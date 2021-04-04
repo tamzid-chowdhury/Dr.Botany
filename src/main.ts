@@ -1,7 +1,7 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./ui_mockup_scenes/MainMenu";
 import SplashScreen from "./ui_mockup_scenes/SplashScreen";
-
+import InGameUI from "./ui_mockup_scenes/InGameUI";
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
     // Run any tests
@@ -21,7 +21,7 @@ import SplashScreen from "./ui_mockup_scenes/SplashScreen";
             {name: "slot1", keys: ["1"]},
             {name: "slot2", keys: ["2"]}
         ],
-        useWebGL: true,                        // Tell the game we want to use webgl
+        useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
 
@@ -29,7 +29,7 @@ import SplashScreen from "./ui_mockup_scenes/SplashScreen";
     const game = new Game(options);
 
     // Start our game
-    game.start(SplashScreen, {});
+    game.start(InGameUI, {});
 })();
 
 function runTests(){};
