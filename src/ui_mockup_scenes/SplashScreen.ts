@@ -1,3 +1,4 @@
+import QuadTree from "../Wolfie2D/DataTypes/QuadTree";
 import Vec2 from "../Wolfie2D/DataTypes/Vec2";
 import Input from "../Wolfie2D/Input/Input";
 import Graphic from "../Wolfie2D/Nodes/Graphic";
@@ -26,11 +27,14 @@ export default class SplashScreen extends Scene {
     private darkHighlight = new Color(140, 100, 81);
     // private darkHighlight = new Color(45, 46, 45);
 	private dropShadow: UIElement;
+    
+    private control: Layer;
 
     loadScene(): void {
         this.load.image("logo", "assets/logo.png");
         this.load.image("background", "assets/canvas.png");
     }
+
 
 
     createLogo(center: Vec2): void {
