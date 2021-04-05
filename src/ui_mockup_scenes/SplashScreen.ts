@@ -1,3 +1,4 @@
+import QuadTree from "../Wolfie2D/DataTypes/QuadTree";
 import Vec2 from "../Wolfie2D/DataTypes/Vec2";
 import Input from "../Wolfie2D/Input/Input";
 import Graphic from "../Wolfie2D/Nodes/Graphic";
@@ -25,13 +26,15 @@ export default class default_scene extends Scene {
     private darkHighlight = new Color(140, 100, 81);
     // private darkHighlight = new Color(45, 46, 45);
 	private dropShadow: UIElement;
+    
+    private control: Layer;
 
     loadScene(): void {
         this.load.image("logo", "assets/logo.png");
         this.load.image("background", "assets/canvas.png");
     }
     setDropShadow(pos: Vec2) {
-        this.dropShadow.position.set(pos.x + 5, pos.y+5);
+        this.dropShadow.position.set(pos.x + 5, pos.y + 5);
 	}
 
 
@@ -60,6 +63,40 @@ export default class default_scene extends Scene {
         controls.backgroundColor = this.darkHighlight;
         controls.borderColor = this.darkHighlight;
         controls.onEnter = () => this.setDropShadow(controls.position);
+
+        //  /* ########## CONTROL SCREEN ############ */
+        
+        //  this.control = this.addUILayer("controls");
+        //  this.control.setHidden(true);
+ 
+        //  const controlsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(center.x, center.y - 250), text: "Controls"});
+        //  controlsHeader.textColor = Color.WHITE;
+ 
+        //  const text1 = "WASD - keys for movements";
+        //  const text2 = "E - keys to pick up an item from the ground";
+        //  const text3 = "Q - keys to drop the current item on the ground";
+        //  const text4 = "Left Mouse Click - to use the currently equipped item";
+        //  const text5 = "1 and 2 - keys to equip an inventory item";
+ 
+        //  const line1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(center.x, center.y - 100), text: text1});
+        //  const line2 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(center.x, center.y - 50), text: text2});
+        //  const line3 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(center.x, center.y), text: text3});
+        //  const line4 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(center.x, center.y + 50), text: text4});
+        //  const line5 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(center.x, center.y + 100), text: text5});
+ 
+        //  line1.textColor = Color.BLACK;
+        //  line2.textColor = Color.BLACK;
+        //  line3.textColor = Color.BLACK;
+        //  line4.textColor = Color.BLACK;
+        //  line5.textColor = Color.BLACK;
+ 
+ 
+        //  const controlsBack = this.add.uiElement(UIElementType.BUTTON, "controls", {position: new Vec2(center.x, center.y + 250), text: "Back"});
+        //  controlsBack.size.set(200, 50);
+        //  controlsBack.borderWidth = 2;
+        //  controlsBack.borderColor = Color.WHITE;
+        //  controlsBack.backgroundColor = Color.TRANSPARENT;
+        //  controlsBack.onClickEventId = "menu";
 
         startY += 100;
 
