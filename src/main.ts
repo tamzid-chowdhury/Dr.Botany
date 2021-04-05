@@ -2,6 +2,7 @@ import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./ui_mockup_scenes/MainMenu";
 import SplashScreen from "./ui_mockup_scenes/SplashScreen";
 import InGameUI from "./ui_mockup_scenes/InGameUI";
+import HelpScreen from "./ui_mockup_scenes/HelpScreen";
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
     // Run any tests
@@ -29,7 +30,7 @@ import InGameUI from "./ui_mockup_scenes/InGameUI";
     const game = new Game(options);
 
     // Start our game
-    game.start(InGameUI, {});
+    game.start(MainMenu, {});
 })();
 
 function runTests(){};

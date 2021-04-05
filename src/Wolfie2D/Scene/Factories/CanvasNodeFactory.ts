@@ -173,8 +173,8 @@ export default class CanvasNodeFactory {
 	buildLabel(options?: Record<string, any>): Label {
 		this.checkIfPropExists("Label", options, "position", Vec2, "Vec2");
 		this.checkIfPropExists("Label", options, "text", "string");
-
-		return new Label(options.position, options.text)
+		// size is an optional argument
+		return new Label(options.position, options.text, options.size)
 	}
 
 	buildSlider(options: Record<string, any>): Slider {
@@ -211,7 +211,7 @@ export default class CanvasNodeFactory {
 		this.checkIfPropExists("Rect", options, "position", Vec2, "Vec2");
 		this.checkIfPropExists("Rect", options, "size", Vec2, "Vec2");
 
-		return new Rect(options.position, options.size);
+		return new Rect(options.position, options.size, options.color);
 	}
 
 	/* ---------- ERROR HANDLING ---------- */

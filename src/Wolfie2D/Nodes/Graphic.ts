@@ -8,9 +8,9 @@ export default abstract class Graphic extends CanvasNode {
     /** The color of the Graphic */
     color: Color;
 
-    constructor(){
+    constructor(color: Color = Color.RED){
         super();
-        this.color = Color.RED;
+        this.color = color;
     }
 
     get alpha(): number {
