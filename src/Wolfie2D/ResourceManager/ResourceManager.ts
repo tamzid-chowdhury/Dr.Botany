@@ -723,7 +723,8 @@ export default class ResourceManager {
     }
 
     public getShaderProgram(key: string): WebGLProgram {
-        return this.gl_ShaderPrograms.get(key).program;
+        let temp = this.gl_ShaderPrograms.get(key);
+        return temp.program;
     }
 
     public getBuffer(key: string): WebGLBuffer {

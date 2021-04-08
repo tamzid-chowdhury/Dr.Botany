@@ -1,6 +1,6 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./ui_mockup_scenes/MainMenu";
-import SplashScreen from "./ui_mockup_scenes/SplashScreen";
+import Registry from "./Wolfie2D/Registry/RegistryManager";
 import InGameUI from "./ui_mockup_scenes/InGameUI";
 import HelpScreen from "./ui_mockup_scenes/HelpScreen";
 import LevelSelection from "./ui_mockup_scenes/LevelSelection";
@@ -28,8 +28,6 @@ import Controls from "./ui_mockup_scenes/Controls";
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
-
-    // Create a game with the options specified
     const game = new Game(options);
 
     // Start our game

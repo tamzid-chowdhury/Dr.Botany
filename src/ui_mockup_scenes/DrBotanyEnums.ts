@@ -1,0 +1,18 @@
+export enum UIEvents {
+	PLAY_GAME = "PLAY_GAME",
+	CONTROLS = "CONTROLS",
+	ABOUT = "ABOUT",
+	MENU = "MENU",
+	HIDE_LAYER = 'HIDE_LAYER',
+	TRANSITION_SPLASH_SCREEN = 'TRANSITION_SPLASH_SCREEN',
+	HIDE_SPLASH_SCREEN = 'HIDE_SPLASH_SCREEN',
+	SHOW_MAIN_MENU = 'SHOW_MAIN_MENU'
+}
+
+export enum ButtonNames {
+	START = "Start",
+	LEVEL_SELECT = "Level Select",
+	CONTROLS = "Controls",
+	OPTIONS = "Options",
+	HELP = "Help"
+}

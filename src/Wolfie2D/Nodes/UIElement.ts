@@ -37,10 +37,15 @@ export default abstract class UIElement extends CanvasNode {
 	/** The event propogated when a mouse leaves this UIElement */
 	onLeaveEventId: string;
 
+	onFirstEnter: Function;
+	onFirstEnterEventId: string;
+
 	/** Whether or not this UIElement is currently clicked on */
 	protected isClicked: boolean;
 	/** Whether or not this UIElement is currently hovered over */
 	protected isEntered: boolean;
+
+	protected isFirstEnter: boolean;
 
 	constructor(position: Vec2){
 		super();
@@ -61,9 +66,12 @@ export default abstract class UIElement extends CanvasNode {
 		this.onEnterEventId = null;
 		this.onLeave = null;
 		this.onLeaveEventId = null;
+		this.onFirstEnter = null;
+		this.onFirstEnterEventId = null;
 
 		this.isClicked = false;
 		this.isEntered = false;
+		this.isFirstEnter = true;
 	}
 
 	// @deprecated
@@ -107,6 +115,16 @@ export default abstract class UIElement extends CanvasNode {
 		if(mousePos && this.contains(mousePos.x, mousePos.y)){
 			this.isEntered = true;
 
+			/** MY ADDITIONS */
+			if(this.isFirstEnter) {
+				this.isFirstEnter = false;
+				if(this.onFirstEnter !== null){
+					this.onFirstEnter();
+				}
+			}
+			/** MY ADDITIONS */
+
+
 			if(this.onEnter !== null){
 				this.onEnter();
 			}
@@ -117,7 +135,7 @@ export default abstract class UIElement extends CanvasNode {
 
 		} else if(this.isEntered) {
 			this.isEntered = false;
-
+			this.isFirstEnter = true;
 			if(this.onLeave !== null){
 				this.onLeave();
 			}

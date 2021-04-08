@@ -474,5 +474,5 @@ export enum TweenableProperties{
 	scaleX = "scaleX",
 	scaleY = "scaleY",
 	rotation = "rotation",
-	alpha = "alpha"
+	alpha = "alpha",
 }

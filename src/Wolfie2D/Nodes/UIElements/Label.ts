@@ -1,4 +1,5 @@
 import Vec2 from "../../DataTypes/Vec2";
+import TweenController from "../../Rendering/Animations/TweenController";
 import Color from "../../Utils/Color";
 import UIElement from "../UIElement";
 
@@ -20,9 +21,14 @@ export default class Label extends UIElement{
 	/** A flag for if the width of the text has been measured on the canvas for auto width assignment */
 	protected sizeAssigned: boolean;
 
+	/** The initial position of the label */
+	origin: Vec2;
+
+	tweens: TweenController;
+
 	constructor(position: Vec2, text: string, size: number = 30){
 		super(position);
-		console.log(size)
+		this.origin = position;
 		this.text = text;
 		this.textColor = new Color(0, 0, 0, 1);
 		this.font = "Arial";
@@ -138,4 +144,32 @@ export default class Label extends UIElement{
 	sizeToText(): void {
 		this.sizeAssigned = false;
 	}
+
+	set textAlpha(value: number) {
+		this.textColor.a = value;
+	}
+
+	set alpha(value: number) {
+		this.backgroundColor.a = value;
+	}
+
+	set bgRedChannel(value: number) {
+		this.backgroundColor.r = value;
+	}
+
+	set bgGreenChannel(value: number) {
+		this.backgroundColor.g = value;
+	}
+
+	set bgBlueChannel(value: number) {
+		this.backgroundColor.b = value;
+	}
+
+}
+
+export enum LabelTweenableProperties{
+	textAlpha = "textAlpha",
+	bgRedChannel = "bgRedChannel",
+	bgGreenChannel = "bgGreenChannel",
+	bgBlueChannel = "bgBlueChannel",
 }

@@ -59,7 +59,7 @@ export default class default_scene extends Scene {
         const text3 = "S - Move Down";
         const text4 = "D - Move Right";
         const text5 = "E - Pick up Items";
-        const text6 = "Q, Moust Wheel - Equipment Change";
+        const text6 = "Q, Mouse Wheel - Equipment Change";
         const text7 = "Right Mouse Button - Block";
         const text8 = "Left Mouse Button - Attack";
         const line1 = <Label>this.add.uiElement(UIElementType.LABEL, "mainMenu", {position: new Vec2(center.x, center.y - 200), text: text1});
