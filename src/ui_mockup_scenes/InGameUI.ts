@@ -16,6 +16,7 @@ import Color from "../Wolfie2D/Utils/Color";
 export default class default_scene extends Scene {
     private logo: Sprite;
     private bg: Sprite;
+    private pauseScreen: Layer; 
     private primary: Layer;
     private background: Layer;
     private about: Layer;
@@ -107,8 +108,44 @@ export default class default_scene extends Scene {
         const moodSlider = <Slider>this.add.uiElement(UIElementType.SLIDER, "primary", {position: new Vec2(1650,680), text:'Mood'});
         moodSlider.size.set(350,40)
 
+        this.createPauseScreen(center)
+
 
     
+    }
+
+    createPauseScreen(center: Vec2): void{ 
+                // Controls screen
+                this.pauseScreen = this.addUILayer("pause");
+                this.pauseScreen.setHidden(true);
+        
+                const resume = <Label>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(center.x, center.y - 300), text: "Resume"});
+                resume.size.set(200, 50);
+                resume.borderWidth = 2;
+                resume.borderColor = Color.BLACK;
+                resume.backgroundColor = Color.WHITE;
+                resume.textColor = Color.BLACK; 
+
+                const controls = <Label>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(center.x, center.y - 225), text: "Controls"});
+                controls.size.set(200, 50);
+                controls.borderWidth = 2;
+                controls.borderColor = Color.BLACK;
+                controls.backgroundColor = Color.WHITE;
+                controls.textColor = Color.BLACK; 
+
+                const options = <Label>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(center.x, center.y - 150), text: "Options"});
+                options.size.set(200, 50);
+                options.borderWidth = 2;
+                options.borderColor = Color.BLACK;
+                options.backgroundColor = Color.WHITE;
+                options.textColor = Color.BLACK; 
+    
+                const back = <Label>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(center.x, center.y - 75), text: "Back"});
+                back.size.set(200, 50);
+                back.borderWidth = 2;
+                back.borderColor = Color.BLACK;
+                back.backgroundColor = Color.WHITE;
+                back.textColor = Color.BLACK;
     }
 
 
