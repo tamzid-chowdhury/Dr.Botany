@@ -31,7 +31,7 @@ import Controls from "./ui_mockup_scenes/Controls";
     const game = new Game(options);
 
     // Start our game
-    game.start(InGameUI, {});
+    game.start(MainMenu, {});
 
 })();
 
