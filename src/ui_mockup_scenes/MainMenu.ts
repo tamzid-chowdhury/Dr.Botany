@@ -23,17 +23,21 @@ import { LevelSelectLayer } from "./Layers/LevelSelectLayer";
 import { OptionsLayer } from "./Layers/OptionsLayer";
 
 export default class MainMenu extends Scene {
-    private mainMenuLayer: MainMenuLayer;
-    private backgroundLayer: BackgroundLayer;
-    private controlsLayer: ControlsLayer;
-
+    mainMenuLayer: MainMenuLayer;
+    backgroundLayer: BackgroundLayer;
+    controlsLayer: ControlsLayer;
+    helpLayer: HelpLayer;
+    levelSelectLayer: LevelSelectLayer;
+    optionsLayer: OptionsLayer;
+    
     private dropShadow: UIElement;
+
 
     center: Vec2 = this.viewport.getCenter();
     zoomLevel: number;
-    helpLayer: HelpLayer;
-    levelSelectLayer: any;
-    optionsLayer: LevelSelectLayer;
+    
+    
+    
 
     
     loadScene(): void {
