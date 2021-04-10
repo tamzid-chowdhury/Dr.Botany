@@ -4,6 +4,7 @@ import Input from "../Wolfie2D/Input/Input";
 import Graphic from "../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Sprite from "../Wolfie2D/Nodes/Sprites/Sprite";
+import AnimatedSprite from "../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import UIElement from "../Wolfie2D/Nodes/UIElement";
 import Button from "../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../Wolfie2D/Nodes/UIElements/Label";
@@ -33,29 +34,32 @@ export default class MainMenu extends Scene {
     cursorLayer: Layer;
     private dropShadow: UIElement;
     cursor: Sprite;
+    cursor2: AnimatedSprite;
 
     center: Vec2 = this.viewport.getCenter();
     zoomLevel: number;
-    
-    
-    
 
-    
+
+
+
+
     loadScene(): void {
         this.load.image("logo", "assets/logo.png");
         this.load.image("background", "assets/canvas.png");
         this.load.image("temp_button_art", "assets/temp_button_art.png");
-        this.load.image("temp_cursor", "assets/temp_cursor.png");
+        this.load.image("temp_cursor", "assets/cursor.png");
+        this.load.spritesheet("cursor_clicked", "assets/spritesheets/cursor_click.json");
     }
 
     setDropShadow(pos: Vec2) {
         this.dropShadow.visible = true;
-        this.dropShadow.position.set(pos.x , pos.y);
+        this.dropShadow.position.set(pos.x, pos.y);
     }
 
     setDetectDocumentClick(toggle: boolean): void {
-        if(toggle) document.onclick = () => { this.emitter.fireEvent(UIEvents.TRANSITION_SPLASH_SCREEN); }
-        else document.onclick = () => { } ;
+        
+        if (toggle) document.onclick = () => { this.emitter.fireEvent(UIEvents.TRANSITION_SPLASH_SCREEN); }
+        else document.onclick = () => { };
     }
 
     startScene(): void {
@@ -69,18 +73,19 @@ export default class MainMenu extends Scene {
 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
         this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
+        
         let mousePos = Input.getMousePosition();
-        this.cursor.scale = new Vec2(0.2,0.2)
+        this.cursor.scale = new Vec2(0.8, 0.8)
         // this.cursor.rotation = 3.14
-
+        
         this.backgroundLayer.playSplashScreen();
         this.setDetectDocumentClick(true);
-        
+
 
         // Subscribe to all events once we nail down the exact events needed we could probably replace this 
         // loop with this.receiver.subscribe(...) calls
-		for (let events in UIEvents) {
-			let event: UIEvents = UIEvents[events as keyof typeof UIEvents];
+        for (let events in UIEvents) {
+            let event: UIEvents = UIEvents[events as keyof typeof UIEvents];
             this.receiver.subscribe(event);
         }
 
@@ -101,12 +106,12 @@ export default class MainMenu extends Scene {
     setVisibleLayer(layerName: string): void {
         this.uiLayers.forEach((key: string) => {
             // don't want to hide the background cause it has the logo, and putting it on a reg. layer breaks tween
-            if(key !== layerName && key !== UILayers.BACKGROUND  && key !== UILayers.CURSOR) { 
+            if (key !== layerName && key !== UILayers.BACKGROUND && key !== UILayers.CURSOR) {
                 this.uiLayers.get(key).setHidden(true);
             }
-            else if(key === layerName) {
+            else if (key === layerName) {
                 this.uiLayers.get(key).setHidden(false);
-            } 
+            }
         });
 
     }
@@ -114,6 +119,7 @@ export default class MainMenu extends Scene {
     updateScene(deltaT: number) {
         let mousePos = Input.getMousePosition();
         this.cursor.position.set(mousePos.x, mousePos.y);
+        
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
@@ -150,7 +156,7 @@ export default class MainMenu extends Scene {
             // distinguishes between the first time the main menu is shown, button tweens wont play after
             if (event.type == UIEvents.FIRST_RENDER) {
                 this.setVisibleLayer(UILayers.MAIN_MENU)
-                
+
                 for (let button of this.mainMenuLayer.menuButtons) {
                     button.tweens.play('slideXFadeIn')
                 }
