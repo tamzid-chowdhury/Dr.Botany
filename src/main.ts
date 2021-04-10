@@ -10,7 +10,7 @@ import Controls from "./ui_mockup_scenes/Controls";
 (function main(){
     // Run any tests
     runTests();
-
+    document.body.style.cursor = 'none';
     // Set up options for our game
     let options = {
         canvasSize: {x: 1920, y: 1080},          // The size of the game

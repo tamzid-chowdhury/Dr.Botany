@@ -21,6 +21,7 @@ import { ControlsLayer } from "./Layers/ControlsLayer";
 import { HelpLayer } from "./Layers/HelpLayer";
 import { LevelSelectLayer } from "./Layers/LevelSelectLayer";
 import { OptionsLayer } from "./Layers/OptionsLayer";
+import MathUtils from "../Wolfie2D/Utils/MathUtils";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -29,9 +30,9 @@ export default class MainMenu extends Scene {
     helpLayer: HelpLayer;
     levelSelectLayer: LevelSelectLayer;
     optionsLayer: OptionsLayer;
-    
+    cursorLayer: Layer;
     private dropShadow: UIElement;
-
+    cursor: Sprite;
 
     center: Vec2 = this.viewport.getCenter();
     zoomLevel: number;
@@ -44,6 +45,7 @@ export default class MainMenu extends Scene {
         this.load.image("logo", "assets/logo.png");
         this.load.image("background", "assets/canvas.png");
         this.load.image("temp_button_art", "assets/temp_button_art.png");
+        this.load.image("temp_cursor", "assets/temp_cursor.png");
     }
 
     setDropShadow(pos: Vec2) {
@@ -57,6 +59,7 @@ export default class MainMenu extends Scene {
     }
 
     startScene(): void {
+
         this.backgroundLayer = new BackgroundLayer(this, this.center, this.viewport.getHalfSize().y / 10);
         this.mainMenuLayer = new MainMenuLayer(this, this.center);
         this.controlsLayer = new ControlsLayer(this, this.center);
@@ -64,6 +67,11 @@ export default class MainMenu extends Scene {
         this.levelSelectLayer = new LevelSelectLayer(this, this.center);
         this.optionsLayer = new OptionsLayer(this, this.center);
 
+        this.cursorLayer = this.addUILayer(UILayers.CURSOR);
+        this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
+        let mousePos = Input.getMousePosition();
+        this.cursor.scale = new Vec2(0.2,0.2)
+        // this.cursor.rotation = 3.14
 
         this.backgroundLayer.playSplashScreen();
         this.setDetectDocumentClick(true);
@@ -93,7 +101,7 @@ export default class MainMenu extends Scene {
     setVisibleLayer(layerName: string): void {
         this.uiLayers.forEach((key: string) => {
             // don't want to hide the background cause it has the logo, and putting it on a reg. layer breaks tween
-            if(key !== layerName && key !== UILayers.BACKGROUND) { 
+            if(key !== layerName && key !== UILayers.BACKGROUND  && key !== UILayers.CURSOR) { 
                 this.uiLayers.get(key).setHidden(true);
             }
             else if(key === layerName) {
@@ -104,6 +112,8 @@ export default class MainMenu extends Scene {
     }
 
     updateScene(deltaT: number) {
+        let mousePos = Input.getMousePosition();
+        this.cursor.position.set(mousePos.x, mousePos.y);
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 

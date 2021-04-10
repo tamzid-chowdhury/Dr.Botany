@@ -24,6 +24,7 @@ export enum UILayers {
 	LEVEL_SELECT = "levelSelect",
 	OPTIONS = "options",
 	HELP = "help",
+	CURSOR = "Cursor"
 }
 
 export enum ButtonNames {
