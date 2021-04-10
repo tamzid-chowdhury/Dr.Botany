@@ -1,12 +1,12 @@
-import Vec2 from "../Wolfie2D/DataTypes/Vec2";
-import { TweenableProperties } from "../Wolfie2D/Nodes/GameNode";
-import { LabelTweenableProperties } from "../Wolfie2D/Nodes/UIElements/Label";
-import { TweenData } from "../Wolfie2D/Rendering/Animations/AnimationTypes"
-import Color from "../Wolfie2D/Utils/Color";
-import { EaseFunctionType } from "../Wolfie2D/Utils/EaseFunctions";
-import { UIEvents } from "./DrBotanyEnums";
+import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import { LabelTweenableProperties } from "../../Wolfie2D/Nodes/UIElements/Label";
+import { TweenData } from "../../Wolfie2D/Rendering/Animations/AnimationTypes"
+import Color from "../../Wolfie2D/Utils/Color";
+import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
+import { UIEvents } from "./Enums";
 
-export function slideXFadeIn(startX: number, delay: number = 0, offset: number): Record<string,any> {
+export function slideXFadeIn(startX: number, startY: number, delay: number = 0, offset: number): Record<string,any> {
 	let tween = {
 		startDelay: delay,
 		duration: 300,
@@ -14,23 +14,26 @@ export function slideXFadeIn(startX: number, delay: number = 0, offset: number):
 			{
 				property: TweenableProperties.posX,
 				start: startX,
-				end: startX + offset,
+				end: startX + offset+2,
 				ease: EaseFunctionType.IN_OUT_QUAD,
-				resetOnComplete: true
+			},
+			{
+				property: TweenableProperties.posY,
+				start: startY,
+				end: startY + 2,
+				ease: EaseFunctionType.IN_OUT_QUAD,
 			},
 			{
 				property: TweenableProperties.alpha,
 				start: 0,
 				end: 1,
 				ease: EaseFunctionType.IN_OUT_QUAD,
-				resetOnComplete: true
 			},
 			{
 				property: LabelTweenableProperties.textAlpha,
 				start: 0,
 				end: 1,
 				ease: EaseFunctionType.IN_OUT_QUAD,
-				resetOnComplete: true
 			},
 		],
 	};
@@ -74,8 +77,7 @@ export function fadeOut(posY: number): Record<string,any> {
 				resetOnComplete: true
 			},
 
-		],
-		onEnd: UIEvents.HIDE_SPLASH_SCREEN
+		]
 	};
 	return tween
 }
@@ -132,7 +134,7 @@ export function slideUpShrink(startScale: Vec2, posY: number, centerY: number): 
 			},
 			
 		],
-		onEnd: UIEvents.SHOW_MAIN_MENU
+		onEnd: UIEvents.FIRST_RENDER
 	};
 	return tween;
 };
@@ -149,13 +151,13 @@ export  function slideUpLeft(xPos: number, yPos: number): Record<string,any> {
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
-			{
-				property: TweenableProperties.posX,
-				start: xPos,
-				end: xPos-2,
-				ease: EaseFunctionType.IN_OUT_QUINT,
-				resetOnComplete: true
-			},
+			// {
+			// 	property: TweenableProperties.posX,
+			// 	start: xPos,
+			// 	end: xPos-2,
+			// 	ease: EaseFunctionType.IN_OUT_QUINT,
+			// 	resetOnComplete: true
+			// },
 		]
 	
 	}
@@ -174,13 +176,13 @@ export  function slideDownRight(xPos: number, yPos: number): Record<string,any> 
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
-			{
-				property: TweenableProperties.posX,
-				start: xPos,
-				end: xPos+2,
-				ease: EaseFunctionType.IN_OUT_QUINT,
-				resetOnComplete: true
-			},
+			// {
+			// 	property: TweenableProperties.posX,
+			// 	start: xPos,
+			// 	end: xPos+2,
+			// 	ease: EaseFunctionType.IN_OUT_QUINT,
+			// 	resetOnComplete: true
+			// },
 		]
 	
 	}
