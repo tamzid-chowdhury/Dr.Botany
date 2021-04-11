@@ -39,7 +39,7 @@ export default class MainMenu extends Scene {
 
     center: Vec2 = this.viewport.getCenter();
     zoomLevel: number;
-    scrollSpeed: number = 0.7;
+    scrollSpeed: number = 1;
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
 
 
@@ -132,13 +132,13 @@ export default class MainMenu extends Scene {
 
         this.backgroundLayer.bg.position.x += this.scrollSpeed;
         this.backgroundLayer.bgCopy.position.x += this.scrollSpeed;
-        if(this.backgroundLayer.bg.position.x > this.viewPortWidth) {
-            this.backgroundLayer.bg.position.x = 0;
+        if(this.backgroundLayer.bg.position.x > this.backgroundLayer.bg.size.x) {
+            this.backgroundLayer.bg.position.x = -this.backgroundLayer.bg.size.x/2;
 
         }
 
-        if(this.backgroundLayer.bgCopy.position.x > this.viewPortWidth) {
-            this.backgroundLayer.bgCopy.position.x = 0;
+        if(this.backgroundLayer.bgCopy.position.x > this.backgroundLayer.bg.size.x) {
+            this.backgroundLayer.bgCopy.position.x = -this.backgroundLayer.bg.size.x/2;
 
         }
  

@@ -25,8 +25,12 @@ export class BackgroundLayer {
 		this.layer = scene.addUILayer(UILayers.BACKGROUND);
 		this.bg = scene.add.sprite("background", UILayers.BACKGROUND);
 		this.bgCopy = scene.add.sprite("background", UILayers.BACKGROUND);
-		this.bg.position.set(0, -18);
-		this.bgCopy.position.set(-this.bg.size.x+1, -18);
+		this.bg.imageOffset = new Vec2(0, 0);
+		this.bgCopy.imageOffset = new Vec2(0, 0);
+		this.bg.position.set(-36, -18);
+		this.bgCopy.position.set(-this.bg.size.x, -18);
+
+
 
 		this.logo = scene.add.sprite("logo", UILayers.BACKGROUND);
 		this.logo.position.set(position.x, position.y - logoOffset);
