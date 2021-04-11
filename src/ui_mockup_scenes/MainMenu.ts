@@ -23,6 +23,7 @@ import { HelpLayer } from "./Layers/HelpLayer";
 import { LevelSelectLayer } from "./Layers/LevelSelectLayer";
 import { OptionsLayer } from "./Layers/OptionsLayer";
 import MathUtils from "../Wolfie2D/Utils/MathUtils";
+import { GameEventType } from "../Wolfie2D/Events/GameEventType";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -38,15 +39,14 @@ export default class MainMenu extends Scene {
 
     center: Vec2 = this.viewport.getCenter();
     zoomLevel: number;
-
-
+    scrollSpeed: number = 0.7;
+    viewPortWidth: number = this.viewport.getHalfSize().x * 2;
 
 
 
     loadScene(): void {
         this.load.image("logo", "assets/logo.png");
         this.load.image("background", "assets/canvas.png");
-        this.load.image("temp_button_art", "assets/temp_button_art.png");
         this.load.image("temp_cursor", "assets/cursor.png");
         this.load.spritesheet("cursor_clicked", "assets/spritesheets/cursor_click.json");
     }
@@ -77,6 +77,7 @@ export default class MainMenu extends Scene {
         let mousePos = Input.getMousePosition();
         this.cursor.scale = new Vec2(0.8, 0.8)
         // this.cursor.rotation = 3.14
+        this.cursor.visible = false;
         
         this.backgroundLayer.playSplashScreen();
         this.setDetectDocumentClick(true);
@@ -88,6 +89,7 @@ export default class MainMenu extends Scene {
             let event: UIEvents = UIEvents[events as keyof typeof UIEvents];
             this.receiver.subscribe(event);
         }
+        this.receiver.subscribe(GameEventType.MOUSE_MOVE);
 
 
 
@@ -98,7 +100,6 @@ export default class MainMenu extends Scene {
         // this.receiver.subscribe(UIEvents.MENU)
         // this.receiver.subscribe(UIEvents.TRANSITION_SPLASH_SCREEN)
         // this.receiver.subscribe(UIEvents.SHOW_MAIN_MENU)
-
 
     }
 
@@ -120,8 +121,35 @@ export default class MainMenu extends Scene {
         let mousePos = Input.getMousePosition();
         this.cursor.position.set(mousePos.x, mousePos.y);
         
+        // idea for scrolling:
+        // make 2 copies of the bg image, line them up on after the other
+        // scroll both of them
+        // after one of the images is fully out of view, reset its position
+        // or if joe fiex webgl, this probably is easier to do with a shader
+
+        // another possibility: write the shader in a webgl environment and make a 
+        // gif out of it
+
+        this.backgroundLayer.bg.position.x += this.scrollSpeed;
+        this.backgroundLayer.bgCopy.position.x += this.scrollSpeed;
+        if(this.backgroundLayer.bg.position.x > this.viewPortWidth) {
+            this.backgroundLayer.bg.position.x = 0;
+
+        }
+
+        if(this.backgroundLayer.bgCopy.position.x > this.viewPortWidth) {
+            this.backgroundLayer.bgCopy.position.x = 0;
+
+        }
+ 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
+
+            // initially hide the mouse until user input, cursor isnt seen in upper corner 
+            if (event.type === GameEventType.MOUSE_MOVE) {
+                this.cursor.visible = true;
+                this.receiver.unsubscribe( GameEventType.MOUSE_MOVE);
+            }
 
             if (event.type === UIEvents.CLICKED_START) {
                 console.log('start')

@@ -31,6 +31,11 @@ export default class Receiver {
 		this.q.clear();
 	}
 
+	unsubscribe(eventTypes: string ): void {
+		EventQueue.getInstance().unsubscribe(this, eventTypes);
+		this.q.clear();
+	}
+
 	/**
 	 * Adds an event to the queue of this reciever. This is used by the @reference[EventQueue] to distribute events
 	 * @param event The event to receive

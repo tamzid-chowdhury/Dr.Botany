@@ -276,6 +276,7 @@ export default class Viewport {
         // If viewport is following an object
         if(this.following){
             // Update our list of previous positions
+            // TODO: implement camera lerp
             this.lastPositions.enqueue(this.following.position.clone());
         } else {
             this.lastPositions.enqueue(this.focus);
