@@ -39,7 +39,7 @@ export default class MainMenu extends Scene {
 
     center: Vec2 = this.viewport.getCenter();
     zoomLevel: number;
-    scrollSpeed: number = 1;
+    scrollSpeed: number = 100;
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
 
 
@@ -130,8 +130,8 @@ export default class MainMenu extends Scene {
         // another possibility: write the shader in a webgl environment and make a 
         // gif out of it
 
-        this.backgroundLayer.bg.position.x += this.scrollSpeed;
-        this.backgroundLayer.bgCopy.position.x += this.scrollSpeed;
+        this.backgroundLayer.bg.position.x += this.scrollSpeed * deltaT;
+        this.backgroundLayer.bgCopy.position.x += this.scrollSpeed * deltaT;
         if(this.backgroundLayer.bg.position.x > this.backgroundLayer.bg.size.x) {
             this.backgroundLayer.bg.position.x = -this.backgroundLayer.bg.size.x/2;
 
