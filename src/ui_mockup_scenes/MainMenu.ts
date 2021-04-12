@@ -48,6 +48,7 @@ export default class MainMenu extends Scene {
         this.load.image("logo", "assets/logo.png");
         this.load.image("background", "assets/canvas.png");
         this.load.image("temp_cursor", "assets/cursor.png");
+        this.load.image("temp_button", "assets/temp_button.png");
         this.load.spritesheet("cursor_clicked", "assets/spritesheets/cursor_click.json");
     }
 
@@ -91,6 +92,7 @@ export default class MainMenu extends Scene {
         }
         this.receiver.subscribe(GameEventType.MOUSE_MOVE);
         this.receiver.subscribe(WindowEvents.RESIZED);
+        this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         
 
 
@@ -191,7 +193,8 @@ export default class MainMenu extends Scene {
                 this.setVisibleLayer(UILayers.MAIN_MENU)
 
                 for (let button of this.mainMenuLayer.menuButtons) {
-                    button.tweens.play('slideXFadeIn')
+                    button.label.tweens.play('slideXFadeIn')
+                    button.sprite.tweens.play('SpriteslideXFadeIn')
                 }
             }
 
