@@ -12,7 +12,7 @@ import { UIElementType } from "../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../Wolfie2D/Scene/Layer";
 import Scene from "../Wolfie2D/Scene/Scene";
 import Color from "../Wolfie2D/Utils/Color";
-import { UIEvents, UILayers, ButtonNames } from "./Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, WindowEvents } from "./Utils/Enums";
 import * as Tweens from "./Utils/Tweens";
 import * as Palette from "./Utils/Colors";
 import UILayer from "../Wolfie2D/Scene/Layers/UILayer";
@@ -63,7 +63,7 @@ export default class MainMenu extends Scene {
     }
 
     startScene(): void {
-
+        window.onresize = (e: UIEvent) => {this.emitter.fireEvent(WindowEvents.RESIZED, {eventObject: e})}
         this.backgroundLayer = new BackgroundLayer(this, this.center, this.viewport.getHalfSize().y / 10);
         this.mainMenuLayer = new MainMenuLayer(this, this.center);
         this.controlsLayer = new ControlsLayer(this, this.center);
@@ -90,7 +90,8 @@ export default class MainMenu extends Scene {
             this.receiver.subscribe(event);
         }
         this.receiver.subscribe(GameEventType.MOUSE_MOVE);
-
+        this.receiver.subscribe(WindowEvents.RESIZED);
+        
 
 
         // this.receiver.subscribe(UIEvents.PLAY_GAME);
@@ -148,7 +149,11 @@ export default class MainMenu extends Scene {
             // initially hide the mouse until user input, cursor isnt seen in upper corner 
             if (event.type === GameEventType.MOUSE_MOVE) {
                 this.cursor.visible = true;
-                this.receiver.unsubscribe( GameEventType.MOUSE_MOVE);
+                this.receiver.unsubscribe(GameEventType.MOUSE_MOVE);
+            }
+
+            if(event.type === WindowEvents.RESIZED) {
+                // should reposition ui elements
             }
 
             if (event.type === UIEvents.CLICKED_START) {

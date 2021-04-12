@@ -16,6 +16,11 @@ export enum UIEvents {
 	CLICKED_HELP = 'CLICKED_HELP'
 }
 
+export enum WindowEvents {
+	RESIZED = 'RESIZED'
+
+} 
+
 export enum UILayers {
 	MAIN_MENU = "mainMenu",
 	BACKGROUND = "background",
