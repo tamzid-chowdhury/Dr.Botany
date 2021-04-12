@@ -30,7 +30,7 @@ export class BackgroundLayer {
 		this.bg.position.set(-36, -18);
 		this.bgCopy.position.set(-this.bg.size.x, -18);
 
-
+		
 
 		this.logo = scene.add.sprite("logo", UILayers.BACKGROUND);
 		this.logo.position.set(position.x, position.y - logoOffset);
