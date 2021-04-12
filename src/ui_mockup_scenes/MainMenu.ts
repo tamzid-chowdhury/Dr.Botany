@@ -24,6 +24,7 @@ import { LevelSelectLayer } from "./Layers/LevelSelectLayer";
 import { OptionsLayer } from "./Layers/OptionsLayer";
 import MathUtils from "../Wolfie2D/Utils/MathUtils";
 import { GameEventType } from "../Wolfie2D/Events/GameEventType";
+import LevelZero from "./Scenes/LevelZero";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;

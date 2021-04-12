@@ -21,11 +21,11 @@ export default class default_scene extends Scene {
     private background: Layer;
     private about: Layer;
     private logoColor = new Color(204, 152, 114);
-    // private highlight = new Color(168, 201, 153);
+    //private highlight = new Color(168, 201, 153);
     private highlight = new Color(76, 175, 80)
     private dropColor = new Color(80, 82, 80);
     private darkHighlight = new Color(140, 100, 81);
-    // private darkHighlight = new Color(45, 46, 45);
+    //private darkHighlight = new Color(45, 46, 45);
 	private dropShadow: UIElement;
 
     loadScene(): void {
