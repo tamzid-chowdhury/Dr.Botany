@@ -47,8 +47,8 @@ export function slideXFadeOut(startX: number, startY: number, delay: number = 0,
 		effects: [
 			{
 				property: TweenableProperties.posX,
-				start: startX + offset+2,
-				end: startX,
+				start: startX,
+				end: startX - offset+2,
 				ease: EaseFunctionType.IN_OUT_QUAD,
 			},
 			// {
@@ -109,8 +109,8 @@ export function spriteSlideXFadeOut(startX: number, startY: number, delay: numbe
 		effects: [
 			{
 				property: TweenableProperties.posX,
-				start: startX + offset+2,
-				end: startX,
+				start: startX,
+				end: startX - offset+2,
 				ease: EaseFunctionType.IN_OUT_QUAD,
 			},
 			{

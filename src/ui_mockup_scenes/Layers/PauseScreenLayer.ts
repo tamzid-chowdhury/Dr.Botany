@@ -21,7 +21,7 @@ export default class PauseScreenLayer {
 		this.font = font;
 		this.position = position.clone();
 		this.layer = scene.addUILayer(UILayers.PAUSE_SCREEN);
-		this.layer.setHidden(true);
+		this.layer.setHidden(false);
 		this.initButtons();
 		
 	}
@@ -53,6 +53,8 @@ export default class PauseScreenLayer {
 			label.onClickEventId = 'CLICKED_' + name;
 
 			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
+			let negativeXOffset = xOffset * -1; 
+			label.tweens.add('slideXFadeOut', Tweens.slideXFadeOut(startX+xOffset, startY, animationDelay, negativeXOffset));
 			label.tweens.add('slideXFadeOut', Tweens.slideXFadeOut(startX, startY, animationDelay, xOffset));
 			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
@@ -60,11 +62,12 @@ export default class PauseScreenLayer {
 			
 
 			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
-			sprite.tweens.add('spriteSlideXFadeOut', Tweens.spriteSlideXFadeOut(startX, startY, animationDelay, xOffset));
+			sprite.tweens.add('spriteSlideXFadeOut', Tweens.spriteSlideXFadeOut(startX+xOffset, startY, animationDelay, negativeXOffset));
 			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
 			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(3.8,3.8), 0, 100));
 			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), sprite.scale, 0, 100));
+
 
 			label.onFirstEnter = () => {
 				label.tweens.play('slideUpLeft');
@@ -83,6 +86,12 @@ export default class PauseScreenLayer {
 			animationDelay += 30;
 			startY += 100;
 			this.menuButtons.push(gameButton);
+
+			if(name == "Resume"){
+				label.onClick(() => {
+					
+				})
+			}
 		}
 	}
 }
