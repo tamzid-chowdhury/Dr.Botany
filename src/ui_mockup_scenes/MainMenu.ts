@@ -225,7 +225,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_START) {
-                // this.sceneManager.changeScene(LevelZero, {});
+                this.sceneManager.changeToScene(LevelZero, {});
             }
 
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {

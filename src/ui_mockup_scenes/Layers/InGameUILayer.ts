@@ -11,9 +11,42 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import { UILayers, ButtonNames } from "../Utils/Enums";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 
-export class InGameUI {
-    logo: Sprite;
+export default class InGameUI {
     layer: UILayer; 
+    scene: Scene;
+    position: Vec2; 
+    pauseScreenLayer: Layer; 
+    healthBarLayer: Layer; 
+    growthBarLayer: Layer; 
+    weaponsInventoryLayer: Layer; 
+    itemsInventoryLayer: Layer; 
+    moodBarLayer: Layer; 
+    font: string; 
+    constructor(scene: Scene, position: Vec2, font: string){
+        this.scene = scene; 
+        this.font = font; 
+        this.position = position.clone(); 
+        this.layer = scene.addUILayer(UILayers.INGAMEUILAYER)
+        this.layer.setHidden(false); 
+
+    }
+
+    createHealthBarLayer(): void{
+        
+    }
+
+    createGrowthBarLayer(): void{
+
+    }
+
+    createWeaponInventoryLayer(): void{
+
+    }
+
+    createItemsInventoryLayer(): void{ 
+
+    }
 }
