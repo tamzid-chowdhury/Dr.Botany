@@ -42,7 +42,7 @@ export class MainMenuLayer {
 			sprite.alpha = 0;
 
 			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.MAIN_MENU, { position: new Vec2(startX, startY), text: `${myName}`, size: 24 });
-			label.size.set(200, 100);
+			label.size.set(180, 100);
 			label.borderWidth = 0;
 			label.borderRadius = 0;
 			label.font = this.font;

@@ -26,6 +26,7 @@ import MathUtils from "../Wolfie2D/Utils/MathUtils";
 import { GameEventType } from "../Wolfie2D/Events/GameEventType";
 import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
+import Game from "../Wolfie2D/Loop/Game";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -35,9 +36,10 @@ export default class MainMenu extends Scene {
     levelSelectLayer: LevelSelectLayer;
     optionsLayer: OptionsLayer;
     cursorLayer: Layer;
+    cursorLayer2: Layer;
     private dropShadow: UIElement;
     cursor: Sprite;
-    cursor2: AnimatedSprite;
+    cursor2: Sprite;
 
     center: Vec2 = this.viewport.getCenter();
     zoomLevel: number;
@@ -54,7 +56,7 @@ export default class MainMenu extends Scene {
         this.load.image("background", "assets/canvas.png");
         this.load.image("temp_cursor", "assets/cursor.png");
         this.load.image("temp_button", "assets/temp_button.png");
-        this.load.spritesheet("cursor_clicked", "assets/spritesheets/cursor_click.json");
+        this.load.image("cursor_clicked", "assets/cursor_clicked.png")
     }
 
     setDropShadow(pos: Vec2) {
@@ -132,6 +134,11 @@ export default class MainMenu extends Scene {
         this.cursor.scale = new Vec2(0.8, 0.8)
         // this.cursor.rotation = 3.14
         this.cursor.visible = false;
+
+        
+        this.cursor2 = this.add.sprite("cursor_clicked", UILayers.CURSOR);
+        this.cursor2.scale = new Vec2(0.8, 0.8)
+        this.cursor2.visible = false;
         
         this.backButton = this.initBackButton();
 
@@ -148,6 +155,7 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe(GameEventType.MOUSE_MOVE);
         this.receiver.subscribe(WindowEvents.RESIZED);
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
+        this.receiver.subscribe(GameEventType.MOUSE_UP);
         
 
 
@@ -171,6 +179,7 @@ export default class MainMenu extends Scene {
     updateScene(deltaT: number) {
         let mousePos = Input.getMousePosition();
         this.cursor.position.set(mousePos.x, mousePos.y);
+        this.cursor2.position.set(mousePos.x, mousePos.y);
         
         // idea for scrolling:
         // make 2 copies of the bg image, line them up on after the other
@@ -206,12 +215,25 @@ export default class MainMenu extends Scene {
                 // should reposition ui elements
             }
 
+            if(event.type === GameEventType.MOUSE_DOWN) {
+                this.cursor.visible = false;
+                this.cursor2.visible = true;
+            }
+            if(event.type === GameEventType.MOUSE_UP) {
+                this.cursor.visible = true;
+                this.cursor2.visible = false;
+            }
+
             if (event.type === UIEvents.CLICKED_START) {
                 // this.sceneManager.changeScene(LevelZero, {});
             }
 
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {
                 this.setVisibleLayer(UILayers.LEVEL_SELECT)
+                for (let button of this.levelSelectLayer.levelSelectButton) {
+                    button.label.tweens.play('slideXFadeIn')
+                    button.sprite.tweens.play('spriteSlideXFadeIn')
+                }
                 this.backButton.label.active = true;
                 this.backButton.label.tweens.play('slideXFadeIn')
                 this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
