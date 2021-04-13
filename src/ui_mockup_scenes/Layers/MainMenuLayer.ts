@@ -15,8 +15,10 @@ export class MainMenuLayer {
 	position: Vec2;
 	scene: Scene;
 	menuButtons: Array<GameButton> = [];
-	constructor(scene: Scene, position: Vec2) {
+	font: string;
+	constructor(scene: Scene, position: Vec2, font: string) {
 		this.scene = scene;
+		this.font = font;
 		this.position = position.clone();
 		this.layer = scene.addUILayer(UILayers.MAIN_MENU);
 		this.layer.setHidden(true);
@@ -43,9 +45,8 @@ export class MainMenuLayer {
 			label.size.set(200, 100);
 			label.borderWidth = 0;
 			label.borderRadius = 0;
-			label.font = "PixelSimple";
+			label.font = this.font;
 			label.backgroundColor = Palette.transparent();
-			// label.backgroundColor = Palette.logoColor();
 			label.backgroundColor.a = 0;
 			label.textColor.a = 0;
 			label.borderColor = Palette.transparent();
@@ -54,24 +55,23 @@ export class MainMenuLayer {
 			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
 			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-			// label.tweens.add('highlight', Tweens.changeColor(label.backgroundColor, Palette.highlight()));
-			// label.tweens.add('unhighlight', Tweens.changeColor(Palette.highlight(), label.backgroundColor));
 
 
-			sprite.tweens.add('SpriteslideXFadeIn', Tweens.SpriteslideXFadeIn(startX, startY, animationDelay, xOffset));
+			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
 			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(4,4), 0, 100));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(4,4), sprite.scale, 0, 100));
 
 			label.onFirstEnter = () => {
 				label.tweens.play('slideUpLeft');
 				sprite.tweens.play('slideUpLeft');
-				// label.tweens.play('highlight');
+				sprite.tweens.play('scaleIn');
 			}
 			label.onLeave = () => {
 				label.tweens.play('slideDownRight');
 				sprite.tweens.play('slideDownRight');
-				
-				// label.tweens.play('unhighlight');
+				sprite.tweens.play('scaleOut');
 			}
 			let gameButton = new GameButton(sprite, label);
 

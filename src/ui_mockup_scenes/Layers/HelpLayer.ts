@@ -16,8 +16,10 @@ export class HelpLayer {
 	position: Vec2;
 	scene: Scene;
 	back: Label;
-	constructor(scene: Scene, position: Vec2) {
+	font: string;
+	constructor(scene: Scene, position: Vec2, font: string) {
 		this.scene = scene;
+		this.font = font;
 		this.position = position;
 		this.layer = scene.addUILayer(UILayers.HELP);
 		this.layer.setHidden(true);
@@ -38,32 +40,8 @@ export class HelpLayer {
 		const textColor = Palette.black();
 		line1.textColor = textColor;
 		line1.fontSize = 40;
-		line1.font = "PixelSimple";
+		line1.font = this.font;
 		
-
-		let back = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.HELP, { position: new Vec2(startX, startY), text: "Back", size : 24});
-		back.size.set(150, 80);
-		back.borderWidth = 0;
-		back.borderRadius = 0;
-		back.font = "PixelSimple";
-		back.backgroundColor = Palette.logoColor();
-		
-		
-		back.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(back.position.x, back.position.y, animationDelay, xOffset));
-		back.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, back.position.y))
-		back.tweens.add('slideDownRight', Tweens.slideDownRight(endX, back.position.y))
-		back.tweens.add('highlight', Tweens.changeColor(back.backgroundColor, Palette.highlight()))
-		back.tweens.add('unhighlight', Tweens.changeColor(Palette.highlight(), back.backgroundColor))
-		back.onFirstEnter = () => {
-			back.tweens.play('slideUpLeft');
-			back.tweens.play('highlight');
-		}
-		back.onLeave = () => {
-			back.tweens.play('slideDownRight');
-			back.tweens.play('unhighlight');
-		}
-		back.onClickEventId = UIEvents.SHOW_MAIN_MENU;
-		this.back = back;
 	}
 
 

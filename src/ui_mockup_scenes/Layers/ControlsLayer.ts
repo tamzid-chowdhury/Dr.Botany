@@ -15,9 +15,10 @@ export class ControlsLayer {
 	layer: UILayer;
 	position: Vec2;
 	scene: Scene;
-	back: Label;
-	constructor(scene: Scene, position: Vec2) {
+	font: string
+	constructor(scene: Scene, position: Vec2, font: string) {
 		this.scene = scene;
+		this.font = font;
 		this.position = position;
 		this.layer = scene.addUILayer(UILayers.CONTROLS);
 		this.layer.setHidden(true);
@@ -51,52 +52,29 @@ export class ControlsLayer {
 		const textColor = Palette.black();
 		line1.textColor = textColor;
 		line1.fontSize = 40;
-		line1.font = "PixelSimple";
+		line1.font = this.font;
 		line2.textColor = textColor;
 		line2.fontSize = 40;
-		line2.font = "PixelSimple";
+		line2.font = this.font;
 		line3.textColor = textColor;
 		line3.fontSize = 40;
-		line3.font = "PixelSimple";
+		line3.font = this.font;
 		line4.textColor = textColor;
 		line4.fontSize = 40;
-		line4.font = "PixelSimple";
+		line4.font = this.font;
 		line5.textColor = textColor;
 		line5.fontSize = 40;
-		line5.font = "PixelSimple";
+		line5.font = this.font;
 		line6.textColor = textColor;
 		line6.fontSize = 40;
-		line6.font = "PixelSimple";
+		line6.font = this.font;
 		line7.textColor = textColor;
 		line7.fontSize = 40;
-		line7.font = "PixelSimple";
+		line7.font = this.font;
 		line8.textColor = textColor;
 		line8.fontSize = 40;
-		line8.font = "PixelSimple";
+		line8.font = this.font;
 
-		let back = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.CONTROLS, { position: new Vec2(startX, startY), text: "Back", size : 24});
-		back.size.set(150, 80);
-		back.borderWidth = 0;
-		back.borderRadius = 0;
-		back.font = "PixelSimple";
-		back.backgroundColor = Palette.logoColor();
-		
-		
-		back.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(back.position.x, back.position.y, animationDelay, xOffset));
-		back.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, back.position.y))
-		back.tweens.add('slideDownRight', Tweens.slideDownRight(endX, back.position.y))
-		back.tweens.add('highlight', Tweens.changeColor(back.backgroundColor, Palette.highlight()))
-		back.tweens.add('unhighlight', Tweens.changeColor(Palette.highlight(), back.backgroundColor))
-		back.onFirstEnter = () => {
-			back.tweens.play('slideUpLeft');
-			back.tweens.play('highlight');
-		}
-		back.onLeave = () => {
-			back.tweens.play('slideDownRight');
-			back.tweens.play('unhighlight');
-		}
-		back.onClickEventId = UIEvents.SHOW_MAIN_MENU;
-		this.back = back;
 	}
 
 

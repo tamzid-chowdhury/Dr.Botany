@@ -8,10 +8,12 @@ import * as Palette from "../Utils/Colors";
 
 // Im thinking this button could encapsulate a position and clickId, and we could swap out a label and sprite interchangeably
 export default class GameButton {
-	sprite: Sprite;
+	sprite?: Sprite;
 	label: Label;
-	constructor(sprite: Sprite, label: Label) {
-		this.sprite = sprite;
+	constructor(sprite: Sprite| null, label: Label) {
+        if(sprite) {
+            this.sprite = sprite;
+        }
 		this.label = label;
 	}
 }

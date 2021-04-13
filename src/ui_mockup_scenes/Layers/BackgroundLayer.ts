@@ -19,8 +19,10 @@ export class BackgroundLayer {
 	position: Vec2;
 	startText: Label;
 	scene: Scene;
-	constructor(scene: Scene, position: Vec2, logoOffset: number) {
+	font: string;
+	constructor(scene: Scene, position: Vec2, logoOffset: number, font: string) {
 		this.scene = scene;
+		this.font = font
 		this.position = position;
 		this.layer = scene.addUILayer(UILayers.BACKGROUND);
 		this.bg = scene.add.sprite("background", UILayers.BACKGROUND);
@@ -41,7 +43,7 @@ export class BackgroundLayer {
 
 		this.startText = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.BACKGROUND, { position: new Vec2(position.x, position.y + 120), text: "Click to Begin!", size: 64 });
         this.startText.textColor = Palette.transparent();
-        this.startText.font = "PixelSimple";
+        this.startText.font = this.font;
         this.startText.alpha = 0;
 
         this.startText.tweens.add('fadeIn', Tweens.fadeIn());

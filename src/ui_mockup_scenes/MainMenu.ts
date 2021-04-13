@@ -25,6 +25,7 @@ import { OptionsLayer } from "./Layers/OptionsLayer";
 import MathUtils from "../Wolfie2D/Utils/MathUtils";
 import { GameEventType } from "../Wolfie2D/Events/GameEventType";
 import LevelZero from "./Scenes/LevelZero";
+import GameButton from "./Classes/GameButton";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -41,7 +42,10 @@ export default class MainMenu extends Scene {
     center: Vec2 = this.viewport.getCenter();
     zoomLevel: number;
     scrollSpeed: number = 100;
+    defaultFont: string = 'Round';
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
+
+    backButton: GameButton;
 
 
 
@@ -64,14 +68,62 @@ export default class MainMenu extends Scene {
         else document.onclick = () => { };
     }
 
+    initBackButton(): GameButton {
+        let center = this.center.clone();
+		let xOffset = 30
+		let startX = center.x - xOffset;
+		let startY = center.y + 300;
+		let endX = center.x;
+		let animationDelay = 0;
+        let backSprite = this.add.sprite("temp_button", UILayers.BACKGROUND);
+        backSprite.position = new Vec2(startX, startY)
+        backSprite.scale = new Vec2(3,3);
+        backSprite.alpha = 0;
+
+        let backLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.BACKGROUND, { position: new Vec2(startX, startY), text: "Back", size : 24});
+		backLabel.size.set(200, 100);
+		backLabel.borderWidth = 0;
+		backLabel.borderRadius = 0;
+		backLabel.font = this.defaultFont;
+        backLabel.backgroundColor = Palette.transparent();
+        backLabel.backgroundColor.a = 0;
+        backLabel.textColor.a = 0;
+        backLabel.borderColor = Palette.transparent();
+		backLabel.onClickEventId = UIEvents.SHOW_MAIN_MENU;
+		
+		
+		backLabel.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
+		backLabel.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+		backLabel.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+
+        backSprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
+		backSprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+		backSprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+        backSprite.tweens.add('scaleIn', Tweens.scaleIn(backSprite.scale, new Vec2(4,4), 0, 100));
+        backSprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(4,4), backSprite.scale, 0, 100));
+
+        backLabel.onFirstEnter = () => {
+			backLabel.tweens.play('slideUpLeft');
+            backSprite.tweens.play('scaleIn');
+            backSprite.tweens.play('slideUpLeft');
+		}
+		backLabel.onLeave = () => {
+			backSprite.tweens.play('slideDownRight');
+			backLabel.tweens.play('slideDownRight');
+            backSprite.tweens.play('scaleOut');
+		}
+
+        return new GameButton(backSprite, backLabel);
+    }
+
     startScene(): void {
         window.onresize = (e: UIEvent) => {this.emitter.fireEvent(WindowEvents.RESIZED, {eventObject: e})}
-        this.backgroundLayer = new BackgroundLayer(this, this.center, this.viewport.getHalfSize().y / 10);
-        this.mainMenuLayer = new MainMenuLayer(this, this.center);
-        this.controlsLayer = new ControlsLayer(this, this.center);
-        this.helpLayer = new HelpLayer(this, this.center);
-        this.levelSelectLayer = new LevelSelectLayer(this, this.center);
-        this.optionsLayer = new OptionsLayer(this, this.center);
+        this.backgroundLayer = new BackgroundLayer(this, this.center, this.viewport.getHalfSize().y / 10, this.defaultFont);
+        this.mainMenuLayer = new MainMenuLayer(this, this.center, this.defaultFont);
+        this.controlsLayer = new ControlsLayer(this, this.center, this.defaultFont);
+        this.helpLayer = new HelpLayer(this, this.center, this.defaultFont);
+        this.levelSelectLayer = new LevelSelectLayer(this, this.center, this.defaultFont);
+        this.optionsLayer = new OptionsLayer(this, this.center, this.defaultFont);
 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
         this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
@@ -81,6 +133,8 @@ export default class MainMenu extends Scene {
         // this.cursor.rotation = 3.14
         this.cursor.visible = false;
         
+        this.backButton = this.initBackButton();
+
         this.backgroundLayer.playSplashScreen();
         this.setDetectDocumentClick(true);
 
@@ -97,13 +151,6 @@ export default class MainMenu extends Scene {
         
 
 
-        // this.receiver.subscribe(UIEvents.PLAY_GAME);
-        // this.receiver.subscribe(UIEvents.CONTROLS);
-        // this.receiver.subscribe(UIEvents.HIDE_LAYER);
-        // this.receiver.subscribe(UIEvents.ABOUT);
-        // this.receiver.subscribe(UIEvents.MENU)
-        // this.receiver.subscribe(UIEvents.TRANSITION_SPLASH_SCREEN)
-        // this.receiver.subscribe(UIEvents.SHOW_MAIN_MENU)
 
     }
 
@@ -160,33 +207,42 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_START) {
-                console.log('start')
                 // this.sceneManager.changeScene(LevelZero, {});
             }
 
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {
                 this.setVisibleLayer(UILayers.LEVEL_SELECT)
-                this.levelSelectLayer.back.tweens.play('slideXFadeIn')
+                this.backButton.label.active = true;
+                this.backButton.label.tweens.play('slideXFadeIn')
+                this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
             }
 
             if (event.type === UIEvents.CLICKED_CONTROLS) {
                 this.setVisibleLayer(UILayers.CONTROLS)
-                this.controlsLayer.back.tweens.play('slideXFadeIn')
+                this.backButton.label.active = true;
+                this.backButton.label.tweens.play('slideXFadeIn')
+                this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
             }
 
             if (event.type === UIEvents.CLICKED_OPTIONS) {
                 this.setVisibleLayer(UILayers.OPTIONS)
-                this.optionsLayer.back.tweens.play('slideXFadeIn')
+                this.backButton.label.active = true;
+                this.backButton.label.tweens.play('slideXFadeIn')
+                this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
             }
 
             if (event.type === UIEvents.CLICKED_HELP) {
                 this.setVisibleLayer(UILayers.HELP)
-                this.helpLayer.back.tweens.play('slideXFadeIn')
-
+                this.backButton.label.active = true;
+                this.backButton.label.tweens.play('slideXFadeIn')
+                this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
             }
 
             if (event.type == UIEvents.SHOW_MAIN_MENU) {
-                this.setVisibleLayer(UILayers.MAIN_MENU)
+                this.setVisibleLayer(UILayers.MAIN_MENU);
+                this.backButton.label.active = false;
+                this.backButton.label.textColor.a = 0;
+                this.backButton.sprite.alpha = 0;
             }
 
             // distinguishes between the first time the main menu is shown, button tweens wont play after
@@ -195,7 +251,7 @@ export default class MainMenu extends Scene {
 
                 for (let button of this.mainMenuLayer.menuButtons) {
                     button.label.tweens.play('slideXFadeIn')
-                    button.sprite.tweens.play('SpriteslideXFadeIn')
+                    button.sprite.tweens.play('spriteSlideXFadeIn')
                 }
             }
 
