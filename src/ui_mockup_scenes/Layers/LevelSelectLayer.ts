@@ -12,6 +12,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import GameButton from "../Classes/GameButton";
 
 
+
 export class LevelSelectLayer {
 	layer: UILayer;
 	position: Vec2;
@@ -24,10 +25,21 @@ export class LevelSelectLayer {
 		this.position = position;
 		this.layer = scene.addUILayer(UILayers.LEVEL_SELECT);
 		this.layer.setHidden(true);
-		this.initButtons();
 	}
-	disableButtons(): void {
-		
+	enbleButtons(): void {
+		this.initButtons();
+		for (let button of this.levelSelectButton) {
+			button.label.tweens.play('slideXFadeIn')
+			button.sprite.tweens.play('spriteSlideXFadeIn')
+		}
+	}
+
+	disbleButtons(): void {
+		for (let button of this.levelSelectButton) {
+			button.label.visible = false;
+			button.sprite.visible = false;
+		}
+		this.levelSelectButton = [];
 	}
 
 	initButtons(): void {
@@ -42,18 +54,20 @@ export class LevelSelectLayer {
 			"Level 7 : Final Boss"
 		]
 		let xOffset = 200
-		let startX = this.position.x - 700;  // this.position is the center
-		let startY = this.position.y - xOffset;
+		let startX = this.position.x - 600;  // this.position is the center
+		let startY = this.position.y - 230;
 		let endX = this.position.x;
 		let animationDelay = 0;
-		for(let i = 0; i < 4; i++) {
+
+		// LEVEL 0 (TUTORIAL SPRING)
+		{
 			let sprite = this.scene.add.sprite("spring", UILayers.LEVEL_SELECT);
 			sprite.position.set(startX, startY);
-			sprite.scale = new Vec2(1.5,0.9);
+			sprite.scale = new Vec2(1.4, 0.8);
 			sprite.alpha = 0;
 
-			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${levelSelectionArray[i]}`, size: 24 });
-			label.size.set(200, 100);
+			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${levelSelectionArray[0]}`, size: 24 });
+			label.size.set(430, 134);
 			label.borderWidth = 0;
 			label.borderRadius = 0;
 			label.font = this.font;
@@ -61,10 +75,8 @@ export class LevelSelectLayer {
 			label.backgroundColor.a = 0;
 			label.textColor.a = 0;
 			label.borderColor = Palette.transparent();
-			label.onClick = () => {
-				console.log("Clicked")
-			}
-			
+			label.onClickEventId = UIEvents.CLICKED_START;
+
 
 			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
 			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
@@ -74,8 +86,8 @@ export class LevelSelectLayer {
 			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
 			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(3.8,3.8), 0, 100));
-			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), sprite.scale, 0, 100));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(1.6, 1.0), 0, 100));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1.6, 1.0), sprite.scale, 0, 100));
 
 			label.onFirstEnter = () => {
 				label.tweens.play('slideUpLeft');
@@ -93,16 +105,16 @@ export class LevelSelectLayer {
 			startY += 150;
 			this.levelSelectButton.push(gameButton);
 		}
-		startX = this.position.x + 300;
-		startY = this.position.y - xOffset;
-		for(let i = 4; i < levelSelectionArray.length; i++) {
-			let sprite = this.scene.add.sprite("temp_button", UILayers.LEVEL_SELECT);
+
+		// LEVEL 1 and LEVEL 2 (SUMMER)
+		for (let i = 1; i < 3; i++) {
+			let sprite = this.scene.add.sprite("spring", UILayers.LEVEL_SELECT);
 			sprite.position.set(startX, startY);
-			sprite.scale = new Vec2(7,3);    // fix this based upon the picture Im drawing
+			sprite.scale = new Vec2(1.4, 0.8);
 			sprite.alpha = 0;
 
 			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${levelSelectionArray[i]}`, size: 24 });
-			label.size.set(200, 100);
+			label.size.set(430, 134);
 			label.borderWidth = 0;
 			label.borderRadius = 0;
 			label.font = this.font;
@@ -110,10 +122,10 @@ export class LevelSelectLayer {
 			label.backgroundColor.a = 0;
 			label.textColor.a = 0;
 			label.borderColor = Palette.transparent();
-			label.onClick = () => {            // This would be assigning the Change Scene method
+			label.onClick = () => {
 				console.log("Clicked")
-			} 
-			
+			}
+
 
 			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
 			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
@@ -123,8 +135,8 @@ export class LevelSelectLayer {
 			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
 			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(3.8,3.8), 0, 100));
-			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), sprite.scale, 0, 100));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(1.6, 1.0), 0, 100));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1.6, 1.0), sprite.scale, 0, 100));
 
 			label.onFirstEnter = () => {
 				label.tweens.play('slideUpLeft');
@@ -139,55 +151,204 @@ export class LevelSelectLayer {
 			let gameButton = new GameButton(sprite, label);
 
 			animationDelay += 30;
-			startY += 130;
+			startY += 150;
 			this.levelSelectButton.push(gameButton);
 		}
-		// for (let name in levelSelectionArray) {
-		// 	let sprite = this.scene.add.sprite("temp_button", UILayers.LEVEL_SELECT);
-		// 	sprite.position.set(startX, startY);
-		// 	sprite.scale = new Vec2(3,3);
-		// 	sprite.alpha = 0;
 
-		// 	let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${name}`, size: 24 });
-		// 	label.size.set(200, 100);
-		// 	label.borderWidth = 0;
-		// 	label.borderRadius = 0;
-		// 	label.font = this.font;
-		// 	label.backgroundColor = Palette.transparent();
-		// 	label.backgroundColor.a = 0;
-		// 	label.textColor.a = 0;
-		// 	label.borderColor = Palette.transparent();
-			
+		{
+			// LEVEL 3 : FALL 
+			let sprite = this.scene.add.sprite("spring", UILayers.LEVEL_SELECT);
+			sprite.position.set(startX, startY);
+			sprite.scale = new Vec2(1.4, 0.8);
+			sprite.alpha = 0;
 
-		// 	label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
-		// 	label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
-		// 	label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${levelSelectionArray[3]}`, size: 24 });
+			label.size.set(430, 134);
+			label.borderWidth = 0;
+			label.borderRadius = 0;
+			label.font = this.font;
+			label.backgroundColor = Palette.transparent();
+			label.backgroundColor.a = 0;
+			label.textColor.a = 0;
+			label.borderColor = Palette.transparent();
+			label.onClick = () => {
+				console.log("Clicked")
+			}
 
 
-		// 	sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
-		// 	sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
-		// 	sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-		// 	sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(3.8,3.8), 0, 100));
-		// 	sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), sprite.scale, 0, 100));
+			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
+			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+			label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
 
-		// 	label.onFirstEnter = () => {
-		// 		label.tweens.play('slideUpLeft');
-		// 		sprite.tweens.play('slideUpLeft');
-		// 		sprite.tweens.play('scaleIn');
-		// 	}
-		// 	label.onLeave = () => {
-		// 		label.tweens.play('slideDownRight');
-		// 		sprite.tweens.play('slideDownRight');
-		// 		sprite.tweens.play('scaleOut');
-		// 	}
-		// 	let gameButton = new GameButton(sprite, label);
 
-		// 	animationDelay += 30;
-		// 	startY += 100;
-		// 	this.levelSelectButton.push(gameButton);
-		// }
+			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
+			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(1.6, 1.0), 0, 100));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1.6, 1.0), sprite.scale, 0, 100));
 
+			label.onFirstEnter = () => {
+				label.tweens.play('slideUpLeft');
+				sprite.tweens.play('slideUpLeft');
+				sprite.tweens.play('scaleIn');
+			}
+			label.onLeave = () => {
+				label.tweens.play('slideDownRight');
+				sprite.tweens.play('slideDownRight');
+				sprite.tweens.play('scaleOut');
+			}
+			let gameButton = new GameButton(sprite, label);
+
+			animationDelay += 30;
+			startY += 150;
+			this.levelSelectButton.push(gameButton);
+		}
+		// New Column for LEVEL 4 : FALL
+		startX = this.position.x + 200;
+		startY = this.position.y - 230;
+		{
+			let sprite = this.scene.add.sprite("spring", UILayers.LEVEL_SELECT);
+			sprite.position.set(startX, startY);
+			sprite.scale = new Vec2(1.4, 0.8);
+			sprite.alpha = 0;
+
+			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${levelSelectionArray[4]}`, size: 24 });
+			label.size.set(430, 134);
+			label.borderWidth = 0;
+			label.borderRadius = 0;
+			label.font = this.font;
+			label.backgroundColor = Palette.transparent();
+			label.backgroundColor.a = 0;
+			label.textColor.a = 0;
+			label.borderColor = Palette.transparent();
+			label.onClick = () => {
+				console.log("Clicked")
+			}
+
+
+			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
+			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+			label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+
+
+			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
+			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(1.6, 1.0), 0, 100));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1.6, 1.0), sprite.scale, 0, 100));
+
+			label.onFirstEnter = () => {
+				label.tweens.play('slideUpLeft');
+				sprite.tweens.play('slideUpLeft');
+				sprite.tweens.play('scaleIn');
+			}
+			label.onLeave = () => {
+				label.tweens.play('slideDownRight');
+				sprite.tweens.play('slideDownRight');
+				sprite.tweens.play('scaleOut');
+			}
+			let gameButton = new GameButton(sprite, label);
+
+			animationDelay += 30;
+			startY += 150;
+			this.levelSelectButton.push(gameButton);
+		}
+		// LEVEL 5 and LEVEL 6 (WINTER)
+		for (let i = 5; i < 7; i++) {
+			let sprite = this.scene.add.sprite("spring", UILayers.LEVEL_SELECT);
+			sprite.position.set(startX, startY);
+			sprite.scale = new Vec2(1.4, 0.8);
+			sprite.alpha = 0;
+
+			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${levelSelectionArray[i]}`, size: 24 });
+			label.size.set(430, 134);
+			label.borderWidth = 0;
+			label.borderRadius = 0;
+			label.font = this.font;
+			label.backgroundColor = Palette.transparent();
+			label.backgroundColor.a = 0;
+			label.textColor.a = 0;
+			label.borderColor = Palette.transparent();
+			label.onClick = () => {
+				console.log("Clicked")
+			}
+
+
+			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
+			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+			label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+
+
+			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
+			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(1.6, 1.0), 0, 100));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1.6, 1.0), sprite.scale, 0, 100));
+
+			label.onFirstEnter = () => {
+				label.tweens.play('slideUpLeft');
+				sprite.tweens.play('slideUpLeft');
+				sprite.tweens.play('scaleIn');
+			}
+			label.onLeave = () => {
+				label.tweens.play('slideDownRight');
+				sprite.tweens.play('slideDownRight');
+				sprite.tweens.play('scaleOut');
+			}
+			let gameButton = new GameButton(sprite, label);
+
+			animationDelay += 30;
+			startY += 150;
+			this.levelSelectButton.push(gameButton);
+		}
+
+		{
+			// LEVEL 7 : FINAL BOSS 
+			let sprite = this.scene.add.sprite("spring", UILayers.LEVEL_SELECT);
+			sprite.position.set(startX, startY);
+			sprite.scale = new Vec2(1.4, 0.8);
+			sprite.alpha = 0;
+
+			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${levelSelectionArray[7]}`, size: 24 });
+			label.size.set(430, 134);
+			label.borderWidth = 0;
+			label.borderRadius = 0;
+			label.font = this.font;
+			label.backgroundColor = Palette.transparent();
+			label.backgroundColor.a = 0;
+			label.textColor.a = 0;
+			label.borderColor = Palette.transparent();
+			label.onClick = () => {
+				console.log("Clicked")
+			}
+
+
+			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
+			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+			label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+
+
+			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
+			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
+			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(1.6, 1.0), 0, 100));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1.6, 1.0), sprite.scale, 0, 100));
+
+			label.onFirstEnter = () => {
+				label.tweens.play('slideUpLeft');
+				sprite.tweens.play('slideUpLeft');
+				sprite.tweens.play('scaleIn');
+			}
+			label.onLeave = () => {
+				label.tweens.play('slideDownRight');
+				sprite.tweens.play('slideDownRight');
+				sprite.tweens.play('scaleOut');
+			}
+			let gameButton = new GameButton(sprite, label);
+
+			animationDelay += 30;
+			startY += 150;
+			this.levelSelectButton.push(gameButton);
+		}
 	}
-
-
 }
