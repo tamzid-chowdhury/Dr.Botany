@@ -14,28 +14,20 @@ import Color from "../../Wolfie2D/Utils/Color";
 import InGameUILayer from "../Layers/InGameUILayer"
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import { UIEvents, UILayers, ButtonNames } from "../Utils/Enums";
+import GameLevel from "./GameLevel";
 
-export default class LevelZero extends Scene {
-    center: Vec2 = this.viewport.getCenter();
-    defaultFont: string = 'Round';
+export default class LevelZero extends GameLevel {
     bg: Sprite; 
 
-    //initialize layers 
-    primary: Layer; 
-    background: Layer; 
-    inGameUILayer: InGameUILayer;
-    cursorLayer: Layer; 
-    cursor2Layer: Layer; 
-
     loadScene(): void {
+        super.loadScene()
         this.load.image("background", "assets/canvas.png");
-        this.load.image("temp_cursor", "assets/cursor.png");
     }
 
     startScene(): void {
+        super.startScene()
         this.background = this.addUILayer("background");
-        this.inGameUILayer = new InGameUILayer(this, this.center,this.defaultFont);
-        this.bg = this.add.sprite("background", "background");
+        
     }
 
     updateScene(deltaT: number){

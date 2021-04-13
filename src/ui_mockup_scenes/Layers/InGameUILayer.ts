@@ -31,6 +31,7 @@ export default class InGameUI {
         this.position = position.clone(); 
         this.layer = scene.addUILayer(UILayers.INGAMEUILAYER)
         this.layer.setHidden(false); 
+        this.createWeaponInventoryLayer();
 
     }
 
@@ -43,7 +44,18 @@ export default class InGameUI {
     }
 
     createWeaponInventoryLayer(): void{
-
+        const weaponSlot1 = <Button>this.scene.add.uiElement(UIElementType.BUTTON, UILayers.INGAMEUILAYER, {position: new Vec2(50,30), text:'x3'});
+        const weaponSlot2 = <Button>this.scene.add.uiElement(UIElementType.BUTTON, UILayers.INGAMEUILAYER, {position: new Vec2(120,30), text:'x5'});
+        weaponSlot1.setHAlign("right")
+        weaponSlot1.setVAlign("bottom")
+        weaponSlot1.fontSize = 14;
+        weaponSlot1.size.set(60,40)
+        weaponSlot2.setHAlign("right")
+        weaponSlot2.setVAlign("bottom")
+        weaponSlot2.fontSize = 14;
+        weaponSlot2.size.set(60,40)
+        weaponSlot1.backgroundColor = new Color(0,0,0)
+        weaponSlot2.backgroundColor = new Color(0,0,0)
     }
 
     createItemsInventoryLayer(): void{ 
