@@ -231,10 +231,8 @@ export default class MainMenu extends Scene {
 
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {
                 this.setVisibleLayer(UILayers.LEVEL_SELECT)
-                for (let button of this.levelSelectLayer.levelSelectButton) {
-                    button.label.tweens.play('slideXFadeIn')
-                    button.sprite.tweens.play('spriteSlideXFadeIn')
-                }
+                this.levelSelectLayer.enbleButtons();
+                
                 this.backButton.label.active = true;
                 this.backButton.label.tweens.play('slideXFadeIn')
                 this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
@@ -263,6 +261,7 @@ export default class MainMenu extends Scene {
 
             if (event.type == UIEvents.SHOW_MAIN_MENU) {
                 this.setVisibleLayer(UILayers.MAIN_MENU);
+                this.levelSelectLayer.disbleButtons();
                 this.backButton.label.active = false;
                 this.backButton.label.textColor.a = 0;
                 this.backButton.sprite.alpha = 0;
