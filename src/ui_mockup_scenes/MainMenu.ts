@@ -99,8 +99,8 @@ export default class MainMenu extends Scene {
         backSprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
 		backSprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 		backSprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-        backSprite.tweens.add('scaleIn', Tweens.scaleIn(backSprite.scale, new Vec2(4,4), 0, 100));
-        backSprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(4,4), backSprite.scale, 0, 100));
+        backSprite.tweens.add('scaleIn', Tweens.scaleIn(backSprite.scale, new Vec2(3.8,3.8), 0, 100));
+        backSprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), backSprite.scale, 0, 100));
 
         backLabel.onFirstEnter = () => {
 			backLabel.tweens.play('slideUpLeft');
