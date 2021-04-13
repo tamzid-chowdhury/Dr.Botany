@@ -4,7 +4,7 @@
      "export":
         {
          "format":"json",
-         "target":"levelZero.json"
+         "target":"level_zero.json"
         }
     },
  "height":32,
@@ -127,11 +127,35 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/tile_wip.json"
+         "columns":4,
+         "imageheight":64,
+         "imagewidth":64,
+         "margin":0,
+         "name":"tile_wip",
+         "spacing":0,
+         "tilecount":16,
+         "tiledversion":"1.4.3",
+         "tileheight":16,
+         "tilewidth":16,
+         "type":"tileset",
+         "version":1.4,
+         "image":"tile_wip.png"
         }, 
         {
          "firstgid":17,
-         "source":"..\/objects.json"
+         "columns":4,
+         "imageheight":64,
+         "imagewidth":64,
+         "margin":0,
+         "name":"objects",
+         "spacing":0,
+         "tilecount":16,
+         "tiledversion":"1.4.3",
+         "tileheight":16,
+         "tilewidth":16,
+         "type":"tileset",
+         "version":1.4,
+         "image":"objects.png"
         }],
  "tilewidth":16,
  "type":"map",

@@ -15,23 +15,57 @@ import InGameUILayer from "../Layers/InGameUILayer"
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import { UIEvents, UILayers, ButtonNames } from "../Utils/Enums";
 import GameLevel from "./GameLevel";
+import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 
 export default class LevelZero extends GameLevel {
-
-
+    private player: Sprite;
+    collidables: OrthogonalTilemap;
+    tilemapSize: Vec2;
     loadScene(): void {
-        super.loadScene()
-        // this.load.tilemap("level0", "assets/tilemaps/level_zero/level_zero.json");
+        this.load.image("player", "assets/dr_botany_wip.png");
+        super.loadScene();
+        this.load.tilemap("level_zero", "assets/tilemaps/level_zero/level_zero.json");
     }
 
     startScene(): void {
         super.startScene()
-        // let tilemapLayers = this.add.tilemap("level0");
-        
+        let tilemapLayers = this.add.tilemap("level_zero");
+        this.collidables = <OrthogonalTilemap>tilemapLayers[4].getItems()[0];
+        this.tilemapSize = this.collidables.size;
+        let origin = this.viewport.getOrigin();
+        this.viewport.setBounds(origin.x, origin.y, this.tilemapSize.x, this.tilemapSize.y);
+        // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
+        this.viewport.setSize( 480, 270);
+        this.addLayer("primary", 10);
+        this.initializePlayer();
+        this.viewport.follow(this.player);
     }
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
         
+    }
+
+    initializePlayer(): void {
+        // Create the inventory
+        // let inventory = new InventoryManager(this, 2, "inventorySlot", new Vec2(16, 16), 4);
+        // let startingWeapon = this.createWeapon("knife");
+        // inventory.addItem(startingWeapon);
+
+        // Create the player
+        // this.player = this.add.animatedSprite("player", "primary");
+        this.player = this.add.sprite("player", "primary");
+        this.player.scale = new Vec2(1.5, 1.5);
+        this.player.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2);
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
+        // this.player.addAI(PlayerController,
+        //     {
+        //         speed: 100,
+        //         inventory: inventory,
+        //         items: this.items
+        //     });
+        // this.player.animation.play("IDLE");
     }
 }

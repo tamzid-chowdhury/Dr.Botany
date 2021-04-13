@@ -112,7 +112,7 @@ export default class GameLevel extends Scene {
     initializeCursor(): void { 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
-        this.reticle.scale = new Vec2(2, 2);
+        this.reticle.scale = new Vec2(0.8, 0.8);
         // this.cursor.visible = false;
         // this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
         
