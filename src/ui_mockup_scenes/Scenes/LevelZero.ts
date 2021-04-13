@@ -17,16 +17,14 @@ import { UIEvents, UILayers, ButtonNames } from "../Utils/Enums";
 import GameLevel from "./GameLevel";
 
 export default class LevelZero extends GameLevel {
-    bg: Sprite; 
+
 
     loadScene(): void {
         super.loadScene()
-        this.load.image("background", "assets/canvas.png");
     }
 
     startScene(): void {
         super.startScene()
-        this.background = this.addUILayer("background");
         
     }
 

@@ -47,7 +47,7 @@ export default class default_scene extends Scene {
         healthBar.size.set(950,40)
         healthBar.backgroundColor = new Color(255,0,0)
 
-        const growthBar = <Button>this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(1880,480), text:'Growth'});
+        const growthBar = <Button>this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(1650,480), text:'Growth'});
         growthBar.size.set(50,450)
         growthBar.backgroundColor = new Color(0,255,0)
 

@@ -33,6 +33,14 @@ export enum UILayers {
 	INGAMEUILAYER = "InGameUILayer"
 }
 
+export enum InGameUILayers {
+	HEALTH_BAR = "HEALTH_BAR",
+	GROWTH_BAR = "GROWTH_BAR",
+	MOOD_BAR = "MOOD_BAR",
+	WEAPONS_INVENTORY = "WEAPONS_INVENTORY",
+	ITEMS_INVENTORY = "ITEMS_INVENTORY"
+}
+
 export enum ButtonNames {
 	START = "Start",
 	LEVEL_SELECT = "Level Select",
