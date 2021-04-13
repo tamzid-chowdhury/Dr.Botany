@@ -18,6 +18,7 @@ import GameLevel from "./GameLevel";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import PlayerController from "../Controllers/PlayerController";
 
 export default class LevelZero extends GameLevel {
     private player: Sprite;
@@ -37,10 +38,11 @@ export default class LevelZero extends GameLevel {
         let origin = this.viewport.getOrigin();
         this.viewport.setBounds(origin.x, origin.y, this.tilemapSize.x, this.tilemapSize.y);
         // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
-        this.viewport.setSize( 480, 270);
+        this.viewport.setSize(480, 270);
         this.addLayer("primary", 10);
         this.initializePlayer();
         this.viewport.follow(this.player);
+        this.viewport.setSmoothingFactor(6);
     }
 
     updateScene(deltaT: number){
@@ -60,12 +62,13 @@ export default class LevelZero extends GameLevel {
         this.player.scale = new Vec2(1.5, 1.5);
         this.player.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
-        // this.player.addAI(PlayerController,
-        //     {
-        //         speed: 100,
-        //         inventory: inventory,
-        //         items: this.items
-        //     });
+        this.player.addAI(PlayerController,
+            {
+                speed: 100,
+                // inventory: inventory,
+                // inventory: inventory,
+                // items: this.items
+            });
         // this.player.animation.play("IDLE");
     }
 }
