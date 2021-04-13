@@ -11,11 +11,11 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import { UILayers, ButtonNames, InGameUILayers } from "../Utils/Enums";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
-import WeaponsInventoryLayer from "./InGameUILayers/WeaponsInventoryLayer";
-import ItemsInventoryLayer from "./InGameUILayers/ItemsInventoryLayer"
-import HealthBarLayer from "./InGameUILayers/HealthBarLayer"
-import GrowthBarLayer from "./InGameUILayers/GrowthBarLayer"
-import MoodBarLayer from "./InGameUILayers/MoodBarLayer"
+import WeaponsInventoryLayer from "./InGameUI/WeaponsInventoryLayer";
+import ItemsInventoryLayer from "./InGameUI/ItemsInventoryLayer"
+import HealthBarLayer from "./InGameUI/HealthBarLayer"
+import GrowthBarLayer from "./InGameUI/GrowthBarLayer"
+import MoodBarLayer from "./InGameUI/MoodBarLayer"
 
 export default class InGameUI {
     layer: UILayer; 

@@ -21,10 +21,12 @@ export default class LevelZero extends GameLevel {
 
     loadScene(): void {
         super.loadScene()
+        // this.load.tilemap("level0", "assets/tilemaps/level_zero/level_zero.json");
     }
 
     startScene(): void {
         super.startScene()
+        // let tilemapLayers = this.add.tilemap("level0");
         
     }
 

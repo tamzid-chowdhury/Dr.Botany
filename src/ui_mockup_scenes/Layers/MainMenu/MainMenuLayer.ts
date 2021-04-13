@@ -1,14 +1,14 @@
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import { UILayers, ButtonNames } from "../Utils/Enums";
-import * as Palette from "../Utils/Colors";
-import * as Tweens from "../Utils/Tweens";
-import UIElement from "../../Wolfie2D/Nodes/UIElement";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import GameButton from "../Classes/GameButton";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import UILayer from "../../../Wolfie2D/Scene/Layers/UILayer";
+import Scene from "../../../Wolfie2D/Scene/Scene";
+import { UILayers, ButtonNames } from "../../Utils/Enums";
+import * as Palette from "../../Utils/Colors";
+import * as Tweens from "../../Utils/Tweens";
+import UIElement from "../../../Wolfie2D/Nodes/UIElement";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
+import GameButton from "../../Classes/GameButton";
 
 export class MainMenuLayer {
 	layer: UILayer;
