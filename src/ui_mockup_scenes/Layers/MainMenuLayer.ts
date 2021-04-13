@@ -60,8 +60,8 @@ export class MainMenuLayer {
 			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
 			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(4,4), 0, 100));
-			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(4,4), sprite.scale, 0, 100));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(3.8,3.8), 0, 100));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), sprite.scale, 0, 100));
 
 			label.onFirstEnter = () => {
 				label.tweens.play('slideUpLeft');

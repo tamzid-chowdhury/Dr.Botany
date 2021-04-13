@@ -41,7 +41,7 @@ export class BackgroundLayer {
 		this.logo.tweens.add('scaleIn', Tweens.scaleIn(this.logo.scale, endScale));
 		this.logo.tweens.add('slideUpShrink', Tweens.slideUpShrink(endScale, this.logo.position.y, position.y));
 
-		this.startText = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.BACKGROUND, { position: new Vec2(position.x, position.y + 120), text: "Click to Begin!", size: 64 });
+		this.startText = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.BACKGROUND, { position: new Vec2(position.x, position.y + 120), text: "Click to Begin!", size: 45 });
         this.startText.textColor = Palette.transparent();
         this.startText.font = this.font;
         this.startText.alpha = 0;
