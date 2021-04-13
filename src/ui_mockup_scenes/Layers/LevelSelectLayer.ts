@@ -47,9 +47,9 @@ export class LevelSelectLayer {
 		let endX = this.position.x;
 		let animationDelay = 0;
 		for(let i = 0; i < 4; i++) {
-			let sprite = this.scene.add.sprite("temp_button", UILayers.LEVEL_SELECT);
+			let sprite = this.scene.add.sprite("spring", UILayers.LEVEL_SELECT);
 			sprite.position.set(startX, startY);
-			sprite.scale = new Vec2(7,3);
+			sprite.scale = new Vec2(1.5,0.9);
 			sprite.alpha = 0;
 
 			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(startX, startY), text: `${levelSelectionArray[i]}`, size: 24 });
@@ -90,7 +90,7 @@ export class LevelSelectLayer {
 			let gameButton = new GameButton(sprite, label);
 
 			animationDelay += 30;
-			startY += 130;
+			startY += 150;
 			this.levelSelectButton.push(gameButton);
 		}
 		startX = this.position.x + 300;

@@ -57,6 +57,7 @@ export default class MainMenu extends Scene {
         this.load.image("temp_cursor", "assets/cursor.png");
         this.load.image("temp_button", "assets/temp_button.png");
         this.load.image("cursor_clicked", "assets/cursor_clicked.png")
+        this.load.image("spring", "assets/LevelSelectionButtons/spring.png")
     }
 
     setDropShadow(pos: Vec2) {
