@@ -78,6 +78,10 @@ export class MainMenuLayer {
 			animationDelay += 30;
 			startY += 100;
 			this.menuButtons.push(gameButton);
+
+
+
+	
 		}
 	}
 }

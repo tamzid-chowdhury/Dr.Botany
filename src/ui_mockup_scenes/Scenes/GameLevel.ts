@@ -21,6 +21,7 @@ import Game from "../../Wolfie2D/Loop/Game";
 export default class GameLevel extends Scene {
     center: Vec2 = this.viewport.getCenter();
     defaultFont: string = 'Round';
+    pauseScreenToggle: boolean = true; 
 
     //initialize layers 
     primary: Layer; 
@@ -58,7 +59,23 @@ export default class GameLevel extends Scene {
         super.updateScene(deltaT);
         this.updateCursorMovement();
         
+        if(Input.isKeyJustPressed("p")){
+            if(this.pauseScreenToggle){
+                for (let button of this.pauseScreenLayer.menuButtons) {
+                    button.label.tweens.play('slideXFadeIn')
+                    button.sprite.tweens.play('spriteSlideXFadeIn')
+                }
+                this.pauseScreenToggle = false; 
+            }
+            else{
+                for (let button of this.pauseScreenLayer.menuButtons) {
+                    button.label.tweens.play('slideXFadeOut')
+                    button.sprite.tweens.play('spriteSlideXFadeOut')
+                }
+                this.pauseScreenToggle = true; 
+            }
 
+        }
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
@@ -80,6 +97,10 @@ export default class GameLevel extends Scene {
             }
             
 
+        }
+
+        for (let name in ButtonNames) {
+            let myName: ButtonNames = ButtonNames[name as keyof typeof ButtonNames];
         }
 
    
@@ -105,20 +126,4 @@ export default class GameLevel extends Scene {
     }
 
 
-    togglePauseScreen(): void {
-        if(this.pauseScreenLayer.layer.isHidden){
-            for (let button of this.pauseScreenLayer.menuButtons) {
-                this.pauseScreenLayer.layer.setHidden(false);
-                button.label.tweens.play('slideXFadeIn')
-                button.sprite.tweens.play('spriteSlideXFadeIn')
-            }
-        }
-        else{
-            for (let button of this.pauseScreenLayer.menuButtons) {
-                this.pauseScreenLayer.layer.setHidden(true);
-                button.label.tweens.play('slideXFadeOut')
-                button.sprite.tweens.play('spriteSlideXFadeOut')
-            }
-        }
-    }
 }
