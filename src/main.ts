@@ -1,10 +1,6 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./ui_mockup_scenes/MainMenu";
-import Registry from "./Wolfie2D/Registry/RegistryManager";
-import InGameUI from "./ui_mockup_scenes/InGameUI";
-import HelpScreen from "./ui_mockup_scenes/HelpScreen";
-import LevelSelection from "./ui_mockup_scenes/LevelSelection";
-import Controls from "./ui_mockup_scenes/Controls";
+
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){

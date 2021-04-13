@@ -52,11 +52,11 @@ export default class MainMenu extends Scene {
 
 
     loadScene(): void {
-        this.load.image("logo", "assets/logo.png");
-        this.load.image("background", "assets/canvas.png");
-        this.load.image("temp_cursor", "assets/cursor.png");
-        this.load.image("temp_button", "assets/temp_button.png");
-        this.load.image("cursor_clicked", "assets/cursor_clicked.png")
+        this.load.image("logo", "assets/misc/logo.png");
+        this.load.image("background", "assets/misc/canvas.png");
+        this.load.image("temp_cursor", "assets/misc/cursor.png");
+        this.load.image("temp_button", "assets/ui_art/button.png");
+        this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
         this.load.image("spring", "assets/LevelSelectionButtons/spring.png")
     }
 

@@ -32,20 +32,21 @@ export default class GameLevel extends Scene {
     pauseScreenLayer: PauseScreenLayer; 
 
     //initialize sprites
-    cursor: Sprite;
-    cursor2: Sprite;
-
+    // cursor: Sprite;
+    // cursor2: Sprite;
+    reticle: Sprite;
     loadScene(): void {
-        this.load.image("temp_cursor", "assets/cursor.png");
-        this.load.image("temp_button", "assets/temp_button.png");
-        this.load.image("cursor_clicked", "assets/cursor_clicked.png")
+        this.load.image("temp_cursor", "assets/misc/cursor.png");
+        this.load.image("reticle", "assets/misc/reticle.png");
+        this.load.image("temp_button", "assets/ui_art/button.png");
+        this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
     }
 
     startScene(): void {
         this.inGameUILayer = new InGameUILayer(this, this.center,this.defaultFont);
         this.pauseScreenLayer = new PauseScreenLayer(this, this.center, this.defaultFont)
     
-        this.initializeCursor()
+        this.initializeCursor();
 
 
         this.receiver.subscribe(GameEventType.MOUSE_MOVE);
@@ -82,18 +83,20 @@ export default class GameLevel extends Scene {
 
             
             if (event.type === GameEventType.MOUSE_MOVE) {
-                this.cursor.visible = true;
+                this.reticle.visible = true;
+                // this.cursor.visible = true;
                 this.receiver.unsubscribe(GameEventType.MOUSE_MOVE);
             }
 
             if(event.type === GameEventType.MOUSE_DOWN) {
-                this.cursor.visible = false;
-                this.cursor2.visible = true;
+
+                // this.cursor.visible = false;
+                // this.cursor2.visible = true;
             }
             
             if(event.type === GameEventType.MOUSE_UP) {
-                this.cursor.visible = true;
-                this.cursor2.visible = false;
+                // this.cursor.visible = true;
+                // this.cursor2.visible = false;
             }
             
 
@@ -108,21 +111,29 @@ export default class GameLevel extends Scene {
 
     initializeCursor(): void { 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
-        this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
+        this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
+        this.reticle.scale = new Vec2(2, 2);
+        // this.cursor.visible = false;
+        // this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
         
-        this.cursor.scale = new Vec2(0.8, 0.8)
-        this.cursor.visible = false;
+        // this.cursor.scale = new Vec2(0.8, 0.8)
+        // this.cursor.visible = false;
 
         
-        this.cursor2 = this.add.sprite("cursor_clicked", UILayers.CURSOR);
-        this.cursor2.scale = new Vec2(0.8, 0.8)
-        this.cursor2.visible = false;
+        // this.cursor2 = this.add.sprite("cursor_clicked", UILayers.CURSOR);
+        // this.cursor2.scale = new Vec2(0.8, 0.8)
+        // this.cursor2.visible = false;
+
+
     }
+
+
 
     updateCursorMovement(): void {
         let mousePos = Input.getMousePosition();
-        this.cursor.position.set(mousePos.x, mousePos.y);
-        this.cursor2.position.set(mousePos.x, mousePos.y);
+        this.reticle.position.set(mousePos.x, mousePos.y);
+        // this.cursor.position.set(mousePos.x, mousePos.y);
+        // this.cursor2.position.set(mousePos.x, mousePos.y);
     }
 
 

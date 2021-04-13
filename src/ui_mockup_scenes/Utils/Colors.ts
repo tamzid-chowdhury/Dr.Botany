@@ -20,6 +20,10 @@ export function black(): Color {
 	return new Color(0, 0, 0, 1);
 }
 
+export function white(): Color {
+	return new Color(255, 255, 255, 1);
+}
+
 
 
 
