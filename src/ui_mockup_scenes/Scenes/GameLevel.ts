@@ -19,7 +19,7 @@ import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Game from "../../Wolfie2D/Loop/Game";
 
 export default class GameLevel extends Scene {
-    center: Vec2 = this.viewport.getCenter();
+    center: Vec2 = new Vec2(960,540); //we need to figure out a way to specify this from options
     defaultFont: string = 'Round';
     pauseScreenToggle: boolean = true; 
 
