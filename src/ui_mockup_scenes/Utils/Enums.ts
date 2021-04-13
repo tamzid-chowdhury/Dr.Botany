@@ -30,7 +30,8 @@ export enum UILayers {
 	OPTIONS = "options",
 	HELP = "help",
 	CURSOR = "Cursor",
-	INGAMEUILAYER = "InGameUILayer"
+	INGAMEUILAYER = "InGameUILayer",
+	PAUSE_SCREEN = "PAUSE_SCREEN"
 }
 
 export enum InGameUILayers {
@@ -47,4 +48,11 @@ export enum ButtonNames {
 	CONTROLS = "Controls",
 	OPTIONS = "Options",
 	HELP = "Help"
+}
+
+export enum PauseButtonNames {
+	RESUME = "Resume",
+	CONTROLS = "Controls",
+	OPTIONS = "Options",
+	QUIT = "Quit"
 }

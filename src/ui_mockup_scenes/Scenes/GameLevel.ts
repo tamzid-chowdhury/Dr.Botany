@@ -15,6 +15,8 @@ import InGameUILayer from "../Layers/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import { UIEvents, UILayers, ButtonNames } from "../Utils/Enums";
+import PauseScreenLayer from "../Layers/PauseScreenLayer";
+import Game from "../../Wolfie2D/Loop/Game";
 
 export default class GameLevel extends Scene {
     center: Vec2 = this.viewport.getCenter();
@@ -26,6 +28,7 @@ export default class GameLevel extends Scene {
     inGameUILayer: InGameUILayer;
     cursorLayer: Layer; 
     cursor2Layer: Layer; 
+    pauseScreenLayer: PauseScreenLayer; 
 
     //initialize sprites
     cursor: Sprite;
@@ -33,18 +36,22 @@ export default class GameLevel extends Scene {
 
     loadScene(): void {
         this.load.image("temp_cursor", "assets/cursor.png");
+        this.load.image("temp_button", "assets/temp_button.png");
         this.load.image("cursor_clicked", "assets/cursor_clicked.png")
     }
 
     startScene(): void {
         this.inGameUILayer = new InGameUILayer(this, this.center,this.defaultFont);
-
+        this.pauseScreenLayer = new PauseScreenLayer(this, this.center, this.defaultFont)
+    
         this.initializeCursor()
 
 
         this.receiver.subscribe(GameEventType.MOUSE_MOVE);
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
+        this.receiver.subscribe(GameEventType.KEY_DOWN);
+
     }
 
     updateScene(deltaT: number){
@@ -71,9 +78,11 @@ export default class GameLevel extends Scene {
                 this.cursor.visible = true;
                 this.cursor2.visible = false;
             }
+            
+
         }
 
-        
+   
     }
 
     initializeCursor(): void { 
@@ -93,5 +102,23 @@ export default class GameLevel extends Scene {
         let mousePos = Input.getMousePosition();
         this.cursor.position.set(mousePos.x, mousePos.y);
         this.cursor2.position.set(mousePos.x, mousePos.y);
+    }
+
+
+    togglePauseScreen(): void {
+        if(this.pauseScreenLayer.layer.isHidden){
+            for (let button of this.pauseScreenLayer.menuButtons) {
+                this.pauseScreenLayer.layer.setHidden(false);
+                button.label.tweens.play('slideXFadeIn')
+                button.sprite.tweens.play('spriteSlideXFadeIn')
+            }
+        }
+        else{
+            for (let button of this.pauseScreenLayer.menuButtons) {
+                this.pauseScreenLayer.layer.setHidden(true);
+                button.label.tweens.play('slideXFadeOut')
+                button.sprite.tweens.play('spriteSlideXFadeOut')
+            }
+        }
     }
 }
