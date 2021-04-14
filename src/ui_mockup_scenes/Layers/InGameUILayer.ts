@@ -19,7 +19,7 @@ import MoodBarLayer from "./InGameUI/MoodBarLayer"
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 
 export default class InGameUI {
-    layer: UILayer; 
+    layer: Layer; 
     scene: Scene;
     center: Vec2;
     viewPort: Viewport;
@@ -42,7 +42,7 @@ export default class InGameUI {
         console.log(viewport.getView());
         console.log(center);
 
-        this.layer = scene.addUILayer(UILayers.INGAMEUILAYER)
+        this.layer = scene.addLayer(InGameUILayers.INGAMEUILAYER,15)
         this.layer.setHidden(false); 
 
         this.weaponsInventoryLayer = new WeaponsInventoryLayer(this.scene, this.font, center);

@@ -64,7 +64,6 @@ export default class GameLevel extends Scene {
                     //button.label.tweens.play('slideXFadeIn')
                     //button.sprite.tweens.play('spriteSlideXFadeIn')
                     button.label.textColor.a = 1; 
-            
                 }
                 this.pauseScreenToggle = false; 
             }
@@ -84,7 +83,7 @@ export default class GameLevel extends Scene {
 
             
             if (event.type === GameEventType.MOUSE_MOVE) {
-                //this.reticle.visible = true;
+                this.reticle.visible = true;
                 // this.cursor.visible = true;
                 this.receiver.unsubscribe(GameEventType.MOUSE_MOVE);
             }
@@ -110,8 +109,8 @@ export default class GameLevel extends Scene {
 
     initializeCursor(): void { 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
-        //this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
-        //this.reticle.scale = new Vec2(0.8, 0.8);
+        this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
+        this.reticle.scale = new Vec2(0.8, 0.8);
         // this.cursor.visible = false;
         // this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
         

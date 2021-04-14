@@ -5,12 +5,15 @@ import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import UIElement from "../../../Wolfie2D/Nodes/UIElement";
 import Button from "../../../Wolfie2D/Nodes/UIElements/Button";
+import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../../Wolfie2D/Scene/Layer";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Color from "../../../Wolfie2D/Utils/Color";
 import { UILayers, ButtonNames, InGameUILayers } from "../../Utils/Enums";
 import UILayer from "../../../Wolfie2D/Scene/Layers/UILayer";
+import LevelZero from "../../Scenes/LevelZero";
+import GameButton from "../../Classes/GameButton"
 
 export default class WeaponsInventoryLayer {
     layer: UILayer; 
@@ -30,17 +33,25 @@ export default class WeaponsInventoryLayer {
     }
 
     initializeWeaponInventory(): void{
-        const weaponSlot1 = <Button>this.scene.add.uiElement(UIElementType.BUTTON, UILayers.INGAMEUILAYER, {position: new Vec2(10,10), text:'x3'});
-        const weaponSlot2 = <Button>this.scene.add.uiElement(UIElementType.BUTTON, UILayers.INGAMEUILAYER, {position: new Vec2(30,10), text:'x5'});
-        weaponSlot1.setHAlign("right")
-        weaponSlot1.setVAlign("bottom")
-        weaponSlot1.fontSize = 14;
+
+        let weaponBox1 = this.scene.add.sprite("weaponslot1",InGameUILayers.WEAPONS_INVENTORY)
+        weaponBox1.scale = new Vec2(.11, .11);
+        weaponBox1.position.set(15,15);
+
+        const weaponSlot1 = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.INGAMEUILAYER, {position: new Vec2(25,24), text:'x3'});
+        weaponSlot1.fontSize = 18;
         weaponSlot1.size.set(60,40)
-        weaponSlot2.setHAlign("right")
-        weaponSlot2.setVAlign("bottom")
-        weaponSlot2.fontSize = 14;
+        weaponSlot1.backgroundColor = Color.TRANSPARENT;
+
+        
+
+        let weaponBox2 = this.scene.add.sprite("weaponslot2",InGameUILayers.WEAPONS_INVENTORY)
+        weaponBox2.scale = new Vec2(.11, .11);
+        weaponBox2.position.set(45,15);
+      
+        const weaponSlot2 = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.INGAMEUILAYER, {position: new Vec2(45,24), text:'x5'});
+        weaponSlot2.fontSize = 18;
         weaponSlot2.size.set(60,40)
-        weaponSlot1.backgroundColor = new Color(0,0,0)
-        weaponSlot2.backgroundColor = new Color(0,0,0)
+        weaponSlot2.backgroundColor = Color.TRANSPARENT;
     }
 }

@@ -29,6 +29,10 @@ export default class LevelZero extends GameLevel {
         this.load.image("player", "assets/dr_botany_wip.png");
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
+
+        
+        this.load.image("weaponslot1", "assets/ui_art/weaponslot1.png")
+        this.load.image("weaponslot2", "assets/ui_art/weaponslot2.png")
     }
 
     startScene(): void {
