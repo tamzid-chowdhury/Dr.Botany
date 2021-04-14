@@ -140,14 +140,12 @@ export default class GameLevel extends Scene {
 
     protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>, scale: number): void {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
-        console.log(tilePos.x + " Tile pos x")
-        console.log(tilePos.y + "tilePos Y")
+        
         enemy.position.set(tilePos.x, tilePos.y);
         enemy.scale.set(scale, scale);
         enemy.addPhysics();
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
-        console.log(enemy.active)
         // enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
     }
 
