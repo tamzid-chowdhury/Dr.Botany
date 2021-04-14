@@ -119,7 +119,7 @@ export default class TilemapFactory {
                     }
                 }
             } else {
-
+                
                 let isNavmeshPoints = false;
                 let navmeshName;
                 let edges;

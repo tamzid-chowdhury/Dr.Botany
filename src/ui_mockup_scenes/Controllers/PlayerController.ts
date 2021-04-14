@@ -35,7 +35,6 @@ export default class PlayerController implements BattlerAI {
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-		// this.owner.rotation = 3.14 / 4;
         this.direction = Vec2.ZERO;
         this.lookDirection = Vec2.ZERO;
         this.speed = options.speed;
@@ -63,18 +62,19 @@ export default class PlayerController implements BattlerAI {
         //     // Player is idle
         //     // this.owner.animation.playIfNotAlready("IDLE", true);
         // }
-		this.owner._velocity.x = this.direction.x * this.speed;
-		this.owner._velocity.y = this.direction.y * this.speed;
+		this.owner._velocity.x = this.direction.x;
+		this.owner._velocity.y = this.direction.y;
+		this.owner._velocity.normalize();
+		this.owner._velocity.mult(new Vec2(this.speed, this.speed))
 		this.owner.move(this.owner._velocity.scaled(deltaT));
 		// Get the unit vector in the look direction
-		if(Input.getMousePosition().x > this.viewHalfSize.x) {
+		if(Input.getMousePosition().x > this.owner.position.x) {
 			this.owner.invertX = true;
 
 			// this.lookDirection = new Vec2(3.14 / 2, 0)
 		}
 		else {
 			this.owner.invertX = false;
-
 			// this.lookDirection = new Vec2(-3.14 / 2, 0)
 
 		}

@@ -226,7 +226,35 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_START) {
-                this.sceneManager.changeToScene(LevelZero, {});
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemy", "materials"],
+                        collisions:
+                        [
+                            /*
+                                Init the next scene with physics collisions:
+
+                                        ground  player  enemy   coin
+                                ground    No      --      --     --
+                                player   Yes      No      --     --
+                                enemy    Yes      No      No     --
+                                coin      No     Yes      No     No
+
+                                Each layer becomes a number. In this case, 4 bits matter for each
+
+                                ground: self - 0001, collisions - 0110
+                                player: self - 0010, collisions - 1001
+                                enemy:  self - 0100, collisions - 0001
+                                coin:   self - 1000, collisions - 0010
+                            */
+                            [0, 1, 1, 0],
+                            [1, 0, 0, 1],
+                            [1, 0, 0, 0],
+                            [0, 1, 0, 0]
+                        ]
+                    }
+                }
+                this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
             }
 
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {

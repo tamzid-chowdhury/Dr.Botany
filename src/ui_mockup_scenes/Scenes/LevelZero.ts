@@ -27,13 +27,19 @@ export default class LevelZero extends GameLevel {
     loadScene(): void {
         this.load.image("player", "assets/dr_botany_wip.png");
         super.loadScene();
-        this.load.tilemap("level_zero", "assets/tilemaps/level_zero/level_zero.json");
+        this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
     }
 
     startScene(): void {
         super.startScene()
         let tilemapLayers = this.add.tilemap("level_zero");
-        this.collidables = <OrthogonalTilemap>tilemapLayers[4].getItems()[0];
+        for(let layer of tilemapLayers) {
+            let obj = layer.getItems()[0];
+            if(obj.isCollidable) {
+                this.collidables = <OrthogonalTilemap>obj;
+            }
+        }
+        // this.collidables = <OrthogonalTilemap>tilemapLayers[4].getItems()[0];
         this.tilemapSize = this.collidables.size;
         let origin = this.viewport.getOrigin();
         this.viewport.setBounds(origin.x, origin.y, this.tilemapSize.x, this.tilemapSize.y);
@@ -42,12 +48,12 @@ export default class LevelZero extends GameLevel {
         this.addLayer("primary", 10);
         this.initializePlayer();
         this.viewport.follow(this.player);
-        this.viewport.setSmoothingFactor(6);
+        this.viewport.setSmoothingFactor(10);
     }
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
-        
+
     }
 
     initializePlayer(): void {
@@ -61,14 +67,12 @@ export default class LevelZero extends GameLevel {
         this.player = this.add.sprite("player", "primary");
         this.player.scale = new Vec2(1.5, 1.5);
         this.player.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
-        this.player.addAI(PlayerController,
-            {
-                speed: 100,
-                // inventory: inventory,
-                // inventory: inventory,
-                // items: this.items
-            });
-        // this.player.animation.play("IDLE");
+
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 2)));
+        this.player.colliderOffset.set(2, 10);
+        this.player.addAI(PlayerController, {tilemap: "Main", speed: 100,});
+
+        // Add triggers on colliding with coins or coinBlocks
+        this.player.setGroup("player");
     }
 }
