@@ -30,9 +30,14 @@ export default class LevelZero extends GameLevel {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
 
-        
+        this.load.image("itemslot1", "assets/ui_art/itemslot1.png")
+        this.load.image("itemslot2", "assets/ui_art/itemslot2.png")
+        this.load.image("itemslot3", "assets/ui_art/itemslot3.png")
+
         this.load.image("weaponslot1", "assets/ui_art/weaponslot1.png")
         this.load.image("weaponslot2", "assets/ui_art/weaponslot2.png")
+        this.load.image("healthbar", "assets/ui_art/health_bar_wip.png")
+        this.load.image("shovel", "assets/shovel.png")
     }
 
     startScene(): void {

@@ -20,6 +20,7 @@ export default class WeaponsInventoryLayer {
     scene: Scene; 
     font: string;
     center: Vec2;
+
     
     constructor(scene: Scene, font: string, center: Vec2){
         this.scene = scene; 
@@ -53,5 +54,9 @@ export default class WeaponsInventoryLayer {
         weaponSlot2.fontSize = 18;
         weaponSlot2.size.set(60,40)
         weaponSlot2.backgroundColor = Color.TRANSPARENT;
+
+        let shovel = this.scene.add.sprite("shovel",InGameUILayers.WEAPONS_INVENTORY)
+        shovel.scale = new Vec2(.7,.7)
+        shovel.position.set(15,17);
     }
 }
