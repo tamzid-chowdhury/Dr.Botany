@@ -65,7 +65,7 @@ export default class PlayerController implements BattlerAI {
 		this.owner._velocity.mult(new Vec2(this.speed, this.speed));
 		this.owner.move(this.owner._velocity.scaled(deltaT));
 		// Get the unit vector in the look direction
-		if(Input.getMousePosition().x > this.owner.position.x) {
+		if(Input.getGlobalMousePosition().x > this.owner.position.x) {
 			this.owner.invertX = true;
 
 			// this.lookDirection = new Vec2(3.14 / 2, 0)

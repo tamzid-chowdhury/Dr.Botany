@@ -69,7 +69,8 @@ export default class LevelZero extends GameLevel {
         this.viewport.follow(this.player);
         this.viewport.setSmoothingFactor(10);
 
-        this.initializeGameUI()
+        this.initializeGameUI();
+        super.initializeCursor();
         
         
         // addEnemy - params:(SpriteKey, Position, aiOptions, scale)

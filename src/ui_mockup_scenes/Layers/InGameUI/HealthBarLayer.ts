@@ -38,18 +38,20 @@ export default class HealthBarLayer {
        let xOffset =  (this.sprite.size.x/2) + 1;
        let yOffset =  this.center.y - 25;
        this.sprite.position.set(xOffset, yOffset)
-       
+
        this.sprite.scale = new Vec2(0.8,0.8);
 
         // healthBar.position.set(98,260)50,450
 
 
         const backdrop = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.HEALTH_BAR, {position: new Vec2(xOffset+0.5, yOffset + 0.5), text:'HP : 100%'});
+        backdrop.size = this.sprite.size;
         backdrop.font = this.font;
         backdrop.textColor = Palette.black();
         backdrop.fontSize = 24;
 
         const healthBarLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.HEALTH_BAR, {position: new Vec2(xOffset, yOffset), text:'HP : 100%'});
+        healthBarLabel.size = this.sprite.size;
         healthBarLabel.font = this.font;
         healthBarLabel.textColor = Palette.white();
         healthBarLabel.fontSize = 24;

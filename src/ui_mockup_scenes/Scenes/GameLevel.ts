@@ -46,7 +46,7 @@ export default class GameLevel extends Scene {
 
     startScene(): void {
         
-        this.initializeCursor();
+        // this.initializeCursor();
 
         this.receiver.subscribe(GameEventType.MOUSE_MOVE);
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
