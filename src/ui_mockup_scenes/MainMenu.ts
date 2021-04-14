@@ -21,6 +21,10 @@ import { BackgroundLayer } from "./Layers/MainMenu/BackgroundLayer";
 import { ControlsLayer } from "./Layers/MainMenu/ControlsLayer";
 import { HelpLayer } from "./Layers/MainMenu/HelpLayer";
 import { LevelSelectLayer } from "./Layers/MainMenu/LevelSelectLayer";
+import { SpringLevelLayer } from "./Layers/MainMenu/SpringLevelLayer";
+import { SummerLevelLayer } from "./Layers/MainMenu/SummerLevelLayer";
+import { FallLevelLayer } from "./Layers/MainMenu/FallLevelLayer";
+import { WinterLevelLayer } from "./Layers/MainMenu/WinterLevelLayer";
 import { OptionsLayer } from "./Layers/MainMenu/OptionsLayer";
 import MathUtils from "../Wolfie2D/Utils/MathUtils";
 import { GameEventType } from "../Wolfie2D/Events/GameEventType";
@@ -34,6 +38,10 @@ export default class MainMenu extends Scene {
     controlsLayer: ControlsLayer;
     helpLayer: HelpLayer;
     levelSelectLayer: LevelSelectLayer;
+    springLevelLayer: SpringLevelLayer;
+    summerLevelLayer: SummerLevelLayer;
+    fallLevelLayer: FallLevelLayer;
+    winterLevelLayer: WinterLevelLayer;
     optionsLayer: OptionsLayer;
     cursorLayer: Layer;
     cursorLayer2: Layer;
@@ -48,6 +56,7 @@ export default class MainMenu extends Scene {
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
 
     backButton: GameButton;
+    selectLevelBack: GameButton;
 
 
 
@@ -56,8 +65,11 @@ export default class MainMenu extends Scene {
         this.load.image("background", "assets/misc/canvas.png");
         this.load.image("temp_cursor", "assets/misc/cursor.png");
         this.load.image("temp_button", "assets/ui_art/button.png");
-        this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
-        this.load.image("spring", "assets/LevelSelectionButtons/spring.png")
+        this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png");
+        this.load.image("spring", "assets/LevelSelectionButtons/spring.png");
+        this.load.image("summer", "assets/LevelSelectionButtons/summer.png");
+        this.load.image("autumn", "assets/LevelSelectionButtons/autumn.png");
+        this.load.image("winter", "assets/LevelSelectionButtons/winter.png");
     }
 
     setDropShadow(pos: Vec2) {
@@ -126,7 +138,14 @@ export default class MainMenu extends Scene {
         this.controlsLayer = new ControlsLayer(this, this.center, this.defaultFont);
         this.helpLayer = new HelpLayer(this, this.center, this.defaultFont);
         this.levelSelectLayer = new LevelSelectLayer(this, this.center, this.defaultFont);
+        // This is all levels layers
+        this.springLevelLayer = new SpringLevelLayer(this, this.center, this.defaultFont);
+        this.summerLevelLayer = new SummerLevelLayer(this, this.center, this.defaultFont);
+        this.fallLevelLayer = new FallLevelLayer(this, this.center, this.defaultFont);
+        this.winterLevelLayer = new WinterLevelLayer(this, this.center, this.defaultFont);
+
         this.optionsLayer = new OptionsLayer(this, this.center, this.defaultFont);
+
 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
         this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
@@ -232,10 +251,54 @@ export default class MainMenu extends Scene {
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {
                 this.setVisibleLayer(UILayers.LEVEL_SELECT)
                 this.levelSelectLayer.enbleButtons();
-                
+                // these three methods should go away as we assign each levels to buttons
+                this.summerLevelLayer.disableButtons();
+                this.fallLevelLayer.disableButtons();
+                this.winterLevelLayer.disableButtons();
                 this.backButton.label.active = true;
+                this.backButton.label.visible = true;
+                this.backButton.sprite.visible = true;
                 this.backButton.label.tweens.play('slideXFadeIn')
                 this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
+                
+            }
+            if (event.type === UIEvents.CLICKED_SPRING) {
+                this.setVisibleLayer(UILayers.SPRING_LEVELS);
+                this.springLevelLayer.enbleButtons();
+                this.levelSelectLayer.disableButtons();
+
+                this.backButton.label.active = false;
+                this.backButton.label.visible = false;
+                this.backButton.sprite.visible = false;
+            }
+
+            if (event.type === UIEvents.CLICKED_SUMMER) {
+                this.setVisibleLayer(UILayers.SUMMER_LEVELS);
+                this.summerLevelLayer.enbleButtons();
+                this.levelSelectLayer.disableButtons();
+                this.backButton.label.active = false;
+                this.backButton.label.visible = false;
+                this.backButton.sprite.visible = false;
+            }
+
+            if (event.type === UIEvents.CLICKED_FALL) {
+                this.setVisibleLayer(UILayers.FALL_LEVELS);
+                this.fallLevelLayer.enbleButtons();
+                this.levelSelectLayer.disableButtons();
+                
+                this.backButton.label.active = false;
+                this.backButton.label.visible = false;
+                this.backButton.sprite.visible = false;
+            }
+
+            if (event.type === UIEvents.CLICKED_WINTER) {
+                this.setVisibleLayer(UILayers.WINTER_LEVELS);
+                this.winterLevelLayer.enbleButtons();
+                this.levelSelectLayer.disableButtons();
+                
+                this.backButton.label.active = false;
+                this.backButton.label.visible = false;
+                this.backButton.sprite.visible = false;
             }
 
             if (event.type === UIEvents.CLICKED_CONTROLS) {
@@ -261,7 +324,7 @@ export default class MainMenu extends Scene {
 
             if (event.type == UIEvents.SHOW_MAIN_MENU) {
                 this.setVisibleLayer(UILayers.MAIN_MENU);
-                this.levelSelectLayer.disbleButtons();
+                this.levelSelectLayer.disableButtons();
                 this.backButton.label.active = false;
                 this.backButton.label.textColor.a = 0;
                 this.backButton.sprite.alpha = 0;
