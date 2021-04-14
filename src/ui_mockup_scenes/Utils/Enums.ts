@@ -15,7 +15,12 @@ export enum UIEvents {
 	CLICKED_CONTROLS = 'CLICKED_CONTROLS', 
 	CLICKED_OPTIONS = 'CLICKED_OPTIONS',
 	CLICKED_HELP = 'CLICKED_HELP',
-	CLICKED_QUIT = "CLICKED_QUIT"
+	CLICKED_QUIT = "CLICKED_QUIT",
+	CLICKED_SPRING = 'CLICKED_SPRING',
+	CLICKED_SUMMER = 'CLICKED_SUMMER',
+	CLICKED_FALL = 'CLICKED_FALL',
+	CLICKED_WINTER = 'CLICKED_WINTER',
+	CLICKED_BACK_LEVEL = 'CLICKED_BACK_LEVEL'
 }
 
 export enum WindowEvents {
@@ -29,6 +34,10 @@ export enum UILayers {
 	SPLASH_SCREEN = "splashScreen",
 	CONTROLS = "controls",
 	LEVEL_SELECT = "levelSelect",
+	SPRING_LEVELS = "springLevels",
+	SUMMER_LEVELS = "summerLevels",
+	FALL_LEVELS = "fallLevels",
+	WINTER_LEVELS = "winterLevels",
 	OPTIONS = "options",
 	HELP = "help",
 	CURSOR = "Cursor",
