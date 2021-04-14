@@ -17,6 +17,7 @@ import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import { UIEvents, UILayers, ButtonNames } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Game from "../../Wolfie2D/Loop/Game";
+import EnemyController from "../Enemies/EnemyController"
 
 export default class GameLevel extends Scene {
     center: Vec2 = new Vec2(960,540); //we need to figure out a way to specify this from options
@@ -132,6 +133,19 @@ export default class GameLevel extends Scene {
         this.reticle.position.set(mousePos.x, mousePos.y);
         // this.cursor.position.set(mousePos.x, mousePos.y);
         // this.cursor2.position.set(mousePos.x, mousePos.y);
+    }
+
+    protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>, scale: number): void {
+        let enemy = this.add.animatedSprite(spriteKey, "primary");
+        console.log(tilePos.x + " Tile pos x")
+        console.log(tilePos.y + "tilePos Y")
+        enemy.position.set(tilePos.x, tilePos.y);
+        enemy.scale.set(scale, scale);
+        enemy.addPhysics();
+        enemy.addAI(EnemyController, aiOptions);
+        enemy.setGroup("enemy");
+        console.log(enemy.active)
+        // enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
     }
 
 

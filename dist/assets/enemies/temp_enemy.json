@@ -1,0 +1,19 @@
+{
+    "name": "temp_enemy",
+    "spriteSheetImage": "temp_enemy.png",
+    "spriteWidth": 32,
+    "spriteHeight": 32,
+    "columns": 2,
+    "rows": 1,
+    "durationType": "time",
+    "animations": [
+        { 
+            "name": "IDLE",
+            "frames": [ {"index": 0, "duration": 1} ]
+        },
+        {
+            "name": "WALK",
+            "frames": [ {"index": 0, "duration": 16}, {"index": 1, "duration": 16}]
+        }
+    ]
+}

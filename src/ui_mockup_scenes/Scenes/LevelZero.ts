@@ -38,6 +38,7 @@ export default class LevelZero extends GameLevel {
         this.load.image("weaponslot2", "assets/ui_art/weaponslot2.png")
         this.load.image("healthbar", "assets/ui_art/health_bar_wip.png")
         this.load.image("shovel", "assets/shovel.png")
+        this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
     }
 
     startScene(): void {
@@ -60,8 +61,13 @@ export default class LevelZero extends GameLevel {
         this.viewport.follow(this.player);
         this.viewport.setSmoothingFactor(10);
 
-
         this.initializeGameUI()
+        
+        
+        // addEnemy - params:(SpriteKey, Position, aiOptions, scale)
+        
+        this.addEnemy("temp_enemy", new Vec2(300, 300), { health : 5, player: this.player }, 1)
+    
     }
 
     updateScene(deltaT: number){
