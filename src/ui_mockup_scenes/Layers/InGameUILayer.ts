@@ -16,29 +16,42 @@ import ItemsInventoryLayer from "./InGameUI/ItemsInventoryLayer"
 import HealthBarLayer from "./InGameUI/HealthBarLayer"
 import GrowthBarLayer from "./InGameUI/GrowthBarLayer"
 import MoodBarLayer from "./InGameUI/MoodBarLayer"
+import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 
 export default class InGameUI {
-    layer: UILayer; 
+    layer: Layer; 
     scene: Scene;
-    position: Vec2; 
-    pauseScreenLayer: Layer; 
+    center: Vec2;
+    viewPort: Viewport;
+    font: string; 
+
+    //nested layers 
     healthBarLayer: HealthBarLayer; 
     growthBarLayer: GrowthBarLayer; 
     weaponsInventoryLayer: WeaponsInventoryLayer; 
     itemsInventoryLayer: ItemsInventoryLayer; 
     moodBarLayer: MoodBarLayer; 
-    font: string; 
-    constructor(scene: Scene, position: Vec2, font: string){
+    
+
+
+    constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
         this.font = font; 
-        this.position = position.clone(); 
-        this.layer = scene.addUILayer(UILayers.INGAMEUILAYER)
+        this.center = center; 
+        
+        console.log(viewport.getView());
+        console.log(center);
+
+        this.layer = scene.addLayer(InGameUILayers.INGAMEUILAYER,13)
         this.layer.setHidden(false); 
-        this.weaponsInventoryLayer = new WeaponsInventoryLayer(this.scene, this.font);
+
+        this.weaponsInventoryLayer = new WeaponsInventoryLayer(this.scene, this.font, this.center);
         this.itemsInventoryLayer = new ItemsInventoryLayer(this.scene, this.font);
-        this.healthBarLayer = new HealthBarLayer(this.scene, this.font);
+        this.healthBarLayer = new HealthBarLayer(this.scene, this.font,this.center);
         this.growthBarLayer = new GrowthBarLayer(this.scene, this.font); 
         this.moodBarLayer = new MoodBarLayer(this.scene, this.font);
+
+
 
     }
 

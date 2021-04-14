@@ -10,7 +10,8 @@ import * as Palette from "../Utils/Colors";
 export default class GameButton {
 	sprite?: Sprite;
 	label: Label;
-	constructor(sprite: Sprite| null, label: Label) {
+
+	constructor(sprite: Sprite| null, label: Label){
         if(sprite) {
             this.sprite = sprite;
         }

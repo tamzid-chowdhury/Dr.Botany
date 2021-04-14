@@ -43,9 +43,7 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
-        this.inGameUILayer = new InGameUILayer(this, this.center,this.defaultFont);
-        this.pauseScreenLayer = new PauseScreenLayer(this, this.center, this.defaultFont)
-    
+        
         this.initializeCursor();
 
 
@@ -63,15 +61,17 @@ export default class GameLevel extends Scene {
         if(Input.isKeyJustPressed("p")){
             if(this.pauseScreenToggle){
                 for (let button of this.pauseScreenLayer.menuButtons) {
-                    button.label.tweens.play('slideXFadeIn')
-                    button.sprite.tweens.play('spriteSlideXFadeIn')
+                    //button.label.tweens.play('slideXFadeIn')
+                    //button.sprite.tweens.play('spriteSlideXFadeIn')
+                    button.label.textColor.a = 1; 
                 }
                 this.pauseScreenToggle = false; 
             }
             else{
                 for (let button of this.pauseScreenLayer.menuButtons) {
-                    button.label.tweens.play('slideXFadeOut')
-                    button.sprite.tweens.play('spriteSlideXFadeOut')
+                    //button.label.tweens.play('slideXFadeOut')
+                    //button.sprite.tweens.play('spriteSlideXFadeOut')
+                    button.label.textColor.a = 0; 
                 }
                 this.pauseScreenToggle = true; 
             }
@@ -102,9 +102,7 @@ export default class GameLevel extends Scene {
 
         }
 
-        for (let name in ButtonNames) {
-            let myName: ButtonNames = ButtonNames[name as keyof typeof ButtonNames];
-        }
+
 
    
     }

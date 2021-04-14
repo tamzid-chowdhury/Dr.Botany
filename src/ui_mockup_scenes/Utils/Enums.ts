@@ -41,8 +41,10 @@ export enum UILayers {
 	OPTIONS = "options",
 	HELP = "help",
 	CURSOR = "Cursor",
-	INGAMEUILAYER = "InGameUILayer",
-	PAUSE_SCREEN = "PAUSE_SCREEN"
+	PAUSE_SCREEN = "PAUSE_SCREEN",
+	CLICKED_SUMMER = "CLICKED_SUMMER",
+	CLICKED_WINTER = "CLICKED_WINTER"
+
 }
 
 export enum InGameUILayers {
@@ -50,7 +52,8 @@ export enum InGameUILayers {
 	GROWTH_BAR = "GROWTH_BAR",
 	MOOD_BAR = "MOOD_BAR",
 	WEAPONS_INVENTORY = "WEAPONS_INVENTORY",
-	ITEMS_INVENTORY = "ITEMS_INVENTORY"
+	ITEMS_INVENTORY = "ITEMS_INVENTORY",
+	INGAMEUILAYER = "InGameUILayer"
 }
 
 export enum ButtonNames {

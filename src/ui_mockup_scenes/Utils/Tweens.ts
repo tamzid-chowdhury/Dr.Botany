@@ -40,39 +40,7 @@ export function slideXFadeIn(startX: number, startY: number, delay: number = 0, 
 	return tween
 }
 
-export function slideXFadeOut(startX: number, startY: number, delay: number = 0, offset: number): Record<string,any> {
-	let tween = {
-		startDelay: delay,
-		duration: 300,
-		effects: [
-			{
-				property: TweenableProperties.posX,
-				start: startX,
-				end: startX - offset+2,
-				ease: EaseFunctionType.IN_OUT_QUAD,
-			},
-			// {
-			// 	property: TweenableProperties.posY,
-			// 	start: startY,
-			// 	end: startY + 2,
-			// 	ease: EaseFunctionType.IN_OUT_QUAD,
-			// },
-			// {
-			// 	property: TweenableProperties.alpha,
-			// 	start: 0,
-			// 	end: 1,
-			// 	ease: EaseFunctionType.IN_OUT_QUAD,
-			// },
-			{
-				property: LabelTweenableProperties.textAlpha,
-				start: 1,
-				end: 0,
-				ease: EaseFunctionType.IN_OUT_QUAD,
-			},
-		],
-	};
-	return tween
-}
+
 
 export function spriteSlideXFadeIn(startX: number, startY: number, delay: number = 0, offset: number): Record<string,any> {
 	let tween = {
@@ -102,33 +70,6 @@ export function spriteSlideXFadeIn(startX: number, startY: number, delay: number
 	return tween
 }
 
-export function spriteSlideXFadeOut(startX: number, startY: number, delay: number = 0, offset: number): Record<string,any> {
-	let tween = {
-		startDelay: delay,
-		duration: 300,
-		effects: [
-			{
-				property: TweenableProperties.posX,
-				start: startX,
-				end: startX - offset+2,
-				ease: EaseFunctionType.IN_OUT_QUAD,
-			},
-			{
-				property: TweenableProperties.posY,
-				start: startY,
-				end: startY ,
-				ease: EaseFunctionType.IN_OUT_QUAD,
-			},
-			{
-				property: TweenableProperties.alpha,
-				start: 1,
-				end: 0,
-				ease: EaseFunctionType.IN_OUT_QUAD,
-			},
-		],
-	};
-	return tween
-}
 
 export function fadeIn(): Record<string,any> {
 	let tween =  {

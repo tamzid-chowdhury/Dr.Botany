@@ -19,6 +19,7 @@ import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
+import PauseScreenLayer from "../Layers/PauseScreenLayer";
 
 export default class LevelZero extends GameLevel {
     private player: Sprite;
@@ -32,6 +33,15 @@ export default class LevelZero extends GameLevel {
         this.load.image("shadow", "assets/shadow_sprite.png");
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
+
+        this.load.image("itemslot1", "assets/ui_art/itemslot1.png")
+        this.load.image("itemslot2", "assets/ui_art/itemslot2.png")
+        this.load.image("itemslot3", "assets/ui_art/itemslot3.png")
+
+        this.load.image("weaponslot1", "assets/ui_art/weaponslot1.png")
+        this.load.image("weaponslot2", "assets/ui_art/weaponslot2.png")
+        this.load.image("healthbar", "assets/ui_art/health_bar_wip.png")
+        this.load.image("shovel", "assets/shovel.png")
     }
 
     startScene(): void {
@@ -59,6 +69,9 @@ export default class LevelZero extends GameLevel {
         this.viewport.follow(this.cameraPoint);
         // this.viewport.follow(this.player);
         this.viewport.setSmoothingFactor(10);
+
+
+        this.initializeGameUI()
     }
 
     updateScene(deltaT: number){
@@ -95,5 +108,15 @@ export default class LevelZero extends GameLevel {
 
         // Add triggers on colliding with coins or coinBlocks
         this.player.setGroup("player");
+    }
+
+    initializeGameUI(): void { 
+        let viewport = this.viewport;
+        let center = new Vec2(this.tilemapSize.x/2,this.tilemapSize.y/2)
+
+
+        this.inGameUILayer = new InGameUILayer(this,center,this.defaultFont, viewport);
+        this.pauseScreenLayer = new PauseScreenLayer(this,center,this.defaultFont);
+
     }
 }
