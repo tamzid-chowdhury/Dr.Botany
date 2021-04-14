@@ -36,7 +36,7 @@ export default class WeaponsInventoryLayer {
     initializeWeaponInventory(): void{
 
         let weaponBox1 = this.scene.add.sprite("weaponslot1",InGameUILayers.WEAPONS_INVENTORY)
-        weaponBox1.scale = new Vec2(.11, .11);
+        weaponBox1.scale = new Vec2(.10, .10);
         weaponBox1.position.set(15,15);
 
         const weaponSlot1 = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.INGAMEUILAYER, {position: new Vec2(25,24), text:'x3'});
@@ -47,7 +47,7 @@ export default class WeaponsInventoryLayer {
         
 
         let weaponBox2 = this.scene.add.sprite("weaponslot2",InGameUILayers.WEAPONS_INVENTORY)
-        weaponBox2.scale = new Vec2(.11, .11);
+        weaponBox2.scale = new Vec2(.10, .10);
         weaponBox2.position.set(45,15);
       
         const weaponSlot2 = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.INGAMEUILAYER, {position: new Vec2(45,24), text:'x5'});
@@ -56,7 +56,7 @@ export default class WeaponsInventoryLayer {
         weaponSlot2.backgroundColor = Color.TRANSPARENT;
 
         let shovel = this.scene.add.sprite("shovel",InGameUILayers.WEAPONS_INVENTORY)
-        shovel.scale = new Vec2(.7,.7)
+        shovel.scale = new Vec2(.6,.6)
         shovel.position.set(15,17);
     }
 }

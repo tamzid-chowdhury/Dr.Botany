@@ -14,10 +14,11 @@ import Color from "../../Wolfie2D/Utils/Color";
 import InGameUILayer from "../Layers/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
-import { UIEvents, UILayers, ButtonNames } from "../Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, InGameUILayers  } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Game from "../../Wolfie2D/Loop/Game";
 import EnemyController from "../Enemies/EnemyController"
+
 
 export default class GameLevel extends Scene {
     center: Vec2 = new Vec2(960,540); //we need to figure out a way to specify this from options
@@ -52,6 +53,8 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
         this.receiver.subscribe(GameEventType.KEY_DOWN);
+
+        
 
     }
 

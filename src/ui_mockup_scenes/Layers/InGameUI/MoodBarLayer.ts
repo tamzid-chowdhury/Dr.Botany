@@ -29,7 +29,13 @@ export default class MoodBarLayer {
     }
 
     initializeMoodBar(): void{
-        const moodSlider = <Slider>this.scene.add.uiElement(UIElementType.SLIDER, InGameUILayers.MOOD_BAR, {position: new Vec2(1650,870), text:'Mood'});
-        moodSlider.size.set(350,40)
+        // const moodSlider = <Slider>this.scene.add.uiElement(UIElementType.SLIDER, InGameUILayers.MOOD_BAR, {position: new Vec2(400,15)});
+        // moodSlider.size.set(400,40)
+
+
+        const moodButton = <Button>this.scene.add.uiElement(UIElementType.BUTTON,InGameUILayers.MOOD_BAR, {position: new Vec2(400,15), text:"Mood Bar"})
+        moodButton.size.set(600,60)
+        moodButton.borderColor = Color.BLACK; 
+        moodButton.backgroundColor = new Color(255,200,0)
     }
 }

@@ -39,8 +39,8 @@ export default class InGameUI {
         this.font = font; 
         this.center = center; 
         
-        // console.log(viewport.getView());
-        // console.log(center);
+         //console.log(viewport.getView());
+         //console.log(center);
 
         this.layer = scene.addLayer(InGameUILayers.INGAMEUILAYER,13)
         this.layer.setHidden(false); 
@@ -48,7 +48,7 @@ export default class InGameUI {
         this.weaponsInventoryLayer = new WeaponsInventoryLayer(this.scene, this.font, this.center);
         this.itemsInventoryLayer = new ItemsInventoryLayer(this.scene, this.font);
         this.healthBarLayer = new HealthBarLayer(this.scene, this.font,this.center);
-        this.growthBarLayer = new GrowthBarLayer(this.scene, this.font); 
+        this.growthBarLayer = new GrowthBarLayer(this.scene, this.font, this.center); 
         this.moodBarLayer = new MoodBarLayer(this.scene, this.font);
 
 

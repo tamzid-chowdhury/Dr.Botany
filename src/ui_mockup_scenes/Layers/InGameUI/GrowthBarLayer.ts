@@ -16,20 +16,21 @@ export default class GrowthBarLayer {
     layer: UILayer; 
     scene: Scene; 
     font: string;
+    center: Vec2; 
     
-    constructor(scene: Scene, font: string){
+    constructor(scene: Scene, font: string, center: Vec2){
         this.scene = scene; 
         this.font = font; 
+        this.center = center; 
         this.layer = scene.addUILayer(InGameUILayers.GROWTH_BAR)
         this.layer.setHidden(false); 
         this.initializeGrowthBar()
-        
-
     }
 
     initializeGrowthBar(): void{
-        const growthBar = <Button>this.scene.add.uiElement(UIElementType.BUTTON, InGameUILayers.GROWTH_BAR, {position: new Vec2(1860,670), text:'Growth'});
+        const growthBar = <Button>this.scene.add.uiElement(UIElementType.BUTTON, InGameUILayers.GROWTH_BAR, {position: new Vec2(470,212), text:'Growth'});
         growthBar.size.set(50,450)
+        growthBar.fontSize = 12;
         growthBar.backgroundColor = new Color(0,255,0)
     }
 }

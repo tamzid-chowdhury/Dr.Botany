@@ -32,8 +32,8 @@ export default class HealthBarLayer {
 
     initializeHealthBar(): void{
         let healthBar = this.scene.add.sprite("healthbar",InGameUILayers.HEALTH_BAR)
-        healthBar.scale = new Vec2(1,.5);
-        healthBar.position.set(65,260)
+        healthBar.scale = new Vec2(1.5,.5);
+        healthBar.position.set(98,260)
         const healthBarLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.HEALTH_BAR, {position: new Vec2(65,260), text:'Health: 100%'});
         healthBarLabel.fontSize = 18;
         healthBarLabel.backgroundColor = Color.RED.lighten();
