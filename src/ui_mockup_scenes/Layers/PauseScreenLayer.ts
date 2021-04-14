@@ -28,9 +28,10 @@ export default class PauseScreenLayer {
 
 
 	initButtons(): void {
-		let xOffset = 200
+		let xOffset = 5;
+		let yOffset = 150;
 		let startX = this.position.x - xOffset;
-		let startY = this.position.y - xOffset;
+		let startY = this.position.y - yOffset;
 		let endX = this.position.x;
 		let animationDelay = 0;
 		for (let name in PauseButtonNames) {
@@ -38,11 +39,11 @@ export default class PauseScreenLayer {
 
 			let sprite = this.scene.add.sprite("temp_button", UILayers.PAUSE_SCREEN);
 			sprite.position.set(startX, startY);
-			sprite.scale = new Vec2(3,3);
+			sprite.scale = new Vec2(.5,.5);
 			sprite.alpha = 0;
 
 			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.PAUSE_SCREEN, { position: new Vec2(startX, startY), text: `${myName}`, size: 24 });
-			label.size.set(180, 100);
+			label.size.set(90, 50);
 			label.borderWidth = 0;
 			label.borderRadius = 0;
 			label.font = this.font;
@@ -53,45 +54,35 @@ export default class PauseScreenLayer {
 			label.onClickEventId = 'CLICKED_' + name;
 
 			label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
-			let negativeXOffset = xOffset * -1; 
-			label.tweens.add('slideXFadeOut', Tweens.slideXFadeOut(startX+xOffset, startY, animationDelay, negativeXOffset));
-			label.tweens.add('slideXFadeOut', Tweens.slideXFadeOut(startX, startY, animationDelay, xOffset));
 			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
+			label.tweens.add('scaleIn', Tweens.scaleIn(label.scale,label.scale.scale(2), 0, 100));
+			label.tweens.add('scaleOut', Tweens.scaleIn(label.scale.scale(2),label.scale, 0, 100));
 
 			
 
 			sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
-			sprite.tweens.add('spriteSlideXFadeOut', Tweens.spriteSlideXFadeOut(startX+xOffset, startY, animationDelay, negativeXOffset));
 			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
 			sprite.tweens.add('scaleIn', Tweens.scaleIn(sprite.scale, new Vec2(3.8,3.8), 0, 100));
 			sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), sprite.scale, 0, 100));
 
 
-			label.onFirstEnter = () => {
-				label.tweens.play('slideUpLeft');
-				sprite.tweens.play('slideUpLeft');
-				sprite.tweens.play('scaleIn');
+			label.onEnter = () => {
+				label.tweens.play('scaleIn');
+
 			}
 			label.onLeave = () => {
-				label.tweens.play('slideDownRight');
-				sprite.tweens.play('slideDownRight');
-				sprite.tweens.play('scaleOut');
+				label.tweens.play('scaleOut');
 			}
 
 
 			let gameButton = new GameButton(sprite, label);
 
 			animationDelay += 30;
-			startY += 100;
+			startY += 20;
 			this.menuButtons.push(gameButton);
 
-			if(name == "Resume"){
-				label.onClick(() => {
-					
-				})
-			}
 		}
 	}
 }

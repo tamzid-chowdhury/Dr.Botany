@@ -19,6 +19,7 @@ import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
+import PauseScreenLayer from "../Layers/PauseScreenLayer";
 
 export default class LevelZero extends GameLevel {
     private player: Sprite;
@@ -49,6 +50,9 @@ export default class LevelZero extends GameLevel {
         this.initializePlayer();
         this.viewport.follow(this.player);
         this.viewport.setSmoothingFactor(10);
+
+
+        this.initializeGameUI()
     }
 
     updateScene(deltaT: number){
@@ -74,5 +78,15 @@ export default class LevelZero extends GameLevel {
 
         // Add triggers on colliding with coins or coinBlocks
         this.player.setGroup("player");
+    }
+
+    initializeGameUI(): void { 
+        let viewport = this.viewport;
+        let center = new Vec2(this.tilemapSize.x/2,this.tilemapSize.y/2)
+
+
+        this.inGameUILayer = new InGameUILayer(this,center,this.defaultFont, viewport);
+        this.pauseScreenLayer = new PauseScreenLayer(this,center,this.defaultFont);
+
     }
 }

@@ -16,10 +16,12 @@ export default class WeaponsInventoryLayer {
     layer: UILayer; 
     scene: Scene; 
     font: string;
+    center: Vec2;
     
-    constructor(scene: Scene, font: string){
+    constructor(scene: Scene, font: string, center: Vec2){
         this.scene = scene; 
         this.font = font; 
+        this.center = center; 
         this.layer = scene.addUILayer(InGameUILayers.WEAPONS_INVENTORY)
         this.layer.setHidden(false); 
         this.initializeWeaponInventory()
@@ -28,8 +30,8 @@ export default class WeaponsInventoryLayer {
     }
 
     initializeWeaponInventory(): void{
-        const weaponSlot1 = <Button>this.scene.add.uiElement(UIElementType.BUTTON, UILayers.INGAMEUILAYER, {position: new Vec2(50,30), text:'x3'});
-        const weaponSlot2 = <Button>this.scene.add.uiElement(UIElementType.BUTTON, UILayers.INGAMEUILAYER, {position: new Vec2(120,30), text:'x5'});
+        const weaponSlot1 = <Button>this.scene.add.uiElement(UIElementType.BUTTON, UILayers.INGAMEUILAYER, {position: new Vec2(10,10), text:'x3'});
+        const weaponSlot2 = <Button>this.scene.add.uiElement(UIElementType.BUTTON, UILayers.INGAMEUILAYER, {position: new Vec2(30,10), text:'x5'});
         weaponSlot1.setHAlign("right")
         weaponSlot1.setVAlign("bottom")
         weaponSlot1.fontSize = 14;

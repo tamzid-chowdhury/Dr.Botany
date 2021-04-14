@@ -43,9 +43,7 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
-        this.inGameUILayer = new InGameUILayer(this, this.center,this.defaultFont);
-        this.pauseScreenLayer = new PauseScreenLayer(this, this.center, this.defaultFont)
-    
+        
         this.initializeCursor();
 
 
@@ -63,15 +61,18 @@ export default class GameLevel extends Scene {
         if(Input.isKeyJustPressed("p")){
             if(this.pauseScreenToggle){
                 for (let button of this.pauseScreenLayer.menuButtons) {
-                    button.label.tweens.play('slideXFadeIn')
-                    button.sprite.tweens.play('spriteSlideXFadeIn')
+                    //button.label.tweens.play('slideXFadeIn')
+                    //button.sprite.tweens.play('spriteSlideXFadeIn')
+                    button.label.textColor.a = 1; 
+            
                 }
                 this.pauseScreenToggle = false; 
             }
             else{
                 for (let button of this.pauseScreenLayer.menuButtons) {
-                    button.label.tweens.play('slideXFadeOut')
-                    button.sprite.tweens.play('spriteSlideXFadeOut')
+                    //button.label.tweens.play('slideXFadeOut')
+                    //button.sprite.tweens.play('spriteSlideXFadeOut')
+                    button.label.textColor.a = 0; 
                 }
                 this.pauseScreenToggle = true; 
             }
@@ -83,7 +84,7 @@ export default class GameLevel extends Scene {
 
             
             if (event.type === GameEventType.MOUSE_MOVE) {
-                this.reticle.visible = true;
+                //this.reticle.visible = true;
                 // this.cursor.visible = true;
                 this.receiver.unsubscribe(GameEventType.MOUSE_MOVE);
             }
@@ -109,8 +110,8 @@ export default class GameLevel extends Scene {
 
     initializeCursor(): void { 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
-        this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
-        this.reticle.scale = new Vec2(0.8, 0.8);
+        //this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
+        //this.reticle.scale = new Vec2(0.8, 0.8);
         // this.cursor.visible = false;
         // this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
         
