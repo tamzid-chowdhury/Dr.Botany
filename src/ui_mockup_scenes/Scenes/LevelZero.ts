@@ -23,11 +23,15 @@ import PauseScreenLayer from "../Layers/PauseScreenLayer";
 
 export default class LevelZero extends GameLevel {
     private player: Sprite;
+    private shadow: Sprite;
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
+    cameraPoint: Label;
+    shadowOffset: Vec2 = new Vec2(0, 4);
     loadScene(): void {
-        this.load.image("player", "assets/dr_botany_wip.png");
         super.loadScene();
+        this.load.image("player", "assets/dr_botany_wip.png");
+        this.load.image("shadow", "assets/shadow_sprite.png");
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
 
         this.load.image("itemslot1", "assets/ui_art/itemslot1.png")
@@ -57,7 +61,13 @@ export default class LevelZero extends GameLevel {
         // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
         this.viewport.setSize(480, 270);
         this.addLayer("primary", 10);
+        this.addLayer("secondary", 9);
         this.initializePlayer();
+
+		// this.cameraPoint = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.CURSOR, { position: new Vec2(this.tilemapSize.x/2,this.tilemapSize.y/2), text: '' });
+        // this.cameraPoint.visible = false;
+
+        // this.viewport.follow(this.cameraPoint);
         this.viewport.follow(this.player);
         this.viewport.setSmoothingFactor(10);
 
@@ -72,6 +82,12 @@ export default class LevelZero extends GameLevel {
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
+        // let cameraPos = this.player.position.clone();
+        // // cameraPos.x += Input.getMousePosition().x/this.viewport.getHalfSize().x;
+        // // cameraPos.add(this.player.position);
+        this.shadow.position = this.player.position.clone();
+        this.shadow.position.y += this.shadowOffset.y
+        // this.cameraPoint.position = cameraPos;
 
     }
 
@@ -83,6 +99,10 @@ export default class LevelZero extends GameLevel {
 
         // Create the player
         // this.player = this.add.animatedSprite("player", "primary");
+        this.shadow = this.add.sprite("shadow", "secondary");
+        this.shadow.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2+ this.shadowOffset.y);
+        this.shadow.scale = new Vec2(0.7, 0.7);
+
         this.player = this.add.sprite("player", "primary");
         this.player.scale = new Vec2(1.5, 1.5);
         this.player.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2);
@@ -101,7 +121,8 @@ export default class LevelZero extends GameLevel {
 
 
         this.inGameUILayer = new InGameUILayer(this,center,this.defaultFont, viewport);
-        this.pauseScreenLayer = new PauseScreenLayer(this,center,this.defaultFont);
+        // this.pauseScreenLayer = new PauseScreenLayer(this,center,this.defaultFont);
+        // console.log(this.pauseScreenLayer)
 
     }
 }
