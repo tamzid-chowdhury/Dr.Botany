@@ -70,6 +70,7 @@ export default class MainMenu extends Scene {
         this.load.image("summer", "assets/LevelSelectionButtons/summer.png");
         this.load.image("autumn", "assets/LevelSelectionButtons/autumn.png");
         this.load.image("winter", "assets/LevelSelectionButtons/winter.png");
+        this.load.audio("temp_music", "assets/music/temp.mp3");
     }
 
     setDropShadow(pos: Vec2) {
@@ -132,6 +133,7 @@ export default class MainMenu extends Scene {
     }
 
     startScene(): void {
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key : "temp_music", loop: true, holdReference: true});
         window.onresize = (e: UIEvent) => {this.emitter.fireEvent(WindowEvents.RESIZED, {eventObject: e})}
         this.backgroundLayer = new BackgroundLayer(this, this.center, this.viewport.getHalfSize().y / 10, this.defaultFont);
         this.mainMenuLayer = new MainMenuLayer(this, this.center, this.defaultFont);
@@ -245,6 +247,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_START) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "temp_music"});
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "materials"],

@@ -1,9 +1,10 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { EnemyStates } from "../EnemyController";
+import EnemyState from "./EnemyState";
 import Idle from "./Idle"
 
-export default class Walk extends Idle {
+export default class Walk extends EnemyState {
 	
 	onEnter(): void {
 		(<AnimatedSprite>this.owner).animation.play("WALK", true);
@@ -16,7 +17,6 @@ export default class Walk extends Idle {
         // if(this.parent.direction.isZero()) {
         //     this.parent.direction = playerPos;
         // }
-		(<AnimatedSprite>this.owner).animation.play("WALK", true);
 		//this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 
