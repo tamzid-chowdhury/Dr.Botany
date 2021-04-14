@@ -67,7 +67,7 @@ export default class LevelZero extends GameLevel {
         this.initializePlayer();
 
         this.viewport.follow(this.player);
-        this.viewport.setSmoothingFactor(10);
+        this.viewport.setSmoothingFactor(20);
 
         this.initializeGameUI();
         super.initializeCursor();
@@ -92,7 +92,7 @@ export default class LevelZero extends GameLevel {
         if(mousePos.x > this.defaultEquip.position.x) {
             this.defaultEquip.rotation = Vec2.UP.angleToCCW(this.lookDirection);
 
-            this.defaultEquip.position.add(new Vec2(-3,-2));
+            this.defaultEquip.position.add(new Vec2(2,-4));
 			this.defaultEquip.invertX = false;
             this.defaultEquip.rotation += 3.14 / 2;
 
@@ -100,7 +100,7 @@ export default class LevelZero extends GameLevel {
 		else {
             this.defaultEquip.rotation = -Vec2.DOWN.angleToCCW(this.lookDirection);
             this.defaultEquip.rotation -= 3.14 / 2;
-            this.defaultEquip.position.add(new Vec2(3,-2));
+            this.defaultEquip.position.add(new Vec2(-2,-4));
 			this.defaultEquip.invertX = true;
 
 		}
@@ -121,7 +121,7 @@ export default class LevelZero extends GameLevel {
         this.shadow.scale = new Vec2(0.7, 0.7);
 
         this.defaultEquip = this.add.sprite("shovel", "secondary");
-        this.defaultEquip.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2 - this.shadowOffset.y);
+        this.defaultEquip.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2);
         this.defaultEquip.rotation = 3.14 / 4;
 
         this.player = this.add.sprite("player", "primary");

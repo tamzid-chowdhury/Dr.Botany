@@ -240,8 +240,12 @@ export default class Viewport {
         // Assure there are no lines in the tilemap
         pos.x = Math.floor(pos.x);
         pos.y = Math.floor(pos.y);
-        
-        this.view.center.copy(pos);
+    
+        let currentCenter = this.view.center.clone();
+        currentCenter.x =  MathUtils.lerp(currentCenter.x, pos.x, 0.125);
+        currentCenter.y =  MathUtils.lerp(currentCenter.y, pos.y, 0.125);
+        this.view.center = currentCenter;
+        // this.view.center.copy(pos);
     }
 
     update(deltaT: number): void {
