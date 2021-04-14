@@ -22,7 +22,7 @@ export default class InGameUI {
     layer: Layer; 
     scene: Scene;
     center: Vec2;
-    viewPort: Viewport;
+    viewport: Viewport;
     font: string; 
 
     //nested layers 
@@ -38,7 +38,7 @@ export default class InGameUI {
         this.scene = scene; 
         this.font = font; 
         this.center = center; 
-        
+        this.viewport = viewport
          //console.log(viewport.getView());
          //console.log(center);
 
@@ -51,7 +51,7 @@ export default class InGameUI {
         this.growthBarLayer = new GrowthBarLayer(this.scene, this.font, this.center); 
         this.moodBarLayer = new MoodBarLayer(this.scene, this.font);
 
-
+        // this.healthBarLayer.sprite.position = this.viewport.getHalfSize();
 
     }
 
