@@ -48,7 +48,6 @@ export default class GameLevel extends Scene {
         
         this.initializeCursor();
 
-
         this.receiver.subscribe(GameEventType.MOUSE_MOVE);
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
@@ -113,6 +112,16 @@ export default class GameLevel extends Scene {
 
    
     }
+
+    initInventory(): void {
+
+    }
+
+    initEquipment(): void {
+
+    }
+
+    
 
     initializeCursor(): void { 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);

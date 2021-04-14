@@ -24,14 +24,16 @@ import PauseScreenLayer from "../Layers/PauseScreenLayer";
 export default class LevelZero extends GameLevel {
     private player: Sprite;
     private shadow: Sprite;
+    private defaultEquip: Sprite;
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
-    cameraPoint: Label;
+    lookDirection: Vec2;
     shadowOffset: Vec2 = new Vec2(0, 4);
     loadScene(): void {
         super.loadScene();
         this.load.image("player", "assets/dr_botany_wip.png");
         this.load.image("shadow", "assets/shadow_sprite.png");
+        this.load.image("shovel", "assets/shovel.png");
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
 
         this.load.image("itemslot1", "assets/ui_art/itemslot1.png")
@@ -64,10 +66,6 @@ export default class LevelZero extends GameLevel {
         this.addLayer("secondary", 9);
         this.initializePlayer();
 
-		// this.cameraPoint = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.CURSOR, { position: new Vec2(this.tilemapSize.x/2,this.tilemapSize.y/2), text: '' });
-        // this.cameraPoint.visible = false;
-
-        // this.viewport.follow(this.cameraPoint);
         this.viewport.follow(this.player);
         this.viewport.setSmoothingFactor(10);
 
@@ -82,14 +80,32 @@ export default class LevelZero extends GameLevel {
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
-        // let cameraPos = this.player.position.clone();
-        // // cameraPos.x += Input.getMousePosition().x/this.viewport.getHalfSize().x;
-        // // cameraPos.add(this.player.position);
         this.shadow.position = this.player.position.clone();
-        this.shadow.position.y += this.shadowOffset.y
-        // this.cameraPoint.position = cameraPos;
+        this.shadow.position.y += this.shadowOffset.y;
+
+        this.defaultEquip.position = this.player.position.clone();
+
+        let mousePos = Input.getGlobalMousePosition()
+        this.lookDirection = this.defaultEquip.position.dirTo(mousePos);
+
+        if(mousePos.x > this.defaultEquip.position.x) {
+            this.defaultEquip.rotation = Vec2.UP.angleToCCW(this.lookDirection);
+
+            this.defaultEquip.position.add(new Vec2(-3,-2));
+			this.defaultEquip.invertX = false;
+            this.defaultEquip.rotation += 3.14 / 2;
+
+		}
+		else {
+            this.defaultEquip.rotation = -Vec2.DOWN.angleToCCW(this.lookDirection);
+            this.defaultEquip.rotation -= 3.14 / 2;
+            this.defaultEquip.position.add(new Vec2(3,-2));
+			this.defaultEquip.invertX = true;
+
+		}
 
     }
+    
 
     initializePlayer(): void {
         // Create the inventory
@@ -103,13 +119,17 @@ export default class LevelZero extends GameLevel {
         this.shadow.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2+ this.shadowOffset.y);
         this.shadow.scale = new Vec2(0.7, 0.7);
 
+        this.defaultEquip = this.add.sprite("shovel", "secondary");
+        this.defaultEquip.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2 - this.shadowOffset.y);
+        this.defaultEquip.rotation = 3.14 / 4;
+
         this.player = this.add.sprite("player", "primary");
         this.player.scale = new Vec2(1.5, 1.5);
         this.player.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2);
 
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 2)));
         this.player.colliderOffset.set(2, 10);
-        this.player.addAI(PlayerController, {tilemap: "Main", speed: 100,});
+        this.player.addAI(PlayerController, {tilemap: "Main", speed: 150,});
 
         // Add triggers on colliding with coins or coinBlocks
         this.player.setGroup("player");
@@ -122,7 +142,6 @@ export default class LevelZero extends GameLevel {
 
         this.inGameUILayer = new InGameUILayer(this,center,this.defaultFont, viewport);
         // this.pauseScreenLayer = new PauseScreenLayer(this,center,this.defaultFont);
-        // console.log(this.pauseScreenLayer)
 
     }
 }

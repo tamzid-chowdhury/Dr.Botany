@@ -345,6 +345,18 @@ export default class Vec2 {
 		return angle;
 	}
 
+	angleToCW(other: Vec2): number {
+		let dot = this.dot(other);
+		let det = this.x*other.y - this.y*other.x;
+		let angle = -Math.atan2(det, dot);
+
+		if(angle > 0){
+			angle += 2*Math.PI;
+		}
+
+		return angle;
+	}
+
 	/**
 	 * Returns a string representation of this vector rounded to 1 decimal point
 	 * @returns This vector as a string
