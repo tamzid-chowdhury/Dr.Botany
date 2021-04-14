@@ -42,7 +42,10 @@ export enum UILayers {
 	HELP = "help",
 	CURSOR = "Cursor",
 	INGAMEUILAYER = "InGameUILayer",
-	PAUSE_SCREEN = "PAUSE_SCREEN"
+	PAUSE_SCREEN = "PAUSE_SCREEN",
+	CLICKED_SUMMER = "CLICKED_SUMMER",
+	CLICKED_WINTER = "CLICKED_WINTER"
+
 }
 
 export enum InGameUILayers {

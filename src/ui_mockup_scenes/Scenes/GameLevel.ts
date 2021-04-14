@@ -102,9 +102,7 @@ export default class GameLevel extends Scene {
 
         }
 
-        for (let name in ButtonNames) {
-            let myName: ButtonNames = ButtonNames[name as keyof typeof ButtonNames];
-        }
+
 
    
     }
