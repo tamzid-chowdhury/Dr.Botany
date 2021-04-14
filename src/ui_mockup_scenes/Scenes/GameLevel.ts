@@ -59,22 +59,25 @@ export default class GameLevel extends Scene {
         this.updateCursorMovement();
         
         if(Input.isKeyJustPressed("p")){
-            if(this.pauseScreenToggle){
-                for (let button of this.pauseScreenLayer.menuButtons) {
-                    //button.label.tweens.play('slideXFadeIn')
-                    //button.sprite.tweens.play('spriteSlideXFadeIn')
-                    button.label.textColor.a = 1; 
+            if(this.pauseScreenLayer !== undefined) {
+                if(this.pauseScreenToggle){
+                    for (let button of this.pauseScreenLayer.menuButtons) {
+                        //button.label.tweens.play('slideXFadeIn')
+                        //button.sprite.tweens.play('spriteSlideXFadeIn')
+                        button.label.textColor.a = 1; 
+                    }
+                    this.pauseScreenToggle = false; 
                 }
-                this.pauseScreenToggle = false; 
-            }
-            else{
-                for (let button of this.pauseScreenLayer.menuButtons) {
-                    //button.label.tweens.play('slideXFadeOut')
-                    //button.sprite.tweens.play('spriteSlideXFadeOut')
-                    button.label.textColor.a = 0; 
+                else{
+                    for (let button of this.pauseScreenLayer.menuButtons) {
+                        //button.label.tweens.play('slideXFadeOut')
+                        //button.sprite.tweens.play('spriteSlideXFadeOut')
+                        button.label.textColor.a = 0; 
+                    }
+                    this.pauseScreenToggle = true; 
                 }
-                this.pauseScreenToggle = true; 
             }
+            
 
         }
 

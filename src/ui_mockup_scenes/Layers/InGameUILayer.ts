@@ -39,8 +39,8 @@ export default class InGameUI {
         this.font = font; 
         this.center = center; 
         
-        console.log(viewport.getView());
-        console.log(center);
+        // console.log(viewport.getView());
+        // console.log(center);
 
         this.layer = scene.addLayer(InGameUILayers.INGAMEUILAYER,13)
         this.layer.setHidden(false); 

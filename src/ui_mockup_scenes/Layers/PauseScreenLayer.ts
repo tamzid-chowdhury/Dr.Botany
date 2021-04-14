@@ -21,7 +21,7 @@ export default class PauseScreenLayer {
 		this.font = font;
 		this.position = position.clone();
 		this.layer = scene.addUILayer(UILayers.PAUSE_SCREEN);
-		this.layer.setHidden(false);
+		this.layer.setHidden(true);
 		this.initButtons();
 		
 	}
