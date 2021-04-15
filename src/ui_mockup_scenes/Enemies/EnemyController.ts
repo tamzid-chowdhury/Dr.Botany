@@ -22,7 +22,6 @@ export enum EnemyStates {
 export default class EnemyController extends StateMachineAI implements BattlerAI {
     owner: AnimatedSprite;
     health: number;
-    velocity: Vec2 = Vec2.ZERO;
     direction: Vec2 = Vec2.ZERO;
     speed: number = 20;
     player: GameNode;
@@ -33,11 +32,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
     initializeAI(owner:AnimatedSprite, options:Record<string, any>) {
         this.owner = owner;
-
         this.health = options.health;
-
-        // this.weapon = options.weapon;
-
         this.player = options.player;
 
 
@@ -62,7 +57,10 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     getPlayerPosition(): Vec2 {
-        let pos = this.player.position;
-        return pos;
+        return this.player.position;
+    }
+
+    getOwnerPostion(): Vec2 {
+        return this.owner.position;
     }
 }

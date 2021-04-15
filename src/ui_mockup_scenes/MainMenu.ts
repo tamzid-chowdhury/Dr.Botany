@@ -248,6 +248,7 @@ export default class MainMenu extends Scene {
 
             if (event.type === UIEvents.CLICKED_START) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "temp_music"});
+                
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "materials"],

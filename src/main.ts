@@ -6,6 +6,14 @@ import MainMenu from "./ui_mockup_scenes/MainMenu";
 (function main(){
     // Run any tests
     runTests();
+    var evt = new MouseEvent("click", {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+        clientX: 20,
+        /* whatever properties you want to give it */
+    });
+    document.dispatchEvent(evt);
     document.body.style.cursor = 'none';
     // Set up options for our game
     let options = {
