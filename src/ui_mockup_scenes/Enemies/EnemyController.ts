@@ -25,21 +25,18 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     direction: Vec2 = Vec2.ZERO;
     speed: number = 20;
     player: GameNode;
-    mushroom : boolean;
+    attackRange: number;
 
     damage(damage: number) : void {
-
+        
     };
 
     initializeAI(owner:AnimatedSprite, options:Record<string, any>) {
         this.owner = owner;
         this.health = options.health;
         this.player = options.player;
-        this.mushroom = options.mushroom;
-        if (this.mushroom) {
-            this.speed = 100;
-        }
-        else { this.speed = 20; };
+        
+        
 
         // have to add some properties for each enemy   I don't know if idle is necessary...
         let idle = new Idle(this, owner);
@@ -57,7 +54,15 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     update(deltaT: number): void {
-		super.update(deltaT);
+		
+        if (this.getOwnerPostion().x + 3 <= this.getPlayerPosition().x) { 
+            this.owner.invertX = true; 
+		}
+		else {
+			this.owner.invertX = false;
+		}
+        super.update(deltaT);
+        
 	}
 
     getPlayerPosition(): Vec2 {

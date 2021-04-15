@@ -1,0 +1,19 @@
+{
+    "name": "orange_mushroom",
+    "spriteSheetImage": "orange_mushroom.png",
+    "spriteWidth": 34,
+    "spriteHeight": 36,
+    "columns": 6,
+    "rows": 1,
+    "durationType": "time",
+    "animations": [
+        { 
+            "name": "IDLE",
+            "frames": [ {"index": 0, "duration": 1} ]
+        },
+        {
+            "name": "WALK",
+            "frames": [ {"index": 0, "duration": 10}, {"index": 1, "duration": 10}, {"index": 2, "duration": 10}, {"index": 3, "duration": 10}, {"index": 4, "duration": 10}, {"index": 5, "duration": 10}]
+        }
+    ]
+}

@@ -46,6 +46,7 @@ export default class LevelZero extends GameLevel {
 
         this.load.image("shovel", "assets/shovel.png")
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
+        this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json" )
     }
 
     startScene(): void {
@@ -74,7 +75,9 @@ export default class LevelZero extends GameLevel {
 
         super.initGameUI(this.viewport.getHalfSize());
         super.initReticle();
-        this.addEnemy("temp_enemy", new Vec2(300, 300), { mushroom: true, health : 5, player: this.player }, 2);
+        // this.addEnemy("temp_enemy", new Vec2(350, 350), {  health : 5, player: this.player }, 1);
+        this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player}, 1)
+        // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
         
         
         
@@ -110,12 +113,12 @@ export default class LevelZero extends GameLevel {
 		}
 
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 15 seconds
-        if (Date.now() - this.time > 15000) {
-            console.log("15 seconds passed");
-            // addEnemy - params:(SpriteKey, Position, aiOptions, scale)
-            this.addEnemy("temp_enemy", new Vec2(300, 300), { mushroom: true, health : 5, player: this.player }, 2);
-            this.time = Date.now();
-        }
+        // if (Date.now() - this.time > 15000) {
+        //     console.log("15 seconds passed");
+        //     // addEnemy - params:(SpriteKey, Position, aiOptions, scale)
+        //     this.addEnemy("temp_enemy", new Vec2(300, 300), {  health : 5, player: this.player }, 1);
+        //     this.time = Date.now();
+        // }
 
     }
     

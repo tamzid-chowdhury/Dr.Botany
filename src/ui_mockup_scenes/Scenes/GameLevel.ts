@@ -18,6 +18,7 @@ import { UIEvents, UILayers, ButtonNames, InGameUILayers  } from "../Utils/Enums
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Game from "../../Wolfie2D/Loop/Game";
 import EnemyController from "../Enemies/EnemyController"
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 
 
 export default class GameLevel extends Scene {
@@ -123,7 +124,10 @@ export default class GameLevel extends Scene {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
         enemy.position.set(tilePos.x, tilePos.y);
         enemy.scale.set(scale, scale);
-        enemy.addPhysics();
+        enemy.addPhysics(new AABB(Vec2.ZERO), new Vec2(50, 50));
+        enemy.colliderOffset.set(0,18);
+        // play with this // maybe add a condition for each enemy
+        
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
         // enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
