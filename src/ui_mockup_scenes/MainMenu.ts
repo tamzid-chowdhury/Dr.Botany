@@ -179,11 +179,7 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
         
-
-
-
     }
-
 
     setVisibleLayer(layerName: string): void {
         this.uiLayers.forEach((key: string) => {

@@ -15,6 +15,7 @@ import MainMenu from "./ui_mockup_scenes/MainMenu";
     });
     document.dispatchEvent(evt);
     document.body.style.cursor = 'none';
+
     // Set up options for our game
     let options = {
         canvasSize: {x: 1920, y: 1080},          // The size of the game
