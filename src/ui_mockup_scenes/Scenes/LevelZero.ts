@@ -67,7 +67,7 @@ export default class LevelZero extends GameLevel {
         this.initializePlayer();
 
         this.viewport.follow(this.player);
-        this.viewport.setSmoothingFactor(20);
+        // this.viewport.setSmoothingFactor(20);
 
         this.initializeGameUI();
         super.initializeCursor();
@@ -128,8 +128,8 @@ export default class LevelZero extends GameLevel {
         this.player.scale = new Vec2(1.5, 1.5);
         this.player.position.set(this.tilemapSize.x/2,this.tilemapSize.y/2);
 
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 2)));
-        this.player.colliderOffset.set(2, 10);
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
+        this.player.colliderOffset.set(0, 10);
         this.player.addAI(PlayerController, {tilemap: "Main", speed: 150,});
 
         // Add triggers on colliding with coins or coinBlocks
