@@ -11,7 +11,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import InGameUILayer from "../Layers/InGameUILayer"
+import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import { UIEvents, UILayers, ButtonNames } from "../Utils/Enums";
 import GameLevel from "./GameLevel";
@@ -43,14 +43,14 @@ export default class LevelZero extends GameLevel {
 
         this.load.image("weaponslot1", "assets/ui_art/weaponslot1.png")
         this.load.image("weaponslot2", "assets/ui_art/weaponslot2.png")
-        this.load.image("healthbar", "assets/ui_art/health_bar_wip.png")
+
         this.load.image("shovel", "assets/shovel.png")
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
     }
 
     startScene(): void {
         super.startScene()
-        this.time =Date.now();
+        this.time = Date.now();
         let tilemapLayers = this.add.tilemap("level_zero");
         for(let layer of tilemapLayers) {
             let obj = layer.getItems()[0];
@@ -64,16 +64,16 @@ export default class LevelZero extends GameLevel {
         this.viewport.setBounds(origin.x, origin.y, this.tilemapSize.x, this.tilemapSize.y+16);
         // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
         this.viewport.setSize(480, 270);
+
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
-        this.initializePlayer();
+        this.initPlayer();
+
 
         this.viewport.follow(this.player);
-        // this.viewport.setSmoothingFactor(20);
 
-        this.initializeGameUI();
-        super.initializeCursor();
-
+        super.initGameUI(this.viewport.getHalfSize());
+        super.initReticle();
         this.addEnemy("temp_enemy", new Vec2(300, 300), { mushroom: true, health : 5, player: this.player }, 2);
         
         
@@ -120,7 +120,7 @@ export default class LevelZero extends GameLevel {
     }
     
 
-    initializePlayer(): void {
+    initPlayer(): void {
         // Create the inventory
         // let inventory = new InventoryManager(this, 2, "inventorySlot", new Vec2(16, 16), 4);
         // let startingWeapon = this.createWeapon("knife");
@@ -148,13 +148,5 @@ export default class LevelZero extends GameLevel {
         this.player.setGroup("player");
     }
 
-    initializeGameUI(): void { 
-        let viewport = this.viewport;
-        let center = new Vec2(this.tilemapSize.x/2,this.tilemapSize.y/2)
 
-
-        this.inGameUILayer = new InGameUILayer(this,center,this.defaultFont, viewport);
-        // this.pauseScreenLayer = new PauseScreenLayer(this,center,this.defaultFont);
-
-    }
 }

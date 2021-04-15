@@ -11,7 +11,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import InGameUILayer from "../Layers/InGameUILayer"
+import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import { UIEvents, UILayers, ButtonNames, InGameUILayers  } from "../Utils/Enums";
@@ -21,8 +21,9 @@ import EnemyController from "../Enemies/EnemyController"
 
 
 export default class GameLevel extends Scene {
-    center: Vec2 = new Vec2(960,540); //we need to figure out a way to specify this from options
+    center: Vec2; //we need to figure out a way to specify this from options
     defaultFont: string = 'Round';
+
     pauseScreenToggle: boolean = true; 
 
     //initialize layers 
@@ -30,25 +31,23 @@ export default class GameLevel extends Scene {
     background: Layer; 
     inGameUILayer: InGameUILayer;
     cursorLayer: Layer; 
-    cursor2Layer: Layer; 
     pauseScreenLayer: PauseScreenLayer; 
 
-    //initialize sprites
-    // cursor: Sprite;
-    // cursor2: Sprite;
     reticle: Sprite;
     loadScene(): void {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
         this.load.image("reticle", "assets/misc/reticle.png");
         this.load.image("temp_button", "assets/ui_art/button.png");
+        this.load.image("ui_square", "assets/ui_art/ui_square.png");
+        this.load.image("ui_circle", "assets/ui_art/ui_circle.png");
         this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
+        this.load.image("healthbar", "assets/ui_art/health_bar_wip.png")
+        this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
+        this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
     }
 
     startScene(): void {
-        
-        // this.initializeCursor();
-
-        this.receiver.subscribe(GameEventType.MOUSE_MOVE);
+        this.center = this.viewport.getCenter();
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
         this.receiver.subscribe(GameEventType.KEY_DOWN);
@@ -59,7 +58,9 @@ export default class GameLevel extends Scene {
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
-        this.updateCursorMovement();
+        // update reticle position
+        let mousePos = Input.getMousePosition();
+        this.reticle.position.set(mousePos.x, mousePos.y);
         
         if(Input.isKeyJustPressed("p")){
             if(this.pauseScreenLayer !== undefined) {
@@ -86,31 +87,11 @@ export default class GameLevel extends Scene {
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-
-            
-            if (event.type === GameEventType.MOUSE_MOVE) {
-                this.reticle.visible = true;
-                // this.cursor.visible = true;
-                this.receiver.unsubscribe(GameEventType.MOUSE_MOVE);
-            }
-
             if(event.type === GameEventType.MOUSE_DOWN) {
 
-                // this.cursor.visible = false;
-                // this.cursor2.visible = true;
             }
-            
-            if(event.type === GameEventType.MOUSE_UP) {
-                // this.cursor.visible = true;
-                // this.cursor2.visible = false;
-            }
-            
 
         }
-
-
-
-   
     }
 
     initInventory(): void {
@@ -121,38 +102,25 @@ export default class GameLevel extends Scene {
 
     }
 
+    initGameUI(halfsize: Vec2): void { 
+        let viewport = this.viewport;
+        let center = halfsize
+        this.inGameUILayer = new InGameUILayer(this, center, this.defaultFont, viewport);
+
+    }
+
     
 
-    initializeCursor(): void { 
+    initReticle(): void { 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.8, 0.8);
-        // this.cursor.visible = false;
-        // this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
-        
-        // this.cursor.scale = new Vec2(0.8, 0.8)
-        // this.cursor.visible = false;
-
-        
-        // this.cursor2 = this.add.sprite("cursor_clicked", UILayers.CURSOR);
-        // this.cursor2.scale = new Vec2(0.8, 0.8)
-        // this.cursor2.visible = false;
-
 
     }
 
-
-
-    updateCursorMovement(): void {
-        let mousePos = Input.getMousePosition();
-        this.reticle.position.set(mousePos.x, mousePos.y);
-        // this.cursor.position.set(mousePos.x, mousePos.y);
-        // this.cursor2.position.set(mousePos.x, mousePos.y);
-    }
 
     protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>, scale: number): void {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
-        
         enemy.position.set(tilePos.x, tilePos.y);
         enemy.scale.set(scale, scale);
         enemy.addPhysics();

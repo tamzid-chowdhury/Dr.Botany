@@ -26,9 +26,14 @@ export enum UIEvents {
 export enum WindowEvents {
 	RESIZED = 'RESIZED'
 
-} 
+}
+
+export enum Fonts {
+	ROUND = 'round',
+}
 
 export enum UILayers {
+	INGAME_UI = "ingameUI",
 	MAIN_MENU = "mainMenu",
 	BACKGROUND = "background",
 	SPLASH_SCREEN = "splashScreen",
