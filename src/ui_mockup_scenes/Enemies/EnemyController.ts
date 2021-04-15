@@ -23,7 +23,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     owner: AnimatedSprite;
     health: number;
     direction: Vec2 = Vec2.ZERO;
-    speed: number;
+    speed: number = 20;
     player: GameNode;
     mushroom : boolean;
 
