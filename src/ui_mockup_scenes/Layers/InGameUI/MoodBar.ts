@@ -11,9 +11,12 @@ export default class Growthbar {
 	text: Label;
 	textBackdrop: Label;
 	centerPos: Vec2;
+    scene: Scene;
+    windowSize: Vec2 = new Vec2(window.innerWidth, window.innerHeight);
 
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
+        this.scene = scene;
 		this.sprite = scene.add.sprite("moodbar", UILayers.INGAME_UI)
         let xOffset =  this.centerPos.x;
         let yOffset =  2*this.centerPos.y - 2.5*this.sprite.size.y ;
@@ -32,6 +35,11 @@ export default class Growthbar {
         // this.text.textColor = Palette.white();
         // this.text.fontSize = 24;
 	}
+
+    updatePos(width: number, height: number): void {
+        // let zoom = document.body.clientWidth + "px x " + document.body.clientHeight + "px";
+        // console.log()
+    }
 
 	updateText(): void {
 		// TODO: when player health changes, text has to update

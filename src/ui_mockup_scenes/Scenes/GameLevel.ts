@@ -14,7 +14,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
-import { UIEvents, UILayers, ButtonNames, InGameUILayers  } from "../Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents  } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Game from "../../Wolfie2D/Loop/Game";
 import EnemyController from "../Enemies/EnemyController"
@@ -50,6 +50,7 @@ export default class GameLevel extends Scene {
     startScene(): void {
         this.center = this.viewport.getCenter();
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
+        // this.receiver.subscribe(WindowEvents.RESIZED);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
         this.receiver.subscribe(GameEventType.KEY_DOWN);
 
@@ -92,6 +93,9 @@ export default class GameLevel extends Scene {
 
             }
 
+            if(event.type === WindowEvents.RESIZED) {
+            }
+
         }
     }
 
@@ -132,6 +136,5 @@ export default class GameLevel extends Scene {
         enemy.setGroup("enemy");
         // enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
     }
-
 
 }

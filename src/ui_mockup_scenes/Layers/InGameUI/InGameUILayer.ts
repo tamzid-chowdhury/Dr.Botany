@@ -54,15 +54,12 @@ export default class InGameUI {
         }
         
 
-        // this.itemsInventoryLayer = new ItemsInventoryLayer(this.scene, this.font);
-        // this.moodBarLayer = new MoodBarLayer(this.scene, this.font);
 
 
     }
 
-    initHealthBar(): void {
-
+    reposition(width: number, height: number) : void {
+        this.moodBar.updatePos(width, height);
     }
-
 
 }

@@ -62,10 +62,9 @@ export default class LevelZero extends GameLevel {
         // this.collidables = <OrthogonalTilemap>tilemapLayers[4].getItems()[0];
         this.tilemapSize = this.collidables.size;
         let origin = this.viewport.getOrigin();
-        this.viewport.setBounds(origin.x, origin.y, this.tilemapSize.x, this.tilemapSize.y+16);
+        this.viewport.setBounds(origin.x, origin.y, this.tilemapSize.x, this.tilemapSize.y+24);
         // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
         this.viewport.setSize(480, 270);
-
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
         this.initPlayer();

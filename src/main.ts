@@ -16,9 +16,12 @@ import MainMenu from "./ui_mockup_scenes/MainMenu";
     document.dispatchEvent(evt);
     document.body.style.cursor = 'none';
 
+    let width = document.body.clientWidth
+    let height = document.body.clientHeight
+
     // Set up options for our game
     let options = {
-        canvasSize: {x: 1920, y: 1080},          // The size of the game
+        canvasSize: {x: width, y: height},          // The size of the game
         clearColor: {r: 0.9607, g: 0.9333, b: 0.9137},   // The color the game clears to
         inputs: [
             {name: "forward", keys: ["w"]},
