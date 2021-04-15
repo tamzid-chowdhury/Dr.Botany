@@ -19,7 +19,6 @@ export default class Walk extends EnemyState {
 
         let playerPosX = this.parent.getPlayerPosition().x;
         let playerPosY = this.parent.getPlayerPosition().y;
-
         // add a condition of enemies reaching the tree or the player
         this.parent.direction.x = ((playerPosX > ownerPosX) ? 1 : -1);
         this.parent.direction.y = ((playerPosY > ownerPosY) ? 1 : -1);

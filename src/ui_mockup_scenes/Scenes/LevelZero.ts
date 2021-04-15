@@ -73,6 +73,8 @@ export default class LevelZero extends GameLevel {
 
         this.initializeGameUI();
         super.initializeCursor();
+
+        this.addEnemy("temp_enemy", new Vec2(300, 300), { mushroom: true, health : 5, player: this.player }, 2);
         
         
         
@@ -111,7 +113,7 @@ export default class LevelZero extends GameLevel {
         if (Date.now() - this.time > 15000) {
             console.log("15 seconds passed");
             // addEnemy - params:(SpriteKey, Position, aiOptions, scale)
-            this.addEnemy("temp_enemy", new Vec2(300, 300), { health : 5, player: this.player }, 2);
+            this.addEnemy("temp_enemy", new Vec2(300, 300), { mushroom: true, health : 5, player: this.player }, 2);
             this.time = Date.now();
         }
 

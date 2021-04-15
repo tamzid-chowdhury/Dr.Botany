@@ -23,8 +23,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     owner: AnimatedSprite;
     health: number;
     direction: Vec2 = Vec2.ZERO;
-    speed: number = 20;
+    speed: number;
     player: GameNode;
+    mushroom : boolean;
 
     damage(damage: number) : void {
 
@@ -34,8 +35,11 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.owner = owner;
         this.health = options.health;
         this.player = options.player;
-
-
+        this.mushroom = options.mushroom;
+        if (this.mushroom) {
+            this.speed = 100;
+        }
+        else { this.speed = 20; };
 
         // have to add some properties for each enemy   I don't know if idle is necessary...
         let idle = new Idle(this, owner);
