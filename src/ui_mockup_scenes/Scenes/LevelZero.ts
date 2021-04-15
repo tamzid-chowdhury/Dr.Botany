@@ -29,6 +29,7 @@ export default class LevelZero extends GameLevel {
     tilemapSize: Vec2;
     lookDirection: Vec2;
     shadowOffset: Vec2 = new Vec2(0, 4);
+    time: number;
     loadScene(): void {
         super.loadScene();
         this.load.image("player", "assets/dr_botany_wip.png");
@@ -49,6 +50,7 @@ export default class LevelZero extends GameLevel {
 
     startScene(): void {
         super.startScene()
+        this.time =Date.now();
         let tilemapLayers = this.add.tilemap("level_zero");
         for(let layer of tilemapLayers) {
             let obj = layer.getItems()[0];
@@ -73,9 +75,9 @@ export default class LevelZero extends GameLevel {
         super.initializeCursor();
         
         
-        // addEnemy - params:(SpriteKey, Position, aiOptions, scale)
         
-        this.addEnemy("temp_enemy", new Vec2(300, 300), { health : 5, player: this.player }, 1)
+        
+        
     
     }
 
@@ -104,6 +106,14 @@ export default class LevelZero extends GameLevel {
 			this.defaultEquip.invertX = true;
 
 		}
+
+        // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 15 seconds
+        if (Date.now() - this.time > 15000) {
+            console.log("15 seconds passed");
+            // addEnemy - params:(SpriteKey, Position, aiOptions, scale)
+            this.addEnemy("temp_enemy", new Vec2(300, 300), { health : 5, player: this.player }, 2);
+            this.time = Date.now();
+        }
 
     }
     

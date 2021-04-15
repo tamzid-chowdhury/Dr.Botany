@@ -21,3 +21,5 @@ export default class Idle extends EnemyState {
 		return {};
 	}
 }
+
+// IGNORE THIS FOR NOW 
