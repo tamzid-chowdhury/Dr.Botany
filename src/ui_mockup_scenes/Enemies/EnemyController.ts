@@ -37,7 +37,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
 
 
-        // have to add some properties for each enemy
+        // have to add some properties for each enemy   I don't know if idle is necessary...
         let idle = new Idle(this, owner);
 		this.addState(EnemyStates.IDLE, idle);
 		let walk = new Walk(this, owner);

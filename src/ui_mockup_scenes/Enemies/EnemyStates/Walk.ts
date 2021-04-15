@@ -8,17 +8,21 @@ export default class Walk extends EnemyState {
 	
 	onEnter(): void {
 		(<AnimatedSprite>this.owner).animation.play("WALK", true);
-        console.log("onEnter")
         
 	}
 
 	update(deltaT: number): void {
 		super.update(deltaT);
-        // this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
-        // this.direction.y = (Input.isPressed("forward") ? -1 : 0) + (Input.isPressed("backward") ? 1 : 0);
-        
-        this.parent.direction.x = ((this.parent.getPlayerPosition().x > this.parent.getOwnerPostion().x) ? 1 : -1);
-        this.parent.direction.y = ((this.parent.getPlayerPosition().y > this.parent.getOwnerPostion().y) ? 1 : -1);
+
+        let ownerPosX = this.parent.getOwnerPostion().x;
+        let ownerPosY = this.parent.getOwnerPostion().y;
+
+        let playerPosX = this.parent.getPlayerPosition().x;
+        let playerPosY = this.parent.getPlayerPosition().y;
+
+        // add a condition of enemies reaching the tree or the player
+        this.parent.direction.x = ((playerPosX > ownerPosX) ? 1 : -1);
+        this.parent.direction.y = ((playerPosY > ownerPosY) ? 1 : -1);
 		this.owner._velocity.x = this.parent.direction.x;
         this.owner._velocity.y = this.parent.direction.y;
         this.owner._velocity.normalize();
