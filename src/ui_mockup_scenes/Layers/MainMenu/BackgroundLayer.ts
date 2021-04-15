@@ -20,11 +20,13 @@ export class BackgroundLayer {
 	font: string;
 	windowCenter: Vec2;
 	windowScale: Vec2;
+	logoOffset: number;
+	logoFinalScale: Vec2;
 	constructor(scene: Scene, position: Vec2, logoOffset: number, font: string) {
 		// NOTE: if we ever get a scrollbar, should use document.body.clientWidth instead
-		this.windowCenter = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
+		this.logoOffset = logoOffset;
 		this.scene = scene;
-		this.font = font
+		this.font = font;
 		this.position = position;
 		this.layer = scene.addUILayer(UILayers.BACKGROUND);
 		this.bg = scene.add.sprite("background", UILayers.BACKGROUND);
@@ -35,13 +37,11 @@ export class BackgroundLayer {
 		this.bgCopy.position.set(-this.bg.size.x+64, 0);
 
 		this.logo = scene.add.sprite("logo", UILayers.BACKGROUND);
-		this.logo.position.set(this.windowCenter.x, this.windowCenter.y - logoOffset);
-		this.windowScale = new Vec2(window.innerWidth / 1920, window.innerHeight / 1080)
-		let endScale = new Vec2(this.logo.scale.x, this.logo.scale.y);
-		endScale.mult(this.windowScale);
+		this.initLogo();
 		this.logo.scale = new Vec2(0,0);
-		this.logo.tweens.add('scaleIn', Tweens.scaleIn(this.logo.scale , endScale));
-		this.logo.tweens.add('slideUpShrink', Tweens.slideUpShrink(endScale, this.logo.position.y, this.windowCenter.y));
+
+		this.logo.tweens.add('scaleIn', Tweens.scaleIn(this.logo.scale , this.logoFinalScale));
+		this.logo.tweens.add('slideUpShrink', Tweens.slideUpShrink(this.logoFinalScale, this.logo.position.y, this.windowCenter.y));
 
 		this.startText = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.BACKGROUND, { position: new Vec2(this.windowCenter.x, this.windowCenter.y + 120), text: "Click to Begin!", size: 45 });
         this.startText.textColor = Palette.transparent();
@@ -50,6 +50,14 @@ export class BackgroundLayer {
 
         this.startText.tweens.add('fadeIn', Tweens.fadeIn());
         this.startText.tweens.add('fadeOut', Tweens.fadeOut(this.startText.position.y));
+	}
+
+	initLogo(): void {
+		this.windowCenter = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
+		this.logo.position.set(this.windowCenter.x, this.windowCenter.y - this.logoOffset);
+		this.windowScale = new Vec2(window.innerHeight / 1080, window.innerHeight / 1080)
+		this.logoFinalScale = new Vec2(this.logo.scale.x, this.logo.scale.y);
+		this.logoFinalScale.mult(this.windowScale);
 	}
 
 	playSplashScreen(): void {

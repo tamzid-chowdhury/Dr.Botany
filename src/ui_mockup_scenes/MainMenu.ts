@@ -195,19 +195,10 @@ export default class MainMenu extends Scene {
     }
 
     updateScene(deltaT: number) {
-        let mousePos = Input.getMousePosition();
+        let mousePos = Input.getGlobalMousePosition();
         this.cursor.position.set(mousePos.x, mousePos.y);
         this.cursor2.position.set(mousePos.x, mousePos.y);
         
-        // idea for scrolling:
-        // make 2 copies of the bg image, line them up on after the other
-        // scroll both of them
-        // after one of the images is fully out of view, reset its position
-        // or if joe fiex webgl, this probably is easier to do with a shader
-
-        // another possibility: write the shader in a webgl environment and make a 
-        // gif out of it
-
         this.backgroundLayer.bg.position.x += this.scrollSpeed * deltaT;
         this.backgroundLayer.bgCopy.position.x += this.scrollSpeed * deltaT;
         if(this.backgroundLayer.bg.position.x > this.backgroundLayer.bg.size.x) {
@@ -230,7 +221,7 @@ export default class MainMenu extends Scene {
             }
 
             if(event.type === WindowEvents.RESIZED) {
-                console.log('resized');
+                this.backgroundLayer.initLogo();
                 // should reposition ui elements
             }
 
