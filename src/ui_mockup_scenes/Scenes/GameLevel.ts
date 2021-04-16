@@ -40,8 +40,9 @@ export default class GameLevel extends Scene {
     shadow: Sprite;
     defaultEquip: Sprite;
     shadowOffset: Vec2 = new Vec2(0, 4);
-    playerLookDirection: Vec2;
-
+    playerLookDirection: Vec2 = new Vec2(0,0);
+    doingSwing: boolean = false;
+    swingDir: number = -1; 
     loadScene(): void {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
         this.load.image("reticle", "assets/misc/reticle.png");
@@ -63,6 +64,9 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(GameEventType.MOUSE_UP);
         this.receiver.subscribe(GameEventType.KEY_DOWN);
         this.receiver.subscribe(InGame_Events.LEVEL_LOADED);
+        this.receiver.subscribe(InGame_Events.DOING_SWING);
+        this.receiver.subscribe(InGame_Events.FINISHED_SWING);
+        this.receiver.subscribe(InGame_Events.START_SWING);
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
 
@@ -79,31 +83,18 @@ export default class GameLevel extends Scene {
         this.shadow.position.y += this.shadowOffset.y;
         this.defaultEquip.position = this.player.position.clone();
         this.playerLookDirection = this.defaultEquip.position.dirTo(rotateTo);
-
             if(mousePos.x > this.defaultEquip.position.x) {
-                this.defaultEquip.rotation = Vec2.UP.angleToCCW(this.playerLookDirection);
-                // this.defaultEquip.position.add(new Vec2(2,-4));
-                this.defaultEquip.position.add(new Vec2(8,-4));
-                this.defaultEquip.invertX = false;
-                this.defaultEquip.rotation += 3.14 / 2;
+                this.defaultEquip.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
             }
             else {
-                this.defaultEquip.rotation = -Vec2.DOWN.angleToCCW(this.playerLookDirection);
-                this.defaultEquip.rotation -= 3.14 / 2;
-                // this.defaultEquip.position.add(new Vec2(-2,-4));
-                this.defaultEquip.position.add(new Vec2(-8,-4));
-                this.defaultEquip.invertX = true;
+                this.defaultEquip.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
     
             }
+            this.defaultEquip.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
             
         // NOTE: TO get the swing working properly, we'll need to implement a state, and only rotate the shovel
         // toward mouse if not in that state. Play should be able to hold down mouse to keep swining if possible
-        if(Input.isMouseJustPressed()) {
-            // this.defaultEquip.invertY = !this.defaultEquip.invertY;
-            // this.defaultEquip.rotation -= 3.14 / 2;
 
-            this.defaultEquip.tweens.play('swing');
-        }
         
         if(Input.isKeyJustPressed("p")){
             if(this.pauseScreenLayer !== undefined) {
@@ -131,12 +122,11 @@ export default class GameLevel extends Scene {
         
 
 
-        
-
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-            if(event.type === GameEventType.MOUSE_DOWN) {
-
+            if(event.type === GameEventType.MOUSE_DOWN && !this.doingSwing) {
+                this.emitter.fireEvent(InGame_Events.START_SWING);
+                this.doingSwing = !this.doingSwing;
             }
 
             if(event.type === WindowEvents.RESIZED) {
@@ -145,6 +135,33 @@ export default class GameLevel extends Scene {
             if(event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();
             }
+
+            if(event.type === InGame_Events.START_SWING) {
+                this.emitter.fireEvent(InGame_Events.DOING_SWING);
+                this.defaultEquip.tweens.add('swingdown', Tweens.swing(this.defaultEquip, this.swingDir))
+                this.defaultEquip.tweens.play('swingdown');
+            }
+
+            if(event.type === InGame_Events.FINISHED_SWING) {
+                if(Input.isMousePressed()) {
+                    this.swingDir *= -1;
+                    this.emitter.fireEvent(InGame_Events.START_SWING);
+                } 
+                else {
+                    this.swingDir *= -1;
+                    this.doingSwing = !this.doingSwing;
+                } 
+            }
+
+            // if(event.type === InGame_Events.DOING_SWING) {
+            //     // this.defaultEquip.invertY = !this.defaultEquip.invertY;
+            //     // this.defaultEquip.rotation -= 3.14 / 2;
+            //     if(Input.isMousePressed()) this.emitter.fireEvent(InGame_Events.START_SWING);
+
+            // }
+
+
+
 
         }
     }
@@ -171,10 +188,10 @@ export default class GameLevel extends Scene {
 
         this.defaultEquip = this.add.sprite("shovel", "secondary");
         this.defaultEquip.position.set(mapSize.x/2,mapSize.y/2);
-        this.defaultEquip.rotation = 3.14 / 4;
+        this.defaultEquip.invertY = true
+        // this.defaultEquip.rotation = 3.14 / 4;
         // this.defaultEquip.addPhysics(new Circle(Vec2.ZERO, 8));
         // this.defaultEquip.setGroup("equipment");
-        this.defaultEquip.tweens.add('swing', Tweens.swing(this.defaultEquip))
 
     }
 

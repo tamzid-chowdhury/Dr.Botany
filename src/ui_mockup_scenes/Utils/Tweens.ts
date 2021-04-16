@@ -5,7 +5,8 @@ import { LabelTweenableProperties } from "../../Wolfie2D/Nodes/UIElements/Label"
 import { TweenData } from "../../Wolfie2D/Rendering/Animations/AnimationTypes"
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
-import { UIEvents } from "./Enums";
+import InGameUI from "../Layers/InGameUI/InGameUILayer";
+import { InGame_Events, UIEvents } from "./Enums";
 
 export function slideXFadeIn(startX: number, startY: number, delay: number = 0, offset: number): Record<string,any> {
 	let tween = {
@@ -254,21 +255,20 @@ export  function changeColor(startColor: Color, endColor: Color): Record<string,
 }
 
 
-export  function swing(sprite: Sprite): Record<string,any> {
+export  function swing(sprite: Sprite, dir: number): Record<string,any> {
 	let tween = {
 		startDelay: 0,
-		duration: 150,
+		duration: 100,
 		effects: [
 			{
 				property:TweenableProperties.rotation,
 				start: sprite.rotation,
-				end: sprite.rotation - (3.14 ),
-				ease: EaseFunctionType.IN_OUT_SINE,
-				// loop: true,
-				resetOnComplete: false
+				end: sprite.rotation + (dir*3.14 ),
+				ease: EaseFunctionType.OUT_SINE,
 			},
 
 		],
+		onEnd: InGame_Events.FINISHED_SWING,
 		// reverseOnComplete: true
 	}
 	return tween;
