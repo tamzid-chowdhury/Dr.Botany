@@ -176,6 +176,7 @@ export default class Scene implements Updateable {
         // Update viewport
         this.viewport.update(deltaT);
     }
+    
 
     /**
      * Collects renderable sets and coordinates with the RenderingManager to draw the Scene

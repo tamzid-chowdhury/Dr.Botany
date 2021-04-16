@@ -37,6 +37,18 @@ export default class Viewport {
     /** The size of the canvas */
     private canvasSize: Vec2;
 
+    shake: boolean = false;
+    
+    shakeDir: Vec2;
+
+    shakeDuration: number = 0;
+
+    decay: number ;// decay of screenshake
+
+    trauma: number = 0 ; //  shake strength
+
+    trauma_power: number = 2  ;
+
     constructor(canvasSize: Vec2, zoomLevel: number){
         this.view = new AABB(Vec2.ZERO, Vec2.ZERO);
         this.boundary = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -242,11 +254,31 @@ export default class Viewport {
         pos.y = Math.floor(pos.y);
     
         let currentCenter = this.view.center.clone();
+
         currentCenter.x =  MathUtils.lerp(currentCenter.x, pos.x, 0.125);
         currentCenter.y =  MathUtils.lerp(currentCenter.y, pos.y, 0.125);
+        if(this.shakeDuration > 0) {
+            this.shakeDuration --
+            currentCenter.x += (this.shakeDir.x + (Math.random() < 0.5 ? -1 : 1));
+            currentCenter.y += (this.shakeDir.y + (Math.random() < 0.5 ? -1 : 1)); 
+        }
         this.view.center = currentCenter;
-        // this.view.center.copy(pos);
+
+        // if(this.shakeDuration > 0) {
+        //     this.shakeDuration --
+        //     this.view.center.x += (this.shakeDir.x + (Math.random() < 0.5 ? -1 : 1));
+        //     this.view.center.y += (this.shakeDir.y + (Math.random() < 0.5 ? -1 : 1)); 
+        // }
+        
     }
+
+    
+    doScreenShake(dir: Vec2): void {
+        this.shake = true;
+        this.shakeDuration = 7;
+        this.shakeDir = dir;
+    }
+
 
     update(deltaT: number): void {
         // If zoom is enabled
@@ -285,6 +317,8 @@ export default class Viewport {
         } else {
             this.lastPositions.enqueue(this.focus);
         }
+
+        this.trauma = Math.max(this.trauma - this.decay * deltaT, 0);
 
         this.updateView();
     }

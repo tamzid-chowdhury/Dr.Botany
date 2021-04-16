@@ -22,6 +22,7 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import * as Tweens from "../Utils/Tweens";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -38,11 +39,13 @@ export default class GameLevel extends Scene {
     reticle: Sprite;
     player: Sprite;
     shadow: Sprite;
+    swing: Sprite
     defaultEquip: Sprite;
-    shadowOffset: Vec2 = new Vec2(0, 4);
+    shadowOffset: Vec2 = new Vec2(0, 10);
     playerLookDirection: Vec2 = new Vec2(0,0);
     doingSwing: boolean = false;
     swingDir: number = -1; 
+
     loadScene(): void {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
         this.load.image("reticle", "assets/misc/reticle.png");
@@ -56,7 +59,9 @@ export default class GameLevel extends Scene {
 
         this.load.image("player", "assets/dr_botany_wip.png");
         this.load.image("shadow", "assets/shadow_sprite.png");
-        this.load.image("shovel", "assets/shovel.png");
+        this.load.image("shovel", "assets/weapons/shovel.png");
+        this.load.spritesheet("swing_sprite", "assets/weapons/swing_sprite.json" )
+
     }
 
     startScene(): void {
@@ -125,8 +130,9 @@ export default class GameLevel extends Scene {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
             if(event.type === GameEventType.MOUSE_DOWN && !this.doingSwing) {
+                this.swing.position = new Vec2(this.player.position.x + 30*this.playerLookDirection.x,this.player.position.y + 30*this.playerLookDirection.y);
                 this.emitter.fireEvent(InGame_Events.START_SWING);
-                this.doingSwing = !this.doingSwing;
+                this.doingSwing = true;
             }
 
             if(event.type === WindowEvents.RESIZED) {
@@ -140,41 +146,35 @@ export default class GameLevel extends Scene {
                 this.emitter.fireEvent(InGame_Events.DOING_SWING);
                 this.defaultEquip.tweens.add('swingdown', Tweens.swing(this.defaultEquip, this.swingDir))
                 this.defaultEquip.tweens.play('swingdown');
+                this.swing.rotation = -this.defaultEquip.rotation;
+                this.swing.visible = true;
+                this.viewport.doScreenShake(this.playerLookDirection);
+            }
+
+            if(event.type === InGame_Events.DOING_SWING) {
+                this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
+                this.swing.tweens.play('fadeOut');
             }
 
             if(event.type === InGame_Events.FINISHED_SWING) {
-                if(Input.isMousePressed()) {
+                if(Input.isMouseJustPressed()) {
                     this.swingDir *= -1;
                     this.emitter.fireEvent(InGame_Events.START_SWING);
                 } 
                 else {
                     this.swingDir *= -1;
-                    this.doingSwing = !this.doingSwing;
+                    this.doingSwing = false;
                 } 
             }
-
-            // if(event.type === InGame_Events.DOING_SWING) {
-            //     // this.defaultEquip.invertY = !this.defaultEquip.invertY;
-            //     // this.defaultEquip.rotation -= 3.14 / 2;
-            //     if(Input.isMousePressed()) this.emitter.fireEvent(InGame_Events.START_SWING);
-
-            // }
-
-
-
 
         }
     }
 
     initPlayer(mapSize: Vec2): void {
-        this.shadow = this.add.sprite("shadow", "secondary");
-        this.shadow.position.set(mapSize.x/2,mapSize.y/2+ this.shadowOffset.y);
-        this.shadow.scale = new Vec2(0.7, 0.7);
-
-
 
 
         this.player = this.add.sprite("player", "primary");
+
         this.player.scale = new Vec2(1.5, 1.5);
         this.player.position.set(mapSize.x/2,mapSize.y/2);
 
@@ -185,6 +185,10 @@ export default class GameLevel extends Scene {
         // Add triggers on colliding with coins or coinBlocks
         this.player.setGroup("player");
 
+        this.shadow = this.add.sprite("shadow", "secondary");
+        this.shadow.position.set(this.player.position.x, this.player.position.y + this.shadowOffset.y);
+        this.shadow.scale = new Vec2(0.7, 0.7);
+
 
         this.defaultEquip = this.add.sprite("shovel", "secondary");
         this.defaultEquip.position.set(mapSize.x/2,mapSize.y/2);
@@ -192,6 +196,13 @@ export default class GameLevel extends Scene {
         // this.defaultEquip.rotation = 3.14 / 4;
         // this.defaultEquip.addPhysics(new Circle(Vec2.ZERO, 8));
         // this.defaultEquip.setGroup("equipment");
+
+        this.swing = this.add.animatedSprite("swing_sprite", "primary");
+        this.swing.position.set(this.player.position.x, this.player.position.y);
+        this.swing.visible = false;
+
+        // this.swing.setGroup("equipment");
+        // this.swing.setTrigger("enemy", InGame_Events.EQUIPMENT_ENEMY_COLLISION, null);
 
     }
 

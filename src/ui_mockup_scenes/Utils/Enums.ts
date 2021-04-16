@@ -78,6 +78,7 @@ export enum PauseButtonNames {
 
 export enum InGame_Events {
 	PLAYER_ENEMY_COLLISION = "PlayerEnemyCollsion",   // Enemy walks to player and damage
+	EQUIPMENT_ENEMY_COLLISION = "EquipmentEnemyCollision", 
 	PLAYER_ATTACK_ENEMY = "PlayerAttackEnemy",     // Player 'hits' the enemy
 	// ENEMY_ATTACK_PLAYER = "EnemyAttackPlayer"     // Enemy attacks the player
 	PLAYER_DIED = "PlayerDied",
