@@ -4,9 +4,9 @@ import Input from "../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
-// import InventoryManager from "../GameSystems/InventoryManager";
+import InventoryManager from "../GameSystems/InventoryManager";
 // import Healthpack from "../GameSystems/items/Healthpack";
-// import Item from "../GameSystems/items/Item";
+import Item from "../GameSystems/items/Item";
 // import Weapon from "../GameSystems/items/Weapon";
 import BattlerAI from "./BattlerAI";
 
@@ -18,10 +18,10 @@ export default class PlayerController implements BattlerAI {
     owner: AnimatedSprite;
 
     // The inventory of the player
-    // private inventory: InventoryManager;
+    private inventory: InventoryManager;
 
     /** A list of items in the game world */
-    // private items: Array<Item>;
+    private items: Array<Item>;
 
     // Movement
     private direction: Vec2;
@@ -101,7 +101,7 @@ export default class PlayerController implements BattlerAI {
         // Inventory
 
         // Check for slot change
-        // if(Input.isJustPressed("slot1")){
+        //if(Input.isJustPressed("slot1")){
         //     this.inventory.changeSlot(0);
         // } else if(Input.isJustPressed("slot2")){
         //     this.inventory.changeSlot(1);

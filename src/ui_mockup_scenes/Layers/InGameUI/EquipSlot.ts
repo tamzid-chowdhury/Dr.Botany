@@ -5,6 +5,7 @@ import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import { UILayers, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
+
 export default class EquipSlots {
 	slotOne: Sprite;
 	slotTwo: Sprite;
@@ -30,6 +31,7 @@ export default class EquipSlots {
 	}
 
 	updateSlot(): void {
+		
 		// TODO: load a sprite of the item to be in this slot, check if melee or projectile and display ammo if projectile
 	}
 
