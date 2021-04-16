@@ -82,7 +82,7 @@ export enum InGame_Events {
 	// ENEMY_ATTACK_PLAYER = "EnemyAttackPlayer"     // Enemy attacks the player
 	PLAYER_DIED = "PlayerDied",
 	ENEMY_DIED = "EnemyDied",
-	
+	LEVEL_LOADED = "LevelLoaded",
 	LEVEL_START = "LevelStart",
 	LEVEL_END = "LevelEnd"
 }
