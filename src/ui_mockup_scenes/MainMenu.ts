@@ -259,11 +259,18 @@ export default class MainMenu extends Scene {
                                 enemy:  self - 0100, collisions - 0001
                                 coin:   self - 1000, collisions - 0010
                             */
-                            [0, 1, 1, 1, 1],
+                            // [0, 1, 1, 1, 1],
+                            // [1, 0, 0, 0, 0],
+                            // [1, 0, 0, 0, 0],
+                            // [1, 0, 0, 0, 0],
+                            // [1, 0, 0, 0, 0],
+
+                            // TODO: figure out if commented out matrix is correct or not for materials/equipment
+                            [0, 1, 1, 0, 0],
+                            [1, 0, 0, 1, 0],
                             [1, 0, 0, 0, 0],
-                            [1, 0, 0, 0, 0],
-                            [1, 0, 0, 0, 0],
-                            [1, 0, 0, 0, 0],
+                            [0, 1, 0, 0, 0],
+                            [0, 0, 0, 0, 0]
                         ]
                     }
                 }

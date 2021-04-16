@@ -88,18 +88,15 @@ export default class GameLevel extends Scene {
         this.shadow.position.y += this.shadowOffset.y;
         this.defaultEquip.position = this.player.position.clone();
         this.playerLookDirection = this.defaultEquip.position.dirTo(rotateTo);
-            if(mousePos.x > this.defaultEquip.position.x) {
-                this.defaultEquip.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
-            }
-            else {
-                this.defaultEquip.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
-    
-            }
-            this.defaultEquip.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
-            
-        // NOTE: TO get the swing working properly, we'll need to implement a state, and only rotate the shovel
-        // toward mouse if not in that state. Play should be able to hold down mouse to keep swining if possible
+        if(mousePos.x > this.defaultEquip.position.x) {
+            this.defaultEquip.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
+        }
+        else {
+            this.defaultEquip.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
 
+        }
+        this.defaultEquip.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
+            
         
         if(Input.isKeyJustPressed("p")){
             if(this.pauseScreenLayer !== undefined) {
@@ -124,9 +121,6 @@ export default class GameLevel extends Scene {
 
         }
 
-        
-
-
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
             if(event.type === GameEventType.MOUSE_DOWN && !this.doingSwing) {
@@ -142,7 +136,12 @@ export default class GameLevel extends Scene {
                 this.screenCenter = this.viewport.getHalfSize();
             }
 
+            // TODO: Move these swing related things into PlayerController/a player class-thing
             if(event.type === InGame_Events.START_SWING) {
+                // NOTE: Right now the swing cooldown is tied to the duration of the swing tween
+                // this is because the tween would kind of bug outit you didnt let it finish
+                // a fix might be to have two copies of the swing tween and swap between them
+                // for alternating swing, which should give each enough time to finish
                 this.emitter.fireEvent(InGame_Events.DOING_SWING);
                 this.defaultEquip.tweens.add('swingdown', Tweens.swing(this.defaultEquip, this.swingDir))
                 this.defaultEquip.tweens.play('swingdown');

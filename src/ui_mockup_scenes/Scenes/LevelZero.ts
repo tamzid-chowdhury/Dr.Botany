@@ -41,6 +41,11 @@ export default class LevelZero extends GameLevel {
 
         // this.addEnemy("temp_enemy", new Vec2(350, 350), {  health : 5, player: this.player }, 1);
         this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player}, 0.5)
+        this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player}, 2)
+        this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player}, 1)
+        this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player}, 0.3)
+        this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player}, 0.5)
+        this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player}, 0.5)
         // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
         
         this.subscribeToEvents();
@@ -49,29 +54,7 @@ export default class LevelZero extends GameLevel {
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
-        // this.shadow.position = this.player.position.clone();
-        // this.shadow.position.y += this.shadowOffset.y;
 
-        // this.defaultEquip.position = this.player.position.clone();
-
-        // let mousePos = Input.getGlobalMousePosition()
-        // this.lookDirection = this.defaultEquip.position.dirTo(mousePos);
-
-        // if(mousePos.x > this.defaultEquip.position.x) {
-        //     this.defaultEquip.rotation = Vec2.UP.angleToCCW(this.lookDirection);
-
-        //     this.defaultEquip.position.add(new Vec2(2,-4));
-		// 	this.defaultEquip.invertX = false;
-        //     this.defaultEquip.rotation += 3.14 / 2;
-
-		// }
-		// else {
-        //     this.defaultEquip.rotation = -Vec2.DOWN.angleToCCW(this.lookDirection);
-        //     this.defaultEquip.rotation -= 3.14 / 2;
-        //     this.defaultEquip.position.add(new Vec2(-2,-4));
-		// 	this.defaultEquip.invertX = true;
-
-		// }
 
         while(this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
