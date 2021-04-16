@@ -28,7 +28,18 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     attackRange: number;
 
     damage(damage: number) : void {
-        
+        this.health -= damage;
+
+        if(this.health <= 0) {
+            this.owner.setAIActive(false, {});
+            this.owner.isCollidable = false;
+            this.owner.visible = false;
+
+            if(Math.random() < 0.5) {
+                // spawn some items
+                // this.emitter.fireEvent("orb", {position: this.owner.position});
+            }
+        }
     };
 
     initializeAI(owner:AnimatedSprite, options:Record<string, any>) {

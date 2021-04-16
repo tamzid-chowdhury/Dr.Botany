@@ -128,8 +128,10 @@ export default class GameLevel extends Scene {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
         enemy.position.set(tilePos.x, tilePos.y);
         enemy.scale.set(scale, scale);
-        enemy.addPhysics(new AABB(Vec2.ZERO), new Vec2(50, 50));
-        enemy.colliderOffset.set(0,18);
+
+        // This has to be touched
+        enemy.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+        enemy.colliderOffset.set(0,10);
         // play with this // maybe add a condition for each enemy
         
         enemy.addAI(EnemyController, aiOptions);

@@ -75,7 +75,7 @@ export default class LevelZero extends GameLevel {
         super.initGameUI(this.viewport.getHalfSize());
         super.initReticle();
         // this.addEnemy("temp_enemy", new Vec2(350, 350), {  health : 5, player: this.player }, 1);
-        this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player}, 1)
+        this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player}, 0.5)
         // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
         
         
