@@ -21,8 +21,14 @@ export default class Walk extends EnemyState {
         let playerPosY = this.parent.getPlayerPosition().y;
         // add a condition of enemies reaching the tree or the player
 		// Fix the > operator to area of the player x and y (to fix shaking)
-        this.parent.direction.x = ((playerPosX > ownerPosX) ? 1 : 0) + ((playerPosX < ownerPosX) ? -1 : 0);
-        this.parent.direction.y = ((playerPosY > ownerPosY) ? 1 : 0) + ((playerPosY < ownerPosY) ? -1 : 0);
+        this.parent.direction.x = ((playerPosX  > ownerPosX) ? 1 : -1);
+        this.parent.direction.y = ((playerPosY  > ownerPosY) ? 1 : -1);
+		if(Math.abs(ownerPosX - playerPosX) < 10) {
+			this.parent.direction.x = 0;
+		}
+		if(Math.abs(ownerPosY - playerPosY) < 10) {
+			this.parent.direction.y = 0;
+		}
 		
 		this.owner._velocity.x = this.parent.direction.x;
         this.owner._velocity.y = this.parent.direction.y;

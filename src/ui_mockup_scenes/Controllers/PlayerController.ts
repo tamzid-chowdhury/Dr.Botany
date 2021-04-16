@@ -73,7 +73,6 @@ export default class PlayerController implements BattlerAI {
 		else {
 			this.owner.invertX = false;
 			// this.lookDirection = new Vec2(-3.14 / 2, 0)
-
 		}
 		// console.log(Input.getMousePosition(), this.levelView.getHalfSize())
         // this.lookDirection = this.owner.position.dirTo(Input.getGlobalMousePosition());
