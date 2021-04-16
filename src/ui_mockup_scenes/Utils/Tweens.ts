@@ -81,7 +81,7 @@ export function fadeIn(): Record<string,any> {
 				start: 0,
 				end: 1,
 				ease: EaseFunctionType.IN_OUT_QUINT,
-				resetOnComplete: true
+				// resetOnComplete: true
 			},
 		]
 	};
@@ -98,14 +98,14 @@ export function fadeOut(posY: number): Record<string,any> {
 				start: 1,
 				end: 0,
 				ease: EaseFunctionType.IN_OUT_QUINT,
-				resetOnComplete: true
+				// resetOnComplete: true
 			},
 			{
 				property: TweenableProperties.posY,
 				start: posY,
 				end: posY + 300,
 				ease: EaseFunctionType.IN_OUT_QUINT,
-				resetOnComplete: true
+				// resetOnComplete: true
 			},
 
 		]

@@ -362,7 +362,7 @@ export default class MainMenu extends Scene {
 
             if (event.type === UIEvents.TRANSITION_SPLASH_SCREEN) {
                 this.setDetectDocumentClick(false);
-                this.backgroundLayer.startText.tweens.play('fadeOut')
+                this.backgroundLayer.startText.tweens.play('fadeOut');
                 this.backgroundLayer.logo.tweens.play('slideUpShrink');
 
             }
