@@ -4,12 +4,12 @@ import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import Item from "./items/Item";
+import Material from "./items/Material";
 
 export default class MaterialsManager {
 
     private position: Vec2;
-    private items: Array<Item>;
+    private items: Array<Material>;
     private inventorySlots: Array<Sprite>;
     private slotSize: Vec2;
     private padding: number;
@@ -33,7 +33,7 @@ export default class MaterialsManager {
 
     }
 
-    getItem(): Item {
+    getItem(): Material {
         return this.items[this.currentSlot];
     }
 
@@ -54,7 +54,7 @@ export default class MaterialsManager {
     /**
      * Adds an item to the currently selected slot
      */
-    addItem(item: Item): boolean {
+    addItem(item: Material): boolean {
         if(!this.items[this.currentSlot]){
             // Add the item to the inventory
             this.items[this.currentSlot] = item;
@@ -69,7 +69,7 @@ export default class MaterialsManager {
     /**
      * Removes and returns an item from the the currently selected slot, if possible
      */
-    removeItem(): Item {
+    removeItem(): Material {
         let item = this.items[this.currentSlot];
 
         this.items[this.currentSlot] = null;

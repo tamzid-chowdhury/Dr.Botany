@@ -5,15 +5,9 @@ export default abstract class MaterialType {
     /** The key for this sprite image */
     spriteKey: string;
 
-    /** How much damage this weapon does */
-    damage: number;
-
     /** Display name */
     displayName: string;
-
-    /** The use cooldown of the weapon */
-    cooldown: number;
-
+    
     /** How loud it is to use this weapon */
     useVolume: number;
 
@@ -29,5 +23,5 @@ export default abstract class MaterialType {
 
     abstract createRequiredAssets(scene: Scene): Array<any>;
 
-    abstract hits(node: GameNode, ...args: any): boolean;
+    abstract absorb(node: GameNode, ...args: any): boolean;
 }

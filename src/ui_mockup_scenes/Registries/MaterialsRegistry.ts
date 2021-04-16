@@ -1,6 +1,6 @@
 import Registry from "../../Wolfie2D/Registry/Registries/Registry";
 import ResourceManager from "../../Wolfie2D/ResourceManager/ResourceManager";
-import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
+import MaterialType from "../GameSystems/items/MaterialTypes/MaterialType";
 
 export default class MaterialsRegistry extends Registry<MaterialConstructor> {
     
@@ -8,9 +8,8 @@ export default class MaterialsRegistry extends Registry<MaterialConstructor> {
         const rm = ResourceManager.getInstance();
 
         // Load sprites
-        // rm.image("pistol", "hw3_assets/sprites/pistol.png");
-        // rm.image("knife", "hw3_assets/sprites/knife.png");
-        // rm.image("laser_rifle", "hw3_assets/sprites/laser_rifle.png");
+        rm.image("jelly", "hw3_assets/sprites/greenorb.png"); //UPPERITEM JELLY GREEN ORB FOR NOW
+        rm.image("stalk", "hw3_assets/sprites/redorb.png"); //DOWNERITEM STALK RED ORB FOR NOW 
 
         // Load spritesheets
         // rm.spritesheet("slice", "hw3_assets/spritesheets/slice.json");
@@ -29,6 +28,6 @@ export default class MaterialsRegistry extends Registry<MaterialConstructor> {
     }
 }
 
-type MaterialConstructor = new (...args: any) => WeaponType;
+type MaterialConstructor = new (...args: any) => MaterialType;
 
 

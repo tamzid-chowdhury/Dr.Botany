@@ -4,13 +4,13 @@ import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import Item from "./Item";
-import WeaponType from "./WeaponTypes/WeaponType";
+import MaterialType from "./MaterialTypes/MaterialType";
 
-export default class Weapon extends Item {
+export default class Material extends Item {
     /** The type of this weapon */
-    type: WeaponType;
+    type: MaterialType;
 
-    /** A list of assets this weapon needs to be animated */
+    /** A list of assets this material needs to be animated */
     assets: Array<any>;
 
     /** An event emitter to hook into the EventQueue */
@@ -19,10 +19,10 @@ export default class Weapon extends Item {
     /** The cooldown timer for this weapon's use */
     cooldownTimer: Timer;
 
-    constructor(sprite: Sprite, type: WeaponType){
+    constructor(sprite: Sprite, type: MaterialType){
         super(sprite);
 
-        // Set the weapon type
+        // Set the material type
         this.type = type;
 
         // Keep a reference to the sprite of this weapon
@@ -34,8 +34,6 @@ export default class Weapon extends Item {
         // Create an event emitter
         this.emitter = new Emitter();
 
-        // Create the cooldown timer
-        this.cooldownTimer = new Timer(type.cooldown);
     }
 
     // @override
@@ -51,10 +49,6 @@ export default class Weapon extends Item {
 
         // Do a type specific weapon animation
         this.type.doAnimation(user, direction, ...this.assets);
-
-    
-        // Reset the cooldown timer
-        this.cooldownTimer.start();
 
         return true;
     }
