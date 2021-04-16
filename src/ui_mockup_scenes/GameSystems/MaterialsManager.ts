@@ -6,7 +6,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Item from "./items/Item";
 
-export default class InventoryManager {
+export default class MaterialsManager {
 
     private position: Vec2;
     private items: Array<Item>;
@@ -31,22 +31,6 @@ export default class InventoryManager {
         this.itemLayer = "items";
         scene.addUILayer(this.itemLayer).setDepth(101);
 
-        // Create the inventory slots
-        for(let i = 0; i < size; i++){
-            this.inventorySlots[i] = scene.add.sprite(inventorySlot, this.slotLayer);
-        }
-
-        this.slotSize = this.inventorySlots[0].size.clone();
-
-        // Position the inventory slots
-        for(let i = 0; i < size; i++){
-            this.inventorySlots[i].position.set(position.x + i*(this.slotSize.x + this.padding), position.y);
-        }
-
-        // Add a rect for the selected slot
-        this.selectedSlot = <Rect>scene.add.graphic(GraphicType.RECT, "slots", {position: this.position.clone(), size: this.slotSize.clone().inc(-2)});
-        this.selectedSlot.color = Color.WHITE;
-        this.selectedSlot.color.a = 0.2;
     }
 
     getItem(): Item {
@@ -58,7 +42,6 @@ export default class InventoryManager {
      */
     changeSlot(slot: number): void {
         this.currentSlot = slot;
-        this.selectedSlot.position.copy(this.inventorySlots[slot].position);
     }
 
     /**
@@ -75,9 +58,6 @@ export default class InventoryManager {
         if(!this.items[this.currentSlot]){
             // Add the item to the inventory
             this.items[this.currentSlot] = item;
-            
-            // Update the gui
-            item.moveSprite(new Vec2(this.position.x + this.currentSlot*(this.slotSize.x + this.padding), this.position.y), this.itemLayer);
 
             return true;
         }
