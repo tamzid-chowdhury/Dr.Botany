@@ -20,23 +20,22 @@ import Game from "../../Wolfie2D/Loop/Game";
 import EnemyController from "../Enemies/EnemyController"
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
-
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
+import * as Tweens from "../Utils/Tweens";
 
 export default class GameLevel extends Scene {
-    center: Vec2; //we need to figure out a way to specify this from options
     defaultFont: string = 'Round';
     screenCenter: Vec2; 
     pauseScreenToggle: boolean = true; 
 
     //initialize layers 
-    primary: Layer; 
-    background: Layer; 
-    inGameUILayer: InGameUILayer;
-    cursorLayer: Layer; 
+    primary:        Layer; 
+    background:     Layer; 
+    cursorLayer:    Layer; 
+    inGameUILayer:  InGameUILayer;
     pauseScreenLayer: PauseScreenLayer; 
 
     reticle: Sprite;
-
     player: Sprite;
     shadow: Sprite;
     defaultEquip: Sprite;
@@ -60,9 +59,7 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
-        this.center = this.viewport.getCenter();
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
-        // this.receiver.subscribe(WindowEvents.RESIZED);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
         this.receiver.subscribe(GameEventType.KEY_DOWN);
         this.receiver.subscribe(InGame_Events.LEVEL_LOADED);
@@ -73,10 +70,40 @@ export default class GameLevel extends Scene {
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
-        // update reticle position
+        // update positions and rotations
         let mousePos = Input.getMousePosition();
         let rotateTo = Input.getGlobalMousePosition();
         this.reticle.position.set(mousePos.x, mousePos.y);
+
+        this.shadow.position = this.player.position.clone();
+        this.shadow.position.y += this.shadowOffset.y;
+        this.defaultEquip.position = this.player.position.clone();
+        this.playerLookDirection = this.defaultEquip.position.dirTo(rotateTo);
+
+            if(mousePos.x > this.defaultEquip.position.x) {
+                this.defaultEquip.rotation = Vec2.UP.angleToCCW(this.playerLookDirection);
+                // this.defaultEquip.position.add(new Vec2(2,-4));
+                this.defaultEquip.position.add(new Vec2(8,-4));
+                this.defaultEquip.invertX = false;
+                this.defaultEquip.rotation += 3.14 / 2;
+            }
+            else {
+                this.defaultEquip.rotation = -Vec2.DOWN.angleToCCW(this.playerLookDirection);
+                this.defaultEquip.rotation -= 3.14 / 2;
+                // this.defaultEquip.position.add(new Vec2(-2,-4));
+                this.defaultEquip.position.add(new Vec2(-8,-4));
+                this.defaultEquip.invertX = true;
+    
+            }
+            
+        // NOTE: TO get the swing working properly, we'll need to implement a state, and only rotate the shovel
+        // toward mouse if not in that state. Play should be able to hold down mouse to keep swining if possible
+        if(Input.isMouseJustPressed()) {
+            // this.defaultEquip.invertY = !this.defaultEquip.invertY;
+            // this.defaultEquip.rotation -= 3.14 / 2;
+
+            this.defaultEquip.tweens.play('swing');
+        }
         
         if(Input.isKeyJustPressed("p")){
             if(this.pauseScreenLayer !== undefined) {
@@ -101,32 +128,10 @@ export default class GameLevel extends Scene {
 
         }
 
-
-        this.shadow.position = this.player.position.clone();
-        this.shadow.position.y += this.shadowOffset.y;
-
-        this.defaultEquip.position = this.player.position.clone();
-
-        this.playerLookDirection = this.defaultEquip.position.dirTo(rotateTo);
-
-        if(mousePos.x > this.defaultEquip.position.x) {
-            this.defaultEquip.rotation = Vec2.UP.angleToCCW(this.playerLookDirection);
-
-            this.defaultEquip.position.add(new Vec2(2,-4));
-			this.defaultEquip.invertX = false;
-            this.defaultEquip.rotation += 3.14 / 2;
-
-		}
-		else {
-            this.defaultEquip.rotation = -Vec2.DOWN.angleToCCW(this.playerLookDirection);
-            this.defaultEquip.rotation -= 3.14 / 2;
-            this.defaultEquip.position.add(new Vec2(-2,-4));
-			this.defaultEquip.invertX = true;
-
-		}
         
 
 
+        
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
@@ -149,9 +154,8 @@ export default class GameLevel extends Scene {
         this.shadow.position.set(mapSize.x/2,mapSize.y/2+ this.shadowOffset.y);
         this.shadow.scale = new Vec2(0.7, 0.7);
 
-        this.defaultEquip = this.add.sprite("shovel", "secondary");
-        this.defaultEquip.position.set(mapSize.x/2,mapSize.y/2);
-        this.defaultEquip.rotation = 3.14 / 4;
+
+
 
         this.player = this.add.sprite("player", "primary");
         this.player.scale = new Vec2(1.5, 1.5);
@@ -163,6 +167,15 @@ export default class GameLevel extends Scene {
 
         // Add triggers on colliding with coins or coinBlocks
         this.player.setGroup("player");
+
+
+        this.defaultEquip = this.add.sprite("shovel", "secondary");
+        this.defaultEquip.position.set(mapSize.x/2,mapSize.y/2);
+        this.defaultEquip.rotation = 3.14 / 4;
+        // this.defaultEquip.addPhysics(new Circle(Vec2.ZERO, 8));
+        // this.defaultEquip.setGroup("equipment");
+        this.defaultEquip.tweens.add('swing', Tweens.swing(this.defaultEquip))
+
     }
 
     initInventory(): void {

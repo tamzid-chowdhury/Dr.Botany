@@ -1,5 +1,6 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { LabelTweenableProperties } from "../../Wolfie2D/Nodes/UIElements/Label";
 import { TweenData } from "../../Wolfie2D/Rendering/Animations/AnimationTypes"
 import Color from "../../Wolfie2D/Utils/Color";
@@ -252,3 +253,23 @@ export  function changeColor(startColor: Color, endColor: Color): Record<string,
 	return tween;
 }
 
+
+export  function swing(sprite: Sprite): Record<string,any> {
+	let tween = {
+		startDelay: 0,
+		duration: 150,
+		effects: [
+			{
+				property:TweenableProperties.rotation,
+				start: sprite.rotation,
+				end: sprite.rotation - (3.14 ),
+				ease: EaseFunctionType.IN_OUT_SINE,
+				// loop: true,
+				resetOnComplete: false
+			},
+
+		],
+		// reverseOnComplete: true
+	}
+	return tween;
+}
