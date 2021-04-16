@@ -14,7 +14,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
-import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents  } from "../Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Game from "../../Wolfie2D/Loop/Game";
 import EnemyController from "../Enemies/EnemyController"
@@ -122,21 +122,4 @@ export default class GameLevel extends Scene {
         this.reticle.scale = new Vec2(0.8, 0.8);
 
     }
-
-
-    protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>, scale: number): void {
-        let enemy = this.add.animatedSprite(spriteKey, "primary");
-        enemy.position.set(tilePos.x, tilePos.y);
-        enemy.scale.set(scale, scale);
-
-        // This has to be touched
-        enemy.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-        enemy.colliderOffset.set(0,10);
-        // play with this // maybe add a condition for each enemy
-        
-        enemy.addAI(EnemyController, aiOptions);
-        enemy.setGroup("enemy");
-        // enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
-    }
-
 }

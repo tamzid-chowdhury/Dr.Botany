@@ -4,7 +4,7 @@ import Input from "../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
-import InventoryManager from "../GameSystems/InventoryManager";
+// import EquipmentManager from "../GameSystems/EquipmentManager";
 // import Healthpack from "../GameSystems/items/Healthpack";
 import Item from "../GameSystems/items/Item";
 // import Weapon from "../GameSystems/items/Weapon";
@@ -18,7 +18,7 @@ export default class PlayerController implements BattlerAI {
     owner: AnimatedSprite;
 
     // The inventory of the player
-    private inventory: InventoryManager;
+    //private inventory: EquipmentManager;
 
     /** A list of items in the game world */
     private items: Array<Item>;

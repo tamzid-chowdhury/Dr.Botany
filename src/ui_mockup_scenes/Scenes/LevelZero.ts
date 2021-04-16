@@ -13,12 +13,13 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
-import { UIEvents, UILayers, ButtonNames } from "../Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, InGame_Events } from "../Utils/Enums";
 import GameLevel from "./GameLevel";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
+import EnemyController from "../Enemies/EnemyController";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 
 export default class LevelZero extends GameLevel {
@@ -68,6 +69,7 @@ export default class LevelZero extends GameLevel {
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
         this.initPlayer();
+        this.subscribeToEvents();
 
 
         this.viewport.follow(this.player);
@@ -111,6 +113,17 @@ export default class LevelZero extends GameLevel {
 
 		}
 
+        while(this.receiver.hasNextEvent()) {
+            let event = this.receiver.getNextEvent();
+
+            switch (event.type) {
+                case InGame_Events.PLAYER_ENEMY_COLLISION:
+                    console.log("Enemy Hit Player");
+
+            
+            }
+        }
+
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 15 seconds
         // if (Date.now() - this.time > 15000) {
         //     console.log("15 seconds passed");
@@ -149,6 +162,30 @@ export default class LevelZero extends GameLevel {
         // Add triggers on colliding with coins or coinBlocks
         this.player.setGroup("player");
     }
+
+    protected subscribeToEvents() {
+        this.receiver.subscribe([
+            InGame_Events.PLAYER_ENEMY_COLLISION,
+            InGame_Events.PLAYER_DIED,
+            InGame_Events.ENEMY_DIED
+        ]);
+    }
+
+    protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>, scale: number): void {
+        let enemy = this.add.animatedSprite(spriteKey, "primary");
+        enemy.position.set(tilePos.x, tilePos.y);
+        enemy.scale.set(scale, scale);
+
+        // This has to be touched
+        enemy.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+        enemy.colliderOffset.set(0,10);
+        // play with this // maybe add a condition for each enemy
+        
+        enemy.addAI(EnemyController, aiOptions);
+        enemy.setGroup("enemy");
+        enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
+    }
+
 
 
 }

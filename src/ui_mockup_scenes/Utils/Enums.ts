@@ -75,3 +75,14 @@ export enum PauseButtonNames {
 	OPTIONS = "Options",
 	QUIT = "Quit"
 }
+
+export enum InGame_Events {
+	PLAYER_ENEMY_COLLISION = "PlayerEnemyCollsion",   // Enemy walks to player and damage
+	PLAYER_ATTACK_ENEMY = "PlayerAttackEnemy",     // Player 'hits' the enemy
+	// ENEMY_ATTACK_PLAYER = "EnemyAttackPlayer"     // Enemy attacks the player
+	PLAYER_DIED = "PlayerDied",
+	ENEMY_DIED = "EnemyDied",
+	
+	LEVEL_START = "LevelStart",
+	LEVEL_END = "LevelEnd"
+}

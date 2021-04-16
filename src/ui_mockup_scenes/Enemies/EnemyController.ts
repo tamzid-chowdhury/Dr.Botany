@@ -7,6 +7,7 @@ import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import BattlerAI from "../Controllers/BattlerAI";
+import { InGame_Events } from "../Utils/Enums";
 import Idle from "./EnemyStates/Idle"
 import Walk from "./EnemyStates/Walk"
 
@@ -31,6 +32,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.health -= damage;
 
         if(this.health <= 0) {
+            this.owner.animation.play("DYING", false, InGame_Events.ENEMY_DIED);
             this.owner.setAIActive(false, {});
             this.owner.isCollidable = false;
             this.owner.visible = false;
@@ -54,7 +56,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		this.addState(EnemyStates.IDLE, idle);
 		let walk = new Walk(this, owner);
 		this.addState(EnemyStates.WALK, walk);
-		// let jump = new Jump(this, owner);
 
         this.initialize(EnemyStates.WALK);
 
