@@ -112,6 +112,7 @@ export default class GameLevel extends Scene {
 
         }
 
+
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
