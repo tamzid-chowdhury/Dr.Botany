@@ -73,6 +73,7 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.DOING_SWING);
         this.receiver.subscribe(InGame_Events.FINISHED_SWING);
         this.receiver.subscribe(InGame_Events.START_SWING);
+        this.receiver.subscribe(InGame_Events.DO_SCREENSHAKE);
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
 
@@ -115,6 +116,12 @@ export default class GameLevel extends Scene {
             let event = this.receiver.getNextEvent();
 
             if(event.type === WindowEvents.RESIZED) {
+            }
+
+            if(event.type === InGame_Events.DO_SCREENSHAKE) {
+                let dir = event.data.get("dir");
+                this.viewport.doScreenShake(dir);
+
             }
 
             if(event.type === InGame_Events.LEVEL_LOADED) {

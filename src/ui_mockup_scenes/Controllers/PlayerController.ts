@@ -110,9 +110,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         // Follower movement/rotation update
         this.shadow.position = this.owner.position.clone();
         this.shadow.position.y += this.shadowOffset.y;
-
         this.equipped.position = this.owner.position.clone();
+
         this.playerLookDirection = this.equipped.position.dirTo(rotateTo);
+
         if(mousePos.x > this.equipped.position.x) {
             this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
         }
@@ -126,7 +127,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             let event = this.receiver.getNextEvent();
             // TODO: Abstract MOUSE_DOWN event to doAttack, specific implementations in weapontype files 
             if(event.type === GameEventType.MOUSE_DOWN && !this.doingSwing) {
-                // this.swing.position = new Vec2(this.player.position.x + 30*this.playerLookDirection.x,this.player.position.y + 30*this.playerLookDirection.y);
                 this.emitter.fireEvent(InGame_Events.START_SWING);
                 this.doingSwing = true;
             }
@@ -135,23 +135,19 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 // this is because the tween would kind of bug outit you didnt let it finish
                 // a fix might be to have two copies of the swing tween and swap between them
                 // for alternating swing, which should give each enough time to finish
-                this.swing.position.set(this.owner.position.x + (20*this.playerLookDirection.x), 
-                    this.owner.position.y+ (20*this.playerLookDirection.y));
+                this.swing.position.set(this.owner.position.x + (20*this.playerLookDirection.x), this.owner.position.y + (20*this.playerLookDirection.y));
 
-                this.emitter.fireEvent(InGame_Events.DOING_SWING);
+                // Ideally, the equipped weapon would own the swing sprite, and they'd receive START_SWING and handle this stuff itself
+                // this.emitter.fireEvent(InGame_Events.DOING_SWING);
+                (<AnimatedSprite>this.swing).animation.play("SWING");
                 this.equipped.tweens.add('swingdown', Tweens.swing(this.equipped, this.swingDir))
                 this.equipped.tweens.play('swingdown');
                 this.swing.rotation = -this.equipped.rotation;
                 this.swing.visible = true;
-                (<AnimatedSprite>this.swing).animation.play("SWING");
-
-                this.viewport.doScreenShake(this.playerLookDirection);
-            }
-
-            if(event.type === InGame_Events.DOING_SWING) {
                 this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('fadeOut');
-                // (<AnimatedSprite>this.swing).animation.stop()
+
+                this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
             }
 
             if(event.type === InGame_Events.FINISHED_SWING) {

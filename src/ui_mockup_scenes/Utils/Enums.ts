@@ -88,5 +88,6 @@ export enum InGame_Events {
 	LEVEL_END = "LevelEnd",
 	DOING_SWING = "DoingSwing",
 	FINISHED_SWING = "FinishedSwing",
-	START_SWING = "StartSwing"
+	START_SWING = "StartSwing",
+	DO_SCREENSHAKE = "DoScreenShake"
 }
