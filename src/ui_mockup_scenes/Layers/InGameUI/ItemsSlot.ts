@@ -22,7 +22,7 @@ export default class ItemsSlot {
         this.yOffset = 2*this.centerPos.y - this.sprite.size.y - 8;
         this.sprite.position.set(this.xOffset, this.yOffset)
 
-        this.sprite.scale = new Vec2(0.5,0.5);
+        this.sprite.scale = new Vec2(0.3,0.3);
         this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.xOffset+0.5, this.yOffset + 0.5), text:'x0'});
         this.textBackdrop.size.set(50,50)
         this.textBackdrop.font = Fonts.ROUND;

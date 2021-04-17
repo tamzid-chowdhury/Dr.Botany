@@ -46,11 +46,11 @@ export default class InGameUI {
         this.growthBar = new GrowthBar(scene, center);
         this.moodBar = new MoodBar(scene, center)
         this.equipSlots = new EquipSlots(scene, center);
-        let xOffset = this.center.x - this.center.x/4;
+        let xOffset = this.center.x - this.center.x/5.5;
         for(let i = 0; i < 6; i ++) {
             this.itemsSlots.push(new ItemsSlot(scene, center, xOffset));
-            if(i === 2) xOffset += (this.center.x/6);
-            else xOffset += (this.center.x/12);
+            if(i === 2) xOffset += (this.center.x/8);
+            else xOffset += (this.center.x/16);
         }
         
 
