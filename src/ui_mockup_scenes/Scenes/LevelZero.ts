@@ -19,6 +19,7 @@ export default class LevelZero extends GameLevel {
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json" )
+        this.load.spritesheet("slime_wip", "assets/enemies/slime_wip.json" )
     }
 
     startScene(): void {
@@ -41,11 +42,17 @@ export default class LevelZero extends GameLevel {
 
         // this.addEnemy("temp_enemy", new Vec2(350, 350), {  health : 5, player: this.player }, 1);
         this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player}, 0.5)
-        this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player}, 2)
+        this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player}, 1.5)
         this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player}, 1)
         this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player}, 0.3)
         this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player}, 0.5)
         this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player}, 0.5)
+        this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player}, 2)
+        this.addEnemy("slime_wip", new Vec2(100, 220), {speed : 40, player: this.player}, 1)
+        this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player}, 0.5)
+        this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player}, 0.8)
+        this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player}, 1.5)
+        this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player}, 1.2)
         // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
         
         this.subscribeToEvents();

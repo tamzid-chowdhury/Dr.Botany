@@ -6,10 +6,10 @@ import EnemyState from "./EnemyState";
 import Idle from "./Idle"
 
 export default class Walk extends EnemyState {
-
+	playerSize: Vec2;
 	onEnter(): void {
 		(<AnimatedSprite>this.owner).animation.play("WALK", true);
-
+		this.playerSize = (<AnimatedSprite>this.parent.player).size;
 	}
 
 	update(deltaT: number): void {
@@ -25,15 +25,17 @@ export default class Walk extends EnemyState {
 		this.parent.direction.x = ((playerPosX > ownerPosX) ? 1 : -1);
 		this.parent.direction.y = ((playerPosY > ownerPosY) ? 1 : -1);
 
-		this.owner._velocity.x = this.parent.direction.x;
-		this.owner._velocity.y = this.parent.direction.y;
+		let dirToPlayer = this.parent.getOwnerPostion().dirTo(this.parent.getPlayerPosition());
+		this.owner._velocity = dirToPlayer;
 
-		if (Math.abs(ownerPosX - playerPosX) < 15 && Math.abs(ownerPosY - playerPosY) < 15) {
-			// This has to be handled through Player			
-			this.owner._velocity.x = 0;
-			this.owner._velocity.y = 0;
+		// if (Math.abs(ownerPosX - playerPosX) < 16 && Math.abs(ownerPosY - playerPosY) < 16) {
+		// 	// This has to be handled through Player			
+		// 	this.owner._velocity.x = 0;
+		// 	this.owner._velocity.y = 0;
 			
-		}
+		// }
+		if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
+		if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
 		this.owner._velocity.normalize();
 		this.owner._velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
 		this.owner.move(this.owner._velocity.scaled(deltaT));

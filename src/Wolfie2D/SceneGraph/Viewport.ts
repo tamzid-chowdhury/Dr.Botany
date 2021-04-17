@@ -259,8 +259,8 @@ export default class Viewport {
         currentCenter.y =  MathUtils.lerp(currentCenter.y, pos.y, 0.125);
         if(this.shakeDuration > 0) {
             this.shakeDuration --
-            currentCenter.x += (this.shakeDir.x + (Math.random() < 0.5 ? -1 : 1));
-            currentCenter.y += (this.shakeDir.y + (Math.random() < 0.5 ? -1 : 1)); 
+            currentCenter.x += (-(this.shakeDir.x) + (Math.random() < 0.5 ? -1 : 1) * 0.4);
+            currentCenter.y += (-(this.shakeDir.y) + (Math.random() < 0.5 ? -1 : 1) * 0.4); 
         }
         this.view.center = currentCenter;
 
@@ -275,7 +275,7 @@ export default class Viewport {
     
     doScreenShake(dir: Vec2): void {
         this.shake = true;
-        this.shakeDuration = 7;
+        this.shakeDuration = 5;
         this.shakeDir = dir;
     }
 
