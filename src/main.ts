@@ -1,7 +1,6 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./ui_mockup_scenes/MainMenu";
 
-
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
     // Run any tests
@@ -36,6 +35,8 @@ import MainMenu from "./ui_mockup_scenes/MainMenu";
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
+
+
     const game = new Game(options);
 
     // Start our game

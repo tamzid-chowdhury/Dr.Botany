@@ -8,8 +8,8 @@ export default class MaterialsRegistry extends Registry<MaterialConstructor> {
         const rm = ResourceManager.getInstance();
 
         // Load sprites
-        rm.image("jelly", "hw3_assets/sprites/greenorb.png"); //UPPERITEM JELLY GREEN ORB FOR NOW
-        rm.image("stalk", "hw3_assets/sprites/redorb.png"); //DOWNERITEM STALK RED ORB FOR NOW 
+        rm.image("jelly", "hw3_assets/sprites/items/greenorb.png"); //UPPERITEM JELLY GREEN ORB FOR NOW
+        rm.image("stalk", "hw3_assets/sprites/items/redorb.png"); //DOWNERITEM STALK RED ORB FOR NOW 
 
         // Load spritesheets
         // rm.spritesheet("slice", "hw3_assets/spritesheets/slice.json");
