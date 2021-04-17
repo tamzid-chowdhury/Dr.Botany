@@ -1,0 +1,32 @@
+{
+    "name": "plant",
+    "spriteSheetImage": "plant.png",
+    "spriteWidth": 210,
+    "spriteHeight": 210,
+    "columns": 5,
+    "rows": 1,
+    "durationType": "time",
+    "animations": [
+        { 
+            "name": "HAPPY",
+            "frames": [ {"index": 0, "duration": 1} ]
+        },
+        {
+            "name": "OKAY",
+            "frames": [ {"index": 1, "duration": 1} ]
+        },
+        {
+            "name": "EH",
+            "frames": [{"index": 2, "duration": 1}]
+        },
+		{
+            "name": "SAD",
+            "frames": [{"index": 3, "duration": 1}]
+        },
+		{
+            "name": "ANGRY",
+            "frames": [{"index": 4, "duration": 1}]
+        }
+		
+    ]
+}

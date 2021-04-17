@@ -105,7 +105,7 @@ export function fadeOut(posY: number): Record<string,any> {
 			{
 				property: TweenableProperties.posY,
 				start: posY,
-				end: posY + 300,
+				end: posY + 1000,
 				ease: EaseFunctionType.IN_OUT_QUINT,
 				// resetOnComplete: true
 			},

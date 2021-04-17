@@ -38,6 +38,7 @@ export default class GameLevel extends Scene {
 
     reticle: Sprite;
     player: Sprite;
+    plant: AnimatedSprite;
     shadow: Sprite;
     swing: Sprite
     defaultEquip: Sprite;
@@ -61,6 +62,7 @@ export default class GameLevel extends Scene {
         this.load.image("shadow", "assets/shadow_sprite.png");
         this.load.image("shovel", "assets/weapons/shovel.png");
         this.load.spritesheet("swing_sprite", "assets/weapons/swing_sprite.json" )
+        this.load.spritesheet("plant", "assets/plant.json" )
 
     }
 
@@ -168,6 +170,21 @@ export default class GameLevel extends Scene {
 
         }
     }
+
+    initPlant(mapSize: Vec2): void {
+        this.plant = this.add.animatedSprite('plant', "primary");
+        this.plant.position.set(mapSize.x/2, mapSize.y/4);
+        this.plant.scale.set(0.2, 0.2);
+
+        // This has to be touched
+        // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+        // this.plant.colliderOffset.set(0,10);
+        // play with this // maybe add a condition for each enemy
+        
+        // TODO: define a specific physics group whose collider is half the size of the sprite for collision objects that the player can go behind
+        // this.plant.setGroup("ground");
+        // this.plant.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
+    }   
 
     initPlayer(mapSize: Vec2): void {
 

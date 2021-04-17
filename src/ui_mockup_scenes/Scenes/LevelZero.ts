@@ -35,6 +35,7 @@ export default class LevelZero extends GameLevel {
         this.tilemapSize = this.collidables.size;
 
         super.initPlayer(this.collidables.size);
+        super.initPlant(this.collidables.size);
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
         super.initReticle();
