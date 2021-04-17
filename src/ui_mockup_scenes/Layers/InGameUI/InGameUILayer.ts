@@ -48,7 +48,8 @@ export default class InGameUI {
         this.equipSlots = new EquipSlots(scene, center);
         let xOffset = this.center.x - this.center.x/5.5;
         for(let i = 0; i < 6; i ++) {
-            this.itemsSlots.push(new ItemsSlot(scene, center, xOffset));
+            let idChoice = i % 2 === 0 ? "green_orb" : "red_orb"; 
+            this.itemsSlots.push(new ItemsSlot(scene, center, xOffset, idChoice));
             if(i === 2) xOffset += (this.center.x/8);
             else xOffset += (this.center.x/16);
         }

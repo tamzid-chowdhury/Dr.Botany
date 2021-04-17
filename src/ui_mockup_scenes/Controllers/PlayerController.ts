@@ -1,45 +1,85 @@
+import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
 // import EquipmentManager from "../GameSystems/EquipmentManager";
 // import Healthpack from "../GameSystems/items/Healthpack";
 import Item from "../GameSystems/items/Item";
-// import Weapon from "../GameSystems/items/Weapon";
+import { InGame_Events } from "../Utils/Enums";
+import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";
 
-export default class PlayerController implements BattlerAI {
-    // Fields from BattlerAI
+export default class PlayerController extends StateMachineAI implements BattlerAI {
     health: number;
-
-    // The actual player sprite
     owner: AnimatedSprite;
+    materials: Array<string> = [];
+
 
     // The inventory of the player
     //private inventory: EquipmentManager;
 
-    /** A list of items in the game world */
-    private items: Array<Item>;
 
-    // Movement
-    private direction: Vec2;
-    private speed: number;
+    direction: Vec2;
+    speed: number;
 
-
+    shadow: Sprite;
+    weapons: Array<Sprite> = [];
+    equipped: Sprite;
+    swing: Sprite;
+    viewport: Viewport;
+    shadowOffset: Vec2 = new Vec2(0, 10);
 	levelView: Viewport;
 	viewHalfSize: Vec2;
+    playerLookDirection: Vec2 = new Vec2(0,0);
+    swingDir: number = -1; 
+    doingSwing: boolean = false;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
+        this.weapons.push(options.defaultWeapon);
+        this.equipped = options.defaultWeapon;
+        this.swing = options.swingSprite;
+        this.shadow = options.shadow;
+        this.viewport = owner.getScene().getViewport();
+
+
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
         this.health = 5;
 		this.levelView = this.owner.getScene().getViewport();
 		this.viewHalfSize = this.levelView.getHalfSize();
+
+        this.shadow.scale = new Vec2(0.7, 0.7);
+        this.owner.scale = new Vec2(1.5, 1.5);
+
+        if(options.mapSize) {
+            this.owner.position.set(options.mapSize.x/2, options.mapSize.y/2);
+            this.equipped.position.set(options.mapSize.x/2,options.mapSize.y/2);
+        }
+        else {
+            this.owner.position = new Vec2(0,0);
+            this.equipped.position = this.owner.position;
+        }
+        this.shadow.position.set(this.owner.position.x, this.owner.position.y + this.shadowOffset.y);
+        this.equipped.invertY = true;
+
+        this.swing.position.set(this.owner.position.x, this.owner.position.y);
+        this.swing.visible = false;
+
+        this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
+        this.owner.colliderOffset.set(0, 10);
+        this.owner.setGroup("player");
+
         // this.items = options.items;
         // this.inventory = options.inventory;
+        this.subscribeToEvents();
     }
 
     activate(options: Record<string, any>): void {}
@@ -47,92 +87,85 @@ export default class PlayerController implements BattlerAI {
     handleEvent(event: GameEvent): void {}
 
     update(deltaT: number): void {
-        // Get the movement direction
+
+        let mousePos = Input.getMousePosition();
+        let rotateTo = Input.getGlobalMousePosition();
+        
         this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
         this.direction.y = (Input.isPressed("forward") ? -1 : 0) + (Input.isPressed("backward") ? 1 : 0);
-
-        // if(!this.direction.isZero()){
-        //     // Move the player
-        //     this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
-        //     // this.owner.animation.playIfNotAlready("WALK", true);
-        // } else {
-        //     // Player is idle
-        //     // this.owner.animation.playIfNotAlready("IDLE", true);
-        // }
 		this.owner._velocity.x = this.direction.x;
 		this.owner._velocity.y = this.direction.y;
 		this.owner._velocity.normalize();
 		this.owner._velocity.mult(new Vec2(this.speed, this.speed));
 		this.owner.move(this.owner._velocity.scaled(deltaT));
-		// Get the unit vector in the look direction
-		if(Input.getGlobalMousePosition().x > this.owner.position.x) {
-			this.owner.invertX = true;
 
-			// this.lookDirection = new Vec2(3.14 / 2, 0)
+		if(rotateTo.x > this.owner.position.x) {
+			this.owner.invertX = true;
 		}
 		else {
 			this.owner.invertX = false;
-			// this.lookDirection = new Vec2(-3.14 / 2, 0)
 		}
-		// console.log(Input.getMousePosition(), this.levelView.getHalfSize())
-        // this.lookDirection = this.owner.position.dirTo(Input.getGlobalMousePosition());
+        // ---
 
-        // Shoot a bullet
-        // if(Input.isMouseJustPressed()){
-        //     // Get the current item
-        //     let item = this.inventory.getItem();
+        // Follower movement/rotation update
+        this.shadow.position = this.owner.position.clone();
+        this.shadow.position.y += this.shadowOffset.y;
 
-        //     // If there is an item in the current slot, use it
-        //     if(item){
-        //         item.use(this.owner, "player", this.lookDirection);
+        this.equipped.position = this.owner.position.clone();
+        this.playerLookDirection = this.equipped.position.dirTo(rotateTo);
+        if(mousePos.x > this.equipped.position.x) {
+            this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
+        }
+        else this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
 
-        //         if(item instanceof Healthpack){
-        //             // Destroy the used healthpack
-        //             this.inventory.removeItem();
-        //             item.sprite.visible = false;
-        //         }
-        //     }
-        // }
+        this.equipped.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
+        // ---
 
-        // Rotate the player
-        // this.owner.rotation = Vec2.UP.angleToCCW(this.lookDirection);
-		// this.owner.rotation = Vec2.RIGHT.angleToCCW(this.lookDirection);
 
-        // Inventory
+        while (this.receiver.hasNextEvent()) {
+            let event = this.receiver.getNextEvent();
+            // TODO: Abstract MOUSE_DOWN event to doAttack, specific implementations in weapontype files 
+            if(event.type === GameEventType.MOUSE_DOWN && !this.doingSwing) {
+                // this.swing.position = new Vec2(this.player.position.x + 30*this.playerLookDirection.x,this.player.position.y + 30*this.playerLookDirection.y);
+                this.emitter.fireEvent(InGame_Events.START_SWING);
+                this.doingSwing = true;
+            }
+            if(event.type === InGame_Events.START_SWING) {
+                // NOTE: Right now the swing cooldown is tied to the duration of the swing tween
+                // this is because the tween would kind of bug outit you didnt let it finish
+                // a fix might be to have two copies of the swing tween and swap between them
+                // for alternating swing, which should give each enough time to finish
+                this.swing.position.set(this.owner.position.x + (20*this.playerLookDirection.x), 
+                    this.owner.position.y+ (20*this.playerLookDirection.y));
 
-        // Check for slot change
-        //if(Input.isJustPressed("slot1")){
-        //     this.inventory.changeSlot(0);
-        // } else if(Input.isJustPressed("slot2")){
-        //     this.inventory.changeSlot(1);
-        // }
-        
-        // if(Input.isJustPressed("pickup")){
-        //     // Check if there is an item to pick up
-        //     for(let item of this.items){
+                this.emitter.fireEvent(InGame_Events.DOING_SWING);
+                this.equipped.tweens.add('swingdown', Tweens.swing(this.equipped, this.swingDir))
+                this.equipped.tweens.play('swingdown');
+                this.swing.rotation = -this.equipped.rotation;
+                this.swing.visible = true;
+                (<AnimatedSprite>this.swing).animation.play("SWING");
 
-        //         if(this.owner.collisionShape.overlaps(item.sprite.boundary)){
-        //             console.log('picking up')
-                    
-        //             // We overlap it, try to pick it up
-        //             this.inventory.addItem(item);
-        //             break;
-        //         }
-        //     }
-        // }
+                this.viewport.doScreenShake(this.playerLookDirection);
+            }
 
-        // if(Input.isJustPressed("drop")){
-        //     // Check if we can drop our current item
-        //     let item = this.inventory.removeItem();
-            
-        //     if(item){
-        //         // Move the item from the ui to the gameworld
-        //         item.moveSprite(this.owner.position, "primary");
+            if(event.type === InGame_Events.DOING_SWING) {
+                this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
+                this.swing.tweens.play('fadeOut');
+                // (<AnimatedSprite>this.swing).animation.stop()
+            }
 
-        //         // Add the item to the list of items
-        //         this.items.push(item);
-        //     }
-        // }
+            if(event.type === InGame_Events.FINISHED_SWING) {
+                if(Input.isMouseJustPressed()) {
+                    this.swingDir *= -1;
+                    this.emitter.fireEvent(InGame_Events.START_SWING);
+                } 
+                else {
+                    this.swingDir *= -1;
+                    this.doingSwing = false;
+                } 
+            }
+        }
+
     }
 
     damage(damage: number): void {
@@ -145,5 +178,14 @@ export default class PlayerController implements BattlerAI {
     destroy(): void {
 
 	}
+
+    subscribeToEvents(): void {
+        this.receiver.subscribe(GameEventType.MOUSE_DOWN);
+        this.receiver.subscribe(GameEventType.MOUSE_UP);
+        this.receiver.subscribe(GameEventType.KEY_DOWN);
+        this.receiver.subscribe(InGame_Events.DOING_SWING);
+        this.receiver.subscribe(InGame_Events.FINISHED_SWING);
+        this.receiver.subscribe(InGame_Events.START_SWING);
+    }
 
 }

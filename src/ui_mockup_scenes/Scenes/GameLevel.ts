@@ -43,9 +43,6 @@ export default class GameLevel extends Scene {
     swing: Sprite
     defaultEquip: Sprite;
     shadowOffset: Vec2 = new Vec2(0, 10);
-    playerLookDirection: Vec2 = new Vec2(0,0);
-    doingSwing: boolean = false;
-    swingDir: number = -1; 
 
     loadScene(): void {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
@@ -61,6 +58,8 @@ export default class GameLevel extends Scene {
         this.load.image("player", "assets/player/dr_botany_wip.png");
         this.load.image("shadow", "assets/player/shadow_sprite.png");
         this.load.image("shovel", "assets/weapons/shovel.png");
+        this.load.image("green_orb", "assets/items/greenorb.png");
+        this.load.image("red_orb", "assets/items/redorb.png");
         this.load.spritesheet("swing_sprite", "assets/weapons/swing_sprite.json" )
         this.load.spritesheet("plant", "assets/plant/plant.json" )
 
@@ -84,20 +83,9 @@ export default class GameLevel extends Scene {
         // update positions and rotations
         let mousePos = Input.getMousePosition();
         let rotateTo = Input.getGlobalMousePosition();
-        this.reticle.position.set(mousePos.x, mousePos.y);
+        this.reticle.position = mousePos;
 
-        this.shadow.position = this.player.position.clone();
-        this.shadow.position.y += this.shadowOffset.y;
-        this.defaultEquip.position = this.player.position.clone();
-        this.playerLookDirection = this.defaultEquip.position.dirTo(rotateTo);
-        if(mousePos.x > this.defaultEquip.position.x) {
-            this.defaultEquip.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
-        }
-        else {
-            this.defaultEquip.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
-
-        }
-        this.defaultEquip.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
+        
             
         
         if(Input.isKeyJustPressed("p")){
@@ -125,11 +113,6 @@ export default class GameLevel extends Scene {
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-            if(event.type === GameEventType.MOUSE_DOWN && !this.doingSwing) {
-                // this.swing.position = new Vec2(this.player.position.x + 30*this.playerLookDirection.x,this.player.position.y + 30*this.playerLookDirection.y);
-                this.emitter.fireEvent(InGame_Events.START_SWING);
-                this.doingSwing = true;
-            }
 
             if(event.type === WindowEvents.RESIZED) {
             }
@@ -138,41 +121,7 @@ export default class GameLevel extends Scene {
                 this.screenCenter = this.viewport.getHalfSize();
             }
 
-            // TODO: Move these swing related things into PlayerController/a player class-thing
-            if(event.type === InGame_Events.START_SWING) {
-                // NOTE: Right now the swing cooldown is tied to the duration of the swing tween
-                // this is because the tween would kind of bug outit you didnt let it finish
-                // a fix might be to have two copies of the swing tween and swap between them
-                // for alternating swing, which should give each enough time to finish
-                this.swing.position.set(this.player.position.x + (20*this.playerLookDirection.x), 
-                    this.player.position.y+ (20*this.playerLookDirection.y));
-
-                this.emitter.fireEvent(InGame_Events.DOING_SWING);
-                this.defaultEquip.tweens.add('swingdown', Tweens.swing(this.defaultEquip, this.swingDir))
-                this.defaultEquip.tweens.play('swingdown');
-                this.swing.rotation = -this.defaultEquip.rotation;
-                this.swing.visible = true;
-                (<AnimatedSprite>this.swing).animation.play("SWING");
-
-                this.viewport.doScreenShake(this.playerLookDirection);
-            }
-
-            if(event.type === InGame_Events.DOING_SWING) {
-                this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
-                this.swing.tweens.play('fadeOut');
-                // (<AnimatedSprite>this.swing).animation.stop()
-            }
-
-            if(event.type === InGame_Events.FINISHED_SWING) {
-                if(Input.isMouseJustPressed()) {
-                    this.swingDir *= -1;
-                    this.emitter.fireEvent(InGame_Events.START_SWING);
-                } 
-                else {
-                    this.swingDir *= -1;
-                    this.doingSwing = false;
-                } 
-            }
+            
 
         }
     }
@@ -193,39 +142,16 @@ export default class GameLevel extends Scene {
     }   
 
     initPlayer(mapSize: Vec2): void {
-
-
         this.player = this.add.sprite("player", "primary");
+        let playerOptions = {
+            mapSize: mapSize, 
+            speed: 150,
+            shadow: this.add.sprite("shadow", "secondary"),
+            defaultWeapon: this.add.sprite("shovel", "secondary"),
+            swingSprite: this.add.animatedSprite("swing_sprite", "primary")
+        }
 
-        this.player.scale = new Vec2(1.5, 1.5);
-        this.player.position.set(mapSize.x/2,mapSize.y/2);
-
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
-        this.player.colliderOffset.set(0, 10);
-        this.player.addAI(PlayerController, {tilemap: "Main", speed: 150,});
-
-        // Add triggers on colliding with coins or coinBlocks
-        this.player.setGroup("player");
-
-        this.shadow = this.add.sprite("shadow", "secondary");
-        this.shadow.position.set(this.player.position.x, this.player.position.y + this.shadowOffset.y);
-        this.shadow.scale = new Vec2(0.7, 0.7);
-
-
-        this.defaultEquip = this.add.sprite("shovel", "secondary");
-        this.defaultEquip.position.set(mapSize.x/2,mapSize.y/2);
-        this.defaultEquip.invertY = true
-        // this.defaultEquip.rotation = 3.14 / 4;
-        // this.defaultEquip.addPhysics(new Circle(Vec2.ZERO, 8));
-        // this.defaultEquip.setGroup("equipment");
-
-        this.swing = this.add.animatedSprite("swing_sprite", "primary");
-
-        this.swing.position.set(this.player.position.x, this.player.position.y);
-        this.swing.visible = false;
-
-        // this.swing.setGroup("equipment");
-        // this.swing.setTrigger("enemy", InGame_Events.EQUIPMENT_ENEMY_COLLISION, null);
+        this.player.addAI(PlayerController, playerOptions);
 
     }
 

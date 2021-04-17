@@ -8,21 +8,26 @@ import * as Palette from "../../Utils/Colors";
 
 export default class ItemsSlot {
 	sprite: Sprite;
+    itemImage: Sprite;
 	text: Label;
 	textBackdrop: Label;
 	centerPos: Vec2;
     xOffset: number;
     yOffset: number;
 
-	constructor(scene: Scene, centerPos: Vec2, xOffset: number) {
+	constructor(scene: Scene, centerPos: Vec2, xOffset: number, itemImageString: string) {
 
 		this.centerPos = centerPos;
 		this.sprite = scene.add.sprite("ui_square", UILayers.INGAME_UI)
+        this.itemImage = scene.add.sprite(itemImageString, UILayers.INGAME_UI);
         this.xOffset = xOffset;
         this.yOffset = 2*this.centerPos.y - this.sprite.size.y - 8;
-        this.sprite.position.set(this.xOffset, this.yOffset)
+        this.sprite.position.set(this.xOffset, this.yOffset);
+        this.itemImage.position.set(this.xOffset, this.yOffset);
+
 
         this.sprite.scale = new Vec2(0.3,0.3);
+        this.itemImage.scale = new Vec2(0.3,0.3);
         this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.xOffset+0.5, this.yOffset + 0.5), text:'x0'});
         this.textBackdrop.size.set(50,50)
         this.textBackdrop.font = Fonts.ROUND;
