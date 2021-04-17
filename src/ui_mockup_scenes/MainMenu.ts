@@ -31,6 +31,7 @@ import { GameEventType } from "../Wolfie2D/Events/GameEventType";
 import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
 import Game from "../Wolfie2D/Loop/Game";
+import BackButton from "./Classes/BackButton";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -45,7 +46,7 @@ export default class MainMenu extends Scene {
     optionsLayer: OptionsLayer;
     cursorLayer: Layer;
     cursorLayer2: Layer;
-    private dropShadow: UIElement;
+
     cursor: Sprite;
     cursor2: Sprite;
 
@@ -55,7 +56,7 @@ export default class MainMenu extends Scene {
     defaultFont: string = 'Round';
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
 
-    backButton: GameButton;
+    backButton: BackButton;
     selectLevelBack: GameButton;
 
 
@@ -73,64 +74,12 @@ export default class MainMenu extends Scene {
         this.load.audio("temp_music", "assets/music/temp.mp3");
     }
 
-    setDropShadow(pos: Vec2) {
-        this.dropShadow.visible = true;
-        this.dropShadow.position.set(pos.x, pos.y);
-    }
-
     setDetectDocumentClick(toggle: boolean): void {
         
         if (toggle) document.onclick = () => { this.emitter.fireEvent(UIEvents.TRANSITION_SPLASH_SCREEN); }
         else document.onclick = () => { };
     }
 
-    initBackButton(): GameButton {
-        let center = this.center.clone();
-		let xOffset = 30
-		let startX = center.x - xOffset;
-		let startY = center.y + 300;
-		let endX = center.x;
-		let animationDelay = 0;
-        let backSprite = this.add.sprite("temp_button", UILayers.BACKGROUND);
-        backSprite.position = new Vec2(startX, startY)
-        backSprite.scale = new Vec2(3,3);
-        backSprite.alpha = 0;
-
-        let backLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.BACKGROUND, { position: new Vec2(startX, startY), text: "Back", size : 24});
-		backLabel.size.set(200, 100);
-		backLabel.borderWidth = 0;
-		backLabel.borderRadius = 0;
-		backLabel.font = this.defaultFont;
-        backLabel.backgroundColor = Palette.transparent();
-        backLabel.backgroundColor.a = 0;
-        backLabel.textColor.a = 0;
-        backLabel.borderColor = Palette.transparent();
-		backLabel.onClickEventId = UIEvents.SHOW_MAIN_MENU;
-		
-		
-		backLabel.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, xOffset));
-		backLabel.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
-		backLabel.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-
-        backSprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, xOffset));
-		backSprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
-		backSprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-        backSprite.tweens.add('scaleIn', Tweens.scaleIn(backSprite.scale, new Vec2(3.8,3.8), 0, 100));
-        backSprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), backSprite.scale, 0, 100));
-
-        backLabel.onFirstEnter = () => {
-			backLabel.tweens.play('slideUpLeft');
-            backSprite.tweens.play('scaleIn');
-            backSprite.tweens.play('slideUpLeft');
-		}
-		backLabel.onLeave = () => {
-			backSprite.tweens.play('slideDownRight');
-			backLabel.tweens.play('slideDownRight');
-            backSprite.tweens.play('scaleOut');
-		}
-
-        return new GameButton(backSprite, backLabel);
-    }
 
     startScene(): void {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key : "temp_music", loop: true, holdReference: true});
@@ -162,7 +111,9 @@ export default class MainMenu extends Scene {
         this.cursor2.scale = new Vec2(0.8, 0.8)
         this.cursor2.visible = false;
         
-        this.backButton = this.initBackButton();
+
+        this.backButton = new BackButton(this);
+        // this.backButton = this.initBackButton();
 
         this.backgroundLayer.playSplashScreen();
         this.setDetectDocumentClick(true);
@@ -222,6 +173,8 @@ export default class MainMenu extends Scene {
 
             if(event.type === WindowEvents.RESIZED) {
                 this.backgroundLayer.initLogo();
+
+                this.backButton.reposition(new Vec2(window.innerWidth / 2, window.innerHeight / 2))
                 // should reposition ui elements
             }
 
