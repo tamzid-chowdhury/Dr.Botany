@@ -119,6 +119,16 @@ export default class GameLevel extends Scene {
                 this.droppedMaterial.splice(index,1)
 
             }
+
+            if(material.sprite.position.distanceTo(this.player.position) < 75){ 
+                let dirToPlayer = material.sprite.position.dirTo(this.player.position);
+                material.sprite._velocity = dirToPlayer;
+                let dist = material.sprite.position.distanceSqTo(this.player.position);
+                let speedSq = Math.pow(300, 2);
+                material.sprite._velocity.normalize();
+                material.sprite._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
+                material.sprite.move(material.sprite._velocity.scaled(deltaT));
+            }
         }
         
 
@@ -186,6 +196,8 @@ export default class GameLevel extends Scene {
                 upper.position = position; 
                 upper.scale.set(0.6, 0.6);
                 let material = new Material(upper,"upper")
+                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+                material.sprite.setGroup("materials");
                 this.droppedMaterial.push(material)
             }
 
@@ -195,6 +207,8 @@ export default class GameLevel extends Scene {
                 downer.position = position; 
                 downer.scale.set(0.6, 0.6);
                 let material = new Material(downer,"downer")
+                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+                material.sprite.setGroup("materials");
                 this.droppedMaterial.push(material)
             }            
 
