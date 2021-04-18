@@ -19,21 +19,11 @@ export default class Growthbar {
         this.scene = scene;
 		this.sprite = scene.add.sprite("moodbar", UILayers.INGAME_UI)
         let xOffset =  this.centerPos.x;
-        let yOffset =  2*this.centerPos.y - 2.2*this.sprite.size.y ;
+        let yOffset =  2*this.centerPos.y - 2*this.sprite.size.y ;
         this.sprite.position.set(xOffset, yOffset)
 
         this.sprite.scale = new Vec2(0.5,0.5);
-        // this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset+0.5, yOffset + 0.5), text:'Growth: 0 %'});
-        // this.textBackdrop.size = this.sprite.size;
-        // this.textBackdrop.font = Fonts.ROUND;
-        // this.textBackdrop.textColor = Palette.black();
-        // this.textBackdrop.fontSize = 24;
 
-        // this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, yOffset), text:'Growth: 0 %'});
-        // this.text.size = this.sprite.size;
-        // this.text.font = Fonts.ROUND;
-        // this.text.textColor = Palette.white();
-        // this.text.fontSize = 24;
 	}
 
     updatePos(width: number, height: number): void {

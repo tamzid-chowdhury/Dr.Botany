@@ -18,11 +18,11 @@ export default class EquipSlots {
 		this.centerPos = centerPos;
 		this.slotOne = scene.add.sprite("ui_square", UILayers.INGAME_UI)
         let xOffset =  this.slotOne.size.x / 3;
-        let yOffset =  this.centerPos.y / 3;
+        let yOffset =  this.centerPos.y / 4;
         this.slotOne.position.set(xOffset, yOffset)
         this.slotOne.scale = new Vec2(0.6, 0.6);
 
-		yOffset += this.centerPos.y / 6;
+		xOffset += this.centerPos.y / 5;
 
 		this.slotTwo = scene.add.sprite("ui_square", UILayers.INGAME_UI)
         this.slotTwo.position.set(xOffset, yOffset)

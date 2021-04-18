@@ -49,6 +49,7 @@ export default class GameLevel extends Scene {
         this.load.image("reticle", "assets/misc/reticle.png");
         this.load.image("temp_button", "assets/ui_art/button.png");
         this.load.image("ui_square", "assets/ui_art/ui_square.png");
+        this.load.image("ui_square_v2", "assets/ui_art/ui_square_v2.png");
         this.load.image("ui_circle", "assets/ui_art/ui_circle.png");
         this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
         this.load.image("healthbar", "assets/ui_art/health_bar_wip.png")

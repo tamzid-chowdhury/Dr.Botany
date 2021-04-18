@@ -31,6 +31,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     shadow: Sprite;
     weapons: Array<Sprite> = [];
     equipped: Sprite;
+
+
+    // WHAT IF TWO SHOVELS AT ONE TIME POWERUP???? ALTERNATING SWINGS
+
     swing: Sprite;
     viewport: Viewport;
     shadowOffset: Vec2 = new Vec2(0, 10);
@@ -116,10 +120,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         if(mousePos.x > this.equipped.position.x) {
             this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
+            // this.equipped.rotation += 3.14/2
         }
-        else this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
+        else {
+            this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
+            // this.equipped.rotation -= 3.14/2
+        } 
+
 
         this.equipped.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
+        // this.equipped.position.x += 6 * this.playerLookDirection.x;
+        // this.equipped.position.y += 3 * this.playerLookDirection.y;
         // ---
 
 
@@ -139,11 +150,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 // Ideally, the equipped weapon would own the swing sprite, and they'd receive START_SWING and handle this stuff itself
                 // this.emitter.fireEvent(InGame_Events.DOING_SWING);
-                (<AnimatedSprite>this.swing).animation.play("SWING");
+                (<AnimatedSprite>this.swing).animation.play("SWING", false);
                 this.equipped.tweens.add('swingdown', Tweens.swing(this.equipped, this.swingDir))
                 this.equipped.tweens.play('swingdown');
                 this.swing.rotation = -this.equipped.rotation;
                 this.swing.visible = true;
+                this.swing.tweens.add('moveAndShrink', Tweens.spriteMoveAndShrink(this.swing.position, this.playerLookDirection))
+                this.swing.tweens.play('moveAndShrink');
+
                 this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('fadeOut');
 
@@ -151,6 +165,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             }
 
             if(event.type === InGame_Events.FINISHED_SWING) {
+
+                this.swing.visible = false;
                 if(Input.isMouseJustPressed()) {
                     this.swingDir *= -1;
                     this.emitter.fireEvent(InGame_Events.START_SWING);

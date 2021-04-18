@@ -258,7 +258,7 @@ export  function changeColor(startColor: Color, endColor: Color): Record<string,
 export  function swing(sprite: Sprite, dir: number): Record<string,any> {
 	let tween = {
 		startDelay: 0,
-		duration: 50,
+		duration: 100,
 		effects: [
 			{
 				property:TweenableProperties.rotation,
@@ -278,7 +278,7 @@ export  function swing(sprite: Sprite, dir: number): Record<string,any> {
 export function spriteFadeOut(pos: Vec2, dir: Vec2): Record<string,any> {
 	let tween = {
 		startDelay: 0,
-		duration: 150,
+		duration: 400,
 		effects: [
 			{
 				property:TweenableProperties.alpha,
@@ -287,23 +287,40 @@ export function spriteFadeOut(pos: Vec2, dir: Vec2): Record<string,any> {
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
+		]
+		// onEnd: InGame_Events.FINISHED_SWING
+	}
+	return tween
+}
+
+export function spriteMoveAndShrink(pos: Vec2, dir: Vec2): Record<string,any> {
+	let tween = {
+		startDelay: 0,
+		duration: 150,
+		effects: [
 			{
 				property:TweenableProperties.scaleX,
 				start: 1,
-				end: 0.5 ,
+				end: 0.8 ,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+			{
+				property:TweenableProperties.scaleY,
+				start: 1,
+				end: 1.8 ,
 				ease: EaseFunctionType.OUT_SINE,
 			},
 			{
 				property:TweenableProperties.posX,
 				start: pos.x,
-				end: pos.x + (10 * dir.x) ,
+				end: pos.x + (20 * dir.x) ,
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
 			{
 				property:TweenableProperties.posY,
 				start: pos.y,
-				end: pos.y + (10 * dir.y) ,
+				end: pos.y + (20 * dir.y) ,
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},

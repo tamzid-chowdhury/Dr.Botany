@@ -9,6 +9,11 @@ import Color from "../../../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
 import WeaponType from "./WeaponType";
 
+
+// single Projectile types: shovel, trashcan lid, bad seeds/pills?
+// stream projectile: water hose
+// 
+
 export default class SemiAutoGun extends WeaponType {
 
     color: Color;

@@ -17,8 +17,8 @@ import * as Palette from "../../Utils/Colors";
 import HealthBar from "./HealthBar";
 import EquipSlots from "./EquipSlot";
 import GrowthBar from "./GrowthBar";
-import ItemsSlot from "./ItemsSlot";
 import MoodBar from "./MoodBar";
+import MaterialSlots from "./MaterialSlots";
 
 export default class InGameUI {
     layer: Layer; 
@@ -31,7 +31,7 @@ export default class InGameUI {
     growthBar: GrowthBar;
     moodBar: MoodBar;
     equipSlots: EquipSlots;
-    itemsSlots: Array<ItemsSlot> = [];
+    materialSlots: MaterialSlots;
     
     constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
@@ -43,16 +43,27 @@ export default class InGameUI {
         this.layer = scene.addUILayer(UILayers.INGAME_UI);
 
         this.healthBar = new HealthBar(scene, center);
-        this.growthBar = new GrowthBar(scene, center);
+        // this.growthBar = new GrowthBar(scene, center);
         this.moodBar = new MoodBar(scene, center)
         this.equipSlots = new EquipSlots(scene, center);
         let xOffset = this.center.x - this.center.x/5.5;
-        for(let i = 0; i < 6; i ++) {
-            let idChoice = i % 2 === 0 ? "green_orb" : "red_orb"; 
-            this.itemsSlots.push(new ItemsSlot(scene, center, xOffset, idChoice));
-            if(i === 2) xOffset += (this.center.x/8);
-            else xOffset += (this.center.x/16);
-        }
+
+        this.materialSlots = new MaterialSlots(scene, center);
+
+
+
+        // for(let i = 0; i < 6; i ++) {
+        //     let idChoice = i % 2 === 0 ? "green_orb" : "red_orb"; 
+        //     this.itemsSlots.push(new ItemsSlot(scene, center, xOffset, idChoice));
+        //     if(i === 2) xOffset += (this.center.x/8);
+        //     else xOffset += (this.center.x/16);
+        // }
+        // for(let i = 0; i < 2; i ++) {
+        //     let idChoice = i % 2 === 0 ? "green_orb" : "red_orb"; 
+        //     this.itemsSlots.push(new ItemsSlot(scene, center, xOffset, idChoice));
+        //     if(i === 2) xOffset += (this.center.x/8);
+        //     else xOffset += (this.center.x/16);
+        // }
         
 
 
