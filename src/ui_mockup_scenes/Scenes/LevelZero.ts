@@ -17,7 +17,7 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     time: number;
     testMaterial: Sprite;
-    shouldMaterialMove: boolean = false;
+    //shouldMaterialMove: boolean = false;
 
     loadScene(): void {
         super.loadScene();
@@ -46,9 +46,9 @@ export default class LevelZero extends GameLevel {
         super.initReticle();
         this.viewport.follow(this.player);
 
-        this.testMaterial = this.add.sprite("green_orb", 'primary');
-        this.testMaterial.position = new Vec2(100, 100); 
-        this.testMaterial.scale.set(0.6, 0.6);
+        // this.testMaterial = this.add.sprite("green_orb", 'primary');
+        // this.testMaterial.position = new Vec2(100, 100); 
+        // this.testMaterial.scale.set(0.6, 0.6);
         
 
         this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 0.5)
@@ -72,27 +72,27 @@ export default class LevelZero extends GameLevel {
     updateScene(deltaT: number){
         super.updateScene(deltaT);
 
-        if(Input.isKeyJustPressed("m")){
-            this.testMaterial.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-            this.testMaterial.setGroup("materials");
-            this.shouldMaterialMove = true;
+        // if(Input.isKeyJustPressed("m")){
+        //     this.testMaterial.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+        //     this.testMaterial.setGroup("materials");
+        //     this.shouldMaterialMove = true;
 
-        }
+        // }
 
 
-        if(this.shouldMaterialMove) {
+        // if(this.shouldMaterialMove) {
             
-            let dirToPlayer = this.testMaterial.position.dirTo(this.player.position);
-            this.testMaterial._velocity = dirToPlayer;
-            console.log(this.testMaterial._velocity)
-            let dist = this.testMaterial.position.distanceSqTo(this.player.position);
-            let speedSq = Math.pow(1000, 2);
-            // if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
-            // if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
-            this.testMaterial._velocity.normalize();
-            this.testMaterial._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
-            this.testMaterial.move(this.testMaterial._velocity.scaled(deltaT));
-        }
+        //     let dirToPlayer = this.testMaterial.position.dirTo(this.player.position);
+        //     this.testMaterial._velocity = dirToPlayer;
+        //     console.log(this.testMaterial._velocity)
+        //     let dist = this.testMaterial.position.distanceSqTo(this.player.position);
+        //     let speedSq = Math.pow(1000, 2);
+        //     // if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
+        //     // if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
+        //     this.testMaterial._velocity.normalize();
+        //     this.testMaterial._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
+        //     this.testMaterial.move(this.testMaterial._velocity.scaled(deltaT));
+        // }
 
         while(this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();

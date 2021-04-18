@@ -23,6 +23,7 @@ import PlayerController from "../Controllers/PlayerController";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import * as Tweens from "../Utils/Tweens";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Material from "../GameSystems/items/Material"
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -43,6 +44,11 @@ export default class GameLevel extends Scene {
     swing: Sprite
     defaultEquip: Sprite;
     shadowOffset: Vec2 = new Vec2(0, 10);
+
+    droppedMaterial: Array<Material> = []; 
+    shouldMaterialMove: boolean = false;
+    downerItems: number = 0;
+    upperItems: number = 0; 
 
 
     loadScene(): void {
@@ -88,6 +94,45 @@ export default class GameLevel extends Scene {
         let mousePos = Input.getMousePosition();
         let rotateTo = Input.getGlobalMousePosition();
         this.reticle.position = mousePos;
+
+
+        if(Input.isKeyJustPressed("m")){
+            for(let material of this.droppedMaterial){
+                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+                material.sprite.setGroup("materials");
+                this.shouldMaterialMove = true;
+            }
+
+        }
+
+        if(this.shouldMaterialMove){
+            for(let material of this.droppedMaterial){ 
+                    let dirToPlayer = material.sprite.position.dirTo(this.player.position);
+                    material.sprite._velocity = dirToPlayer;
+                    let dist = material.sprite.position.distanceSqTo(this.player.position);
+                    let speedSq = Math.pow(1000, 2);
+                    // if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
+                    // if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
+                    material.sprite._velocity.normalize();
+                    material.sprite._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
+                    material.sprite.move(material.sprite._velocity.scaled(deltaT));
+            }
+        }
+
+        for(let material of this.droppedMaterial){ 
+            if(material.sprite.position.distanceTo(this.player.position) < 10){
+                if(material.type == "upper"){
+                    this.upperItems = this.upperItems + 1 
+                }
+                else{
+                    this.downerItems = this.downerItems + 1; 
+                }
+                material.destroy()
+                this.emitter.fireEvent(InGame_Events.UPDATE_MATERIAL_COUNT, {upperItems:this.upperItems, downerItems:this.downerItems});
+            }
+        }
+
+        this.inGameUILayer.update(deltaT);
 
         
             
@@ -137,6 +182,8 @@ export default class GameLevel extends Scene {
                 let upper = this.add.sprite("green_orb", 'primary');
                 upper.position = position; 
                 upper.scale.set(0.6, 0.6);
+                let material = new Material(upper,"upper")
+                this.droppedMaterial.push(material)
             }
 
             if(event.type === InGame_Events.SPAWN_DOWNER) {
@@ -144,10 +191,9 @@ export default class GameLevel extends Scene {
                 let downer = this.add.sprite("red_orb", 'primary');
                 downer.position = position; 
                 downer.scale.set(0.6, 0.6);
-            }
-            
-
-            
+                let material = new Material(downer,"downer")
+                this.droppedMaterial.push(material)
+            }            
 
         }
     }

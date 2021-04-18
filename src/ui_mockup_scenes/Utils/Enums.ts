@@ -77,19 +77,21 @@ export enum PauseButtonNames {
 }
 
 export enum InGame_Events {
-	PLAYER_ENEMY_COLLISION = "PlayerEnemyCollsion",   // Enemy walks to player and damage
-	EQUIPMENT_ENEMY_COLLISION = "EquipmentEnemyCollision", 
-	PLAYER_ATTACK_ENEMY = "PlayerAttackEnemy",     // Player 'hits' the enemy
-	// ENEMY_ATTACK_PLAYER = "EnemyAttackPlayer"     // Enemy attacks the player
-	PLAYER_DIED = "PlayerDied",
-	ENEMY_DIED = "EnemyDied",
-	LEVEL_LOADED = "LevelLoaded",
-	LEVEL_START = "LevelStart",
-	LEVEL_END = "LevelEnd",
-	DOING_SWING = "DoingSwing",
-	FINISHED_SWING = "FinishedSwing",
-	START_SWING = "StartSwing",
-	DO_SCREENSHAKE = "DoScreenShake",
-	SPAWN_UPPER = "SpawnUpper",
-	SPAWN_DOWNER = "SpawnDowner"
+    PLAYER_ENEMY_COLLISION = "PlayerEnemyCollsion",
+    EQUIPMENT_ENEMY_COLLISION = "EquipmentEnemyCollision",
+    PLAYER_ATTACK_ENEMY = "PlayerAttackEnemy",
+
+    // ENEMY_ATTACK_PLAYER = "EnemyAttackPlayer"     // Enemy attacks the player
+    PLAYER_DIED = "PlayerDied",
+    ENEMY_DIED = "EnemyDied",
+    LEVEL_LOADED = "LevelLoaded",
+    LEVEL_START = "LevelStart",
+    LEVEL_END = "LevelEnd",
+    DOING_SWING = "DoingSwing",
+    FINISHED_SWING = "FinishedSwing",
+    START_SWING = "StartSwing",
+    DO_SCREENSHAKE = "DoScreenShake",
+    SPAWN_UPPER = "SpawnUpper",
+    SPAWN_DOWNER = "SpawnDowner",
+    UPDATE_MATERIAL_COUNT = "UPDATE_MATERIAL_COUNT"
 }

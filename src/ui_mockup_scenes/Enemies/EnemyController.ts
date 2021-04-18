@@ -36,16 +36,17 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         if(this.health <= 0) {
             this.owner.animation.play("DYING", false, InGame_Events.ENEMY_DIED);
             setTimeout(() => {
-                this.owner.visible = false;
+                let ownerPosition = this.owner.position;
+                this.owner.destroy()
                 if(Math.random() < 0.9) {
                     if(this.type == "Upper"){
-                        this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: this.owner.position});
+                        this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});
                     }
                     else {
-                        this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: this.owner.position});
+                        this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: ownerPosition});
                     }
                 }
-            }, 850)
+            }, 700)
             this.owner.setAIActive(false, {});
             this.owner.isCollidable = false;
             

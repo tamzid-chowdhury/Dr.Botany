@@ -8,18 +8,12 @@ import MaterialType from "./MaterialTypes/MaterialType";
 
 export default class Material extends Item {
     /** The type of this weapon */
-    type: MaterialType;
+    type: String;
 
     /** A list of assets this material needs to be animated */
-    assets: Array<any>;
+    sprite: Sprite; 
 
-    /** An event emitter to hook into the EventQueue */
-    emitter: Emitter
-
-    /** The cooldown timer for this weapon's use */
-    cooldownTimer: Timer;
-
-    constructor(sprite: Sprite, type: MaterialType){
+    constructor(sprite: Sprite, type: String){
         super(sprite);
 
         // Set the material type
@@ -28,29 +22,18 @@ export default class Material extends Item {
         // Keep a reference to the sprite of this weapon
         this.sprite = sprite;
 
-        // Rely on the weapon type to create any necessary assets
-        this.assets = this.type.createRequiredAssets(this.sprite.getScene());
-
-        // Create an event emitter
-        this.emitter = new Emitter();
-
     }
 
     // @override
-    /**
-     * Uses this weapon in the specified direction.
-     * This only works if the cooldown timer has ended
-     */
     use(user: GameNode, userType: string, direction: Vec2): boolean {
-        // If the cooldown timer is still running, we can't use the weapon
-        if(!this.cooldownTimer.isStopped()){
-            return false;
-        }
 
-        // Do a type specific weapon animation
-        this.type.doAnimation(user, direction, ...this.assets);
 
         return true;
+    }
+
+    destroy(){
+        this.sprite.destroy;
+        this.type == null; 
     }
 
 

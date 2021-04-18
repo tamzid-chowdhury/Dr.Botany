@@ -9,7 +9,7 @@ import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes
 import Layer from "../../../Wolfie2D/Scene/Layer";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Color from "../../../Wolfie2D/Utils/Color";
-import { UILayers, ButtonNames, InGameUILayers } from "../../Utils/Enums";
+import { UILayers, ButtonNames, InGameUILayers, InGame_Events } from "../../Utils/Enums";
 import UILayer from "../../../Wolfie2D/Scene/Layers/UILayer";
 import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
@@ -19,8 +19,10 @@ import EquipSlots from "./EquipSlot";
 import GrowthBar from "./GrowthBar";
 import ItemsSlot from "./ItemsSlot";
 import MoodBar from "./MoodBar";
+import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
+import Receiver from "../../../Wolfie2D/Events/Receiver"
 
-export default class InGameUI {
+export default class InGameUI implements Updateable {
     layer: Layer; 
     scene: Scene;
     center: Vec2;
@@ -33,6 +35,7 @@ export default class InGameUI {
     equipSlots: EquipSlots;
     upperSlot: ItemsSlot;
     downerSlot: ItemsSlot
+    receiver: Receiver = new Receiver();
     
     constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
@@ -52,6 +55,9 @@ export default class InGameUI {
         xOffset = this.center.x + this.center.x/5.5;
         this.downerSlot = new ItemsSlot(scene, center, xOffset, "green_orb")
 
+
+        //subscribe to events
+        this.receiver.subscribe(InGame_Events.UPDATE_MATERIAL_COUNT);
         
 
 
@@ -62,4 +68,19 @@ export default class InGameUI {
         this.moodBar.updatePos(width, height);
     }
 
+    update(deltaT:number){
+        while (this.receiver.hasNextEvent()) {
+            let event = this.receiver.getNextEvent();
+
+            if(event.type === InGame_Events.UPDATE_MATERIAL_COUNT){
+                let upperItems = event.data.get("upperItems");
+                this.upperSlot.updateCount(upperItems)
+                let downerItems = event.data.get("downerItems");
+                this.downerSlot.updateCount(downerItems)
+                
+            }
+            
+        }
+    }
+ 
 }
