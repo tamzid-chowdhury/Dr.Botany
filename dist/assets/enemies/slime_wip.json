@@ -1,8 +1,8 @@
 {
     "name": "slime_wip",
     "spriteSheetImage": "slime_wip.png",
-    "spriteWidth": 24,
-    "spriteHeight": 24,
+    "spriteWidth": 18,
+    "spriteHeight": 16,
     "columns": 14,
     "rows": 1,
     "durationType": "time",

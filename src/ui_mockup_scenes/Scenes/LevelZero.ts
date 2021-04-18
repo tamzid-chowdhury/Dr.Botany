@@ -52,18 +52,18 @@ export default class LevelZero extends GameLevel {
         this.testMaterial.scale.set(0.6, 0.6);
         
 
-        this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 0.5)
-        this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player, health: 50, type:"Upper"}, 1.5)
+        this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1)
+        this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player, health: 50, type:"Upper"}, 1)
         this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player, health: 50, type:"Upper"}, 1)
-        this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player, health: 50, type:"Upper"}, 0.3)
-        this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 0.5)
-        this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 0.5)
-        this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player, health: 50, type:"Downer"}, 2)
+        this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player, health: 50, type:"Upper"}, 1)
+        this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
+        this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
+        this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player, health: 50, type:"Downer"}, 1)
         this.addEnemy("slime_wip", new Vec2(100, 220), {speed : 40, player: this.player, health: 50, type:"Downer"}, 1)
-        this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player, health: 50, type:"Downer"}, 0.5)
-        this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player, health: 50, type:"Downer"}, 0.8)
-        this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player, health: 50, type:"Downer"}, 1.5)
-        this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player, health: 50, type:"Downer"}, 1.2)
+        this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player, health: 50, type:"Downer"}, 1)
+        this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player, health: 50, type:"Downer"}, 1)
+        this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player, health: 50, type:"Downer"}, 1)
+        this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player, health: 50, type:"Downer"}, 1)
         // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
         
         this.subscribeToEvents();
@@ -74,8 +74,8 @@ export default class LevelZero extends GameLevel {
         super.updateScene(deltaT);
 
         if(Input.isKeyJustPressed("m")){
-            this.testMaterial.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-            this.testMaterial.setGroup("materials");
+            // this.testMaterial.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
+            // this.testMaterial.setGroup("materials");
             this.testMaterial.position = new Vec2(50, 50)
             this.shouldMaterialMove = true;
             this.testMaterial.visible = true;
@@ -156,14 +156,16 @@ export default class LevelZero extends GameLevel {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
         enemy.position.set(tilePos.x, tilePos.y);
         enemy.scale.set(scale, scale);
-
+        let collisionShape = enemy.size;
         // This has to be touched
-        enemy.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-        enemy.colliderOffset.set(0,10);
+        // this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.halfSize.scaled(this.scene.getViewScale())
+        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2((collisionShape.x/2) * scale, (collisionShape.y/2 - collisionShape.y/3) * scale)));
+        
+        enemy.colliderOffset.set(0,collisionShape.y/3);
         // play with this // maybe add a condition for each enemy
         
         enemy.addAI(EnemyController, aiOptions);
-        enemy.setGroup("enemy");
+        enemy.setGroup("enemies");
         // enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
 
 

@@ -61,7 +61,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.player = options.player;
         this.speed = options.speed;
         this.type = options.type; 
-        
+        console.log(this.owner);
 
         // have to add some properties for each enemy   I don't know if idle is necessary...
         let idle = new Idle(this, owner);
