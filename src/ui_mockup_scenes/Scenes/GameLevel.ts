@@ -105,6 +105,30 @@ export default class GameLevel extends Scene {
 
         }
 
+        for(let material of this.droppedMaterial){ 
+            if(material.sprite.position.distanceTo(this.player.position) < 10){
+                if(material.type == "upper"){
+                    this.upperItems = this.upperItems + 1 
+                }
+                if(material.type == "downer"){
+                    this.downerItems = this.downerItems + 1; 
+                }
+                
+
+                this.inGameUILayer.update(deltaT);
+
+                material.sprite.destroy();
+                
+                let index = this.droppedMaterial.indexOf(material) 
+                this.droppedMaterial.splice(index,1)
+                console.log(this.droppedMaterial.length)
+
+                this.emitter.fireEvent(InGame_Events.UPDATE_MATERIAL_COUNT, {upperItems:this.upperItems, downerItems:this.downerItems});
+            }
+        }
+        
+
+
         if(this.shouldMaterialMove){
             for(let material of this.droppedMaterial){ 
                     let dirToPlayer = material.sprite.position.dirTo(this.player.position);
@@ -119,22 +143,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        for(let material of this.droppedMaterial){ 
-            if(material.sprite.position.distanceTo(this.player.position) < 10){
-                if(material.type == "upper"){
-                    this.upperItems = this.upperItems + 1 
-                }
-                else{
-                    this.downerItems = this.downerItems + 1; 
-                }
-                material.destroy()
-                this.emitter.fireEvent(InGame_Events.UPDATE_MATERIAL_COUNT, {upperItems:this.upperItems, downerItems:this.downerItems});
-            }
-        }
 
-        this.inGameUILayer.update(deltaT);
-
-        
             
         
         if(Input.isKeyJustPressed("p")){

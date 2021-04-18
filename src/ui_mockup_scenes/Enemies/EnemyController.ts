@@ -10,7 +10,7 @@ import BattlerAI from "../Controllers/BattlerAI";
 import { InGame_Events } from "../Utils/Enums";
 import Idle from "./EnemyStates/Idle"
 import Walk from "./EnemyStates/Walk"
-import Input from "../../Wolfie2D/Input/Input";
+
 
 
 
@@ -36,7 +36,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         if(this.health <= 0) {
             this.owner.animation.play("DYING", false, InGame_Events.ENEMY_DIED);
             setTimeout(() => {
-                let ownerPosition = this.owner.position;
+                let ownerPosition = this.owner.position.clone();
                 this.owner.destroy()
                 if(Math.random() < 0.9) {
                     if(this.type == "Upper"){
@@ -71,6 +71,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
         this.initialize(EnemyStates.WALK);
 
+
     }
 
     changeState(stateName: string): void {
@@ -86,12 +87,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 			this.owner.invertX = false;
 		}
         super.update(deltaT);
-
-        if(Input.isKeyJustPressed("k")){ //right now all enemies have 50 health so this should kill all enemies
-            this.damage(50);
-
-        }
-
         
 	}
 

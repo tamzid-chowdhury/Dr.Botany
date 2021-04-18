@@ -17,6 +17,7 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     time: number;
     testMaterial: Sprite;
+    enemyList: Array<AnimatedSprite>  = [];
     //shouldMaterialMove: boolean = false;
 
     loadScene(): void {
@@ -94,6 +95,13 @@ export default class LevelZero extends GameLevel {
         //     this.testMaterial.move(this.testMaterial._velocity.scaled(deltaT));
         // }
 
+        if(Input.isKeyJustPressed("k")){
+            for(let enemy of this.enemyList){
+                let enemyController = <EnemyController>enemy._ai;
+                enemyController.damage(50);
+            }
+        }
+
         while(this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
@@ -139,6 +147,8 @@ export default class LevelZero extends GameLevel {
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
         enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
+
+        this.enemyList.push(enemy);
     }
 
 
