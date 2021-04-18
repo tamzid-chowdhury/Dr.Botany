@@ -164,7 +164,8 @@ export default class LevelZero extends GameLevel {
         
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
-        enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
+        // enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
+
 
         this.enemyList.push(enemy);
     }
