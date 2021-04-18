@@ -96,14 +96,14 @@ export default class GameLevel extends Scene {
         this.reticle.position = mousePos;
 
 
-        if(Input.isKeyJustPressed("m")){
-            for(let material of this.droppedMaterial){
-                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-                material.sprite.setGroup("materials");
-                this.shouldMaterialMove = true;
-            }
+        // if(Input.isKeyJustPressed("m")){
+        //     for(let material of this.droppedMaterial){
+        //         material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+        //         material.sprite.setGroup("materials");
+        //         this.shouldMaterialMove = true;
+        //     }
 
-        }
+        // }
 
         for(let material of this.droppedMaterial){ 
             if(material.sprite.position.distanceTo(this.player.position) < 10){
@@ -121,7 +121,6 @@ export default class GameLevel extends Scene {
                 
                 let index = this.droppedMaterial.indexOf(material) 
                 this.droppedMaterial.splice(index,1)
-                console.log(this.droppedMaterial.length)
 
                 this.emitter.fireEvent(InGame_Events.UPDATE_MATERIAL_COUNT, {upperItems:this.upperItems, downerItems:this.downerItems});
             }
@@ -129,19 +128,19 @@ export default class GameLevel extends Scene {
         
 
 
-        if(this.shouldMaterialMove){
-            for(let material of this.droppedMaterial){ 
-                    let dirToPlayer = material.sprite.position.dirTo(this.player.position);
-                    material.sprite._velocity = dirToPlayer;
-                    let dist = material.sprite.position.distanceSqTo(this.player.position);
-                    let speedSq = Math.pow(1000, 2);
-                    // if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
-                    // if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
-                    material.sprite._velocity.normalize();
-                    material.sprite._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
-                    material.sprite.move(material.sprite._velocity.scaled(deltaT));
-            }
-        }
+        // if(this.shouldMaterialMove){
+        //     for(let material of this.droppedMaterial){ 
+        //             let dirToPlayer = material.sprite.position.dirTo(this.player.position);
+        //             material.sprite._velocity = dirToPlayer;
+        //             let dist = material.sprite.position.distanceSqTo(this.player.position);
+        //             let speedSq = Math.pow(1000, 2);
+        //             // if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
+        //             // if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
+        //             material.sprite._velocity.normalize();
+        //             material.sprite._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
+        //             material.sprite.move(material.sprite._velocity.scaled(deltaT));
+        //     }
+        // }
 
 
             
