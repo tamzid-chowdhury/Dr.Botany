@@ -88,6 +88,7 @@ export default class GameLevel extends Scene {
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
+        this.inGameUILayer.update(deltaT);
         // update positions and rotations
         let mousePos = Input.getMousePosition();
         let rotateTo = Input.getGlobalMousePosition();
@@ -105,10 +106,10 @@ export default class GameLevel extends Scene {
 
         for(let material of this.droppedMaterial){ 
             if(material.sprite.position.distanceTo(this.player.position) < 10){
-                if(material.type == "upper"){
+                if(material.type === "upper"){
                     this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT)
                 }
-                if(material.type == "downer"){
+                if(material.type === "downer"){
                     this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT)
                 }                
 
@@ -117,8 +118,6 @@ export default class GameLevel extends Scene {
                 let index = this.droppedMaterial.indexOf(material) 
                 this.droppedMaterial.splice(index,1)
 
-
-                this.inGameUILayer.update(deltaT);
             }
         }
         
