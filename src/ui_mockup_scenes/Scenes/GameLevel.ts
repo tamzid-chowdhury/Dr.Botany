@@ -14,7 +14,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
-import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events } from "../Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Game from "../../Wolfie2D/Loop/Game";
 import EnemyController from "../Enemies/EnemyController"
@@ -23,6 +23,7 @@ import PlayerController from "../Controllers/PlayerController";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import * as Tweens from "../Utils/Tweens";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Material from "../GameSystems/items/Material"
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -43,6 +44,10 @@ export default class GameLevel extends Scene {
     swing: Sprite
     defaultEquip: Sprite;
     shadowOffset: Vec2 = new Vec2(0, 10);
+
+    droppedMaterial: Array<Material> = []; 
+    shouldMaterialMove: boolean = false;
+
 
     loadScene(): void {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
@@ -75,6 +80,8 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.FINISHED_SWING);
         this.receiver.subscribe(InGame_Events.START_SWING);
         this.receiver.subscribe(InGame_Events.DO_SCREENSHAKE);
+        this.receiver.subscribe(InGame_Events.SPAWN_UPPER);
+        this.receiver.subscribe(InGame_Events.SPAWN_DOWNER);
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
 
@@ -82,12 +89,66 @@ export default class GameLevel extends Scene {
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
+        this.inGameUILayer.update(deltaT);
         // update positions and rotations
         let mousePos = Input.getMousePosition();
         let rotateTo = Input.getGlobalMousePosition();
         this.reticle.position = mousePos;
 
+
+        // if(Input.isKeyJustPressed("m")){
+        //     for(let material of this.droppedMaterial){
+        //         material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+        //         material.sprite.setGroup("materials");
+        //         this.shouldMaterialMove = true;
+        //     }
+
+        // }
+
+        for(let material of this.droppedMaterial){ 
+            if(material.sprite.position.distanceTo(this.player.position) < 10){
+                if(material.type === "upper"){
+                    this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT)
+                }
+                if(material.type === "downer"){
+                    this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT)
+                }                
+
+                material.sprite.destroy();
+                
+                let index = this.droppedMaterial.indexOf(material) 
+                this.droppedMaterial.splice(index,1)
+
+            }
+
+            if(material.sprite.position.distanceTo(this.player.position) < 75){ 
+                let dirToPlayer = material.sprite.position.dirTo(this.player.position);
+                material.sprite._velocity = dirToPlayer;
+                let dist = material.sprite.position.distanceSqTo(this.player.position);
+                let speedSq = Math.pow(300, 2);
+                material.sprite._velocity.normalize();
+                material.sprite._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
+                material.sprite.move(material.sprite._velocity.scaled(deltaT));
+            }
+        }
         
+
+
+        // if(this.shouldMaterialMove){
+        //     for(let material of this.droppedMaterial){ 
+        //             let dirToPlayer = material.sprite.position.dirTo(this.player.position);
+        //             material.sprite._velocity = dirToPlayer;
+        //             let dist = material.sprite.position.distanceSqTo(this.player.position);
+        //             let speedSq = Math.pow(1000, 2);
+        //             // if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
+        //             // if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
+        //             material.sprite._velocity.normalize();
+        //             material.sprite._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
+        //             material.sprite.move(material.sprite._velocity.scaled(deltaT));
+        //     }
+        // }
+
+
             
         
         if(Input.isKeyJustPressed("p")){
@@ -129,8 +190,28 @@ export default class GameLevel extends Scene {
             if(event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();
             }
-
             
+            if(event.type === InGame_Events.SPAWN_UPPER) {
+                let position = event.data.get("position");
+                let upper = this.add.sprite("green_orb", 'primary');
+                upper.position = position; 
+                upper.scale.set(0.6, 0.6);
+                let material = new Material(upper,"upper")
+                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+                material.sprite.setGroup("materials");
+                this.droppedMaterial.push(material)
+            }
+
+            if(event.type === InGame_Events.SPAWN_DOWNER) {
+                let position = event.data.get("position");
+                let downer = this.add.sprite("red_orb", 'primary');
+                downer.position = position; 
+                downer.scale.set(0.6, 0.6);
+                let material = new Material(downer,"downer")
+                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+                material.sprite.setGroup("materials");
+                this.droppedMaterial.push(material)
+            }            
 
         }
     }

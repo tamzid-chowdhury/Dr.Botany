@@ -13,6 +13,7 @@ import Walk from "./EnemyStates/Walk"
 
 
 
+
 export enum EnemyStates {
 	IDLE = "idle",
 	WALK = "walk",
@@ -27,20 +28,30 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     speed: number = 20;
     player: GameNode;
     attackRange: number;
+    type: String; 
 
     damage(damage: number) : void {
         this.health -= damage;
 
         if(this.health <= 0) {
             this.owner.animation.play("DYING", false, InGame_Events.ENEMY_DIED);
+            setTimeout(() => {
+                let ownerPosition = this.owner.position.clone();
+                this.owner.destroy()
+                if(Math.random() < 0.9) {
+                    if(this.type == "Upper"){
+                        this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});
+                    }
+                    if(this.type == "Downer"){
+                        this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: ownerPosition});
+                    }
+                }
+            }, 700)
             this.owner.setAIActive(false, {});
             this.owner.isCollidable = false;
-            this.owner.visible = false;
+            
 
-            if(Math.random() < 0.5) {
-                // spawn some items
-                // this.emitter.fireEvent("orb", {position: this.owner.position});
-            }
+
         }
     };
 
@@ -49,6 +60,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.health = options.health;
         this.player = options.player;
         this.speed = options.speed;
+        this.type = options.type; 
         
 
         // have to add some properties for each enemy   I don't know if idle is necessary...
@@ -58,6 +70,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		this.addState(EnemyStates.WALK, walk);
 
         this.initialize(EnemyStates.WALK);
+
 
     }
 

@@ -9,7 +9,7 @@ import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes
 import Layer from "../../../Wolfie2D/Scene/Layer";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Color from "../../../Wolfie2D/Utils/Color";
-import { UILayers, ButtonNames, InGameUILayers } from "../../Utils/Enums";
+import { UILayers, ButtonNames, InGameUILayers, InGame_Events, InGame_GUI_Events } from "../../Utils/Enums";
 import UILayer from "../../../Wolfie2D/Scene/Layers/UILayer";
 import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
@@ -18,9 +18,11 @@ import HealthBar from "./HealthBar";
 import EquipSlots from "./EquipSlot";
 import GrowthBar from "./GrowthBar";
 import MoodBar from "./MoodBar";
-import MaterialSlots from "./MaterialSlots";
+import MaterialSlot from "./MaterialSlot";
+import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
+import Receiver from "../../../Wolfie2D/Events/Receiver"
 
-export default class InGameUI {
+export default class InGameUI implements Updateable {
     layer: Layer; 
     scene: Scene;
     center: Vec2;
@@ -31,39 +33,31 @@ export default class InGameUI {
     growthBar: GrowthBar;
     moodBar: MoodBar;
     equipSlots: EquipSlots;
-    materialSlots: MaterialSlots;
-    
+    materialSlots: Array<MaterialSlot> = []; // [0] == upper  [1] == downer
+    materialSpriteIds: Array<string> = ["green_orb", "red_orb"];
+    receiver: Receiver;
     constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
         this.font = font; 
         this.center = center; 
         this.viewport = viewport
-
+        this.receiver = new Receiver();
 
         this.layer = scene.addUILayer(UILayers.INGAME_UI);
 
         this.healthBar = new HealthBar(scene, center);
-        // this.growthBar = new GrowthBar(scene, center);
         this.moodBar = new MoodBar(scene, center)
         this.equipSlots = new EquipSlots(scene, center);
-        let xOffset = this.center.x - this.center.x/5.5;
+        let xOffset = this.equipSlots.slotOne.position.x;
+        for(let i = 0; i < 2; i ++) {
+            this.materialSlots.push(new MaterialSlot(scene, center, xOffset, this.materialSpriteIds[i]));
+            xOffset = this.equipSlots.slotTwo.position.x;
+        }
 
-        this.materialSlots = new MaterialSlots(scene, center);
 
-
-
-        // for(let i = 0; i < 6; i ++) {
-        //     let idChoice = i % 2 === 0 ? "green_orb" : "red_orb"; 
-        //     this.itemsSlots.push(new ItemsSlot(scene, center, xOffset, idChoice));
-        //     if(i === 2) xOffset += (this.center.x/8);
-        //     else xOffset += (this.center.x/16);
-        // }
-        // for(let i = 0; i < 2; i ++) {
-        //     let idChoice = i % 2 === 0 ? "green_orb" : "red_orb"; 
-        //     this.itemsSlots.push(new ItemsSlot(scene, center, xOffset, idChoice));
-        //     if(i === 2) xOffset += (this.center.x/8);
-        //     else xOffset += (this.center.x/16);
-        // }
+        //subscribe to events
+        this.receiver.subscribe(InGame_GUI_Events.INCREMENT_UPPER_COUNT);
+        this.receiver.subscribe(InGame_GUI_Events.INCREMENT_DOWNER_COUNT);
         
 
 
@@ -74,4 +68,22 @@ export default class InGameUI {
         this.moodBar.updatePos(width, height);
     }
 
+    update(deltaT:number){
+        while (this.receiver.hasNextEvent()) {
+            let event = this.receiver.getNextEvent();
+
+            if(event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT){
+                this.materialSlots[0].updateCount()
+
+                
+            }
+
+            if(event.type === InGame_GUI_Events.INCREMENT_DOWNER_COUNT){
+                this.materialSlots[1].updateCount()
+                
+            }
+            
+        }
+    }
+ 
 }

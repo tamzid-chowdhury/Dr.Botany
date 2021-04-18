@@ -1,5 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import { UIEvents, UILayers, ButtonNames, InGame_Events } from "../Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import GameLevel from "./GameLevel";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -17,7 +17,9 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     time: number;
     testMaterial: Sprite;
-    shouldMaterialMove: boolean = false;
+    enemyList: Array<AnimatedSprite>  = [];
+    //shouldMaterialMove: boolean = false;
+
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
@@ -50,18 +52,18 @@ export default class LevelZero extends GameLevel {
         this.testMaterial.scale.set(0.6, 0.6);
         
 
-        this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player}, 0.5)
-        this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player}, 1.5)
-        this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player}, 1)
-        this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player}, 0.3)
-        this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player}, 0.5)
-        this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player}, 0.5)
-        this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player}, 2)
-        this.addEnemy("slime_wip", new Vec2(100, 220), {speed : 40, player: this.player}, 1)
-        this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player}, 0.5)
-        this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player}, 0.8)
-        this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player}, 1.5)
-        this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player}, 1.2)
+        this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 0.5)
+        this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player, health: 50, type:"Upper"}, 1.5)
+        this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player, health: 50, type:"Upper"}, 1)
+        this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player, health: 50, type:"Upper"}, 0.3)
+        this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 0.5)
+        this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 0.5)
+        this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player, health: 50, type:"Downer"}, 2)
+        this.addEnemy("slime_wip", new Vec2(100, 220), {speed : 40, player: this.player, health: 50, type:"Downer"}, 1)
+        this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player, health: 50, type:"Downer"}, 0.5)
+        this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player, health: 50, type:"Downer"}, 0.8)
+        this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player, health: 50, type:"Downer"}, 1.5)
+        this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player, health: 50, type:"Downer"}, 1.2)
         // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
         
         this.subscribeToEvents();
@@ -74,22 +76,48 @@ export default class LevelZero extends GameLevel {
         if(Input.isKeyJustPressed("m")){
             this.testMaterial.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
             this.testMaterial.setGroup("materials");
+            this.testMaterial.position = new Vec2(50, 50)
             this.shouldMaterialMove = true;
+            this.testMaterial.visible = true;
 
         }
 
+
         if(this.shouldMaterialMove) {
-            
-            let dirToPlayer = this.testMaterial.position.dirTo(this.player.position);
+            let playerPos = this.player.position;
+            let materialPos = this.testMaterial.position
+            let dirToPlayer = materialPos.dirTo(playerPos);
             this.testMaterial._velocity = dirToPlayer;
-            console.log(this.testMaterial._velocity)
-            let dist = this.testMaterial.position.distanceSqTo(this.player.position);
+            let dist = materialPos.distanceSqTo(playerPos);
             let speedSq = Math.pow(1000, 2);
-            // if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
-            // if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
+
+            if(Math.abs(materialPos.x - playerPos.x) < (this.player.size.x / 4)) { 
+                this.shouldMaterialMove = false; 
+                this.testMaterial._velocity.x = 0;
+                this.testMaterial.position.x = this.player.position.x;
+
+            } 
+            if(Math.abs(materialPos.y - playerPos.y) < (this.player.size.y / 4) ) { 
+                this.shouldMaterialMove = false; 
+                this.testMaterial._velocity.y = 0;
+                this.testMaterial.position.y = this.player.position.y;
+            } 
+
+            if(!this.shouldMaterialMove) {
+                this.testMaterial.visible = false;
+                this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT)
+            }
+
             this.testMaterial._velocity.normalize();
             this.testMaterial._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
             this.testMaterial.move(this.testMaterial._velocity.scaled(deltaT));
+        }
+
+        if(Input.isKeyJustPressed("k")){
+            for(let enemy of this.enemyList){
+                let enemyController = <EnemyController>enemy._ai;
+                enemyController.damage(50);
+            }
         }
 
         while(this.receiver.hasNextEvent()) {
@@ -137,6 +165,8 @@ export default class LevelZero extends GameLevel {
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
         enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
+
+        this.enemyList.push(enemy);
     }
 
 
