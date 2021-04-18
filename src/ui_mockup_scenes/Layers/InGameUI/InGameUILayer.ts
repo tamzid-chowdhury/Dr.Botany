@@ -9,7 +9,7 @@ import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes
 import Layer from "../../../Wolfie2D/Scene/Layer";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Color from "../../../Wolfie2D/Utils/Color";
-import { UILayers, ButtonNames, InGameUILayers, InGame_Events } from "../../Utils/Enums";
+import { UILayers, ButtonNames, InGameUILayers, InGame_Events, InGame_GUI_Events } from "../../Utils/Enums";
 import UILayer from "../../../Wolfie2D/Scene/Layers/UILayer";
 import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
@@ -51,13 +51,14 @@ export default class InGameUI implements Updateable {
         this.moodBar = new MoodBar(scene, center)
         this.equipSlots = new EquipSlots(scene, center);
         let xOffset = this.center.x - this.center.x/5.5;
-        this.upperSlot = new ItemsSlot(scene, center, xOffset, "red_orb")
+        this.upperSlot = new ItemsSlot(scene, center, xOffset, "green_orb")
         xOffset = this.center.x + this.center.x/5.5;
-        this.downerSlot = new ItemsSlot(scene, center, xOffset, "green_orb")
+        this.downerSlot = new ItemsSlot(scene, center, xOffset, "red_orb")
 
 
         //subscribe to events
-        this.receiver.subscribe(InGame_Events.UPDATE_MATERIAL_COUNT);
+        this.receiver.subscribe(InGame_GUI_Events.INCREMENT_UPPER_COUNT);
+        this.receiver.subscribe(InGame_GUI_Events.INCREMENT_DOWNER_COUNT);
         
 
 
@@ -72,11 +73,14 @@ export default class InGameUI implements Updateable {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
-            if(event.type === InGame_Events.UPDATE_MATERIAL_COUNT){
-                let upperItems = event.data.get("upperItems");
-                this.upperSlot.updateCount(upperItems)
-                let downerItems = event.data.get("downerItems");
-                this.downerSlot.updateCount(downerItems)
+            if(event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT){
+                this.upperSlot.updateCount()
+
+                
+            }
+
+            if(event.type === InGame_GUI_Events.INCREMENT_DOWNER_COUNT){
+                this.downerSlot.updateCount()
                 
             }
             

@@ -14,7 +14,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
-import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events } from "../Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Game from "../../Wolfie2D/Loop/Game";
 import EnemyController from "../Enemies/EnemyController"
@@ -47,8 +47,6 @@ export default class GameLevel extends Scene {
 
     droppedMaterial: Array<Material> = []; 
     shouldMaterialMove: boolean = false;
-    downerItems: number = 0;
-    upperItems: number = 0; 
 
 
     loadScene(): void {
@@ -108,21 +106,19 @@ export default class GameLevel extends Scene {
         for(let material of this.droppedMaterial){ 
             if(material.sprite.position.distanceTo(this.player.position) < 10){
                 if(material.type == "upper"){
-                    this.upperItems = this.upperItems + 1 
+                    this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT)
                 }
                 if(material.type == "downer"){
-                    this.downerItems = this.downerItems + 1; 
-                }
-                
-
-                this.inGameUILayer.update(deltaT);
+                    this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT)
+                }                
 
                 material.sprite.destroy();
                 
                 let index = this.droppedMaterial.indexOf(material) 
                 this.droppedMaterial.splice(index,1)
 
-                this.emitter.fireEvent(InGame_Events.UPDATE_MATERIAL_COUNT, {upperItems:this.upperItems, downerItems:this.downerItems});
+
+                this.inGameUILayer.update(deltaT);
             }
         }
         

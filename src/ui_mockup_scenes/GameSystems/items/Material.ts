@@ -19,9 +19,6 @@ export default class Material extends Item {
         // Set the material type
         this.type = type;
 
-        // Keep a reference to the sprite of this weapon
-        this.sprite = sprite;
-
     }
 
     // @override
@@ -33,7 +30,6 @@ export default class Material extends Item {
 
     destroy(){
         this.sprite.destroy;
-        this.type == null; 
     }
 
 

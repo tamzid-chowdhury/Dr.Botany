@@ -92,6 +92,13 @@ export enum InGame_Events {
     START_SWING = "StartSwing",
     DO_SCREENSHAKE = "DoScreenShake",
     SPAWN_UPPER = "SpawnUpper",
-    SPAWN_DOWNER = "SpawnDowner",
-    UPDATE_MATERIAL_COUNT = "UPDATE_MATERIAL_COUNT"
+    SPAWN_DOWNER = "SpawnDowner"
+	
+}
+
+
+export enum InGame_GUI_Events {
+	INCREMENT_UPPER_COUNT = "IncrementUpperCount",
+	INCREMENT_DOWNER_COUNT = "IncrementDownerCount"
+	
 }

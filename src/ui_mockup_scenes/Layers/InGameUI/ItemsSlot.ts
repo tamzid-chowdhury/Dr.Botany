@@ -45,8 +45,8 @@ export default class ItemsSlot {
         this.text.setVAlign('bottom')
 	}
 
-    updateCount(newCount: number): void {
-        this.count = newCount;
+    updateCount(): void {
+        this.count = this.count+1;
         this.textBackdrop.text = 'x' + this.count;
         this.text.text = 'x' + this.count; 
     }

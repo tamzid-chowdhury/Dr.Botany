@@ -42,7 +42,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
                     if(this.type == "Upper"){
                         this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});
                     }
-                    else {
+                    if(this.type == "Downer"){
                         this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: ownerPosition});
                     }
                 }
