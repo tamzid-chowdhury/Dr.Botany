@@ -44,6 +44,7 @@ export default class GameLevel extends Scene {
     defaultEquip: Sprite;
     shadowOffset: Vec2 = new Vec2(0, 10);
 
+
     loadScene(): void {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
         this.load.image("reticle", "assets/misc/reticle.png");
@@ -74,6 +75,8 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.FINISHED_SWING);
         this.receiver.subscribe(InGame_Events.START_SWING);
         this.receiver.subscribe(InGame_Events.DO_SCREENSHAKE);
+        this.receiver.subscribe(InGame_Events.SPAWN_UPPER);
+        this.receiver.subscribe(InGame_Events.SPAWN_DOWNER);
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
 
@@ -128,6 +131,21 @@ export default class GameLevel extends Scene {
             if(event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();
             }
+            
+            if(event.type === InGame_Events.SPAWN_UPPER) {
+                let position = event.data.get("position");
+                let upper = this.add.sprite("green_orb", 'primary');
+                upper.position = position; 
+                upper.scale.set(0.6, 0.6);
+            }
+
+            if(event.type === InGame_Events.SPAWN_DOWNER) {
+                let position = event.data.get("position");
+                let downer = this.add.sprite("red_orb", 'primary');
+                downer.position = position; 
+                downer.scale.set(0.6, 0.6);
+            }
+            
 
             
 

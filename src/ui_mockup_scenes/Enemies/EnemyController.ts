@@ -37,19 +37,20 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
             this.owner.animation.play("DYING", false, InGame_Events.ENEMY_DIED);
             setTimeout(() => {
                 this.owner.visible = false;
+                if(Math.random() < 0.9) {
+                    if(this.type == "Upper"){
+                        this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: this.owner.position});
+                    }
+                    else {
+                        this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: this.owner.position});
+                    }
+                }
             }, 850)
             this.owner.setAIActive(false, {});
             this.owner.isCollidable = false;
             
 
-            if(Math.random() < 0.9) {
-                if(this.type == "Upper"){
-                    this.emitter.fireEvent("greenorb", {position: this.owner.position});
-                }
-                else {
-                    this.emitter.fireEvent("redorb", {position: this.owner.position});
-                }
-            }
+
         }
     };
 
@@ -85,7 +86,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		}
         super.update(deltaT);
 
-        if(Input.isKeyJustPressed("k")){
+        if(Input.isKeyJustPressed("k")){ //right now all enemies have 50 health so this should kill all enemies
             this.damage(50);
 
         }

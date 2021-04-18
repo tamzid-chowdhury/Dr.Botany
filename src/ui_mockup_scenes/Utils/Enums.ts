@@ -89,5 +89,7 @@ export enum InGame_Events {
 	DOING_SWING = "DoingSwing",
 	FINISHED_SWING = "FinishedSwing",
 	START_SWING = "StartSwing",
-	DO_SCREENSHAKE = "DoScreenShake"
+	DO_SCREENSHAKE = "DoScreenShake",
+	SPAWN_UPPER = "SpawnUpper",
+	SPAWN_DOWNER = "SpawnDowner"
 }

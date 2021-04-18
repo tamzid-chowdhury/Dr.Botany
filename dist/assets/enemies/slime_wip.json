@@ -34,13 +34,13 @@
         {
             "name": "DYING",
             "frames": [ 
-				{"index": 5, "duration": 4}, 
-				{"index": 6, "duration": 4}, 
-				{"index": 7, "duration": 4}, 
-				{"index": 8, "duration": 4}, 
-				{"index": 9, "duration": 4}, 
-				{"index": 10, "duration": 4},
-				{"index": 11, "duration": 4}
+				{"index": 5, "duration": 5}, 
+				{"index": 6, "duration": 5}, 
+				{"index": 7, "duration": 5}, 
+				{"index": 8, "duration": 5}, 
+				{"index": 9, "duration": 5}, 
+				{"index": 10, "duration": 5},
+				{"index": 11, "duration": 6}
 			]
         }
 
