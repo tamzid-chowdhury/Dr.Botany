@@ -10,6 +10,7 @@ import BattlerAI from "../Controllers/BattlerAI";
 import { InGame_Events } from "../Utils/Enums";
 import Idle from "./EnemyStates/Idle"
 import Walk from "./EnemyStates/Walk"
+import Input from "../../Wolfie2D/Input/Input";
 
 
 
@@ -27,19 +28,27 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     speed: number = 20;
     player: GameNode;
     attackRange: number;
+    type: String; 
 
     damage(damage: number) : void {
         this.health -= damage;
 
         if(this.health <= 0) {
             this.owner.animation.play("DYING", false, InGame_Events.ENEMY_DIED);
+            setTimeout(() => {
+                this.owner.visible = false;
+            }, 850)
             this.owner.setAIActive(false, {});
             this.owner.isCollidable = false;
-            this.owner.visible = false;
+            
 
-            if(Math.random() < 0.5) {
-                // spawn some items
-                // this.emitter.fireEvent("orb", {position: this.owner.position});
+            if(Math.random() < 0.9) {
+                if(this.type == "Upper"){
+                    this.emitter.fireEvent("greenorb", {position: this.owner.position});
+                }
+                else {
+                    this.emitter.fireEvent("redorb", {position: this.owner.position});
+                }
             }
         }
     };
@@ -49,6 +58,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.health = options.health;
         this.player = options.player;
         this.speed = options.speed;
+        this.type = options.type; 
         
 
         // have to add some properties for each enemy   I don't know if idle is necessary...
@@ -74,6 +84,12 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 			this.owner.invertX = false;
 		}
         super.update(deltaT);
+
+        if(Input.isKeyJustPressed("k")){
+            this.damage(50);
+
+        }
+
         
 	}
 

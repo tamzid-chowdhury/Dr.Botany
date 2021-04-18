@@ -14,8 +14,9 @@ export default class ItemsSlot {
 	centerPos: Vec2;
     xOffset: number;
     yOffset: number;
+    count: number = 0; 
 
-	constructor(scene: Scene, centerPos: Vec2, xOffset: number, itemImageString: string) {
+	constructor(scene: Scene, centerPos: Vec2, xOffset: number, itemImageString: string,) {
 
 		this.centerPos = centerPos;
 		this.sprite = scene.add.sprite("ui_square", UILayers.INGAME_UI)
@@ -25,10 +26,9 @@ export default class ItemsSlot {
         this.sprite.position.set(this.xOffset, this.yOffset);
         this.itemImage.position.set(this.xOffset, this.yOffset);
 
-
         this.sprite.scale = new Vec2(0.3,0.3);
         this.itemImage.scale = new Vec2(0.3,0.3);
-        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.xOffset+0.5, this.yOffset + 0.5), text:'x0'});
+        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.xOffset+0.5, this.yOffset + 0.5), text:'x' + this.count});
         this.textBackdrop.size.set(50,50)
         this.textBackdrop.font = Fonts.ROUND;
         this.textBackdrop.textColor = Palette.black();
@@ -36,7 +36,7 @@ export default class ItemsSlot {
         this.textBackdrop.setHAlign('right');
         this.textBackdrop.setVAlign('bottom')
 
-        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, this.yOffset), text:'x0'});
+        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, this.yOffset), text:'x' + this.count});
         this.text.size.set(50,50)
         this.text.font = Fonts.ROUND;
         this.text.textColor = Palette.white();
@@ -45,7 +45,11 @@ export default class ItemsSlot {
         this.text.setVAlign('bottom')
 	}
 
-	updateText(): void {
-		// TODO: when player health changes, text has to update
-	}
+    increaseCount(): void {
+        this.count = this.count+1; 
+    }
+
+    decreaseCount(): void {
+        this.count = this.count-1; 
+    }
 }

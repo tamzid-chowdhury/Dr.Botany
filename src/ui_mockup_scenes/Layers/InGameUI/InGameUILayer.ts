@@ -31,7 +31,8 @@ export default class InGameUI {
     growthBar: GrowthBar;
     moodBar: MoodBar;
     equipSlots: EquipSlots;
-    itemsSlots: Array<ItemsSlot> = [];
+    upperSlot: ItemsSlot;
+    downerSlot: ItemsSlot
     
     constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
@@ -47,12 +48,10 @@ export default class InGameUI {
         this.moodBar = new MoodBar(scene, center)
         this.equipSlots = new EquipSlots(scene, center);
         let xOffset = this.center.x - this.center.x/5.5;
-        for(let i = 0; i < 6; i ++) {
-            let idChoice = i % 2 === 0 ? "green_orb" : "red_orb"; 
-            this.itemsSlots.push(new ItemsSlot(scene, center, xOffset, idChoice));
-            if(i === 2) xOffset += (this.center.x/8);
-            else xOffset += (this.center.x/16);
-        }
+        this.upperSlot = new ItemsSlot(scene, center, xOffset, "red_orb")
+        xOffset = this.center.x + this.center.x/5.5;
+        this.downerSlot = new ItemsSlot(scene, center, xOffset, "green_orb")
+
         
 
 

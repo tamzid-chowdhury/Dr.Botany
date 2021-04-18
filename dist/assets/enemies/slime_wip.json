@@ -30,6 +30,18 @@
 				{"index": 6, "duration": 16},
 				{"index": 7, "duration": 16}
 			]
+        },
+        {
+            "name": "DYING",
+            "frames": [ 
+				{"index": 5, "duration": 4}, 
+				{"index": 6, "duration": 4}, 
+				{"index": 7, "duration": 4}, 
+				{"index": 8, "duration": 4}, 
+				{"index": 9, "duration": 4}, 
+				{"index": 10, "duration": 4},
+				{"index": 11, "duration": 4}
+			]
         }
 
     ]
