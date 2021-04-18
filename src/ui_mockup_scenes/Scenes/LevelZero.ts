@@ -74,8 +74,8 @@ export default class LevelZero extends GameLevel {
         super.updateScene(deltaT);
 
         if(Input.isKeyJustPressed("m")){
-            // this.testMaterial.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
-            // this.testMaterial.setGroup("materials");
+            this.testMaterial.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
+            this.testMaterial.setGroup("materials");
             this.testMaterial.position = new Vec2(50, 50)
             this.shouldMaterialMove = true;
             this.testMaterial.visible = true;
