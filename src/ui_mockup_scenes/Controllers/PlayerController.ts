@@ -43,6 +43,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     playerLookDirection: Vec2 = new Vec2(0,0);
     swingDir: number = -1; 
     doingSwing: boolean = false;
+    damaged: boolean = false;
+    damageCooldown: number;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -168,13 +170,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('fadeOut');
-                
+
                 this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
-                this.emitter.fireEvent(InGame_Events.PLAYER_ATTACK_ENEMY, null);
+                // this.swing.setTrigger("enemies", InGame_Events.PLAYER_ATTACK_ENEMY, null);
             }
 
             if(event.type === InGame_Events.FINISHED_SWING) {
-
                 this.swing.visible = false;
                 if(Input.isMouseJustPressed()) {
                     this.swingDir *= -1;
@@ -185,6 +186,29 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.doingSwing = false;
                 } 
             }
+
+
+            if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
+                if(this.damaged) {
+                    if (Date.now() - this.damageCooldown > 2000) {
+                        this.damaged = false;
+                    }
+                }
+                else {
+                    // This is where it plays tweens + animation for getting hit
+                    this.damage(1);
+                    this.damaged = true;
+                    this.damageCooldown = Date.now();
+                    console.log(this.health);
+                }
+                
+            }
+
+            if(event.type === InGame_Events.PLAYER_ATTACK_ENEMY) {
+                console.log("Attacked");
+                
+            }
+                
         }
 
     }
@@ -207,6 +231,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.receiver.subscribe(InGame_Events.DOING_SWING);
         this.receiver.subscribe(InGame_Events.FINISHED_SWING);
         this.receiver.subscribe(InGame_Events.START_SWING);
+        this.receiver.subscribe(InGame_Events.PLAYER_ENEMY_COLLISION);
+        this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
     }
 
 }

@@ -204,36 +204,21 @@ export default class GameLevel extends Scene {
                 this.droppedMaterial.push(material)
             }
 
-            if(event.type === InGame_Events.PLAYER_ATTACK_ENEMY) {
-                // let node = this.sceneGraph.getNode(event.data.get("node"));
-                // let other = this.sceneGraph.getNode(event.data.get("other"));
-                // let node2 = this.sceneGraph.getNode(event.data.get("owner"));
-                // console.log(node2)
-                // console.log(other)
-                // console.log(node)
-                // if( node === this.player) {
-                //     console.log("node is player ");
-                // }
-                // else {
-                //     console.log("node is enemey");
-                //     console.log(other)
-                // }aw
+            // if(event.type === InGame_Events.PLAYER_ATTACK_ENEMY) {
+            //     let node = this.sceneGraph.getNode(event.data.get("node"));
+            //     let other = this.sceneGraph.getNode(event.data.get("other"));
+            //     console.log("hit enemeis")
+            //     console.log(other)
+            //     console.log(node)
+            //     if( node === this.swing) {
+            //         console.log("node is player ");
+            //     }
+            //     else {
+            //         console.log("node is enemey");
+            //         console.log(other)
+            //     }
+            // }
 
-                
-            }
-
-            if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
-                let node = this.sceneGraph.getNode(event.data.get("node"));
-                let other = this.sceneGraph.getNode(event.data.get("other"));
-
-                if (node === this.player) {
-                    console.log("node is player");
-                    (<PlayerController>this.player._ai).damage(1);
-
-                    // add tweens that bumps from the enemy collision
-                    console.log((<PlayerController>this.player._ai).health);
-                }
-            }
 
             if(event.type === InGame_Events.SPAWN_DOWNER) {
                 let position = event.data.get("position");
