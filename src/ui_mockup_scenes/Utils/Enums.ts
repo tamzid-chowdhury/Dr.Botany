@@ -80,7 +80,7 @@ export enum InGame_Events {
     PLAYER_ENEMY_COLLISION = "PlayerEnemyCollsion",
     EQUIPMENT_ENEMY_COLLISION = "EquipmentEnemyCollision",
     PLAYER_ATTACK_ENEMY = "PlayerAttackEnemy",
-
+	PROJECTILE_HIT_ENEMY = "ProjectileHitEnemy",
     // ENEMY_ATTACK_PLAYER = "EnemyAttackPlayer"     // Enemy attacks the player
     PLAYER_DIED = "PlayerDied",
     ENEMY_DIED = "EnemyDied",

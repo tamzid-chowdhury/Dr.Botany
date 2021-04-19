@@ -19,11 +19,11 @@ export default class LevelZero extends GameLevel {
     testMaterial: Sprite;
     enemyList: Array<AnimatedSprite>  = [];
     //shouldMaterialMove: boolean = false;
-
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
+        this.load.image("box", "assets/misc/test_box.png")
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json" )
         this.load.spritesheet("slime_wip", "assets/enemies/slime_wip.json" )
     }
@@ -53,19 +53,21 @@ export default class LevelZero extends GameLevel {
         
 
         this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1)
-        this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player, health: 50, type:"Upper"}, 1)
-        this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player, health: 50, type:"Upper"}, 1)
-        this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player, health: 50, type:"Upper"}, 1)
-        this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
-        this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
-        this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player, health: 50, type:"Downer"}, 1.5)
-        this.addEnemy("slime_wip", new Vec2(100, 220), {speed : 40, player: this.player, health: 50, type:"Downer"}, 0.5)
-        this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player, health: 50, type:"Downer"}, 2)
-        this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player, health: 50, type:"Downer"}, 1)
-        this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player, health: 50, type:"Downer"}, 1)
-        this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player, health: 50, type:"Downer"}, 1)
+        // this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player, health: 50, type:"Upper"}, 1)
+        // this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player, health: 50, type:"Upper"}, 1)
+        // this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player, health: 50, type:"Upper"}, 1)
+        // this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
+        // this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
+        // this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player, health: 50, type:"Downer"}, 1.5)
+        // this.addEnemy("slime_wip", new Vec2(100, 220), {speed : 40, player: this.player, health: 50, type:"Downer"}, 0.5)
+        // this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player, health: 50, type:"Downer"}, 2)
+        // this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player, health: 50, type:"Downer"}, 1)
+        // this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player, health: 50, type:"Downer"}, 1)
+        // this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player, health: 50, type:"Downer"}, 1)
         // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
         
+
+
         this.subscribeToEvents();
     
     }
@@ -167,7 +169,7 @@ export default class LevelZero extends GameLevel {
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemies");
         enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
-
+        enemy.setTrigger("projectiles", InGame_Events.PROJECTILE_HIT_ENEMY, null)
 
         this.enemyList.push(enemy);
     }

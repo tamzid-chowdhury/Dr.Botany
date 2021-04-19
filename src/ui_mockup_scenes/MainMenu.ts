@@ -18,6 +18,7 @@ import { GameEventType } from "../Wolfie2D/Events/GameEventType";
 import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
 import BackButton from "./Classes/BackButton";
+import InGameUI from "./Layers/InGameUI/InGameUILayer";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -178,7 +179,7 @@ export default class MainMenu extends Scene {
                 
                 let sceneOptions = {
                     physics: {
-                        groupNames: ["ground", "player", "enemies", "materials"],
+                        groupNames: ["ground", "player", "enemies", "materials", "projectiles"],
                         // groupNames: ["ground", "player", "enemy", "materials", "equipment"],
                         collisions:
                         [
@@ -206,10 +207,11 @@ export default class MainMenu extends Scene {
                             // [1, 0, 0, 0, 0],
 
                             // TODO: figure out if commented out matrix is correct or not for materials/equipment
-                            [0, 1, 1, 0],
-                            [1, 0, 0, 1],
-                            [1, 0, 1, 0],
-                            [0, 1, 0, 0]
+                            [0, 1, 1, 0, 1],
+                            [1, 0, 0, 1, 0],
+                            [1, 0, 1, 0, 0],
+                            [0, 1, 0, 0, 0],
+                            [1, 0, 0, 0, 0]
                         ]
                     }
                 }

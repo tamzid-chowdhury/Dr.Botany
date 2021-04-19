@@ -84,6 +84,8 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.SPAWN_UPPER);
         this.receiver.subscribe(InGame_Events.SPAWN_DOWNER);
         this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
+        this.receiver.subscribe(InGame_Events.PROJECTILE_HIT_ENEMY);
+
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
 
@@ -180,6 +182,9 @@ export default class GameLevel extends Scene {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
+            if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
+                console.log('projectile hit enemy')
+            }
             if(event.type === WindowEvents.RESIZED) {
             }
 
@@ -218,7 +223,7 @@ export default class GameLevel extends Scene {
                 //     console.log("node is enemey");
                 //     console.log(other)
                 // }aw
-
+                
                 
             }
 

@@ -14,6 +14,7 @@ import Item from "../GameSystems/items/Item";
 import { InGame_Events } from "../Utils/Enums";
 import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";
+import ProjectileController from "./ProjectileController";
 
 export default class PlayerController extends StateMachineAI implements BattlerAI {
     health: number;
@@ -76,7 +77,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.swing.position.set(this.owner.position.x, this.owner.position.y);
         this.swing.visible = false;
-
+        this.swing.active = false;
+        this.swing.addAI(ProjectileController, {});
+        this.swing.setTrigger("enemies", InGame_Events.PROJECTILE_HIT_ENEMY, null);
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
         this.owner.colliderOffset.set(0, 10);
         this.owner.setGroup("player");
@@ -123,6 +126,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.shadow.position = this.owner.position.clone();
         this.shadow.position.y += this.shadowOffset.y;
         this.equipped.position = this.owner.position.clone();
+        this.swing.position = this.owner.position.clone();
 
         this.playerLookDirection = this.equipped.position.dirTo(rotateTo);
 
@@ -163,6 +167,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.equipped.tweens.play('swingdown');
                 this.swing.rotation = -this.equipped.rotation;
                 this.swing.visible = true;
+                this.swing.active = true;
                 this.swing.tweens.add('moveAndShrink', Tweens.spriteMoveAndShrink(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('moveAndShrink');
 
@@ -170,11 +175,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.swing.tweens.play('fadeOut');
                 
                 this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
-                this.emitter.fireEvent(InGame_Events.PLAYER_ATTACK_ENEMY, null);
+                // this.emitter.fireEvent(InGame_Events.PLAYER_ATTACK_ENEMY, null);
             }
 
             if(event.type === InGame_Events.FINISHED_SWING) {
-
                 this.swing.visible = false;
                 if(Input.isMouseJustPressed()) {
                     this.swingDir *= -1;
