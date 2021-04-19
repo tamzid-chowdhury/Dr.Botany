@@ -56,7 +56,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
-        this.health = 5;
+        this.health = 50;
 		this.levelView = this.owner.getScene().getViewport();
 		this.viewHalfSize = this.levelView.getHalfSize();
 
@@ -80,6 +80,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
         this.owner.colliderOffset.set(0, 10);
         this.owner.setGroup("player");
+
 
         // this.items = options.items;
         // this.inventory = options.inventory;
@@ -160,8 +161,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('fadeOut');
-
+                
                 this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
+                this.emitter.fireEvent(InGame_Events.PLAYER_ATTACK_ENEMY, null);
             }
 
             if(event.type === InGame_Events.FINISHED_SWING) {

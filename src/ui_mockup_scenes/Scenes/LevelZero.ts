@@ -47,9 +47,9 @@ export default class LevelZero extends GameLevel {
         super.initReticle();
         this.viewport.follow(this.player);
 
-        this.testMaterial = this.add.sprite("green_orb", 'primary');
-        this.testMaterial.position = new Vec2(100, 100); 
-        this.testMaterial.scale.set(0.6, 0.6);
+        // this.testMaterial = this.add.sprite("green_orb", 'primary');
+        // this.testMaterial.position = new Vec2(100, 100); 
+        // this.testMaterial.scale.set(0.6, 0.6);
         
 
         this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1)
@@ -125,7 +125,7 @@ export default class LevelZero extends GameLevel {
 
             switch (event.type) {
                 case InGame_Events.PLAYER_ENEMY_COLLISION:
-                    console.log("Enemy Hit Player");
+                    
 
             
             }
@@ -166,7 +166,7 @@ export default class LevelZero extends GameLevel {
         
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemies");
-        // enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
+        enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
 
 
         this.enemyList.push(enemy);

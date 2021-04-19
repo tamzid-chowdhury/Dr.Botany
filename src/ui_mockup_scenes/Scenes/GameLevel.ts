@@ -38,7 +38,7 @@ export default class GameLevel extends Scene {
     pauseScreenLayer: PauseScreenLayer; 
 
     reticle: Sprite;
-    player: Sprite;
+    player: AnimatedSprite;
     plant: Sprite;
     shadow: Sprite;
     swing: Sprite
@@ -61,7 +61,8 @@ export default class GameLevel extends Scene {
         this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
 
-        this.load.image("player", "assets/player/dr_botany_wip.png");
+        // this.load.image("player", "assets/player/dr_botany_wip.png");
+        this.load.spritesheet("player", "assets/player/dr_botany.png")
         this.load.image("shadow", "assets/player/shadow_sprite.png");
         this.load.image("shovel", "assets/weapons/shovel.png");
         this.load.image("green_orb", "assets/items/greenorb.png");
@@ -82,6 +83,7 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.DO_SCREENSHAKE);
         this.receiver.subscribe(InGame_Events.SPAWN_UPPER);
         this.receiver.subscribe(InGame_Events.SPAWN_DOWNER);
+        this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
 
@@ -202,6 +204,37 @@ export default class GameLevel extends Scene {
                 this.droppedMaterial.push(material)
             }
 
+            if(event.type === InGame_Events.PLAYER_ATTACK_ENEMY) {
+                // let node = this.sceneGraph.getNode(event.data.get("node"));
+                // let other = this.sceneGraph.getNode(event.data.get("other"));
+                // let node2 = this.sceneGraph.getNode(event.data.get("owner"));
+                // console.log(node2)
+                // console.log(other)
+                // console.log(node)
+                // if( node === this.player) {
+                //     console.log("node is player ");
+                // }
+                // else {
+                //     console.log("node is enemey");
+                //     console.log(other)
+                // }aw
+
+                
+            }
+
+            if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
+                let node = this.sceneGraph.getNode(event.data.get("node"));
+                let other = this.sceneGraph.getNode(event.data.get("other"));
+
+                if (node === this.player) {
+                    console.log("node is player");
+                    (<PlayerController>this.player._ai).damage(1);
+
+                    // add tweens that bumps from the enemy collision
+                    console.log((<PlayerController>this.player._ai).health);
+                }
+            }
+
             if(event.type === InGame_Events.SPAWN_DOWNER) {
                 let position = event.data.get("position");
                 let downer = this.add.sprite("red_orb", 'primary');
@@ -232,7 +265,7 @@ export default class GameLevel extends Scene {
     }   
 
     initPlayer(mapSize: Vec2): void {
-        this.player = this.add.sprite("player", "primary");
+        this.player = this.add.animatedSprite("player", "primary");
         let playerOptions = {
             mapSize: mapSize, 
             speed: 150,
