@@ -35,6 +35,7 @@ export default class ProjectileController extends StateMachineAI {
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
+        this.owner.active = false;
         this.owner.setGroup("projectiles");
 
 

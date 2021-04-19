@@ -11,14 +11,17 @@ export default class Knockback extends EnemyState {
 	onEnter(): void {
 		// (<AnimatedSprite>this.owner).animation.play("WALK", true);
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
-		this.force = this.parent.knockBackDir.scale(200, 200);
+		this.force = this.parent.knockBackDir.scale(500, 500);
 		this.parent.velocity.add(this.force);
 	}
 	// TODO: Velocity Tween
 	update(deltaT: number): void {
+		this.parent.velocity.add(new Vec2(-this.parent.velocity.x/24, -this.parent.velocity.y/24));
 		this.owner.move(this.parent.velocity.scaled(deltaT));
-		super.update(deltaT);
+		console.log(this.parent.velocity.x, this.parent.velocity.y);
 		this.parent.knockBackTimer --;
+		super.update(deltaT);
+
 	}
 
 	onExit(): Record<string, any> {
