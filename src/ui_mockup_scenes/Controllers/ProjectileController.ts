@@ -38,8 +38,6 @@ export default class ProjectileController extends StateMachineAI {
         this.owner.setGroup("projectiles");
 
 
-        // this.items = options.items;
-        // this.inventory = options.inventory;
         this.subscribeToEvents();
     }
 

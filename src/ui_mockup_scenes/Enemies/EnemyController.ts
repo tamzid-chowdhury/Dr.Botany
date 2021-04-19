@@ -9,6 +9,7 @@ import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import BattlerAI from "../Controllers/BattlerAI";
 import { InGame_Events } from "../Utils/Enums";
 import Idle from "./EnemyStates/Idle"
+import Knockback from "./EnemyStates/Knockback";
 import Walk from "./EnemyStates/Walk"
 
 
@@ -17,6 +18,7 @@ import Walk from "./EnemyStates/Walk"
 export enum EnemyStates {
 	IDLE = "idle",
 	WALK = "walk",
+	KNOCKBACK = "knockback",
     ATTACKING = "attacking",
 	PREVIOUS = "previous"
 }
@@ -25,11 +27,14 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     owner: AnimatedSprite;
     health: number;
     direction: Vec2 = Vec2.ZERO;
-    speed: number = 20;
+    speed: number = 30;
     player: GameNode;
     attackRange: number;
     type: String; 
+    velocity: Vec2 = Vec2.ZERO;
 
+    knockBackDir: Vec2 = new Vec2(0,0);
+    knockBackTimer: number = 0;
     damage(damage: number) : void {
         this.health -= damage;
 
@@ -67,6 +72,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		this.addState(EnemyStates.IDLE, idle);
 		let walk = new Walk(this, owner);
 		this.addState(EnemyStates.WALK, walk);
+        let knockback = new Knockback(this, owner);
+		this.addState(EnemyStates.KNOCKBACK, knockback);
 
         this.initialize(EnemyStates.WALK);
 
@@ -78,7 +85,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     update(deltaT: number): void {
-		
+        if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
         if (this.getOwnerPostion().x + 3 <= this.getPlayerPosition().x) { 
             this.owner.invertX = true; 
 		}
@@ -88,6 +95,12 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         super.update(deltaT);
         
 	}
+
+    doKnockBack(direction: Vec2): void {
+        this.knockBackDir = direction.clone();
+        this.knockBackTimer = 50;
+        this.changeState(EnemyStates.KNOCKBACK);
+    }
 
     getPlayerPosition(): Vec2 {
         return this.player.position;

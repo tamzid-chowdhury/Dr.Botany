@@ -82,6 +82,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.swing.active = false;
         this.swing.addAI(ProjectileController, {});
         this.swing.setTrigger("enemies", InGame_Events.PROJECTILE_HIT_ENEMY, null);
+        
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
         this.owner.colliderOffset.set(0, 10);
         this.owner.setGroup("player");
@@ -181,6 +182,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             }
 
             if(event.type === InGame_Events.FINISHED_SWING) {
+                this.swing.active = false;
                 this.swing.visible = false;
                 if(Input.isMouseJustPressed()) {
                     this.swingDir *= -1;
@@ -208,11 +210,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
                 
             }
-
-            if(event.type === InGame_Events.PLAYER_ATTACK_ENEMY) {
-                console.log("Attacked");
-                
-            }
+            
                 
         }
 

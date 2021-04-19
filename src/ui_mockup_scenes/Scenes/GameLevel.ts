@@ -182,8 +182,13 @@ export default class GameLevel extends Scene {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
+            // WARNING: No checking that node is actually the enemy, could fail
             if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
-                console.log('projectile hit enemy')
+                let node = this.sceneGraph.getNode(event.data.get("node"));
+                let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
+                (<EnemyController>node._ai).damage(1);
+                (<EnemyController>node._ai).doKnockBack(knockBackDir);
+
             }
             if(event.type === WindowEvents.RESIZED) {
             }

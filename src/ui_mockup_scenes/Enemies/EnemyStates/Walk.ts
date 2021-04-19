@@ -15,6 +15,7 @@ export default class Walk extends EnemyState {
 	update(deltaT: number): void {
 		super.update(deltaT);
 
+
 		let ownerPosX = this.parent.getOwnerPostion().x;
 		let ownerPosY = this.parent.getOwnerPostion().y;
 
@@ -26,24 +27,26 @@ export default class Walk extends EnemyState {
 		this.parent.direction.y = ((playerPosY > ownerPosY) ? 1 : -1);
 
 		let dirToPlayer = this.parent.getOwnerPostion().dirTo(this.parent.getPlayerPosition());
-		this.owner._velocity = dirToPlayer;
-
+		// this.owner._velocity = dirToPlayer;
+		this.parent.velocity = dirToPlayer;
 		// if (Math.abs(ownerPosX - playerPosX) < 16 && Math.abs(ownerPosY - playerPosY) < 16) {
 		// 	// This has to be handled through Player			
 		// 	this.owner._velocity.x = 0;
 		// 	this.owner._velocity.y = 0;
 			
 		// }
-		if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
-		if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
-		this.owner._velocity.normalize();
-		this.owner._velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
-		this.owner.move(this.owner._velocity.scaled(deltaT));
+		if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.parent.velocity.x = 0;
+		if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.parent.velocity.y = 0;
+		this.parent.velocity.normalize();
+		this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
+		this.owner.move(this.parent.velocity.scaled(deltaT));
 
 
 
 
 		// if the coordinates are within its range, go to attack depending on its class
+
+		
 
 	}
 
