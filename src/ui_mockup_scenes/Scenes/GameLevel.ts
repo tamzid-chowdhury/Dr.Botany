@@ -87,6 +87,8 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
         this.receiver.subscribe(InGame_Events.PROJECTILE_HIT_ENEMY);
         this.receiver.subscribe(InGame_Events.PLAYER_DIED);
+        this.receiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
+        this.receiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
 
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
@@ -246,6 +248,14 @@ export default class GameLevel extends Scene {
             
             if(event.type === InGame_Events.PLAYER_DIED) {
  //               this.sceneManager.changeToScene(GameOver, {})
+            }
+
+            if(event.type === InGame_Events.ANGRY_MOOD_REACHED) {
+                console.log("ANGRYYY");
+            }
+
+            if(event.type === InGame_Events.HAPPY_MOOD_REACHED) {
+                console.log("HAPPPYYY");
             }
 
         }

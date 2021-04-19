@@ -84,6 +84,18 @@ export default class LevelZero extends GameLevel {
 
         }
 
+        if(Input.isKeyJustPressed("o")){
+            console.log("yo");
+            this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+
+        }
+
+        if(Input.isKeyJustPressed("p")){
+            console.log("yurr");
+            this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
+
+        }
+
 
         if(this.shouldMaterialMove) {
             let playerPos = this.player.position;
@@ -125,12 +137,9 @@ export default class LevelZero extends GameLevel {
         while(this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
-            switch (event.type) {
-                case InGame_Events.PLAYER_ENEMY_COLLISION:
-                    
 
-            
-            }
+
+
         }
 
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 15 seconds
@@ -150,7 +159,9 @@ export default class LevelZero extends GameLevel {
         this.receiver.subscribe([
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
-            InGame_Events.ENEMY_DIED
+            InGame_Events.ENEMY_DIED,
+            InGame_Events.ANGRY_MOOD_REACHED,
+            InGame_Events.HAPPY_MOOD_REACHED
         ]);
     }
 
