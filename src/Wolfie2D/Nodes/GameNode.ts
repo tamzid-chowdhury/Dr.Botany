@@ -379,6 +379,14 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.position.y = value;
 	}
 
+	set velocityX(value: number) {
+		this._velocity.x = value;
+	}
+
+	set velocityY(value: number) {
+		this._velocity.y = value;
+	}
+
 	abstract set scaleX(value: number);
 
 	abstract set scaleY(value: number);
@@ -475,4 +483,6 @@ export enum TweenableProperties{
 	scaleY = "scaleY",
 	rotation = "rotation",
 	alpha = "alpha",
+	velocityX = "velocityX",
+	velocityY = "velocityY",
 }

@@ -330,3 +330,28 @@ export function spriteMoveAndShrink(pos: Vec2, dir: Vec2): Record<string,any> {
 	}
 	return tween
 }
+
+export function knockBack(velocity: Vec2): Record<string,any> {
+	let tween = {
+		startDelay: 0,
+		duration: 400,
+		effects: [
+			{
+				property:TweenableProperties.velocityX,
+				start: velocity.x,
+				end: 0 ,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property:TweenableProperties.velocityY,
+				start: velocity.y,
+				end: 0 ,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+		]
+		// onEnd: InGame_Events.FINISHED_SWING
+	}
+	return tween
+}
