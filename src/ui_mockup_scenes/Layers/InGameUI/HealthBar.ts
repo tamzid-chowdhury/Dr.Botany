@@ -14,8 +14,8 @@ export default class HealthBar {
 
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
-        this.sprite = scene.add.sprite("healthbar", UILayers.INGAME_UI)
         this.spriteOutline = scene.add.sprite("healthbaroutline", UILayers.INGAME_UI)
+        this.sprite = scene.add.sprite("healthbar", UILayers.INGAME_UI)
 
         let xOffset =  this.sprite.size.x / 5;
         let yOffset =  this.centerPos.y / 9;
@@ -23,7 +23,7 @@ export default class HealthBar {
         this.spriteOutline.position.set(xOffset,yOffset)
 
         this.sprite.scale = new Vec2(0.5, 0.5);
-        //this.spriteOutline.scale = new Vec2(0.5,0.5);
+        this.spriteOutline.scale = new Vec2(0.5,0.5);
         this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset+0.5, yOffset + 0.5), text:'HP: 100 %'});
         this.textBackdrop.size = this.sprite.size;
         this.textBackdrop.font = Fonts.ROUND;

@@ -24,7 +24,7 @@ export default class LevelZero extends GameLevel {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
-        this.load.image("box", "assets/misc/test_box.png")
+
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json" )
         this.load.spritesheet("slime_wip", "assets/enemies/slime_wip.json" )
     }
@@ -49,13 +49,13 @@ export default class LevelZero extends GameLevel {
         this.viewport.follow(this.player);
         
 
-        this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1)
+        // this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1)
         // this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player, health: 50, type:"Upper"}, 1)
         // this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player, health: 50, type:"Upper"}, 1)
         // this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player, health: 50, type:"Upper"}, 1)
         // this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
         // this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
-        this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player, health: 50, type:"Downer"}, 1.5)
+        // this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player, health: 50, type:"Downer"}, 1.5)
         // this.addEnemy("slime_wip", new Vec2(100, 220), {speed : 40, player: this.player, health: 50, type:"Downer"}, 0.5)
         // this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player, health: 50, type:"Downer"}, 2)
         // this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player, health: 50, type:"Downer"}, 1)
@@ -107,6 +107,14 @@ export default class LevelZero extends GameLevel {
                 this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
             }
 
+            if(event.type === InGame_Events.ON_DOWNER) {
+                console.log(':(')
+            }
+
+            if(event.type === InGame_Events.ON_UPPER) {
+                console.log(':)')
+            }
+
 
         }
 
@@ -127,7 +135,9 @@ export default class LevelZero extends GameLevel {
         this.levelZeroReceiver.subscribe([
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
-            InGame_Events.ENEMY_DIED
+            InGame_Events.ENEMY_DIED,
+            InGame_Events.ON_DOWNER,
+            InGame_Events.ON_UPPER
         ]);
     }
 

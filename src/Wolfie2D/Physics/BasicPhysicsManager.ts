@@ -91,7 +91,6 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
 				this.collisionMasks[i] = collisionMask;
 			}
-			console.log(this.collisionMasks)
 		}
 	}
 
