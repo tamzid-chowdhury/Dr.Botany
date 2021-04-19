@@ -167,6 +167,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 // Ideally, the equipped weapon would own the swing sprite, and they'd receive START_SWING and handle this stuff itself
                 // this.emitter.fireEvent(InGame_Events.DOING_SWING);
                 (<AnimatedSprite>this.swing).animation.play("SWING", false);
+                // this.owner.animation.play("SWING", false);
                 this.equipped.tweens.add('swingdown', Tweens.swing(this.equipped, this.swingDir))
                 this.equipped.tweens.play('swingdown');
                 this.swing.rotation = -this.equipped.rotation;
@@ -177,8 +178,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('fadeOut');
-
-                this.owner.animation.play("SWING", false);
 
                 this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
 
