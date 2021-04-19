@@ -39,20 +39,20 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.health -= damage;
         if(this.health <= 0) {
            
-            setTimeout(() => {
-                let ownerPosition = this.owner.position.clone();
-                this.owner.destroy();
-                if(Math.random() < 0.9) {
-                    if(this.type == "Upper"){
-                        this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});
-                    }
-                    if(this.type == "Downer"){
-                        this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: ownerPosition});
-                    }
-                }
-            }, 700)
-            this.owner.setAIActive(false, {});
-            this.owner.isCollidable = false;
+            // setTimeout(() => {
+            //     let ownerPosition = this.owner.position.clone();
+            //     this.owner.destroy();
+            //     if(Math.random() < 0.9) {
+            //         if(this.type == "Upper"){
+            //             this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});
+            //         }
+            //         if(this.type == "Downer"){
+            //             this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: ownerPosition});
+            //         }
+            //     }
+            // }, 600)
+            // this.owner.setAIActive(false, {});
+            // this.owner.isCollidable = false;
         }
         // else {
         //     this.owner.animation.play("HIT", false);
@@ -75,7 +75,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		this.addState(EnemyStates.KNOCKBACK, knockback);
 
         this.initialize(EnemyStates.WALK);
-
+        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER])
 
     }
 
@@ -84,6 +84,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     update(deltaT: number): void {
+        super.update(deltaT);
+        
         if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
         if (this.getOwnerPostion().x + 3 <= this.getPlayerPosition().x) { 
             this.owner.invertX = true; 
@@ -91,7 +93,24 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		else {
 			this.owner.invertX = false;
 		}
-        super.update(deltaT);
+        while (this.receiver.hasNextEvent()) {
+            let event = this.receiver.getNextEvent();
+            if(event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
+                let ownerPosition = this.owner.position.clone();
+                if(Math.random() < 0.9) {
+                    if(this.type == "Upper"){
+                        this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});
+                    }
+                    if(this.type == "Downer"){
+                        this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: ownerPosition});
+                    }
+                }
+                this.owner.setAIActive(false, {});
+                this.owner.isCollidable = false;
+                this.owner.destroy();
+
+            }
+        }
         
 	}
 

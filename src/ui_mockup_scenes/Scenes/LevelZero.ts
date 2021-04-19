@@ -120,7 +120,7 @@ export default class LevelZero extends GameLevel {
         }
 
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 15 seconds
-        if (Date.now() - this.time > 15000) {
+        if (Date.now() - this.time > 5000) {
             let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
             let randomX = Math.floor(Math.random() * this.tilemapSize.x) - 20;
             let randomY = Math.floor(Math.random() * this.tilemapSize.y) - 20;

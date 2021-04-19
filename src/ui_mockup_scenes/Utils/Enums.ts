@@ -96,8 +96,8 @@ export enum InGame_Events {
 	HAPPY_MOOD_REACHED = "HappyMoodReached",
 	ANGRY_MOOD_REACHED = "AngryMoodReached",
 	ON_UPPER = "OnUpper",
-	ON_DOWNER = "OnDowner"
-	
+	ON_DOWNER = "OnDowner",
+	ENEMY_DEATH_ANIM_OVER = "EnemyDeathAnimOver"
 }
 
 
