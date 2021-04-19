@@ -9,6 +9,7 @@ import EnemyController from "../Enemies/EnemyController";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Input from "../../Wolfie2D/Input/Input";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Receiver from "../../Wolfie2D/Events/Receiver";
 
 export default class LevelZero extends GameLevel {
 
@@ -17,6 +18,8 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     time: number;
     enemyList: Array<AnimatedSprite>  = [];
+
+    levelZeroReceiver: Receiver = new Receiver();
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
@@ -59,9 +62,9 @@ export default class LevelZero extends GameLevel {
         // this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player, health: 50, type:"Downer"}, 1)
         // this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player, health: 50, type:"Downer"}, 1)
         // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
-        
 
-
+        this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
+        this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
     
     }
@@ -90,10 +93,19 @@ export default class LevelZero extends GameLevel {
             }
         }
 
-        while(this.receiver.hasNextEvent()) {
-            let event = this.receiver.getNextEvent();
+        while(this.levelZeroReceiver.hasNextEvent()) {
+            let event = this.levelZeroReceiver.getNextEvent();
 
+            if(event.type === InGame_Events.ANGRY_MOOD_REACHED) {
+                this.increaseEnemyStrength();
+                this.levelZeroReceiver.unsubscribe(InGame_Events.ANGRY_MOOD_REACHED)
 
+            }
+
+            if(event.type === InGame_Events.HAPPY_MOOD_REACHED) {
+                this.increaseEnemySpeed();
+                this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
+            }
 
 
         }
@@ -112,12 +124,10 @@ export default class LevelZero extends GameLevel {
 
 
     protected subscribeToEvents() {
-        this.receiver.subscribe([
+        this.levelZeroReceiver.subscribe([
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
-            InGame_Events.ENEMY_DIED,
-            InGame_Events.ANGRY_MOOD_REACHED,
-            InGame_Events.HAPPY_MOOD_REACHED
+            InGame_Events.ENEMY_DIED
         ]);
     }
 
@@ -141,6 +151,16 @@ export default class LevelZero extends GameLevel {
         this.enemyList.push(enemy);
     }
 
+    protected increaseEnemySpeed(): void {
+        for(let enemy of this.enemyList){
+            let enemyController = <EnemyController>enemy._ai;
+            enemyController.increaseSpeed();
+        }
+    }
 
+    protected increaseEnemyStrength(): void {
+        let playerController = <PlayerController>this.player._ai; 
+        playerController.increaseDamageTaken(2);
+    }
 
 }

@@ -46,6 +46,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     doingSwing: boolean = false;
     damaged: boolean = false;
     damageCooldown: number;
+    damageTaken: number = 1; 
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -59,7 +60,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
-        this.health = 5;
+        this.health = 100;
 		this.levelView = this.owner.getScene().getViewport();
 		this.viewHalfSize = this.levelView.getHalfSize();
 
@@ -204,7 +205,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
                 else {
                     // This is where it plays tweens + animation for getting hit
-                    this.damage(1);
+                    this.damage(this.damageTaken);
                     this.damaged = true;
                     this.damageCooldown = Date.now();
                     console.log(this.health);
@@ -241,4 +242,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
     }
 
+    increaseDamageTaken(newDamageTaken: number): void {
+        this.damageTaken = newDamageTaken
+    }
 }

@@ -58,7 +58,8 @@ export default class GameLevel extends Scene {
         this.load.image("ui_square_v2", "assets/ui_art/ui_square_v2.png");
         this.load.image("ui_circle", "assets/ui_art/ui_circle.png");
         this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
-        this.load.image("healthbar", "assets/ui_art/health_bar_wip.png")
+        this.load.image("healthbar", "assets/ui_art/health_bar_wip-1.png")
+        this.load.image("healthbaroutline", "assets/misc/ui_bar_outline.png")
         this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
 
@@ -87,8 +88,6 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
         this.receiver.subscribe(InGame_Events.PROJECTILE_HIT_ENEMY);
         this.receiver.subscribe(InGame_Events.PLAYER_DIED);
-        this.receiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
-        this.receiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
 
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
@@ -102,6 +101,16 @@ export default class GameLevel extends Scene {
         let mousePos = Input.getMousePosition();
         let rotateTo = Input.getGlobalMousePosition();
         this.reticle.position = mousePos;
+
+        if(Input.isKeyJustPressed("o")){
+            this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+
+        }
+
+        if(Input.isKeyJustPressed("p")){
+            this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
+
+        }
 
         for(let material of this.droppedMaterial){ 
             if(material.sprite.position.distanceTo(this.player.position) < 10){
@@ -221,16 +230,9 @@ export default class GameLevel extends Scene {
             }
             
             if(event.type === InGame_Events.PLAYER_DIED) {
- //               this.sceneManager.changeToScene(GameOver, {})
+                //this.sceneManager.changeToScene(GameOver, {})
             }
 
-            if(event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                console.log("ANGRYYY");
-            }
-
-            if(event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-                console.log("HAPPPYYY");
-            }
 
         }
     }
@@ -290,4 +292,5 @@ export default class GameLevel extends Scene {
         this.reticle.scale = new Vec2(0.7, 0.7);
 
     }
+
 }

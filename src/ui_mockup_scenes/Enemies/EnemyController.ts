@@ -108,4 +108,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     getOwnerPostion(): Vec2 {
         return this.owner.position;
     }
+
+    increaseSpeed(): void {
+        this.speed = this.speed * 4;
+    }
 }
