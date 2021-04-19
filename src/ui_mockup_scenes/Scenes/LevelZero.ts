@@ -18,6 +18,7 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     time: number;
     enemyList: Array<AnimatedSprite>  = [];
+    enemyNameList: Array<string> = ["orange_mushroom", "slime_wip"];
 
     levelZeroReceiver: Receiver = new Receiver();
     loadScene(): void {
@@ -119,13 +120,19 @@ export default class LevelZero extends GameLevel {
         }
 
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 15 seconds
-        // if (Date.now() - this.time > 15000) {
-        //     console.log("15 seconds passed");
-        //     // addEnemy - params:(SpriteKey, Position, aiOptions, scale)
-        //     this.addEnemy("temp_enemy", new Vec2(300, 300), {  health : 5, player: this.player }, 1);
-        //     this.time = Date.now();
-        // }
-
+        if (Date.now() - this.time > 15000) {
+            let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
+            let randomX = Math.floor(Math.random() * this.tilemapSize.x) - 20;
+            let randomY = Math.floor(Math.random() * this.tilemapSize.y) - 20;
+            console.log("15 seconds passed, Spawning new enemy");
+            if(this.enemyNameList[randomInt] === "orange_mushroom") {
+                this.addEnemy("orange_mushroom" ,new Vec2(randomX, randomY), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1);
+            }
+            else if (this.enemyNameList[randomInt] === "slime_wip") {
+                this.addEnemy("slime_wip", new Vec2(randomX, randomY), {speed : 25, player: this.player, health: 50, type:"Downer"}, 1.5)
+            }
+            this.time = Date.now();
+        }
     }
     
 

@@ -38,10 +38,10 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     damage(damage: number) : void {
         this.health -= damage;
         if(this.health <= 0) {
-            this.owner.animation.play("DYING", false, InGame_Events.ENEMY_DIED);
+           
             setTimeout(() => {
                 let ownerPosition = this.owner.position.clone();
-                this.owner.destroy()
+                this.owner.destroy();
                 if(Math.random() < 0.9) {
                     if(this.type == "Upper"){
                         this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});

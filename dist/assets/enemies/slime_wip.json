@@ -21,6 +21,16 @@
 				{"index": 8, "duration": 10}
 			]
         },
+		{
+            "name": "HIT",
+            "frames": [ 
+				{"index": 9, "duration": 10}, 
+				{"index": 10, "duration": 10}, 
+				{"index": 11, "duration": 10}, 
+				{"index": 12, "duration": 10}, 
+				{"index": 13, "duration": 10}
+			]
+        },
         {
             "name": "DYING",
             "frames": [ 

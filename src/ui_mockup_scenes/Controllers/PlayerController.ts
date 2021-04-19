@@ -192,6 +192,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.doingSwing = false;
                 } 
             }
+            
 
             if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
                 if(this.damaged) {
@@ -218,7 +219,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         if(this.health <= 0){
             console.log("Game Over");
-            this.owner.animation.play("DYING", false, InGame_Events.PLAYER_DIED);
+            this.owner.animation.play("DYING", false);
+            this.emitter.fireEvent(InGame_Events.PLAYER_DIED);
         }
     }
     destroy(): void {
@@ -233,7 +235,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.receiver.subscribe(InGame_Events.FINISHED_SWING);
         this.receiver.subscribe(InGame_Events.START_SWING);
         this.receiver.subscribe(InGame_Events.PLAYER_ENEMY_COLLISION);
-        this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
+        this.receiver.subscribe(InGame_Events.PLAYER_DIED);
     }
 
     increaseDamageTaken(newDamageTaken: number): void {
