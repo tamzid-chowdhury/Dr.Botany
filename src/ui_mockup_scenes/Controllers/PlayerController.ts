@@ -87,8 +87,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
         this.owner.colliderOffset.set(0, 10);
         this.owner.setGroup("player");
-
-
         // this.items = options.items;
         // this.inventory = options.inventory;
         this.subscribeToEvents();
@@ -145,8 +143,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
         this.equipped.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
-        // this.equipped.position.x += 6 * this.playerLookDirection.x;
-        // this.equipped.position.y += 3 * this.playerLookDirection.y;
         // ---
 
 
@@ -212,9 +208,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
                 
             }
-            
 
-                
         }
 
     }

@@ -42,6 +42,8 @@ export default class GameLevel extends Scene {
     reticle: Sprite;
     player: AnimatedSprite;
     plant: Sprite;
+    upperDeposit: Sprite;
+    downerDeposit: Sprite;
     shadow: Sprite;
     swing: Sprite
     defaultEquip: Sprite;
@@ -72,7 +74,8 @@ export default class GameLevel extends Scene {
         this.load.image("red_orb", "assets/items/redorb.png");
         this.load.spritesheet("swing_sprite", "assets/weapons/swing_sprite.json" )
         this.load.spritesheet("plant", "assets/plant/plant.json" )
-
+        this.load.image("upper_deposit", "assets/misc/upper_deposit.png")
+        this.load.image("downer_deposit", "assets/misc/downer_deposit.png")
     }
 
     startScene(): void {
@@ -89,6 +92,7 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
         this.receiver.subscribe(InGame_Events.PROJECTILE_HIT_ENEMY);
         this.receiver.subscribe(InGame_Events.PLAYER_DIED);
+
 
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
@@ -141,7 +145,7 @@ export default class GameLevel extends Scene {
         }
 
 
-            
+
         
         if(Input.isKeyJustPressed("p")){
             if(this.pauseScreenLayer !== undefined) {
@@ -242,8 +246,26 @@ export default class GameLevel extends Scene {
 
     initPlant(mapSize: Vec2): void {
         this.plant = this.add.animatedSprite('plant', "primary");
-        this.plant.position.set(mapSize.x/2, mapSize.y/4);
-        this.plant.scale.set(0.2, 0.2);
+        this.upperDeposit = this.add.sprite('upper_deposit', "secondary");
+        this.downerDeposit = this.add.sprite('downer_deposit', "secondary");
+        this.plant.position.set(mapSize.x/2, this.plant.size.y/2);
+
+        this.upperDeposit.position.set(mapSize.x/2 - this.upperDeposit.size.x/2, this.plant.size.y + this.upperDeposit.size.y/4);
+        this.downerDeposit.position.set(mapSize.x/2 + this.downerDeposit.size.x/2, this.plant.size.y + this.downerDeposit.size.y/4);
+
+        this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x/4, this.upperDeposit.size.y/4) ));
+        this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x/4, this.downerDeposit.size.y/4)));
+        this.upperDeposit.setGroup('deposits');
+        this.downerDeposit.setGroup('deposits');
+
+        this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER, null);
+        this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER, null);
+
+
+        this.plant.scale.set(1.0, 1.0);
+        // this.plant.scale.set(0.7, 0.7);
+        this.upperDeposit.scale.set(0.3, 0.3);
+        this.downerDeposit.scale.set(0.3, 0.3);
         (<AnimatedSprite>this.plant).animation.play("EH")
         // This has to be touched
         // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
