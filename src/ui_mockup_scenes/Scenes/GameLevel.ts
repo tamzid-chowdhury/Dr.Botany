@@ -188,7 +188,7 @@ export default class GameLevel extends Scene {
             if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
                 let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
-                (<EnemyController>node._ai).damage(1);
+                (<EnemyController>node._ai).damage(10);
                 (<EnemyController>node._ai).doKnockBack(knockBackDir);
 
 
