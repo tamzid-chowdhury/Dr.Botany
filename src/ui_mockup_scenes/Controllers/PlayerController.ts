@@ -178,7 +178,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
 
-                this.swing.setTrigger("enemies", InGame_Events.PLAYER_ATTACK_ENEMY, null);
             }
 
             if(event.type === InGame_Events.FINISHED_SWING) {
