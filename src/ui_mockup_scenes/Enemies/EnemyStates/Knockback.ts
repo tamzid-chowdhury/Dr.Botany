@@ -13,7 +13,7 @@ export default class Knockback extends EnemyState {
 			(<AnimatedSprite>this.owner).animation.play("HIT", false);
 		}
 		else {
-			(<AnimatedSprite>this.owner).animation.play("DYING", false);
+			(<AnimatedSprite>this.owner).animation.play("DYING", false, InGame_Events.ENEMY_DEATH_ANIM_OVER);
 			
 		}
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
