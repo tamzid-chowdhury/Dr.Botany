@@ -37,7 +37,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     knockBackTimer: number = 0;
     damage(damage: number) : void {
         this.health -= damage;
-
         if(this.health <= 0) {
             this.owner.animation.play("DYING", false, InGame_Events.ENEMY_DIED);
             setTimeout(() => {
@@ -54,10 +53,10 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
             }, 700)
             this.owner.setAIActive(false, {});
             this.owner.isCollidable = false;
-            
-
-
         }
+        // else {
+        //     this.owner.animation.play("HIT", false);
+        // }
     };
 
     initializeAI(owner:AnimatedSprite, options:Record<string, any>) {

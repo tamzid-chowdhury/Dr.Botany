@@ -24,6 +24,7 @@ import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import * as Tweens from "../Utils/Tweens";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Material from "../GameSystems/items/Material"
+// import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -85,6 +86,7 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.SPAWN_DOWNER);
         this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
         this.receiver.subscribe(InGame_Events.PROJECTILE_HIT_ENEMY);
+        this.receiver.subscribe(InGame_Events.PLAYER_DIED);
 
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
@@ -189,6 +191,7 @@ export default class GameLevel extends Scene {
                 (<EnemyController>node._ai).damage(1);
                 (<EnemyController>node._ai).doKnockBack(knockBackDir);
 
+
             }
             if(event.type === WindowEvents.RESIZED) {
             }
@@ -216,15 +219,17 @@ export default class GameLevel extends Scene {
 
 
             if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
-                let node = this.sceneGraph.getNode(event.data.get("node"));
-                let other = this.sceneGraph.getNode(event.data.get("other"));
-
-                if (node === this.player) {
-                    console.log("node is player");
+                if((<PlayerController>this.player._ai).damaged) {
+                    if (Date.now() - (<PlayerController>this.player._ai).damageCooldown > 2000) {
+                        (<PlayerController>this.player._ai).damaged = false;
+                    }
+                }
+                else {
+                    // This is where it plays tweens + animation for getting hit
                     (<PlayerController>this.player._ai).damage(1);
-
-                    // add tweens that bumps from the enemy collision
-                    // console.log((<PlayerController>this.player._ai).health);
+                    (<PlayerController>this.player._ai).damaged = true;
+                    (<PlayerController>this.player._ai).damageCooldown = Date.now();
+                    console.log((<PlayerController>this.player._ai).health);
                 }
             }
 
@@ -237,7 +242,11 @@ export default class GameLevel extends Scene {
                 material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
                 material.sprite.setGroup("materials");
                 this.droppedMaterial.push(material)
-            }            
+            }
+            
+            if(event.type === InGame_Events.PLAYER_DIED) {
+ //               this.sceneManager.changeToScene(GameOver, {})
+            }
 
         }
     }
