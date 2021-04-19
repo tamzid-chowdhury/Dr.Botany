@@ -62,7 +62,7 @@ export default class GameLevel extends Scene {
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
 
         // this.load.image("player", "assets/player/dr_botany_wip.png");
-        this.load.spritesheet("player", "assets/player/dr_botany.png")
+        this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.image("shadow", "assets/player/shadow_sprite.png");
         this.load.image("shovel", "assets/weapons/shovel.png");
         this.load.image("green_orb", "assets/items/greenorb.png");
@@ -275,7 +275,7 @@ export default class GameLevel extends Scene {
         }
 
         this.player.addAI(PlayerController, playerOptions);
-
+        this.player.animation.play("IDLE");
     }
 
     initInventory(): void {

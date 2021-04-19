@@ -98,6 +98,13 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         
         this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
         this.direction.y = (Input.isPressed("forward") ? -1 : 0) + (Input.isPressed("backward") ? 1 : 0);
+
+        if(!this.direction.isZero()) {
+            this.owner.animation.playIfNotAlready("WALK", true);
+        }
+        else {
+            this.owner.animation.playIfNotAlready("IDLE", true);
+        }
 		this.owner._velocity.x = this.direction.x;
 		this.owner._velocity.y = this.direction.y;
 		this.owner._velocity.normalize();
