@@ -92,7 +92,9 @@ export enum InGame_Events {
     START_SWING = "StartSwing",
     DO_SCREENSHAKE = "DoScreenShake",
     SPAWN_UPPER = "SpawnUpper",
-    SPAWN_DOWNER = "SpawnDowner"
+	SPAWN_DOWNER = "SpawnDowner",
+	HAPPY_MOOD_REACHED = "HappyMoodReached",
+	ANGRY_MOOD_REACHED = "AngryMoodReached"
 	
 }
 
