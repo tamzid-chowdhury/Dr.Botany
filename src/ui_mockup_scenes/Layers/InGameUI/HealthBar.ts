@@ -6,19 +6,24 @@ import Scene from "../../../Wolfie2D/Scene/Scene";
 import { UILayers, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
 export default class HealthBar {
-	sprite: Sprite;
+    sprite: Sprite;
+    spriteOutline: Sprite; 
 	text: Label;
 	textBackdrop: Label;
 	centerPos: Vec2;
 
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
-		this.sprite = scene.add.sprite("healthbar", UILayers.INGAME_UI)
+        this.sprite = scene.add.sprite("healthbar", UILayers.INGAME_UI)
+        this.spriteOutline = scene.add.sprite("healthbaroutline", UILayers.INGAME_UI)
+
         let xOffset =  this.sprite.size.x / 5;
         let yOffset =  this.centerPos.y / 9;
         this.sprite.position.set(xOffset, yOffset)
+        this.spriteOutline.position.set(xOffset,yOffset)
 
         this.sprite.scale = new Vec2(0.5, 0.5);
+        //this.spriteOutline.scale = new Vec2(0.5,0.5);
         this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset+0.5, yOffset + 0.5), text:'HP: 100 %'});
         this.textBackdrop.size = this.sprite.size;
         this.textBackdrop.font = Fonts.ROUND;

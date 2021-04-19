@@ -58,7 +58,8 @@ export default class GameLevel extends Scene {
         this.load.image("ui_square_v2", "assets/ui_art/ui_square_v2.png");
         this.load.image("ui_circle", "assets/ui_art/ui_circle.png");
         this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
-        this.load.image("healthbar", "assets/ui_art/health_bar_wip.png")
+        this.load.image("healthbar", "assets/ui_art/health_bar_wip-1.png")
+        this.load.image("healthbaroutline", "assets/misc/ui_bar_outline.png")
         this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
 

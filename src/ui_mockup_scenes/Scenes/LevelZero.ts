@@ -129,13 +129,14 @@ export default class LevelZero extends GameLevel {
             let event = this.levelZeroReceiver.getNextEvent();
 
             if(event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                console.log("ANGRY");
+                this.increaseEnemyStrength();
+                this.levelZeroReceiver.unsubscribe(InGame_Events.ANGRY_MOOD_REACHED)
 
             }
 
             if(event.type === InGame_Events.HAPPY_MOOD_REACHED) {
                 this.increaseEnemySpeed();
-                this.levelZeroReceiver.unsubscribe(InGame_Events.ANGRY_MOOD_REACHED)
+                this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
             }
 
 
@@ -187,6 +188,11 @@ export default class LevelZero extends GameLevel {
             let enemyController = <EnemyController>enemy._ai;
             enemyController.increaseSpeed();
         }
+    }
+
+    protected increaseEnemyStrength(): void {
+        let playerController = <PlayerController>this.player._ai; 
+        playerController.increaseDamageTaken(2);
     }
 
 }
