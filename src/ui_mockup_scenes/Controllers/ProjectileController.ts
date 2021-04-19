@@ -17,17 +17,8 @@ import BattlerAI from "./BattlerAI";
 
 export default class ProjectileController extends StateMachineAI {
     owner: AnimatedSprite;
-
-
-    // The inventory of the player
-    //private inventory: EquipmentManager;
-
-
     direction: Vec2;
     speed: number = 50;
-
-
-
     // WHAT IF TWO SHOVELS AT ONE TIME POWERUP???? ALTERNATING SWINGS
 
 
@@ -49,9 +40,9 @@ export default class ProjectileController extends StateMachineAI {
     update(deltaT: number): void {
 		while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-			if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
-				this.owner.active = false;
-			}
+            if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
+                this.owner.active = false;
+            }
 		}
 
     }
