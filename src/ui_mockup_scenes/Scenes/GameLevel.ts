@@ -24,6 +24,7 @@ import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import * as Tweens from "../Utils/Tweens";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Material from "../GameSystems/items/Material"
+import MainMenu from "../MainMenu";
 // import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
@@ -230,7 +231,9 @@ export default class GameLevel extends Scene {
             }
             
             if(event.type === InGame_Events.PLAYER_DIED) {
+                console.log("Player Died. Go to main menu")
                 //this.sceneManager.changeToScene(GameOver, {})
+                // this.sceneManager.changeToScene(MainMenu, {}) // This has to be changed 
             }
 
 
