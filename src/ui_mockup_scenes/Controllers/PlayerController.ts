@@ -193,21 +193,20 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             }
 
 
-            if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
-                if(this.damaged) {
-                    if (Date.now() - this.damageCooldown > 2000) {
-                        this.damaged = false;
-                    }
-                }
-                else {
-                    // This is where it plays tweens + animation for getting hit
-                    this.damage(1);
-                    this.damaged = true;
-                    this.damageCooldown = Date.now();
-                    console.log(this.health);
-                }
-                
-            }
+            // if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
+            //     if(this.damaged) {
+            //         if (Date.now() - this.damageCooldown > 2000) {
+            //             this.damaged = false;
+            //         }
+            //     }
+            //     else {
+            //         // This is where it plays tweens + animation for getting hit
+            //         this.damage(1);
+            //         this.damaged = true;
+            //         this.damageCooldown = Date.now();
+            //         console.log(this.health);
+            //     }
+            // }
 
             if(event.type === InGame_Events.PLAYER_ATTACK_ENEMY) {
                 console.log("Attacked");
@@ -223,6 +222,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         if(this.health <= 0){
             console.log("Game Over");
+            this.emitter.fireEvent(InGame_Events.PLAYER_DIED);
         }
     }
     destroy(): void {
