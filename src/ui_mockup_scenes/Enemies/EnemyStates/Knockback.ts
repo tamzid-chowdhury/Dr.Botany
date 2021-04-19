@@ -18,8 +18,8 @@ export default class Knockback extends EnemyState {
 	update(deltaT: number): void {
 		this.parent.velocity.add(new Vec2(-this.parent.velocity.x/24, -this.parent.velocity.y/24));
 		this.owner.move(this.parent.velocity.scaled(deltaT));
-		console.log(this.parent.velocity.x, this.parent.velocity.y);
 		this.parent.knockBackTimer --;
+		if(this.parent.knockBackTimer <= 0) this.finished(EnemyStates.WALK);
 		super.update(deltaT);
 
 	}
