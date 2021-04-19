@@ -59,7 +59,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
-        this.health = 50;
+        this.health = 5;
 		this.levelView = this.owner.getScene().getViewport();
 		this.viewHalfSize = this.levelView.getHalfSize();
 
@@ -161,7 +161,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 // a fix might be to have two copies of the swing tween and swap between them
                 // for alternating swing, which should give each enough time to finish
                 this.swing.position.set(this.owner.position.x + (20*this.playerLookDirection.x), this.owner.position.y + (20*this.playerLookDirection.y));
-
+                
                 // Ideally, the equipped weapon would own the swing sprite, and they'd receive START_SWING and handle this stuff itself
                 // this.emitter.fireEvent(InGame_Events.DOING_SWING);
                 (<AnimatedSprite>this.swing).animation.play("SWING", false);
@@ -175,6 +175,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('fadeOut');
+
+                this.owner.animation.play("SWING", false);
 
                 this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
 
@@ -222,7 +224,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         if(this.health <= 0){
             console.log("Game Over");
-            this.emitter.fireEvent(InGame_Events.PLAYER_DIED);
+            this.owner.animation.play("DYING", false, InGame_Events.PLAYER_DIED);
         }
     }
     destroy(): void {
