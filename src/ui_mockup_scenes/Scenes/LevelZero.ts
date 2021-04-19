@@ -9,6 +9,7 @@ import EnemyController from "../Enemies/EnemyController";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Input from "../../Wolfie2D/Input/Input";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Receiver from "../../Wolfie2D/Events/Receiver";
 
 export default class LevelZero extends GameLevel {
 
@@ -18,6 +19,8 @@ export default class LevelZero extends GameLevel {
     time: number;
     testMaterial: Sprite;
     enemyList: Array<AnimatedSprite>  = [];
+    levelZeroReceiver: Receiver = new Receiver();
+
     //shouldMaterialMove: boolean = false;
     loadScene(): void {
         super.loadScene();
@@ -65,9 +68,9 @@ export default class LevelZero extends GameLevel {
         // this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player, health: 50, type:"Downer"}, 1)
         // this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player, health: 50, type:"Downer"}, 1)
         // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
-        
 
-
+        this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
+        this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
     
     }
@@ -81,18 +84,6 @@ export default class LevelZero extends GameLevel {
             this.testMaterial.position = new Vec2(50, 50)
             this.shouldMaterialMove = true;
             this.testMaterial.visible = true;
-
-        }
-
-        if(Input.isKeyJustPressed("o")){
-            console.log("yo");
-            this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
-
-        }
-
-        if(Input.isKeyJustPressed("p")){
-            console.log("yurr");
-            this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
 
         }
 
@@ -134,10 +125,18 @@ export default class LevelZero extends GameLevel {
             }
         }
 
-        while(this.receiver.hasNextEvent()) {
-            let event = this.receiver.getNextEvent();
+        while(this.levelZeroReceiver.hasNextEvent()) {
+            let event = this.levelZeroReceiver.getNextEvent();
 
+            if(event.type === InGame_Events.ANGRY_MOOD_REACHED) {
+                console.log("ANGRY");
 
+            }
+
+            if(event.type === InGame_Events.HAPPY_MOOD_REACHED) {
+                this.increaseEnemySpeed();
+                this.levelZeroReceiver.unsubscribe(InGame_Events.ANGRY_MOOD_REACHED)
+            }
 
 
         }
@@ -156,12 +155,10 @@ export default class LevelZero extends GameLevel {
 
 
     protected subscribeToEvents() {
-        this.receiver.subscribe([
+        this.levelZeroReceiver.subscribe([
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
-            InGame_Events.ENEMY_DIED,
-            InGame_Events.ANGRY_MOOD_REACHED,
-            InGame_Events.HAPPY_MOOD_REACHED
+            InGame_Events.ENEMY_DIED
         ]);
     }
 
@@ -185,6 +182,11 @@ export default class LevelZero extends GameLevel {
         this.enemyList.push(enemy);
     }
 
-
+    protected increaseEnemySpeed(): void {
+        for(let enemy of this.enemyList){
+            let enemyController = <EnemyController>enemy._ai;
+            enemyController.increaseSpeed();
+        }
+    }
 
 }

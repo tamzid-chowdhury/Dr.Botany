@@ -87,8 +87,6 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
         this.receiver.subscribe(InGame_Events.PROJECTILE_HIT_ENEMY);
         this.receiver.subscribe(InGame_Events.PLAYER_DIED);
-        this.receiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
-        this.receiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
 
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
@@ -112,6 +110,16 @@ export default class GameLevel extends Scene {
         //     }
 
         // }
+
+        if(Input.isKeyJustPressed("o")){
+            this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+
+        }
+
+        if(Input.isKeyJustPressed("p")){
+            this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
+
+        }
 
         for(let material of this.droppedMaterial){ 
             if(material.sprite.position.distanceTo(this.player.position) < 10){
@@ -247,16 +255,9 @@ export default class GameLevel extends Scene {
             }
             
             if(event.type === InGame_Events.PLAYER_DIED) {
- //               this.sceneManager.changeToScene(GameOver, {})
+                //this.sceneManager.changeToScene(GameOver, {})
             }
 
-            if(event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                console.log("ANGRYYY");
-            }
-
-            if(event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-                console.log("HAPPPYYY");
-            }
 
         }
     }
@@ -316,4 +317,5 @@ export default class GameLevel extends Scene {
         this.reticle.scale = new Vec2(0.7, 0.7);
 
     }
+
 }
