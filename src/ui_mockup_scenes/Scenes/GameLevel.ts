@@ -103,16 +103,6 @@ export default class GameLevel extends Scene {
         let rotateTo = Input.getGlobalMousePosition();
         this.reticle.position = mousePos;
 
-
-        // if(Input.isKeyJustPressed("m")){
-        //     for(let material of this.droppedMaterial){
-        //         material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-        //         material.sprite.setGroup("materials");
-        //         this.shouldMaterialMove = true;
-        //     }
-
-        // }
-
         for(let material of this.droppedMaterial){ 
             if(material.sprite.position.distanceTo(this.player.position) < 10){
                 if(material.type === "upper"){
@@ -129,7 +119,7 @@ export default class GameLevel extends Scene {
 
             }
 
-            if(material.sprite.position.distanceTo(this.player.position) < 75){ 
+            if(material.sprite.position.distanceTo(this.player.position) < 100){ 
                 let dirToPlayer = material.sprite.position.dirTo(this.player.position);
                 material.sprite._velocity = dirToPlayer;
                 let dist = material.sprite.position.distanceSqTo(this.player.position);
@@ -139,22 +129,6 @@ export default class GameLevel extends Scene {
                 material.sprite.move(material.sprite._velocity.scaled(deltaT));
             }
         }
-        
-
-
-        // if(this.shouldMaterialMove){
-        //     for(let material of this.droppedMaterial){ 
-        //             let dirToPlayer = material.sprite.position.dirTo(this.player.position);
-        //             material.sprite._velocity = dirToPlayer;
-        //             let dist = material.sprite.position.distanceSqTo(this.player.position);
-        //             let speedSq = Math.pow(1000, 2);
-        //             // if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.owner._velocity.x = 0;
-        //             // if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.owner._velocity.y = 0;
-        //             material.sprite._velocity.normalize();
-        //             material.sprite._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
-        //             material.sprite.move(material.sprite._velocity.scaled(deltaT));
-        //     }
-        // }
 
 
             

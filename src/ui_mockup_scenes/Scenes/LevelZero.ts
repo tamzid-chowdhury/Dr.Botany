@@ -16,9 +16,7 @@ export default class LevelZero extends GameLevel {
     tilemapSize: Vec2;
     lookDirection: Vec2;
     time: number;
-    testMaterial: Sprite;
     enemyList: Array<AnimatedSprite>  = [];
-    //shouldMaterialMove: boolean = false;
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
@@ -46,10 +44,6 @@ export default class LevelZero extends GameLevel {
         super.initGameUI(this.viewport.getHalfSize());
         super.initReticle();
         this.viewport.follow(this.player);
-
-        // this.testMaterial = this.add.sprite("green_orb", 'primary');
-        // this.testMaterial.position = new Vec2(100, 100); 
-        // this.testMaterial.scale.set(0.6, 0.6);
         
 
         this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1)
@@ -75,15 +69,6 @@ export default class LevelZero extends GameLevel {
     updateScene(deltaT: number){
         super.updateScene(deltaT);
 
-        if(Input.isKeyJustPressed("m")){
-            this.testMaterial.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
-            this.testMaterial.setGroup("materials");
-            this.testMaterial.position = new Vec2(50, 50)
-            this.shouldMaterialMove = true;
-            this.testMaterial.visible = true;
-
-        }
-
         if(Input.isKeyJustPressed("o")){
             console.log("yo");
             this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
@@ -97,35 +82,6 @@ export default class LevelZero extends GameLevel {
         }
 
 
-        if(this.shouldMaterialMove) {
-            let playerPos = this.player.position;
-            let materialPos = this.testMaterial.position
-            let dirToPlayer = materialPos.dirTo(playerPos);
-            this.testMaterial._velocity = dirToPlayer;
-            let dist = materialPos.distanceSqTo(playerPos);
-            let speedSq = Math.pow(1000, 2);
-
-            if(Math.abs(materialPos.x - playerPos.x) < (this.player.size.x / 4)) { 
-                this.shouldMaterialMove = false; 
-                this.testMaterial._velocity.x = 0;
-                this.testMaterial.position.x = this.player.position.x;
-
-            } 
-            if(Math.abs(materialPos.y - playerPos.y) < (this.player.size.y / 4) ) { 
-                this.shouldMaterialMove = false; 
-                this.testMaterial._velocity.y = 0;
-                this.testMaterial.position.y = this.player.position.y;
-            } 
-
-            if(!this.shouldMaterialMove) {
-                this.testMaterial.visible = false;
-                this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT)
-            }
-
-            this.testMaterial._velocity.normalize();
-            this.testMaterial._velocity.mult(new Vec2(speedSq / dist, speedSq / dist));
-            this.testMaterial.move(this.testMaterial._velocity.scaled(deltaT));
-        }
 
         if(Input.isKeyJustPressed("k")){
             for(let enemy of this.enemyList){
@@ -172,7 +128,7 @@ export default class LevelZero extends GameLevel {
         let collisionShape = enemy.size;
         // This has to be touched
         // this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.halfSize.scaled(this.scene.getViewScale())
-        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2((collisionShape.x/2) * scale, (collisionShape.y/2 - collisionShape.y/3) * scale)));
+        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(((collisionShape.x/2) - 2) * scale, (collisionShape.y/2 - collisionShape.y/3) * scale)));
         
         enemy.colliderOffset.set(0,(collisionShape.y/3) * scale);
         // play with this // maybe add a condition for each enemy
