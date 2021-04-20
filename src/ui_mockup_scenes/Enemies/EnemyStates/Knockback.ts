@@ -1,4 +1,5 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { EnemyStates } from "../EnemyController";
 import EnemyState from "./EnemyState";
@@ -7,7 +8,10 @@ export default class Knockback extends EnemyState {
 	playerSize: Vec2;
 	force: Vec2;
 	onEnter(): void {
+		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemy_hit", loop: false, holdReference: true});
+		
 		if (this.parent.health > 0) {
+		
 			(<AnimatedSprite>this.owner).animation.play("HIT", false);
 		}
 		else {
@@ -15,7 +19,7 @@ export default class Knockback extends EnemyState {
 
 		}
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
-		this.force = this.parent.knockBackDir.scale(300, 300);
+		this.force = this.parent.knockBackDir.scale(250, 250);
 		this.parent.velocity.add(this.force);
 	}
 	// TODO: Knockback that scales with size

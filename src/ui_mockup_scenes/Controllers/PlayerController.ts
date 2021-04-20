@@ -159,6 +159,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.doingSwing = true;
             }
             if(event.type === InGame_Events.START_SWING) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "swing", loop: false, holdReference: true});
+
                 // NOTE: Right now the swing cooldown is tied to the duration of the swing tween
                 // this is because the tween would kind of bug outit you didnt let it finish
                 // a fix might be to have two copies of the swing tween and swap between them

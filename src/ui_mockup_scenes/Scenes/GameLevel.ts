@@ -77,6 +77,11 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("plant", "assets/plant/plant.json")
         this.load.image("upper_deposit", "assets/misc/upper_deposit.png")
         this.load.image("downer_deposit", "assets/misc/downer_deposit.png")
+        this.load.audio("swing", "assets/sfx/swing_sfx.wav");
+        this.load.audio("enemy_hit", "assets/sfx/enemy_hit.wav");
+        this.load.audio("enemy_die", "assets/sfx/enemy_die.wav");
+        this.load.audio("material_get", "assets/sfx/material_get_sfx.wav");
+
     }
 
     startScene(): void {
@@ -129,9 +134,12 @@ export default class GameLevel extends Scene {
         for (let material of this.droppedMaterial) {
             if (material.sprite.position.distanceTo(this.player.position) < 15) {
                 if (material.type === "upper") {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
+
                     this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT, {position: this.player.position.clone()})
                 }
                 if (material.type === "downer") {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT, {position: this.player.position.clone()})
                 }
 

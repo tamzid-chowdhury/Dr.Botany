@@ -59,6 +59,11 @@ export default class MainMenu extends Scene {
         this.load.image("autumn", "assets/LevelSelectionButtons/autumn.png");
         this.load.image("winter", "assets/LevelSelectionButtons/winter.png");
         this.load.audio("temp_music", "assets/music/temp.mp3");
+        this.load.audio("button", "assets/sfx/button_sfx.wav");
+    }
+
+    unloadScene(): void {
+        this.load.keepAudio("button");
     }
 
     setDetectDocumentClick(toggle: boolean): void {
@@ -69,7 +74,7 @@ export default class MainMenu extends Scene {
 
 
     startScene(): void {
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key : "temp_music", loop: true, holdReference: true});
+        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key : "temp_music", loop: true, holdReference: true});
         window.onresize = (e: UIEvent) => {this.emitter.fireEvent(WindowEvents.RESIZED, {eventObject: e})};
         this.backgroundLayer = new BackgroundLayer(this, this.center, this.viewport.getHalfSize().y / 10, this.defaultFont);
         this.mainMenuLayer = new MainMenuLayer(this, this.center, this.defaultFont);
@@ -175,8 +180,8 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_START) {
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "temp_music"});
-                
+                // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "temp_music"});
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemies", "materials", "projectiles", "deposits"],
@@ -219,6 +224,8 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
+
                 this.setVisibleLayer(UILayers.LEVEL_SELECT)
                 this.levelSelectLayer.enbleButtons();
                 // these three methods should go away as we assign each levels to buttons
@@ -233,6 +240,7 @@ export default class MainMenu extends Scene {
                 
             }
             if (event.type === UIEvents.CLICKED_SPRING) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 this.setVisibleLayer(UILayers.SPRING_LEVELS);
                 this.springLevelLayer.enbleButtons();
                 this.levelSelectLayer.disableButtons();
@@ -243,6 +251,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_SUMMER) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 this.setVisibleLayer(UILayers.SUMMER_LEVELS);
                 this.summerLevelLayer.enbleButtons();
                 this.levelSelectLayer.disableButtons();
@@ -252,6 +261,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_FALL) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 this.setVisibleLayer(UILayers.FALL_LEVELS);
                 this.fallLevelLayer.enbleButtons();
                 this.levelSelectLayer.disableButtons();
@@ -262,6 +272,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_WINTER) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 this.setVisibleLayer(UILayers.WINTER_LEVELS);
                 this.winterLevelLayer.enbleButtons();
                 this.levelSelectLayer.disableButtons();
@@ -272,6 +283,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_CONTROLS) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 this.setVisibleLayer(UILayers.CONTROLS)
                 this.backButton.label.active = true;
                 this.backButton.label.tweens.play('slideXFadeIn')
@@ -279,6 +291,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_OPTIONS) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 this.setVisibleLayer(UILayers.OPTIONS)
                 this.backButton.label.active = true;
                 this.backButton.label.tweens.play('slideXFadeIn')
@@ -286,6 +299,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_HELP) {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 this.setVisibleLayer(UILayers.HELP)
                 this.backButton.label.active = true;
                 this.backButton.label.tweens.play('slideXFadeIn')
