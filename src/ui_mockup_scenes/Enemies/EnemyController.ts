@@ -40,26 +40,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     knockBackTimer: number = 0;
     damage(damage: number) : void {
         this.health -= damage;
-        if(this.health <= 0) {
-           
-            // setTimeout(() => {
-            //     let ownerPosition = this.owner.position.clone();
-            //     this.owner.destroy();
-            //     if(Math.random() < 0.9) {
-            //         if(this.type == "Upper"){
-            //             this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});
-            //         }
-            //         if(this.type == "Downer"){
-            //             this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: ownerPosition});
-            //         }
-            //     }
-            // }, 600)
-            // this.owner.setAIActive(false, {});
-            // this.owner.isCollidable = false;
-        }
-        // else {
-        //     this.owner.animation.play("HIT", false);
-        // }
     };
 
     initializeAI(owner:AnimatedSprite, options:Record<string, any>) {
@@ -124,6 +104,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     }
 
     increaseSpeed(): void {
-        this.speed = this.speed * 4;
+        this.speed = this.speed * 2;
+    }
+    decreaseSpeed(): void {
+        this.speed = this.speed / 2;
     }
 }
