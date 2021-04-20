@@ -24,6 +24,7 @@ export default class LevelZero extends GameLevel {
 
     // TODO: move mood control into PlantController
     overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
+    mood: string = "normal";
     moodMin: number = -10;
     moodMax: number = 10;
     moodBarTimer: Timer = new Timer(6000, null, false);
@@ -67,7 +68,14 @@ export default class LevelZero extends GameLevel {
         super.updateScene(deltaT);
         if (this.moodBarTimer.isStopped() && this.moodBarTimer.hasRun()) {
             this.moodBarTimer.reset();
-            this.resetEffect();
+
+            if ( this.mood = "happy") {
+                // this.resetHappyEffect();
+            }
+            else if( this.mood = "angry") {
+                this.resetAngryEffect();
+            }
+            this.mood = "normal";
         }
 
         if (Input.isKeyJustPressed("o")) {
@@ -75,7 +83,7 @@ export default class LevelZero extends GameLevel {
             this.overallMood -= 1;
             console.log("Mood: -1, Current Mood stat: " + this.overallMood);
             // this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: -1});
-            if (this.overallMood === this.moodMin) {
+            if (this.overallMood <= this.moodMin) {
                 this.overallMood = 0;
                 this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
             }
@@ -88,7 +96,7 @@ export default class LevelZero extends GameLevel {
             this.overallMood += 1;
             console.log("Mood: +1, Current Mood stat: " + this.overallMood);
             // this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: 1});
-            if (this.overallMood === this.moodMax) {
+            if (this.overallMood >= this.moodMax) {
                 this.overallMood = 0;
                 this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
             }
@@ -96,7 +104,6 @@ export default class LevelZero extends GameLevel {
 
         }
 
-        // console.log(this.moodBarTimer.toString());
 
 
 
@@ -111,7 +118,8 @@ export default class LevelZero extends GameLevel {
             let event = this.levelZeroReceiver.getNextEvent();
 
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                if (!this.moodBarTimer.isActive()) {
+                this.mood = "angry";
+                if (this.moodBarTimer.isActive() === false) {
                     this.moodBarTimer.start();
                     this.increaseEnemyStrength();
                 }
@@ -121,9 +129,10 @@ export default class LevelZero extends GameLevel {
             }
 
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-                // this.increaseEnemySpeed();
-                if (!this.moodBarTimer.isActive()) {
+                this.mood = "happy";
+                if (this.moodBarTimer.isActive() === false) {
                     this.moodBarTimer.start();
+                    console.log("Happy mood reached, have to implement faster enemies' speed behavior")
                     // this.increaseEnemySpeed(); // increase speed buggy 
                 }
                 // this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
@@ -154,7 +163,7 @@ export default class LevelZero extends GameLevel {
             let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
             let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
             let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
-            console.log("15 seconds passed, Spawning new enemy");
+            console.log("5 seconds passed, Spawning new enemy");
             if (this.enemyNameList[randomInt] === "orange_mushroom") {
                 let randomScale = Math.random() * (2 - 1) + 1;
                 this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 60 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
@@ -200,7 +209,7 @@ export default class LevelZero extends GameLevel {
 
         this.enemyList.push(enemy);
     }
-
+// TODO: make it so that new created enemies have doubled speed, because when the timer is done, newly created enemies with normal speed gets slower than normal
     protected increaseEnemySpeed(): void {
         for (let enemy of this.enemyList) {
             let enemyController = <EnemyController>enemy._ai;
@@ -213,14 +222,16 @@ export default class LevelZero extends GameLevel {
         playerController.increaseDamageTaken(10);
     }
 
-    protected resetEffect(): void {
+    protected resetAngryEffect(): void {
+        let playerController = <PlayerController>this.player._ai;
+        playerController.increaseDamageTaken(5);
+    }
+
+    protected resetHappyEffect(): void {
         for (let enemy of this.enemyList) {
             let enemyController = <EnemyController>enemy._ai;
             enemyController.decreaseSpeed();
         }
-
-        let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(5);
     }
 
 }
