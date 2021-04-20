@@ -165,6 +165,11 @@ export default class Label extends UIElement{
 		this.backgroundColor.b = value;
 	}
 
+	set textSize(value: number) {
+		this.fontSize = value;
+	}
+
+
 }
 
 export enum LabelTweenableProperties{
@@ -172,4 +177,5 @@ export enum LabelTweenableProperties{
 	bgRedChannel = "bgRedChannel",
 	bgGreenChannel = "bgGreenChannel",
 	bgBlueChannel = "bgBlueChannel",
+	textSize = "textSize"
 }

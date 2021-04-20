@@ -8,6 +8,51 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import InGameUI from "../Layers/InGameUI/InGameUILayer";
 import { InGame_Events, UIEvents } from "./Enums";
 
+
+
+export function itemIncrement(size: number) : Record<string,any> {
+	let tween = {
+		startDelay: 0,
+		duration: 300,
+		effects: [
+			{
+				property: LabelTweenableProperties.textSize,
+				start: size*2,
+				end: size,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+
+		],
+		// reverseOnComplete: true
+	};
+	return tween
+}
+
+export function announce(startX: number, offset: number): Record<string,any> {
+	let tween = {
+		startDelay: 0,
+		duration: 300,
+		effects: [
+			{
+				property: TweenableProperties.posX,
+				start: startX,
+				end: startX + offset,
+				ease: EaseFunctionType.IN_OUT_QUAD,
+			},
+
+			{
+				property: LabelTweenableProperties.textAlpha,
+				start: 0,
+				end: 1,
+				resetOnComplete: true,
+				ease: EaseFunctionType.IN_OUT_QUAD,
+			},
+		],
+	};
+	return tween
+}
+
 export function slideXFadeIn(startX: number, startY: number, delay: number = 0, offset: number): Record<string,any> {
 	let tween = {
 		startDelay: delay,

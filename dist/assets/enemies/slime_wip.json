@@ -24,11 +24,11 @@
 		{
             "name": "HIT",
             "frames": [ 
-				{"index": 9, "duration": 10}, 
-				{"index": 10, "duration": 10}, 
-				{"index": 11, "duration": 10}, 
-				{"index": 12, "duration": 10}, 
-				{"index": 13, "duration": 10}
+				{"index": 9, "duration": 5}, 
+				{"index": 10, "duration": 5}, 
+				{"index": 11, "duration": 5}, 
+				{"index": 12, "duration": 5}, 
+				{"index": 13, "duration": 5}
 			]
         },
         {

@@ -58,7 +58,9 @@ export enum InGameUILayers {
 	MOOD_BAR = "MOOD_BAR",
     WEAPONS_INVENTORY = "WEAPONS_INVENTORY",
     ITEMS_INVENTORY = "ITEMS_INVENTORY",
-    INGAMEUILAYER = "InGameUILayer"
+    INGAMEUILAYER = "InGameUILayer",
+    ANNOUNCEMENT_BACKDROP = "AnnouncementBackdrop",
+    ANNOUNCEMENT_TEXT = "AnnouncementText",
 }
 
 export enum ButtonNames {
