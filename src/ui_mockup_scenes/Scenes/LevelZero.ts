@@ -69,12 +69,12 @@ export default class LevelZero extends GameLevel {
         if (this.moodBarTimer.isStopped() && this.moodBarTimer.hasRun()) {
             this.moodBarTimer.reset();
 
-            if ( this.mood = "happy") {
-                // this.resetHappyEffect();
-            }
-            else if( this.mood = "angry") {
-                this.resetAngryEffect();
-            }
+
+            // this.resetHappyEffect();
+
+
+            this.resetAngryEffect();
+
             this.mood = "normal";
         }
 
@@ -209,7 +209,7 @@ export default class LevelZero extends GameLevel {
 
         this.enemyList.push(enemy);
     }
-// TODO: make it so that new created enemies have doubled speed, because when the timer is done, newly created enemies with normal speed gets slower than normal
+    // TODO: make it so that new created enemies have doubled speed, because when the timer is done, newly created enemies with normal speed gets slower than normal
     protected increaseEnemySpeed(): void {
         for (let enemy of this.enemyList) {
             let enemyController = <EnemyController>enemy._ai;
