@@ -65,7 +65,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
-        this.health = 1;
+        this.health = 100;
 		this.levelView = this.owner.getScene().getViewport();
 		this.viewHalfSize = this.levelView.getHalfSize();
 

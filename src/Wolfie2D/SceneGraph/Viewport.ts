@@ -162,6 +162,10 @@ export default class Viewport {
 		}
     }
 
+    getCanvasSize() : Vec2 {
+        return this.canvasSize;
+    }
+
     /**
      * Sets the zoom level of the viewport
      * @param zoom The zoom level

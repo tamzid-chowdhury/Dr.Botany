@@ -38,7 +38,6 @@ export default class MainMenu extends Scene {
     cursor2: Sprite;
 
     center: Vec2;
-    zoomLevel: number;
     scrollSpeed: number = 100;
     defaultFont: string = 'Round';
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
@@ -70,10 +69,7 @@ export default class MainMenu extends Scene {
 
     startScene(): void {
         this.viewport.setZoomLevel(1);
-        
-        this.viewport.setCenter(this.viewport.getCenter());
-        this.center = this.viewport.getCenter();
-        console.log(this.center);
+        this.center = new Vec2(this.viewport.getCanvasSize().x/2, this.viewport.getCanvasSize().y/2);
         
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "temp_music", loop: true, holdReference: true });
         window.onresize = (e: UIEvent) => { this.emitter.fireEvent(WindowEvents.RESIZED, { eventObject: e }) };
@@ -108,7 +104,7 @@ export default class MainMenu extends Scene {
 
         this.backButton = new BackButton(this);
         // this.backButton = this.initBackButton();
-        console.log(this.getViewScale());
+
         this.backgroundLayer.playSplashScreen();
         this.setDetectDocumentClick(true);
 
