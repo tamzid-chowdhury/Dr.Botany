@@ -51,7 +51,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     doingSwing: boolean = false;
     damaged: boolean = false;
     damageCooldown: number;
-    damageTaken: number = 1; 
+    damageTaken: number = 5; 
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -210,6 +210,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.damaged = true;
                     this.damageCooldown = Date.now();
                     console.log(this.health);
+                    this.emitter.fireEvent(InGame_GUI_Events.UPDATE_HEALTHBAR, {damageTaken: this.damageTaken});
                 }
                 
             }
