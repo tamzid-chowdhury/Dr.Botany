@@ -97,6 +97,16 @@ export default class InGameUI implements Updateable {
                 let damageTaken = event.data.get('damageTaken');
                 console.log("Health decreased by " + damageTaken)
                 this.healthBar.updateText(damageTaken);
+                
+                // let xScale = this.healthBar.sprite.scale.x; 
+                // let newXScale = xScale - .01;
+                // this.healthBar.sprite.tweens.add("scaleX", Tweens.healthBarScaleDown(xScale,newXScale)); 
+                // this.healthBar.sprite.tweens.play("scaleX");
+
+                let xPos = this.healthBar.sprite.position.x;
+                let newXPos = this.healthBar.sprite.position.x - 2.8;
+                this.healthBar.sprite.tweens.add("slideX", Tweens.healthBarSlideX(xPos,newXPos)); 
+                this.healthBar.sprite.tweens.play("slideX");
             }
 
 

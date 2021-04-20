@@ -9,6 +9,48 @@ import InGameUI from "../Layers/InGameUI/InGameUILayer";
 import { InGame_Events, UIEvents } from "./Enums";
 
 
+export function healthBarSlideX(xPos: number, newXPos: number) : Record<string,any> {
+	let tween = {
+		startDelay: 100,
+		duration: 300,
+		effects: [
+			{
+				property: TweenableProperties.posX,
+				start: xPos,
+				end: newXPos,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+
+
+		],
+
+	};
+	return tween
+}
+
+export function healthBarScaleDown(scaleX:number, newScaleX:number) : Record<string,any> {
+	let tween = {
+		startDelay: 100,
+		duration: 300,
+		effects: [
+			{
+				property: TweenableProperties.scaleX,
+				start: scaleX,
+				end: newScaleX,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+			// {
+			// 	property: TweenableProperties.scaleY,
+			// 	start: scale.y,
+			// 	end: scale.y + 0.2,
+			// 	ease: EaseFunctionType.IN_SINE,
+			// },
+
+		],
+	};
+	return tween
+}
+
 
 export function indicatorSlideX(xPos: number, newXPos: number) : Record<string,any> {
 	let tween = {
@@ -442,3 +484,28 @@ export function knockBack(velocity: Vec2): Record<string,any> {
 	}
 	return tween
 }
+
+
+// export function HealthScaleDownSlideX(xScale: number, newXScale: number, xPos: number, newXPos: number) : Record<string,any> {
+// 	let tween = {
+// 		startDelay: 400,
+// 		duration: 300,
+// 		effects: [
+// 			{
+// 				property: TweenableProperties.scaleX,
+// 				start: xScale,
+// 				end: newXScale,
+// 				ease: EaseFunctionType.OUT_SINE,
+// 			},
+// 			{
+// 				property: TweenableProperties.posX,
+// 				start: xPos,
+// 				end: newXPos,
+// 				ease: EaseFunctionType.OUT_SINE,
+// 			}
+// 		],
+
+// 	};
+// 	return tween
+// }
+
