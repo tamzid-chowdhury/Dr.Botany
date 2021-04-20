@@ -108,8 +108,9 @@ export enum InGame_Events {
 
 
 export enum InGame_GUI_Events {
-	INCREMENT_UPPER_COUNT = "IncrementUpperCount",
-	INCREMENT_DOWNER_COUNT = "IncrementDownerCount",
-	CLEAR_UPPER_LABEL = "ClearUpperLabel",
-	CLEAR_DOWNER_LABEL = "ClearDownerLabel",
+    INCREMENT_UPPER_COUNT = "IncrementUpperCount",
+    INCREMENT_DOWNER_COUNT = "IncrementDownerCount",
+    CLEAR_UPPER_LABEL = "ClearUpperLabel",
+    CLEAR_DOWNER_LABEL = "ClearDownerLabel",
+    UPDATE_HEALTHBAR = "UPDATE_HEALTHBAR"
 }

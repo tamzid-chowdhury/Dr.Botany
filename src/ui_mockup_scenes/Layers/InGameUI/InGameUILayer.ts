@@ -61,7 +61,8 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.INCREMENT_DOWNER_COUNT,
             InGame_Events.MOOD_CHANGED,
             InGame_GUI_Events.CLEAR_UPPER_LABEL,
-            InGame_GUI_Events.CLEAR_DOWNER_LABEL
+            InGame_GUI_Events.CLEAR_DOWNER_LABEL,
+            InGame_GUI_Events.UPDATE_HEALTHBAR
 
         ]);
         
@@ -90,6 +91,12 @@ export default class InGameUI implements Updateable {
                 this.moodBar.indicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.indicator.scale));        
                 this.moodBar.indicator.tweens.play("slideX");        
                 this.moodBar.indicator.tweens.play("scale");        
+            }
+
+            if(event.type === InGame_GUI_Events.UPDATE_HEALTHBAR){
+                let damageTaken = event.data.get('damageTaken');
+                console.log("Health decreased by " + damageTaken)
+                this.healthBar.updateText(damageTaken);
             }
 
 

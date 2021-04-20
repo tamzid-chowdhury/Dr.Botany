@@ -10,7 +10,8 @@ export default class HealthBar {
     spriteOutline: Sprite; 
 	text: Label;
 	textBackdrop: Label;
-	centerPos: Vec2;
+    centerPos: Vec2;
+    health: number = 100; 
 
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
@@ -24,21 +25,24 @@ export default class HealthBar {
 
         this.sprite.scale = new Vec2(0.5, 0.5);
         this.spriteOutline.scale = new Vec2(0.5,0.5);
-        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset+0.5, yOffset + 0.5), text:'HP: 100 %'});
+        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset+0.5, yOffset + 0.5), text:'HP: ' + this.health + '%'});
         this.textBackdrop.size = this.sprite.size;
         this.textBackdrop.font = Fonts.ROUND;
         this.textBackdrop.textColor = Palette.black();
         this.textBackdrop.fontSize = 24;
 
-		this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, yOffset), text:'HP: 100 %'});
+		this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, yOffset), text:'HP: ' + this.health + '%'});
         this.text.size = this.sprite.size;
         this.text.font = Fonts.ROUND;
         this.text.textColor = Palette.white();
         this.text.fontSize = 24;
 	}
 
-	updateText(): void {
-		// TODO: when player health changes, text has to update
+	updateText(damageTaken: number): void {
+        // TODO: when player health changes, text has to update
+        this.health = this.health - damageTaken; 
+        this.textBackdrop.text = 'HP: ' + this.health + '%';
+        this.text.text = 'HP: ' + this.health + '%';
 	}
 
 }

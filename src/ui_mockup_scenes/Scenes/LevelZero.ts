@@ -193,7 +193,7 @@ export default class LevelZero extends GameLevel {
 
     protected increaseEnemyStrength(): void {
         let playerController = <PlayerController>this.player._ai; 
-        playerController.increaseDamageTaken(2);
+        playerController.increaseDamageTaken(10);
     }
 
 }
