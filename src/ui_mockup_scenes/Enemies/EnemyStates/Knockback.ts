@@ -15,7 +15,7 @@ export default class Knockback extends EnemyState {
 
 		}
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
-		this.force = this.parent.knockBackDir.scale(500, 500);
+		this.force = this.parent.knockBackDir.scale(300, 300);
 		this.parent.velocity.add(this.force);
 	}
 	// TODO: Knockback that scales with size
