@@ -10,6 +10,48 @@ import { InGame_Events, UIEvents } from "./Enums";
 
 
 
+export function indicatorSlideX(xPos: number, newXPos: number) : Record<string,any> {
+	let tween = {
+		startDelay: 400,
+		duration: 300,
+		effects: [
+			{
+				property: TweenableProperties.posX,
+				start: xPos,
+				end: newXPos,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+
+
+		],
+
+	};
+	return tween
+}
+
+export function indicatorScaleUpDown(scale: Vec2) : Record<string,any> {
+	let tween = {
+		startDelay: 400,
+		duration: 300,
+		effects: [
+			{
+				property: TweenableProperties.scaleX,
+				start: scale.x,
+				end: scale.x - 1,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+			// {
+			// 	property: TweenableProperties.scaleY,
+			// 	start: scale.y,
+			// 	end: scale.y + 0.2,
+			// 	ease: EaseFunctionType.IN_SINE,
+			// },
+
+		],
+	};
+	return tween
+}
+
 export function itemIncrement(size: number) : Record<string,any> {
 	let tween = {
 		startDelay: 0,

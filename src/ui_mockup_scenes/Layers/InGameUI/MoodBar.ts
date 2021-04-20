@@ -6,13 +6,14 @@ import Scene from "../../../Wolfie2D/Scene/Scene";
 import { UILayers, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
 
-export default class Growthbar {
+export default class Moodbar {
 	sprite: Sprite;
 	indicator: Sprite;
 	text: Label;
 	textBackdrop: Label;
 	centerPos: Vec2;
     scene: Scene;
+	scale: Vec2 = new Vec2(0.5,0.5);
     windowSize: Vec2 = new Vec2(window.innerWidth, window.innerHeight);
 
 	constructor(scene: Scene, centerPos: Vec2) {
@@ -25,7 +26,7 @@ export default class Growthbar {
         this.sprite.position.set(xOffset, yOffset)
         this.indicator.position.set(xOffset, yOffset)
 
-        this.sprite.scale = new Vec2(0.5,0.5);
+        this.sprite.scale = this.scale;
         this.indicator.scale = new Vec2(0.6,0.6);
 
 	}

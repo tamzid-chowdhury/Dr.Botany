@@ -11,7 +11,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 // import EquipmentManager from "../GameSystems/EquipmentManager";
 // import Healthpack from "../GameSystems/items/Healthpack";
 import Item from "../GameSystems/items/Item";
-import { InGame_Events } from "../Utils/Enums";
+import { InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";
 import ProjectileController from "./ProjectileController";
@@ -33,6 +33,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     weapons: Array<Sprite> = [];
     equipped: Sprite;
 
+
+    downerCount: number = 0;
+    upperCount: number = 0;
+    canDepositUpper: boolean = false;
+    canDepositDowner: boolean = false;
 
     // WHAT IF TWO SHOVELS AT ONE TIME POWERUP???? ALTERNATING SWINGS
 
@@ -209,6 +214,32 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 
             }
 
+            if(event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT) {
+                this.upperCount++;
+                this.canDepositUpper = true;
+            }
+
+            if(event.type === InGame_GUI_Events.INCREMENT_DOWNER_COUNT) {
+                this.downerCount++;
+                this.canDepositDowner = true;
+            }
+
+            if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
+                let count = this.upperCount;
+                this.canDepositUpper = false;
+                this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, {position: this.owner.position.clone()});
+                this.emitter.fireEvent(InGame_Events.ADD_TO_MOOD, {type: 1, count: count});
+                this.upperCount = 0;
+            }
+
+            if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
+                let count = this.downerCount;
+                this.canDepositDowner = false;
+                this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, {position: this.owner.position.clone()});
+                this.emitter.fireEvent(InGame_Events.ADD_TO_MOOD, {type: -1, count: count});
+                this.downerCount = 0;
+            }
+
         }
 
     }
@@ -227,14 +258,25 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 	}
 
     subscribeToEvents(): void {
-        this.receiver.subscribe(GameEventType.MOUSE_DOWN);
-        this.receiver.subscribe(GameEventType.MOUSE_UP);
-        this.receiver.subscribe(GameEventType.KEY_DOWN);
-        this.receiver.subscribe(InGame_Events.DOING_SWING);
-        this.receiver.subscribe(InGame_Events.FINISHED_SWING);
-        this.receiver.subscribe(InGame_Events.START_SWING);
-        this.receiver.subscribe(InGame_Events.PLAYER_ENEMY_COLLISION);
-        this.receiver.subscribe(InGame_Events.PLAYER_DIED);
+        this.receiver.subscribe([
+            GameEventType.MOUSE_DOWN,
+            GameEventType.MOUSE_UP,
+            GameEventType.KEY_DOWN,
+            InGame_Events.DOING_SWING,
+            InGame_Events.FINISHED_SWING,
+            InGame_Events.START_SWING,
+            InGame_Events.PLAYER_ENEMY_COLLISION,
+            InGame_Events.PLAYER_DIED,
+            InGame_GUI_Events.INCREMENT_UPPER_COUNT,
+            InGame_GUI_Events.INCREMENT_DOWNER_COUNT,
+            InGame_Events.ON_UPPER_DEPOSIT,
+            InGame_Events.ON_DOWNER_DEPOSIT,
+            InGame_Events.OFF_UPPER_DEPOSIT,
+            InGame_Events.OFF_DOWNER_DEPOSIT,
+
+
+
+        ]);
     }
 
     increaseDamageTaken(newDamageTaken: number): void {

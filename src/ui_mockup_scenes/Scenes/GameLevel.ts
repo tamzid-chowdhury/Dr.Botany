@@ -80,20 +80,25 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
-        this.receiver.subscribe(GameEventType.MOUSE_DOWN);
-        this.receiver.subscribe(GameEventType.MOUSE_UP);
-        this.receiver.subscribe(GameEventType.KEY_DOWN);
-        this.receiver.subscribe(InGame_Events.LEVEL_LOADED);
-        this.receiver.subscribe(InGame_Events.DOING_SWING);
-        this.receiver.subscribe(InGame_Events.FINISHED_SWING);
-        this.receiver.subscribe(InGame_Events.START_SWING);
-        this.receiver.subscribe(InGame_Events.DO_SCREENSHAKE);
-        this.receiver.subscribe(InGame_Events.SPAWN_UPPER);
-        this.receiver.subscribe(InGame_Events.SPAWN_DOWNER);
-        this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
-        this.receiver.subscribe(InGame_Events.PROJECTILE_HIT_ENEMY);
-        this.receiver.subscribe(InGame_Events.PLAYER_DIED);
-        this.receiver.subscribe(InGame_Events.ENEMY_DEATH_ANIM_OVER);
+        this.receiver.subscribe([
+            GameEventType.MOUSE_DOWN,
+            GameEventType.MOUSE_UP,
+            GameEventType.KEY_DOWN,
+            InGame_Events.LEVEL_LOADED,
+            InGame_Events.DOING_SWING,
+            InGame_Events.FINISHED_SWING,
+            InGame_Events.START_SWING,
+            InGame_Events.DO_SCREENSHAKE,
+            InGame_Events.SPAWN_UPPER,
+            InGame_Events.SPAWN_DOWNER,
+            InGame_Events.PLAYER_ATTACK_ENEMY,
+            InGame_Events.PROJECTILE_HIT_ENEMY,
+            InGame_Events.PLAYER_DIED,
+            InGame_Events.ENEMY_DEATH_ANIM_OVER,
+            InGame_Events.ON_UPPER_DEPOSIT,
+            InGame_Events.ON_DOWNER_DEPOSIT
+        ]);
+
 
 
         this.addLayer("primary", 10);
@@ -122,7 +127,7 @@ export default class GameLevel extends Scene {
         }
 
         for (let material of this.droppedMaterial) {
-            if (material.sprite.position.distanceTo(this.player.position) < 10) {
+            if (material.sprite.position.distanceTo(this.player.position) < 15) {
                 if (material.type === "upper") {
                     this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT, {position: this.player.position.clone()})
                 }
@@ -137,13 +142,13 @@ export default class GameLevel extends Scene {
 
             }
 
-            if (material.sprite.position.distanceTo(this.player.position) < 200) {
+            if (material.sprite.position.distanceTo(this.player.position) < 400) {
                 let dirToPlayer = material.sprite.position.dirTo(this.player.position);
                 material.sprite._velocity = dirToPlayer;
                 let dist = material.sprite.position.distanceSqTo(this.player.position);
                 let speedSq = Math.pow(350, 2);
                 material.sprite._velocity.normalize();
-                material.sprite._velocity.mult(new Vec2(speedSq / (dist), speedSq / (dist)));
+                material.sprite._velocity.mult(new Vec2(speedSq / (dist/3), speedSq / (dist/3)));
                 material.sprite.move(material.sprite._velocity.scaled(deltaT));
             }
         }
@@ -182,6 +187,10 @@ export default class GameLevel extends Scene {
             if (event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
                 let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
+                let ms = 30;
+                var currentTime = new Date().getTime();
+                 
+                // while (currentTime + ms >= new Date().getTime()) { /* I feel filthy  doing this*/}
                 (<EnemyController>node._ai).damage(10);
                 (<EnemyController>node._ai).doKnockBack(knockBackDir);
 
@@ -262,27 +271,27 @@ export default class GameLevel extends Scene {
     }
 
     initPlant(mapSize: Vec2): void {
+        let xOffset = 32;
         this.plant = this.add.animatedSprite('plant', "primary");
         this.upperDeposit = this.add.sprite('upper_deposit', "secondary");
         this.downerDeposit = this.add.sprite('downer_deposit', "secondary");
-        this.plant.position.set(mapSize.x / 2, this.plant.size.y / 2);
+        this.plant.position.set((mapSize.x / 2) + xOffset, this.plant.size.y / 2);
 
-        this.upperDeposit.position.set(mapSize.x / 2 - this.upperDeposit.size.x / 2, this.plant.size.y + this.upperDeposit.size.y / 4);
-        this.downerDeposit.position.set(mapSize.x / 2 + this.downerDeposit.size.x / 2, this.plant.size.y + this.downerDeposit.size.y / 4);
+        this.upperDeposit.position.set((mapSize.x / 2) - 2*this.upperDeposit.size.x + xOffset, this.plant.size.y + this.upperDeposit.size.y);
+        this.downerDeposit.position.set((mapSize.x / 2) + 2*this.downerDeposit.size.x + xOffset, this.plant.size.y + this.downerDeposit.size.y);
 
-        this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x / 4, this.upperDeposit.size.y / 4)));
-        this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x / 4, this.downerDeposit.size.y / 4)));
+        this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x - this.upperDeposit.size.x/4, this.upperDeposit.size.y - this.upperDeposit.size.y/4)));
+        this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x - this.downerDeposit.size.x/4, this.downerDeposit.size.y - this.downerDeposit.size.y/4)));
         this.upperDeposit.setGroup('deposits');
         this.downerDeposit.setGroup('deposits');
 
-        this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER, null);
-        this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER, null);
+        this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
+        this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
 
 
         this.plant.scale.set(1.0, 1.0);
-        // this.plant.scale.set(0.7, 0.7);
-        this.upperDeposit.scale.set(0.3, 0.3);
-        this.downerDeposit.scale.set(0.3, 0.3);
+        this.upperDeposit.scale.set(1.5, 1.5);
+        this.downerDeposit.scale.set(1.5, 1.5);
         (<AnimatedSprite>this.plant).animation.play("EH")
         // This has to be touched
         // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));

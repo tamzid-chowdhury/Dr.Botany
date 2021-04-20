@@ -63,6 +63,12 @@ export default class MaterialSlots {
         this.text.text = `x${this.count}`; 
     }
 
+    clearCount(): void {
+        this.count = 0;
+        this.textBackdrop.text = `x${this.count}`;
+        this.text.text = `x${this.count}`; 
+    }
+
 	updateText(): void {
 		// TODO: when player health changes, text has to update
 	}
