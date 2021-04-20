@@ -11,6 +11,7 @@ import Input from "../../Wolfie2D/Input/Input";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 export default class LevelZero extends GameLevel {
 
@@ -25,6 +26,7 @@ export default class LevelZero extends GameLevel {
     overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
     moodMin: number = -10;
     moodMax: number = 10;
+    moodBarTimer: Timer = new Timer(6000, null, false);
     levelZeroReceiver: Receiver = new Receiver();
     loadScene(): void {
         super.loadScene();
@@ -37,6 +39,7 @@ export default class LevelZero extends GameLevel {
 
     startScene(): void {
         super.startScene()
+        // this.moodBarTimer.start();
         this.time = Date.now();
         let tilemapLayers = this.add.tilemap("level_zero");
         for(let layer of tilemapLayers) {
@@ -62,18 +65,33 @@ export default class LevelZero extends GameLevel {
 
     updateScene(deltaT: number){
         super.updateScene(deltaT);
-
+        if(this.moodBarTimer.isPaused()) {
+            this.overallMood = 0;
+            this.moodBarTimer.reset();
+            // reset the effect
+        }
+        console.log(this.moodBarTimer.toString());
         if(Input.isKeyJustPressed("o")){
-            console.log("yo");
-            this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+            console.log("Mood: -1, Current Mood stat: " + this.overallMood);
+            this.overallMood -= 1;
+            if (this.overallMood === this.moodMin) {
+                this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+            }
+            
 
         }
 
         if(Input.isKeyJustPressed("p")){
-            console.log("yurr");
-            this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
+            console.log("Mood: +1, Current Mood stat: " + this.overallMood);
+            this.overallMood += 1;
+            if (this.overallMood === this.moodMax) {
+                this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
+            }
+            
 
         }
+
+        // console.log(this.moodBarTimer.toString());
 
 
 
@@ -88,14 +106,18 @@ export default class LevelZero extends GameLevel {
             let event = this.levelZeroReceiver.getNextEvent();
 
             if(event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                this.increaseEnemyStrength();
-                this.levelZeroReceiver.unsubscribe(InGame_Events.ANGRY_MOOD_REACHED)
+                this.moodBarTimer.start();
+                // this.increaseEnemyStrength();
+                console.log(this.overallMood);
+                // this.levelZeroReceiver.unsubscribe(InGame_Events.ANGRY_MOOD_REACHED)
 
             }
 
             if(event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-                this.increaseEnemySpeed();
-                this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
+                // this.increaseEnemySpeed();
+                this.moodBarTimer.start();
+                console.log(this.overallMood);
+                // this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
             }
 
             if(event.type === InGame_Events.ADD_TO_MOOD) {
@@ -110,7 +132,7 @@ export default class LevelZero extends GameLevel {
 
         }
 
-        // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 15 seconds
+        // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 5 seconds
         if (Date.now() - this.time > 5000) {
             let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
             let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);

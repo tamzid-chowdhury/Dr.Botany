@@ -116,15 +116,15 @@ export default class GameLevel extends Scene {
         let rotateTo = Input.getGlobalMousePosition();
         this.reticle.position = mousePos;
 
-        if (Input.isKeyJustPressed("o")) {
-            this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+        // if (Input.isKeyJustPressed("o")) {
+        //     this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+        //     console.log("lajhsdflaijsdofijasdofij")
+        // }
 
-        }
+        // if (Input.isKeyJustPressed("p")) {
+        //     this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
 
-        if (Input.isKeyJustPressed("p")) {
-            this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
-
-        }
+        // }
 
         for (let material of this.droppedMaterial) {
             if (material.sprite.position.distanceTo(this.player.position) < 15) {
@@ -248,8 +248,7 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.PLAYER_DIED) {
                 console.log("Player Died. Go to main menu")
-                //this.sceneManager.changeToScene(GameOver, {})
-                this.sceneManager.changeToScene(MainMenu, {}) // This has to be changed 
+                this.sceneManager.changeToScene(MainMenu, {}) 
             }
 
             if (event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
