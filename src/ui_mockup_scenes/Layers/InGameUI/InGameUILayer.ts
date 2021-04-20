@@ -17,11 +17,11 @@ import * as Palette from "../../Utils/Colors";
 import * as Tweens from "../../Utils/Tweens";
 import HealthBar from "./HealthBar";
 import EquipSlots from "./EquipSlot";
-import GrowthBar from "./GrowthBar";
 import MoodBar from "./MoodBar";
 import MaterialSlot from "./MaterialSlot";
 import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import Receiver from "../../../Wolfie2D/Events/Receiver"
+import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
 export default class InGameUI implements Updateable {
     layer: Layer; 
@@ -31,7 +31,6 @@ export default class InGameUI implements Updateable {
     font: string; 
 
     healthBar: HealthBar;
-    growthBar: GrowthBar;
     moodBar: MoodBar;
     equipSlots: EquipSlots;
     materialSlots: Array<MaterialSlot> = []; // [0] == upper  [1] == downer
@@ -57,8 +56,14 @@ export default class InGameUI implements Updateable {
 
 
         //subscribe to events
-        this.receiver.subscribe(InGame_GUI_Events.INCREMENT_UPPER_COUNT);
-        this.receiver.subscribe(InGame_GUI_Events.INCREMENT_DOWNER_COUNT);
+        this.receiver.subscribe([
+            InGame_GUI_Events.INCREMENT_UPPER_COUNT,
+            InGame_GUI_Events.INCREMENT_DOWNER_COUNT,
+            InGame_Events.MOOD_CHANGED,
+            InGame_GUI_Events.CLEAR_UPPER_LABEL,
+            InGame_GUI_Events.CLEAR_DOWNER_LABEL
+
+        ]);
         
 
 
@@ -75,10 +80,40 @@ export default class InGameUI implements Updateable {
             let announce = false;
             let position = new Vec2(0,0);
             let announceText = '';
+            let color;
+            if(event.type === InGame_Events.MOOD_CHANGED){
+                let moodLevel = event.data.get('moodChange');
+                let newPos = (-10*moodLevel / (this.moodBar.sprite.size.x/16)) +  this.moodBar.indicator.position.x;
+                newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
+                this.moodBar.indicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.indicator.position.x, newPos));   
+                this.moodBar.indicator.scale.x += 1;     
+                this.moodBar.indicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.indicator.scale));        
+                this.moodBar.indicator.tweens.play("slideX");        
+                this.moodBar.indicator.tweens.play("scale");        
+            }
+
+
+            if(event.type === InGame_GUI_Events.CLEAR_UPPER_LABEL){
+                position = event.data.get("position");
+                announceText = `-${this.materialSlots[0].count} uppers`
+                announce = true;
+                color = Palette.red()
+                this.materialSlots[0].clearCount()
+            }
+
+            if(event.type === InGame_GUI_Events.CLEAR_DOWNER_LABEL){
+                position = event.data.get("position");
+                announceText = `-${this.materialSlots[1].count} uppers`
+                announce = true;
+                color = Palette.red()
+                this.materialSlots[1].clearCount()
+
+            }
             if(event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT){
                 position = event.data.get("position");
                 this.materialSlots[0].updateCount()
                 announceText = '+1 Upper'
+                color = Palette.white()
                 announce = true;
                 
             }
@@ -87,6 +122,7 @@ export default class InGameUI implements Updateable {
                 position = event.data.get("position");
                 this.materialSlots[1].updateCount()
                 announceText = '+1 Downer'
+                color = Palette.white()
                 announce = true;
             }
             if(announce) {
@@ -99,7 +135,7 @@ export default class InGameUI implements Updateable {
 
                 let announceLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x , position.y), text:announceText});
                 announceLabel.font = Fonts.ROUND;
-                announceLabel.textColor = Palette.white();
+                announceLabel.textColor = color;
                 announceLabel.fontSize = 26;
                 announceLabel.tweens.add("announce", Tweens.announce(position.x - 32, 32));
                 announceLabelBackdrop.tweens.play("announce");

@@ -10,6 +10,7 @@ import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import Input from "../../Wolfie2D/Input/Input";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Receiver from "../../Wolfie2D/Events/Receiver";
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 export default class LevelZero extends GameLevel {
 
@@ -20,6 +21,10 @@ export default class LevelZero extends GameLevel {
     enemyList: Array<AnimatedSprite>  = [];
     enemyNameList: Array<string> = ["orange_mushroom", "slime_wip"];
 
+    // TODO: move mood control into PlantController
+    overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
+    moodMin: number = -10;
+    moodMax: number = 10;
     levelZeroReceiver: Receiver = new Receiver();
     loadScene(): void {
         super.loadScene();
@@ -49,21 +54,6 @@ export default class LevelZero extends GameLevel {
         super.initReticle();
         this.viewport.follow(this.player);
         
-
-        // this.addEnemy("orange_mushroom", new Vec2(300, 300), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1)
-        // this.addEnemy("orange_mushroom", new Vec2(200, 300), {speed : 20, player: this.player, health: 50, type:"Upper"}, 1)
-        // this.addEnemy("orange_mushroom", new Vec2(310, 300), {speed : 25, player: this.player, health: 50, type:"Upper"}, 1)
-        // this.addEnemy("orange_mushroom", new Vec2(340, 300), {speed : 60, player: this.player, health: 50, type:"Upper"}, 1)
-        // this.addEnemy("orange_mushroom", new Vec2(400, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
-        // this.addEnemy("orange_mushroom", new Vec2(305, 300), {speed : 40, player: this.player, health: 50, type:"Upper"}, 1)
-        // this.addEnemy("slime_wip", new Vec2(193, 440), {speed : 25, player: this.player, health: 50, type:"Downer"}, 1.5)
-        // this.addEnemy("slime_wip", new Vec2(100, 220), {speed : 40, player: this.player, health: 50, type:"Downer"}, 0.5)
-        // this.addEnemy("slime_wip", new Vec2(80, 198), {speed : 45, player: this.player, health: 50, type:"Downer"}, 2)
-        // this.addEnemy("slime_wip", new Vec2(225, 156), {speed : 40, player: this.player, health: 50, type:"Downer"}, 1)
-        // this.addEnemy("slime_wip", new Vec2(500, 333), {speed : 30, player: this.player, health: 50, type:"Downer"}, 1)
-        // this.addEnemy("slime_wip", new Vec2(405, 201), {speed : 35, player: this.player, health: 50, type:"Downer"}, 1)
-        // enemies options : speed, health, attackRange (this could probably be replaced with enemy types),
-
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
         this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
@@ -108,12 +98,13 @@ export default class LevelZero extends GameLevel {
                 this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
             }
 
-            if(event.type === InGame_Events.ON_DOWNER) {
-                console.log(':(')
-            }
-
-            if(event.type === InGame_Events.ON_UPPER) {
-                console.log(':)')
+            if(event.type === InGame_Events.ADD_TO_MOOD) {
+                let type = event.data.get('type');
+                let count = event.data.get('count');
+                count *= type;
+                this.overallMood += count;
+                MathUtils.clamp(this.overallMood, this.moodMin, this.moodMax);
+                this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: count});
             }
 
 
@@ -126,10 +117,13 @@ export default class LevelZero extends GameLevel {
             let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
             console.log("15 seconds passed, Spawning new enemy");
             if(this.enemyNameList[randomInt] === "orange_mushroom") {
-                this.addEnemy("orange_mushroom" ,new Vec2(randomX, randomY), {speed : 30, player: this.player, health: 50, type:"Upper"}, 1);
+                let randomScale = Math.random() * (2 - 1) + 1;
+                this.addEnemy("orange_mushroom" ,new Vec2(randomX, randomY), {speed : 60 * (1/randomScale), player: this.player, health: 50, type:"Upper"}, 1 );
             }
             else if (this.enemyNameList[randomInt] === "slime_wip") {
-                this.addEnemy("slime_wip", new Vec2(randomX, randomY), {speed : 25, player: this.player, health: 50, type:"Downer"}, 1.5)
+                let randomScale = Math.random() * (2 - 0.5) + 0.5;
+
+                this.addEnemy("slime_wip", new Vec2(randomX, randomY), {speed : 50 * (1/randomScale), player: this.player, health: 40, type:"Downer"}, 1.5 )
             }
             this.time = Date.now();
         }
@@ -143,8 +137,8 @@ export default class LevelZero extends GameLevel {
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DIED,
-            InGame_Events.ON_DOWNER,
-            InGame_Events.ON_UPPER
+            InGame_Events.ADD_TO_MOOD,
+
         ]);
     }
 
@@ -155,7 +149,7 @@ export default class LevelZero extends GameLevel {
         let collisionShape = enemy.size;
         // This has to be touched
         // this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.halfSize.scaled(this.scene.getViewScale())
-        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(((collisionShape.x/2) - 2) * scale, (collisionShape.y/2 - collisionShape.y/3) * scale)));
+        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(((collisionShape.x/2 )- 2) * scale, (collisionShape.y/2 - collisionShape.y/3) * scale)));
         
         enemy.colliderOffset.set(0,(collisionShape.y/3) * scale);
         // play with this // maybe add a condition for each enemy

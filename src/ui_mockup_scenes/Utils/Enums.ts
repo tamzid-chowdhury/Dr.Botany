@@ -97,14 +97,19 @@ export enum InGame_Events {
 	SPAWN_DOWNER = "SpawnDowner",
 	HAPPY_MOOD_REACHED = "HappyMoodReached",
 	ANGRY_MOOD_REACHED = "AngryMoodReached",
-	ON_UPPER = "OnUpper",
-	ON_DOWNER = "OnDowner",
+	ON_UPPER_DEPOSIT = "OnUpperDeposit",
+	ON_DOWNER_DEPOSIT = "OnDownerDeposit",
+	OFF_UPPER_DEPOSIT = "OffUpperDeposit",
+	OFF_DOWNER_DEPOSIT = "OffDownerDeposit",
+	ADD_TO_MOOD = "AddToMood",
+	MOOD_CHANGED = "MoodChanged",
 	ENEMY_DEATH_ANIM_OVER = "EnemyDeathAnimOver"
 }
 
 
 export enum InGame_GUI_Events {
 	INCREMENT_UPPER_COUNT = "IncrementUpperCount",
-	INCREMENT_DOWNER_COUNT = "IncrementDownerCount"
-	
+	INCREMENT_DOWNER_COUNT = "IncrementDownerCount",
+	CLEAR_UPPER_LABEL = "ClearUpperLabel",
+	CLEAR_DOWNER_LABEL = "ClearDownerLabel",
 }

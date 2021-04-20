@@ -24,6 +24,9 @@ export function white(): Color {
 	return new Color(255, 255, 255, 1);
 }
 
+export function red(): Color {
+	return new Color(255, 0, 0, 1);
+}
 
 
 
