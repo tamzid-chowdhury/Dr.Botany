@@ -102,11 +102,19 @@ export default class InGameUI implements Updateable {
                 // let newXScale = xScale - .01;
                 // this.healthBar.sprite.tweens.add("scaleX", Tweens.healthBarScaleDown(xScale,newXScale)); 
                 // this.healthBar.sprite.tweens.play("scaleX");
-
-                let xPos = this.healthBar.sprite.position.x;
-                let newXPos = this.healthBar.sprite.position.x - 2.8;
-                this.healthBar.sprite.tweens.add("slideX", Tweens.healthBarSlideX(xPos,newXPos)); 
-                this.healthBar.sprite.tweens.play("slideX");
+                if(damageTaken == 10){
+                    let xPos = this.healthBar.sprite.position.x;
+                    let newXPos = this.healthBar.sprite.position.x - 5.6;
+                    this.healthBar.sprite.tweens.add("slideX", Tweens.healthBarSlideX(xPos,newXPos)); 
+                    this.healthBar.sprite.tweens.play("slideX");
+                }
+                else{
+                    let xPos = this.healthBar.sprite.position.x;
+                    let newXPos = this.healthBar.sprite.position.x - 2.8;
+                    this.healthBar.sprite.tweens.add("slideX", Tweens.healthBarSlideX(xPos,newXPos)); 
+                    this.healthBar.sprite.tweens.play("slideX");
+                }
+                
             }
 
 
