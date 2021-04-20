@@ -8,6 +8,8 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import BattlerAI from "../Controllers/BattlerAI";
 import { InGame_Events } from "../Utils/Enums";
+import Dying from "./EnemyStates/Dying";
+import EnemyState from "./EnemyStates/EnemyState";
 import Idle from "./EnemyStates/Idle"
 import Knockback from "./EnemyStates/Knockback";
 import Walk from "./EnemyStates/Walk"
@@ -20,7 +22,8 @@ export enum EnemyStates {
 	WALK = "walk",
 	KNOCKBACK = "knockback",
     ATTACKING = "attacking",
-	PREVIOUS = "previous"
+	PREVIOUS = "previous",
+    DYING = "dying"
 }
 
 export default class EnemyController extends StateMachineAI implements BattlerAI {
@@ -73,6 +76,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		this.addState(EnemyStates.WALK, walk);
         let knockback = new Knockback(this, owner);
 		this.addState(EnemyStates.KNOCKBACK, knockback);
+        let dying = new Dying(this, owner);
+        this.addState(EnemyStates.DYING, dying)
 
         this.initialize(EnemyStates.WALK);
         this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER])
@@ -95,21 +100,11 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		}
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-            if(event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
-                let ownerPosition = this.owner.position.clone();
-                if(Math.random() < 0.9) {
-                    if(this.type == "Upper"){
-                        this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, {position: ownerPosition});
-                    }
-                    if(this.type == "Downer"){
-                        this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, {position: ownerPosition});
-                    }
-                }
-                this.owner.setAIActive(false, {});
-                this.owner.isCollidable = false;
-                this.owner.destroy();
+            // if(event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
 
-            }
+                
+
+            // }
         }
         
 	}

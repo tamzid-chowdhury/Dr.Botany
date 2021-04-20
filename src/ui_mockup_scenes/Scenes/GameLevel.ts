@@ -92,6 +92,7 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe(InGame_Events.PLAYER_ATTACK_ENEMY);
         this.receiver.subscribe(InGame_Events.PROJECTILE_HIT_ENEMY);
         this.receiver.subscribe(InGame_Events.PLAYER_DIED);
+        this.receiver.subscribe(InGame_Events.ENEMY_DEATH_ANIM_OVER);
 
 
         this.addLayer("primary", 10);
@@ -238,6 +239,13 @@ export default class GameLevel extends Scene {
                 console.log("Player Died. Go to main menu")
                 //this.sceneManager.changeToScene(GameOver, {})
                 // this.sceneManager.changeToScene(MainMenu, {}) // This has to be changed 
+            }
+
+            if(event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
+                let node = this.sceneGraph.getNode(event.data.get("owner"));
+                console.log("called")
+                console.log(node)
+                node.destroy();
             }
 
 
