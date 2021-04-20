@@ -8,6 +8,7 @@ import * as Palette from "../../Utils/Colors";
 
 export default class Growthbar {
 	sprite: Sprite;
+	indicator: Sprite;
 	text: Label;
 	textBackdrop: Label;
 	centerPos: Vec2;
@@ -18,11 +19,14 @@ export default class Growthbar {
 		this.centerPos = centerPos;
         this.scene = scene;
 		this.sprite = scene.add.sprite("moodbar", UILayers.INGAME_UI)
+		this.indicator = scene.add.sprite("moodbar_indicator", UILayers.INGAME_UI)
         let xOffset =  this.centerPos.x;
         let yOffset =  2*this.centerPos.y - 2*this.sprite.size.y ;
         this.sprite.position.set(xOffset, yOffset)
+        this.indicator.position.set(xOffset, yOffset)
 
         this.sprite.scale = new Vec2(0.5,0.5);
+        this.indicator.scale = new Vec2(0.6,0.6);
 
 	}
 

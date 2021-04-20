@@ -65,6 +65,7 @@ export default class GameLevel extends Scene {
         this.load.image("healthbaroutline", "assets/ui_art/ui_bar_outline.png")
         this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
+        this.load.image("moodbar_indicator", "assets/ui_art/mood_bar_indicator.png")
 
         // this.load.image("player", "assets/player/dr_botany_wip.png");
         this.load.spritesheet("player", "assets/player/dr_botany.json")
@@ -220,7 +221,6 @@ export default class GameLevel extends Scene {
                     (<PlayerController>this.player._ai).damage(1);
                     (<PlayerController>this.player._ai).damaged = true;
                     (<PlayerController>this.player._ai).damageCooldown = Date.now();
-                    console.log((<PlayerController>this.player._ai).health);
                 }
             }
 
@@ -243,8 +243,7 @@ export default class GameLevel extends Scene {
 
             if(event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
                 let node = this.sceneGraph.getNode(event.data.get("owner"));
-                console.log("called")
-                console.log(node)
+                console.log((<EnemyController>node.ai).type)
                 node.destroy();
             }
 

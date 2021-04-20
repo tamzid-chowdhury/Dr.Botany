@@ -1,9 +1,7 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import { InGame_Events } from "../../Utils/Enums";
 import { EnemyStates } from "../EnemyController";
 import EnemyState from "./EnemyState";
-import Idle from "./Idle"
 
 export default class Knockback extends EnemyState {
 	playerSize: Vec2;
@@ -20,7 +18,7 @@ export default class Knockback extends EnemyState {
 		this.force = this.parent.knockBackDir.scale(500, 500);
 		this.parent.velocity.add(this.force);
 	}
-	// TODO: Velocity Tween
+	// TODO: Knockback that scales with size
 	update(deltaT: number): void {
 		this.parent.velocity.add(new Vec2(-this.parent.velocity.x / 24, -this.parent.velocity.y / 24));
 		this.owner.move(this.parent.velocity.scaled(deltaT));
@@ -31,8 +29,6 @@ export default class Knockback extends EnemyState {
 	}
 
 	onExit(): Record<string, any> {
-		// (<AnimatedSprite>this.owner).animation.stop();
-
 		return {};
 	}
 }

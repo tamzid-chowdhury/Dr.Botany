@@ -51,7 +51,7 @@ export default class Walk extends EnemyState {
 	}
 
 	onExit(): Record<string, any> {
-		(<AnimatedSprite>this.owner).animation.stop();
+		// (<AnimatedSprite>this.owner).animation.stop();
 		return {};
 	}
 }
