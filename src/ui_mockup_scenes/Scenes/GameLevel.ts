@@ -240,7 +240,7 @@ export default class GameLevel extends Scene {
             if (event.type === InGame_Events.PLAYER_DIED) {
                 console.log("Player Died. Go to main menu")
                 //this.sceneManager.changeToScene(GameOver, {})
-                // this.sceneManager.changeToScene(MainMenu, {}) // This has to be changed 
+                this.sceneManager.changeToScene(MainMenu, {}) // This has to be changed 
             }
 
             if (event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {

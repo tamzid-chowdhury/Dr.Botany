@@ -37,7 +37,7 @@ export default class MainMenu extends Scene {
     cursor: Sprite;
     cursor2: Sprite;
 
-    center: Vec2 = this.viewport.getCenter();
+    center: Vec2;
     zoomLevel: number;
     scrollSpeed: number = 100;
     defaultFont: string = 'Round';
@@ -62,15 +62,21 @@ export default class MainMenu extends Scene {
     }
 
     setDetectDocumentClick(toggle: boolean): void {
-        
+
         if (toggle) document.onclick = () => { this.emitter.fireEvent(UIEvents.TRANSITION_SPLASH_SCREEN); }
         else document.onclick = () => { };
     }
 
 
     startScene(): void {
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key : "temp_music", loop: true, holdReference: true});
-        window.onresize = (e: UIEvent) => {this.emitter.fireEvent(WindowEvents.RESIZED, {eventObject: e})};
+        this.viewport.setZoomLevel(1);
+        
+        this.viewport.setCenter(this.viewport.getCenter());
+        this.center = this.viewport.getCenter();
+        console.log(this.center);
+        
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "temp_music", loop: true, holdReference: true });
+        window.onresize = (e: UIEvent) => { this.emitter.fireEvent(WindowEvents.RESIZED, { eventObject: e }) };
         this.backgroundLayer = new BackgroundLayer(this, this.center, this.viewport.getHalfSize().y / 10, this.defaultFont);
         this.mainMenuLayer = new MainMenuLayer(this, this.center, this.defaultFont);
         this.controlsLayer = new ControlsLayer(this, this.center, this.defaultFont);
@@ -82,26 +88,27 @@ export default class MainMenu extends Scene {
         this.fallLevelLayer = new FallLevelLayer(this, this.center, this.defaultFont);
         this.winterLevelLayer = new WinterLevelLayer(this, this.center, this.defaultFont);
 
+        this.viewport.setCenter(this.center);
         this.optionsLayer = new OptionsLayer(this, this.center, this.defaultFont);
 
 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
         this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
-        
+
         let mousePos = Input.getMousePosition();
         this.cursor.scale = new Vec2(0.8, 0.8)
         // this.cursor.rotation = 3.14
         this.cursor.visible = false;
 
-        
+
         this.cursor2 = this.add.sprite("cursor_clicked", UILayers.CURSOR);
         this.cursor2.scale = new Vec2(0.8, 0.8)
         this.cursor2.visible = false;
-        
+
 
         this.backButton = new BackButton(this);
         // this.backButton = this.initBackButton();
-
+        console.log(this.getViewScale());
         this.backgroundLayer.playSplashScreen();
         this.setDetectDocumentClick(true);
 
@@ -116,7 +123,7 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe(WindowEvents.RESIZED);
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
-        
+
     }
 
     setVisibleLayer(layerName: string): void {
@@ -136,19 +143,19 @@ export default class MainMenu extends Scene {
         let mousePos = Input.getGlobalMousePosition();
         this.cursor.position.set(mousePos.x, mousePos.y);
         this.cursor2.position.set(mousePos.x, mousePos.y);
-        
+
         this.backgroundLayer.bg.position.x += this.scrollSpeed * deltaT;
         this.backgroundLayer.bgCopy.position.x += this.scrollSpeed * deltaT;
-        if(this.backgroundLayer.bg.position.x > this.backgroundLayer.bg.size.x) {
-            this.backgroundLayer.bg.position.x = -this.backgroundLayer.bg.size.x/2;
+        if (this.backgroundLayer.bg.position.x > this.backgroundLayer.bg.size.x) {
+            this.backgroundLayer.bg.position.x = -this.backgroundLayer.bg.size.x / 2;
 
         }
 
-        if(this.backgroundLayer.bgCopy.position.x > this.backgroundLayer.bg.size.x) {
-            this.backgroundLayer.bgCopy.position.x = -this.backgroundLayer.bg.size.x/2;
+        if (this.backgroundLayer.bgCopy.position.x > this.backgroundLayer.bg.size.x) {
+            this.backgroundLayer.bgCopy.position.x = -this.backgroundLayer.bg.size.x / 2;
 
         }
- 
+
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
@@ -158,61 +165,61 @@ export default class MainMenu extends Scene {
                 this.receiver.unsubscribe(GameEventType.MOUSE_MOVE);
             }
 
-            if(event.type === WindowEvents.RESIZED) {
+            if (event.type === WindowEvents.RESIZED) {
                 this.backgroundLayer.initLogo();
 
                 this.backButton.reposition(new Vec2(window.innerWidth / 2, window.innerHeight / 2))
                 // should reposition ui elements
             }
 
-            if(event.type === GameEventType.MOUSE_DOWN) {
+            if (event.type === GameEventType.MOUSE_DOWN) {
                 this.cursor.visible = false;
                 this.cursor2.visible = true;
             }
-            if(event.type === GameEventType.MOUSE_UP) {
+            if (event.type === GameEventType.MOUSE_UP) {
                 this.cursor.visible = true;
                 this.cursor2.visible = false;
             }
 
             if (event.type === UIEvents.CLICKED_START) {
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "temp_music"});
-                
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
+
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemies", "materials", "projectiles", "deposits"],
                         collisions:
-                        [
-                            /*
-                                Init the next scene with physics collisions:
+                            [
+                                /*
+                                    Init the next scene with physics collisions:
+    
+                                                ground  player  enemy   materials   equipment
+                                    ground        No       --      --     --            --
+                                    player        Yes      No      --     --            --
+                                    enemy         Yes      No      No     --            No
+                                    materials     Yes       No      No     No           No
+                                    equipment     Yes       No      No     No           No
+    
+                                    Each layer becomes a number. In this case, 4 bits matter for each
+    
+                                    ground: self - 0001, collisions - 0110
+                                    player: self - 0010, collisions - 1001
+                                    enemy:  self - 0100, collisions - 0001
+                                    coin:   self - 1000, collisions - 0010
+                                */
+                                // [0, 1, 1, 1, 1],
+                                // [1, 0, 0, 0, 0],
+                                // [1, 0, 0, 0, 0],
+                                // [1, 0, 0, 0, 0],
+                                // [1, 0, 0, 0, 0]
 
-                                            ground  player  enemy   materials   equipment
-                                ground        No       --      --     --            --
-                                player        Yes      No      --     --            --
-                                enemy         Yes      No      No     --            No
-                                materials     Yes       No      No     No           No
-                                equipment     Yes       No      No     No           No
-
-                                Each layer becomes a number. In this case, 4 bits matter for each
-
-                                ground: self - 0001, collisions - 0110
-                                player: self - 0010, collisions - 1001
-                                enemy:  self - 0100, collisions - 0001
-                                coin:   self - 1000, collisions - 0010
-                            */
-                            // [0, 1, 1, 1, 1],
-                            // [1, 0, 0, 0, 0],
-                            // [1, 0, 0, 0, 0],
-                            // [1, 0, 0, 0, 0],
-                            // [1, 0, 0, 0, 0]
-
-                            // TODO: figure out if commented out matrix is correct or not for materials/equipment
-                            [0, 1, 1, 0, 1, 0],
-                            [1, 0, 0, 1, 0, 0],
-                            [1, 0, 1, 0, 0, 0],
-                            [0, 1, 0, 0, 0, 0],
-                            [1, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0]
-                        ]
+                                // TODO: figure out if commented out matrix is correct or not for materials/equipment
+                                [0, 1, 1, 0, 1, 0],
+                                [1, 0, 0, 1, 0, 0],
+                                [1, 0, 1, 0, 0, 0],
+                                [0, 1, 0, 0, 0, 0],
+                                [1, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0]
+                            ]
                     }
                 }
                 this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
@@ -230,7 +237,7 @@ export default class MainMenu extends Scene {
                 this.backButton.sprite.visible = true;
                 this.backButton.label.tweens.play('slideXFadeIn')
                 this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
-                
+
             }
             if (event.type === UIEvents.CLICKED_SPRING) {
                 this.setVisibleLayer(UILayers.SPRING_LEVELS);
@@ -255,7 +262,7 @@ export default class MainMenu extends Scene {
                 this.setVisibleLayer(UILayers.FALL_LEVELS);
                 this.fallLevelLayer.enbleButtons();
                 this.levelSelectLayer.disableButtons();
-                
+
                 this.backButton.label.active = false;
                 this.backButton.label.visible = false;
                 this.backButton.sprite.visible = false;
@@ -265,7 +272,7 @@ export default class MainMenu extends Scene {
                 this.setVisibleLayer(UILayers.WINTER_LEVELS);
                 this.winterLevelLayer.enbleButtons();
                 this.levelSelectLayer.disableButtons();
-                
+
                 this.backButton.label.active = false;
                 this.backButton.label.visible = false;
                 this.backButton.sprite.visible = false;
