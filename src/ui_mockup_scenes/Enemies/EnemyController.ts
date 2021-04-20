@@ -104,6 +104,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     }
 
     increaseSpeed(): void {
-        this.speed = this.speed * 4;
+        this.speed = this.speed * 2;
+    }
+    decreaseSpeed(): void {
+        this.speed = this.speed / 1.5;
     }
 }

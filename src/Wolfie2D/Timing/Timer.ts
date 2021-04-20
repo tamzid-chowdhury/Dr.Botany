@@ -42,6 +42,10 @@ export default class Timer implements Updateable {
         return this.state === TimerState.PAUSED;
     }
 
+    isActive(){
+        return this.state === TimerState.ACTIVE;
+    }
+
     /**
      * Returns whether or not this timer has been run before
      * @returns true if it has been run at least once (after the latest reset), and false otherwise

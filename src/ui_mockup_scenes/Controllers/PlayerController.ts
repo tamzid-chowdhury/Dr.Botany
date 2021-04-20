@@ -209,7 +209,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.damage(this.damageTaken);
                     this.damaged = true;
                     this.damageCooldown = Date.now();
-                    console.log(this.health);
                     this.emitter.fireEvent(InGame_GUI_Events.UPDATE_HEALTHBAR, {damageTaken: this.damageTaken});
                 }
                 
