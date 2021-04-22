@@ -10,7 +10,7 @@ export default class Receiver {
 	readonly MAX_SIZE: number;
 
 	/** The inbox of the Receiver */
-	private q: Queue<GameEvent>;
+	 q: Queue<GameEvent>;
 
 	/** Creates a new Receiver */
 	constructor(){

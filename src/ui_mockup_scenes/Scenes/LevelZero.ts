@@ -12,6 +12,8 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 
 export default class LevelZero extends GameLevel {
 
@@ -21,6 +23,8 @@ export default class LevelZero extends GameLevel {
     time: number;
     enemyList: Array<AnimatedSprite> = [];
     enemyNameList: Array<string> = ["orange_mushroom", "slime_wip"];
+
+    testLabel: Label;
 
     // TODO: move mood control into PlantController
     overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
@@ -39,6 +43,10 @@ export default class LevelZero extends GameLevel {
 
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
         this.load.spritesheet("slime_wip", "assets/enemies/slime_wip.json")
+    }
+
+    unloadScene(): void {
+        this.levelZeroReceiver.destroy();
     }
 
     startScene(): void {
@@ -115,6 +123,17 @@ export default class LevelZero extends GameLevel {
 
             this.addEnemy("slime_wip", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 50 , player: this.player, health: 40, type: "Downer" }, 1.5)
 
+
+        }
+
+        if (Input.isKeyJustPressed("t")) {
+            if(!this.testLabel) {
+                this.testLabel = <Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), text:'test'});
+
+            }
+            for(let i = 0; i < 10; i++) {
+                this.testLabel.text += 'a';
+            }
 
         }
 

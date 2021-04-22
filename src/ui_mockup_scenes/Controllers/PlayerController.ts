@@ -200,6 +200,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             
 
             if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
+
                 if(this.damaged) {
                     if (Date.now() - this.damageCooldown > 2000) {
                         this.damaged = false;
@@ -256,7 +257,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
     }
     destroy(): void {
-
+        this.receiver.destroy();
 	}
 
     subscribeToEvents(): void {

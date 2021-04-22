@@ -1,27 +1,15 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../Wolfie2D/Input/Input";
-import Graphic from "../../Wolfie2D/Nodes/Graphic";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import UIElement from "../../Wolfie2D/Nodes/UIElement";
-import Button from "../../Wolfie2D/Nodes/UIElements/Button";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import Slider from "../../Wolfie2D/Nodes/UIElements/Slider";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
-import Color from "../../Wolfie2D/Utils/Color";
 import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
-import Game from "../../Wolfie2D/Loop/Game";
 import EnemyController from "../Enemies/EnemyController"
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
-import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
-import * as Tweens from "../Utils/Tweens";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Material from "../GameSystems/items/Material"
 import MainMenu from "../MainMenu";
@@ -309,6 +297,10 @@ export default class GameLevel extends Scene {
         // this.plant.setGroup("ground");
         // this.plant.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
     }
+    unloadScene(): void {
+        // this.player.destroy();
+        this.receiver.destroy();
+    }
 
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
@@ -350,5 +342,6 @@ export default class GameLevel extends Scene {
         this.reticle.scale = new Vec2(0.7, 0.7);
 
     }
+
 
 }

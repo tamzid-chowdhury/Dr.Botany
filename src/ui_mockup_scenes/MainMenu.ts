@@ -71,7 +71,6 @@ export default class MainMenu extends Scene {
 
 
     startScene(): void {
-
         this.viewport.setZoomLevel(1);
         this.center = new Vec2(this.viewport.getCanvasSize().x/2, this.viewport.getCanvasSize().y/2);
         

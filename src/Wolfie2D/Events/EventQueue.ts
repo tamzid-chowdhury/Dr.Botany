@@ -71,6 +71,7 @@ export default class EventQueue {
         } else {
             this.addListener(receiver, type);
         }
+
 	}
 
     /**
