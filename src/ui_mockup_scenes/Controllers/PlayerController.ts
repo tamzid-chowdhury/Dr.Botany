@@ -257,7 +257,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
     }
     destroy(): void {
-        this.receiver.destroy();
+        // this.receiver.destroy();
 	}
 
     subscribeToEvents(): void {
