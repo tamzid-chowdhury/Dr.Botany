@@ -111,6 +111,13 @@ export default class LevelZero extends GameLevel {
 
         }
 
+        if (Input.isKeyJustPressed("l")) {
+
+            this.addEnemy("slime_wip", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 50 , player: this.player, health: 40, type: "Downer" }, 1.5)
+
+
+        }
+
 
 
 

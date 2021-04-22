@@ -81,6 +81,14 @@ export enum PauseButtonNames {
 	QUIT = "Quit"
 }
 
+export enum PlantMoods {
+	NEUTRAL = "Neutral",
+	SAD = "Sad",
+	ANGRY = "Angry",
+	HAPPY = "Happy",
+	EXCITED = "Excited"
+}
+
 export enum InGame_Events {
     PLAYER_ENEMY_COLLISION = "PlayerEnemyCollsion",
     EQUIPMENT_ENEMY_COLLISION = "EquipmentEnemyCollision",
@@ -117,4 +125,14 @@ export enum InGame_GUI_Events {
     CLEAR_UPPER_LABEL = "ClearUpperLabel",
     CLEAR_DOWNER_LABEL = "ClearDownerLabel",
     UPDATE_HEALTHBAR = "UPDATE_HEALTHBAR"
+}
+
+export enum CheatCodes {
+	GO_TO_TUTORIAL = "GoToTutorial",
+	GO_TO_SUMMER = "GoToSummer",
+	GO_TO_FALL = "GoToFall",
+	GO_TO_WINTER = "GoToWinter",
+
+	ENABLE_INVINCIBILITY = "EnableInvincibility",
+	ENABLE_UNLIMITED_AMMO = "EnableUnlimitedAmmo",
 }

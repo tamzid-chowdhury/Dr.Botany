@@ -341,8 +341,7 @@ export default class GameLevel extends Scene {
     initViewport(mapSize: Vec2): void {
         let origin = this.viewport.getOrigin();
         this.viewport.setBounds(origin.x, origin.y, mapSize.x, mapSize.y + 24);
-        // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
-        this.viewport.setSize(480, 270);
+        this.viewport.setSize(480, 270); // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
     }
 
     initReticle(): void {
