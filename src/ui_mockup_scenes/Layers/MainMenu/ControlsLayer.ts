@@ -37,8 +37,8 @@ export class ControlsLayer extends GameLayer {
 		this.sprite.position = center;
 		let finalScale = new Vec2(11,11);
 		let startScale = new Vec2(0,0);
-		this.sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 200));
-		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 200));
+		this.sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 300));
+		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 300));
 
 		this.sprite.position.y += this.sprite.size.y/3;
 
@@ -50,8 +50,8 @@ export class ControlsLayer extends GameLayer {
 		this.titleLabel.textColor = textColor;
 		this.titleLabel.fontSize = 48;
 		this.titleLabel.font = Fonts.ABBADON_BOLD;
-		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 200));
-		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 200));
+		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
+		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
 
 		
 		for(let entry of this.controls) {
@@ -61,8 +61,8 @@ export class ControlsLayer extends GameLayer {
 			line.fontSize = 40;
 			line.font = this.font;
 			line.scale = new Vec2(0,0);
-			line.tweens.add('scaleIn', Tweens.scaleInText(line.fontSize, 0, 200))
-			line.tweens.add('scaleOut', Tweens.scaleOutText(line.fontSize, 0, 200))
+			line.tweens.add('scaleIn', Tweens.scaleInText(line.fontSize, 0, 300))
+			line.tweens.add('scaleOut', Tweens.scaleOutText(line.fontSize, 0, 300))
 			this.lines.push(line);
 		}
 

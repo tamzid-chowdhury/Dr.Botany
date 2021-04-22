@@ -31,8 +31,8 @@ export class HelpLayer extends GameLayer {
 		this.sprite.position = center;
 		let finalScale = new Vec2(11,11);
 		let startScale = new Vec2(0,0);
-		this.sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 200));
-		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 200));
+		this.sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 300));
+		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 300));
 
 		this.sprite.position.y += this.sprite.size.y/3;
 
@@ -43,8 +43,8 @@ export class HelpLayer extends GameLayer {
 		this.titleLabel.textColor = textColor;
 		this.titleLabel.fontSize = 48;
 		this.titleLabel.font = Fonts.ABBADON_BOLD;
-		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 200));
-		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 200));
+		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
+		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
 		
 	}
 

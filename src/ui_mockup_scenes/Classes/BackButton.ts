@@ -35,8 +35,8 @@ export default class BackButton extends GameButton {
 		
 
 		
-		this.label.tweens.add('scaleIn', Tweens.scaleInText(this.label.fontSize, 0, 200))
-		this.label.tweens.add('scaleOut', Tweens.scaleOutText(this.label.fontSize, 0, 200))
+		this.label.tweens.add('scaleIn', Tweens.scaleInText(this.label.fontSize, 0, 300))
+		this.label.tweens.add('scaleOut', Tweens.scaleOutText(this.label.fontSize, 0, 300))
 		this.label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 		this.label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
 		this.sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));

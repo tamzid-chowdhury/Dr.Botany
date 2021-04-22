@@ -43,8 +43,8 @@ export class LevelSelectLayer extends GameLayer{
 		this.sprite.position = center;
 		let finalScale = new Vec2(11,11);
 		let startScale = new Vec2(0,0);
-		this.sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 200));
-		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 200));
+		this.sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 300));
+		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 300));
 		this.sprite.position.y += this.sprite.size.y/3;
 
 		this.levelSpriteNames.push({name: 'spring', position: new Vec2(center.x - (3*this.sprite.size.x * this.sprite.scale.x), center.y - (this.sprite.size.y * this.sprite.scale.y)), eventId: UIEvents.CLICKED_SPRING});
@@ -58,8 +58,8 @@ export class LevelSelectLayer extends GameLayer{
 		this.titleLabel.textColor = textColor;
 		this.titleLabel.fontSize = 48;
 		this.titleLabel.font = Fonts.ABBADON_BOLD;
-		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 200));
-		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 200));
+		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
+		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
 
 
 		for(let entry of this.levelSpriteNames) {
@@ -74,15 +74,15 @@ export class LevelSelectLayer extends GameLayer{
 			label.font = Fonts.ABBADON_LIGHT;
 			label.onClickEventId = eventId;
 		
-			label.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 200));
-			label.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 200));
+			label.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
+			label.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
 			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(position.x, position.y));
 			label.tweens.add('slideDownRight', Tweens.slideDownRight(position.x, position.y));
 
 			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(position.x, position.y));
 			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(position.x, position.y));
-			sprite.tweens.add('fadeIn', Tweens.spriteFadeIn(100));
-			sprite.tweens.add('fadeOut', Tweens.spriteFadeOut(100));
+			sprite.tweens.add('fadeIn', Tweens.spriteFadeIn(300));
+			sprite.tweens.add('fadeOut', Tweens.spriteFadeOut(300));
 
 
 			label.onFirstEnter = () => {
