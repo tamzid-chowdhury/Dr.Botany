@@ -17,20 +17,19 @@ import { OptionsLayer } from "./Layers/MainMenu/OptionsLayer";
 import { GameEventType } from "../Wolfie2D/Events/GameEventType";
 import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
-import BackButton from "./Classes/BackButton";
-import InGameUI from "./Layers/InGameUI/InGameUILayer";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
     backgroundLayer: BackgroundLayer;
     controlsLayer: ControlsLayer;
     helpLayer: HelpLayer;
+    optionsLayer: OptionsLayer;
     levelSelectLayer: LevelSelectLayer;
     springLevelLayer: SpringLevelLayer;
     summerLevelLayer: SummerLevelLayer;
     fallLevelLayer: FallLevelLayer;
     winterLevelLayer: WinterLevelLayer;
-    optionsLayer: OptionsLayer;
+    
     cursorLayer: Layer;
     cursorLayer2: Layer;
 
@@ -42,14 +41,13 @@ export default class MainMenu extends Scene {
     defaultFont: string = 'Round';
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
 
-    backButton: BackButton;
     selectLevelBack: GameButton;
-
-
-
+    currentLayer: string = '';
+    
     loadScene(): void {
         this.load.image("logo", "assets/misc/logo.png");
         this.load.image("background", "assets/misc/canvas.png");
+        this.load.image("ui_rect", "assets/ui_art/ui_rect_wip_v2.png");
         this.load.image("temp_cursor", "assets/misc/cursor.png");
         this.load.image("temp_button", "assets/ui_art/button.png");
         this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png");
@@ -82,8 +80,10 @@ export default class MainMenu extends Scene {
 
         this.backgroundLayer = new BackgroundLayer(this, this.center, this.viewport.getHalfSize().y / 10, this.defaultFont);
         this.mainMenuLayer = new MainMenuLayer(this, this.center, this.defaultFont);
+        this.optionsLayer = new OptionsLayer(this, this.center, this.defaultFont);
         this.controlsLayer = new ControlsLayer(this, this.center, this.defaultFont);
         this.helpLayer = new HelpLayer(this, this.center, this.defaultFont);
+        
         this.levelSelectLayer = new LevelSelectLayer(this, this.center, this.defaultFont);
         // This is all levels layers
         this.springLevelLayer = new SpringLevelLayer(this, this.center, this.defaultFont);
@@ -92,7 +92,6 @@ export default class MainMenu extends Scene {
         this.winterLevelLayer = new WinterLevelLayer(this, this.center, this.defaultFont);
 
         this.viewport.setCenter(this.center);
-        this.optionsLayer = new OptionsLayer(this, this.center, this.defaultFont);
 
 
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
@@ -108,9 +107,6 @@ export default class MainMenu extends Scene {
         this.cursor2.scale = new Vec2(0.8, 0.8)
         this.cursor2.visible = false;
 
-
-        this.backButton = new BackButton(this);
-        // this.backButton = this.initBackButton();
 
         this.backgroundLayer.playSplashScreen();
         this.setDetectDocumentClick(true);
@@ -130,15 +126,25 @@ export default class MainMenu extends Scene {
     }
 
     setVisibleLayer(layerName: string): void {
-        this.uiLayers.forEach((key: string) => {
-            // don't want to hide the background cause it has the logo, and putting it on a reg. layer breaks tween
-            if (key !== layerName && key !== UILayers.BACKGROUND && key !== UILayers.CURSOR) {
-                this.uiLayers.get(key).setHidden(true);
-            }
-            else if (key === layerName) {
-                this.uiLayers.get(key).setHidden(false);
-            }
-        });
+        // this.uiLayers.forEach((key: string) => {
+        //     if (key !== layerName && key !== UILayers.BACKGROUND && key !== UILayers.CURSOR) {
+        //         this.uiLayers.get(key).disable();
+        //     }
+        //     else if (key === layerName) {
+        //         this.currentLayer = layerName;
+        //         console.log(this.uiLayers.get(key))
+        //         this.uiLayers.get(key).enable();
+        //     }
+        // });
+        if(this.currentLayer) {
+            console.log('hiding ', this.currentLayer);
+            this.uiLayers.get(this.currentLayer).disable();
+
+        }
+        this.currentLayer = layerName;
+        console.log('showing ', this.currentLayer);
+        this.uiLayers.get(layerName).enable();
+
 
     }
 
@@ -171,8 +177,6 @@ export default class MainMenu extends Scene {
             if (event.type === WindowEvents.RESIZED) {
                 this.backgroundLayer.initLogo();
 
-                this.backButton.reposition(new Vec2(window.innerWidth / 2, window.innerHeight / 2))
-                // should reposition ui elements
             }
 
             if (event.type === GameEventType.MOUSE_DOWN) {
@@ -229,94 +233,69 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
 
-                this.setVisibleLayer(UILayers.LEVEL_SELECT)
-                this.levelSelectLayer.enbleButtons();
-                // these three methods should go away as we assign each levels to buttons
-                this.summerLevelLayer.disableButtons();
-                this.fallLevelLayer.disableButtons();
-                this.winterLevelLayer.disableButtons();
-                this.backButton.label.active = true;
-                this.backButton.label.visible = true;
-                this.backButton.sprite.visible = true;
-                this.backButton.label.tweens.play('slideXFadeIn')
-                this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
+
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
+                this.levelSelectLayer.playEntryTweens();
+                this.setVisibleLayer(UILayers.LEVEL_SELECT);
+
 
             }
             if (event.type === UIEvents.CLICKED_SPRING) {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
-                this.setVisibleLayer(UILayers.SPRING_LEVELS);
-                this.springLevelLayer.enbleButtons();
-                this.levelSelectLayer.disableButtons();
+                console.log('spring')
+				// this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
+                // this.setVisibleLayer(UILayers.SPRING_LEVELS);
+                // this.springLevelLayer.enbleButtons();
+                // this.levelSelectLayer.disableButtons();
 
-                this.backButton.label.active = false;
-                this.backButton.label.visible = false;
-                this.backButton.sprite.visible = false;
             }
 
             if (event.type === UIEvents.CLICKED_SUMMER) {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
-                this.setVisibleLayer(UILayers.SUMMER_LEVELS);
-                this.summerLevelLayer.enbleButtons();
-                this.levelSelectLayer.disableButtons();
-                this.backButton.label.active = false;
-                this.backButton.label.visible = false;
-                this.backButton.sprite.visible = false;
+                console.log('summer')
+				// this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
+                // this.setVisibleLayer(UILayers.SUMMER_LEVELS);
+                // this.summerLevelLayer.enbleButtons();
+                // this.levelSelectLayer.disableButtons();
+
             }
 
             if (event.type === UIEvents.CLICKED_FALL) {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
-                this.setVisibleLayer(UILayers.FALL_LEVELS);
-                this.fallLevelLayer.enbleButtons();
-                this.levelSelectLayer.disableButtons();
-
-                this.backButton.label.active = false;
-                this.backButton.label.visible = false;
-                this.backButton.sprite.visible = false;
+                console.log('fall')
+				// this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
+                // this.setVisibleLayer(UILayers.FALL_LEVELS);
+                // this.fallLevelLayer.enbleButtons();
+                // this.levelSelectLayer.disableButtons();
             }
 
             if (event.type === UIEvents.CLICKED_WINTER) {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
-                this.setVisibleLayer(UILayers.WINTER_LEVELS);
-                this.winterLevelLayer.enbleButtons();
-                this.levelSelectLayer.disableButtons();
+                console.log('winter')
+				// this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
+                // this.setVisibleLayer(UILayers.WINTER_LEVELS);
+                // this.winterLevelLayer.enbleButtons();
+                // this.levelSelectLayer.disableButtons();
 
-                this.backButton.label.active = false;
-                this.backButton.label.visible = false;
-                this.backButton.sprite.visible = false;
             }
 
             if (event.type === UIEvents.CLICKED_CONTROLS) {
 				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
-                this.setVisibleLayer(UILayers.CONTROLS)
-                this.backButton.label.active = true;
-                this.backButton.label.tweens.play('slideXFadeIn')
-                this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
+                this.controlsLayer.playEntryTweens();
+                this.setVisibleLayer(UILayers.CONTROLS);
             }
 
             if (event.type === UIEvents.CLICKED_OPTIONS) {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
-                this.setVisibleLayer(UILayers.OPTIONS)
-                this.backButton.label.active = true;
-                this.backButton.label.tweens.play('slideXFadeIn')
-                this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
+                this.optionsLayer.playEntryTweens();
+                this.setVisibleLayer(UILayers.OPTIONS);
             }
 
             if (event.type === UIEvents.CLICKED_HELP) {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
-                this.setVisibleLayer(UILayers.HELP)
-                this.backButton.label.active = true;
-                this.backButton.label.tweens.play('slideXFadeIn')
-                this.backButton.sprite.tweens.play('spriteSlideXFadeIn')
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
+                this.helpLayer.playEntryTweens();
+                this.setVisibleLayer(UILayers.HELP);
             }
 
             if (event.type == UIEvents.SHOW_MAIN_MENU) {
                 this.setVisibleLayer(UILayers.MAIN_MENU);
-                this.levelSelectLayer.disableButtons();
-                this.backButton.label.active = false;
-                this.backButton.label.textColor.a = 0;
-                this.backButton.sprite.alpha = 0;
             }
 
             // distinguishes between the first time the main menu is shown, button tweens wont play after
@@ -328,6 +307,26 @@ export default class MainMenu extends Scene {
                     button.sprite.tweens.play('spriteSlideXFadeIn')
                 }
             }
+
+            if (event.type === UIEvents.TRANSITION_SCREEN) {
+                switch(this.currentLayer) {
+                    case(UILayers.CONTROLS):
+                        this.controlsLayer.playExitTweens()
+                        break;
+                    case(UILayers.OPTIONS):
+                        this.optionsLayer.playExitTweens()
+                        break;
+                    case(UILayers.HELP):
+                        this.helpLayer.playExitTweens()
+                        break;
+                    case(UILayers.LEVEL_SELECT):
+                        this.levelSelectLayer.playExitTweens()
+                        break;
+                    default: 
+                        break;
+                }
+            }
+
 
             if (event.type === UIEvents.TRANSITION_SPLASH_SCREEN) {
                 this.setDetectDocumentClick(false);

@@ -128,6 +128,10 @@ export default class Game {
         return this.sceneManager;
     }
 
+    getAudioManager(): AudioManager {
+        return this.audioManager;
+    }
+
     /**
      * Starts the game
      */
@@ -178,6 +182,7 @@ export default class Game {
             console.warn("Uncaught Error in Update - Crashing gracefully");
             console.error(e);
         }
+
     }
 
     /**

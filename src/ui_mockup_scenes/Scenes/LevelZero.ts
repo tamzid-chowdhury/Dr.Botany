@@ -29,9 +29,12 @@ export default class LevelZero extends GameLevel {
     moodMax: number = 10;
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelZeroReceiver: Receiver = new Receiver();
+
+    overdrawTiles: Array<Sprite> = [];
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
+        this.load.image("box_top", "assets/misc/test_box.png")
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
 
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
@@ -61,6 +64,10 @@ export default class LevelZero extends GameLevel {
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
         this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
+        for(let i = 0; i < 3; i++) {
+            this.overdrawTiles.push(this.add.sprite('box_top', 'primary'));
+            this.overdrawTiles[i].visible = false;
+        }
 
     }
 
@@ -116,6 +123,25 @@ export default class LevelZero extends GameLevel {
 
         while (this.levelZeroReceiver.hasNextEvent()) {
             let event = this.levelZeroReceiver.getNextEvent();
+// NOTE: OVERDRAW 
+            // if(event.type === InGame_Events.DRAW_OVERLAP_TILE) {
+            //     let positions = event.data.get('positions');
+            //     for(let i = 0; i < positions.length; i++ ) {
+            //         let entry = positions[i];
+            //         this.overdrawTiles[i].position = entry;
+            //         // if(this.overdrawTiles[i].position.x > this.tilemapSize.x &&
+            //         //     this.overdrawTiles[i].position.y > this.tilemapSize.y) {
+            //         //     this.overdrawTiles[i].position.x -= 1/4;
+            //             this.overdrawTiles[i].position.y -= 1/4;
+
+            //         // }
+            //         // if(this.overdrawTiles[i].position.y > this.tilemapSize.y/2) {
+
+            //         // }
+                    
+            //         this.overdrawTiles[i].visible = true;
+            //     }
+            // }
 
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
                 this.mood = "angry";
@@ -158,6 +184,8 @@ export default class LevelZero extends GameLevel {
 
         }
 
+/*
+
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 5 seconds
         if (Date.now() - this.time > 5000) {
             let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
@@ -175,6 +203,8 @@ export default class LevelZero extends GameLevel {
             }
             this.time = Date.now();
         }
+
+*/
     }
 
 
@@ -186,6 +216,7 @@ export default class LevelZero extends GameLevel {
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DIED,
             InGame_Events.ADD_TO_MOOD,
+            InGame_Events.DRAW_OVERLAP_TILE
 
         ]);
     }

@@ -1,8 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import UIElement from "../../Wolfie2D/Nodes/UIElement";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import Color from "../../Wolfie2D/Utils/Color";
 import * as Tweens from "../Utils/Tweens";
 import * as Palette from "../Utils/Colors";
 import { Fonts, UIEvents, UILayers } from "../Utils/Enums";
@@ -16,48 +13,52 @@ export default class BackButton extends GameButton {
 
 	scene: Scene;
 	center: Vec2 = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
-	constructor(scene: Scene){
-		super(scene.add.sprite("temp_button", UILayers.BACKGROUND), <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.BACKGROUND, { position: new Vec2(0, 0), text: "Back", size : 24}));
+	constructor(scene: Scene, layer: string = UILayers.BACKGROUND, scale: Vec2 = new Vec2(3,3)){
+		super(scene.add.sprite("temp_button", layer), <Label>scene.add.uiElement(UIElementType.LABEL, layer, { position: new Vec2(0, 0), text: "Back", size : 24}));
 
-		let startX = this.center.x - this.xOffset;
 		let startY = this.center.y + this.yOffset;
 		let endX = this.center.x;
-		let animationDelay = 0;
-		this.sprite.position = new Vec2(startX, startY);
-		this.sprite.scale = new Vec2(3,3);
+		this.sprite.position = new Vec2(endX, startY);
+		this.sprite.scale = scale;
 		this.sprite.alpha = 0;
 
 		this.label.position = this.sprite.position;
-		this.label.size.set(200, 100);
+		this.label.size.set((this.sprite.size.x * scale.x) - 16, (this.sprite.size.y * scale.y) - 16);
 		this.label.borderWidth = 0;
+		this.label.setVAlign('bottom');
 		this.label.borderRadius = 0;
-		this.label.font = Fonts.ROUND;
+		this.label.font = Fonts.ABBADON_BOLD;
+		this.label.fontSize = 48;
 		this.label.backgroundColor = Palette.transparent();
-		this.label.backgroundColor.a = 0;
-		this.label.textColor.a = 0;
 		this.label.borderColor = Palette.transparent();
-		this.label.onClickEventId = UIEvents.SHOW_MAIN_MENU;
+		this.label.onClickEventId = UIEvents.TRANSITION_SCREEN;
+		
 
-		this.label.tweens.add('slideXFadeIn', Tweens.slideXFadeIn(startX, startY, animationDelay, this.xOffset));
+		
+		this.label.tweens.add('scaleIn', Tweens.scaleInText(this.label.fontSize, 0, 200))
+		this.label.tweens.add('scaleOut', Tweens.scaleOutText(this.label.fontSize, 0, 200))
 		this.label.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 		this.label.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-
-		this.sprite.tweens.add('spriteSlideXFadeIn', Tweens.spriteSlideXFadeIn(startX, startY, animationDelay, this.xOffset));
 		this.sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(endX, startY));
 		this.sprite.tweens.add('slideDownRight', Tweens.slideDownRight(endX, startY));
-		this.sprite.tweens.add('scaleIn', Tweens.scaleIn(this.sprite.scale, new Vec2(3.8,3.8), 0, 100));
-		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(3.8,3.8), this.sprite.scale, 0, 100));
+
+
+		this.sprite.tweens.add('fadeIn', Tweens.spriteFadeIn(100));
+		this.sprite.tweens.add('fadeOut', Tweens.spriteFadeOut(100));
 	
+
+
 		this.label.onFirstEnter = () => {
 			this.label.tweens.play('slideUpLeft');
-			this.sprite.tweens.play('scaleIn');
+			this.sprite.tweens.play('fadeIn');
 			this.sprite.tweens.play('slideUpLeft');
 		}
 		this.label.onLeave = () => {
 			this.sprite.tweens.play('slideDownRight');
-			this.sprite.tweens.play('scaleOut');
+			this.sprite.tweens.play('fadeOut');
 			this.label.tweens.play('slideDownRight');
 		}
+
 	
 	}
 

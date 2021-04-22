@@ -3,46 +3,63 @@ import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import UILayer from "../../../Wolfie2D/Scene/Layers/UILayer";
 import Scene from "../../../Wolfie2D/Scene/Scene";
-import { UIEvents, UILayers, ButtonNames } from "../../Utils/Enums";
+import { UILayers, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
 import * as Tweens from "../../Utils/Tweens";
-import UIElement from "../../../Wolfie2D/Nodes/UIElement";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
-import Layer from "../../../Wolfie2D/Scene/Layer";
+import BackButton from "../../Classes/BackButton";
+import GameLayer from "../../Classes/GameLayer";
 
 
-export class HelpLayer {
-	layer: UILayer;
-	position: Vec2;
-	scene: Scene;
-	back: Label;
-	font: string;
+export class HelpLayer extends GameLayer {
+
 	constructor(scene: Scene, position: Vec2, font: string) {
+		super();
 		this.scene = scene;
-		this.font = font;
+		this.font = Fonts.ABBADON_LIGHT;
 		this.position = position;
 		this.layer = scene.addUILayer(UILayers.HELP);
-		this.layer.setHidden(true);
+		// this.layer.setHidden(true);
 		this.initButtons();
+		this.backButton = new BackButton(scene, UILayers.HELP, new Vec2(2,2));
+		this.layer.disable();
 	}
 
 	initButtons(): void {
 		let center = this.position.clone();
-		let xOffset = 30
-		let startX = this.position.x - xOffset;
-		let startY = this.position.y + 300;
-		let endX = this.position.x;
-		let animationDelay = 0;
-		
-		const line1 = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.HELP, { position: new Vec2(center.x, center.y - 200), text: 'Help layer' });
-	
+		this.sprite = this.scene.add.sprite('ui_rect', UILayers.HELP);
+		this.sprite.position = center;
+		let finalScale = new Vec2(11,11);
+		let startScale = new Vec2(0,0);
+		this.sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 200));
+		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 200));
 
+		this.sprite.position.y += this.sprite.size.y/3;
+
+		const title = "Help"
+		this.titleLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.HELP, { position: new Vec2(center.x, center.y - this.sprite.position.y/1.8), text: title });
 		const textColor = Palette.black();
-		line1.textColor = textColor;
-		line1.fontSize = 40;
-		line1.font = this.font;
+
+		this.titleLabel.textColor = textColor;
+		this.titleLabel.fontSize = 48;
+		this.titleLabel.font = Fonts.ABBADON_BOLD;
+		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 200));
+		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 200));
 		
 	}
 
+	playEntryTweens(): void {
+		this.titleLabel.tweens.play('scaleIn');
+		this.sprite.tweens.play('scaleIn');
+		this.backButton.label.active = true;
+		this.backButton.label.tweens.play('scaleIn')
+	}
+
+	playExitTweens(): void {
+		this.titleLabel.tweens.play('scaleOut');
+		this.sprite.tweens.play('scaleOut');
+		this.backButton.label.active = false;
+		this.backButton.label.tweens.play('scaleOut');
+	}
 
 }

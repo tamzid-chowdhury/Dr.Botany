@@ -179,7 +179,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.swing.tweens.add('moveAndShrink', Tweens.spriteMoveAndShrink(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('moveAndShrink');
 
-                this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(this.swing.position, this.playerLookDirection))
+                this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut())
                 this.swing.tweens.play('fadeOut');
 
                 this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
@@ -275,8 +275,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             InGame_Events.ON_DOWNER_DEPOSIT,
             InGame_Events.OFF_UPPER_DEPOSIT,
             InGame_Events.OFF_DOWNER_DEPOSIT,
-
-
 
         ]);
     }

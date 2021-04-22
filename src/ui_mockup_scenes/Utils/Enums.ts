@@ -6,6 +6,7 @@ export enum UIEvents {
 	HIDE_LAYER = 'HIDE_LAYER',
 	TRANSITION_SPLASH_SCREEN = 'TRANSITION_SPLASH_SCREEN',
 	SHOW_MAIN_MENU = 'SHOW_MAIN_MENU',
+	TRANSITION_SCREEN = 'TRANSITION_SCREEN',
 	SHOW_MAIN_MENU_FINISHED = 'SHOW_MAIN_MENU_FINISHED',
 	FIRST_RENDER = 'FIRST_RENDER',
 
@@ -30,6 +31,8 @@ export enum WindowEvents {
 
 export enum Fonts {
 	ROUND = 'round',
+	ABBADON_BOLD = 'Abbadon Bold',
+	ABBADON_LIGHT = 'Abbadon Light',
 }
 
 export enum UILayers {
@@ -103,7 +106,8 @@ export enum InGame_Events {
 	OFF_DOWNER_DEPOSIT = "OffDownerDeposit",
 	ADD_TO_MOOD = "AddToMood",
 	MOOD_CHANGED = "MoodChanged",
-	ENEMY_DEATH_ANIM_OVER = "EnemyDeathAnimOver"
+	ENEMY_DEATH_ANIM_OVER = "EnemyDeathAnimOver",
+	DRAW_OVERLAP_TILE = "DrawOverlapTile"
 }
 
 

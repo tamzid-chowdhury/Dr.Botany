@@ -21,8 +21,9 @@ export class MainMenuLayer {
 		this.font = font;
 		this.position = position.clone();
 		this.layer = scene.addUILayer(UILayers.MAIN_MENU);
-		this.layer.setHidden(true);
+		// this.layer.setHidden(true);
 		this.initButtons();
+		this.layer.disable();
 		
 	}
 

@@ -32,6 +32,10 @@ export default class OrthogonalTilemap extends Tilemap {
         this.isCollidable = false;
         if(layer.properties){
             for(let item of layer.properties){
+                if(item.name === "HalfSize"){
+                    this.halfSize = true;
+                }
+
                 if(item.name === "Collidable"){
                     this.isCollidable = item.value;
 

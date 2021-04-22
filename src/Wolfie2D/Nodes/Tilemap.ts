@@ -19,6 +19,9 @@ export default abstract class Tilemap extends CanvasNode {
 
     /** An array of tile collision data */
     protected collisionMap: Array<boolean>;
+    
+    halfSize: boolean;
+
 
     /** The name of the tilemap */
     name: string;

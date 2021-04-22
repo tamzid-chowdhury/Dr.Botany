@@ -20,7 +20,7 @@ export default class Moodbar {
 		this.centerPos = centerPos;
         this.scene = scene;
 		this.sprite = scene.add.sprite("moodbar", UILayers.INGAME_UI)
-		this.indicator = scene.add.sprite("moodbar_indicator", UILayers.INGAME_UI)
+		this.indicator = scene.add.sprite("moodbar_indicator", UILayers.INGAME_UI);
         let xOffset =  this.centerPos.x;
         let yOffset =  2*this.centerPos.y - 2*this.sprite.size.y ;
         this.sprite.position.set(xOffset, yOffset)

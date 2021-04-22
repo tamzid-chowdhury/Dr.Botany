@@ -38,6 +38,10 @@ import MainMenu from "./ui_mockup_scenes/MainMenu";
 
 
     const game = new Game(options);
+    let audio = game.getAudioManager();
+    
+    window.onblur = () => {audio.getAudioContext().suspend();}
+    window.onfocus = () => {audio.getAudioContext().resume();}
 
     // Start our game
     game.start(MainMenu, {});

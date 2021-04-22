@@ -51,6 +51,7 @@ export default class GameLevel extends Scene {
 
     droppedMaterial: Array<Material> = [];
     shouldMaterialMove: boolean = false;
+    boxTop: Sprite;
 
 
     loadScene(): void {
@@ -58,7 +59,6 @@ export default class GameLevel extends Scene {
         this.load.image("reticle", "assets/misc/reticle.png");
         this.load.image("temp_button", "assets/ui_art/button.png");
         this.load.image("ui_square", "assets/ui_art/ui_square.png");
-        this.load.image("ui_square_v2", "assets/ui_art/ui_square_v2.png");
         this.load.image("ui_circle", "assets/ui_art/ui_circle.png");
         this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
         this.load.image("healthbar", "assets/ui_art/health_bar_wip-1.png")
@@ -67,7 +67,6 @@ export default class GameLevel extends Scene {
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
         this.load.image("moodbar_indicator", "assets/ui_art/mood_bar_indicator.png")
 
-        // this.load.image("player", "assets/player/dr_botany_wip.png");
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.image("shadow", "assets/player/shadow_sprite.png");
         this.load.image("shovel", "assets/weapons/shovel.png");
@@ -120,6 +119,7 @@ export default class GameLevel extends Scene {
         let mousePos = Input.getMousePosition();
         let rotateTo = Input.getGlobalMousePosition();
         this.reticle.position = mousePos;
+
 
         // if (Input.isKeyJustPressed("o")) {
         //     this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
@@ -319,9 +319,10 @@ export default class GameLevel extends Scene {
             defaultWeapon: this.add.sprite("shovel", "secondary"),
             swingSprite: this.add.animatedSprite("swing_sprite", "primary")
         }
-
         this.player.addAI(PlayerController, playerOptions);
         this.player.animation.play("IDLE");
+
+
     }
 
     initInventory(): void {

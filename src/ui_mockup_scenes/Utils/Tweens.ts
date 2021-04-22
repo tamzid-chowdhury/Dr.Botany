@@ -137,10 +137,10 @@ export function announce(startX: number, offset: number): Record<string,any> {
 	return tween
 }
 
-export function slideXFadeIn(startX: number, startY: number, delay: number = 0, offset: number): Record<string,any> {
+export function slideXFadeIn(startX: number, startY: number, delay: number = 0, offset: number, duration: number = 300): Record<string,any> {
 	let tween = {
 		startDelay: delay,
-		duration: 300,
+		duration: duration,
 		effects: [
 			{
 				property: TweenableProperties.posX,
@@ -173,10 +173,10 @@ export function slideXFadeIn(startX: number, startY: number, delay: number = 0, 
 
 
 
-export function spriteSlideXFadeIn(startX: number, startY: number, delay: number = 0, offset: number): Record<string,any> {
+export function spriteSlideXFadeIn(startX: number, startY: number, delay: number = 0, offset: number, duration: number = 300): Record<string,any> {
 	let tween = {
 		startDelay: delay,
-		duration: 300,
+		duration: duration,
 		effects: [
 			{
 				property: TweenableProperties.posX,
@@ -194,6 +194,28 @@ export function spriteSlideXFadeIn(startX: number, startY: number, delay: number
 				property: TweenableProperties.alpha,
 				start: 0,
 				end: 1,
+				ease: EaseFunctionType.IN_OUT_QUAD,
+			},
+		],
+	};
+	return tween
+}
+
+export function spriteSlideIn(startX: number, startY: number, delay: number = 0, offset: number, duration: number = 300): Record<string,any> {
+	let tween = {
+		startDelay: delay,
+		duration: duration,
+		effects: [
+			{
+				property: TweenableProperties.posX,
+				start: startX,
+				end: startX + offset+2,
+				ease: EaseFunctionType.IN_OUT_QUAD,
+			},
+			{
+				property: TweenableProperties.posY,
+				start: startY,
+				end: startY ,
 				ease: EaseFunctionType.IN_OUT_QUAD,
 			},
 		],
@@ -268,6 +290,42 @@ export function scaleIn(startScale: Vec2, endScale: Vec2, delay: number = 300, d
 	return tween;
 };
 
+export function scaleInText(size: number, delay: number = 300, duration = 300): Record<string,any> {
+	let tween =  {
+		startDelay: delay,
+		duration: duration,
+		effects: [
+			{
+				property: LabelTweenableProperties.textSize,
+				start: 0,
+				end: size,
+				ease: EaseFunctionType.IN_OUT_QUINT,
+			},
+		]
+	};
+	return tween;
+};
+
+export function scaleOutText(size: number, delay: number = 300, duration = 300): Record<string,any> {
+	let tween =  {
+		startDelay: delay,
+		duration: duration,
+		effects: [
+			{
+				property: LabelTweenableProperties.textSize,
+				start: size,
+				end: 0,
+				ease: EaseFunctionType.IN_OUT_QUINT,
+			},
+		],
+		onEnd: UIEvents.SHOW_MAIN_MENU
+	};
+	return tween;
+};
+
+
+
+
 export function slideUpShrink(startScale: Vec2, posY: number, centerY: number): Record<string,any> {
 	let tween =  {
 		startDelay: 0,
@@ -276,7 +334,7 @@ export function slideUpShrink(startScale: Vec2, posY: number, centerY: number): 
 			{
 				property: TweenableProperties.posY,
 				start: posY,
-				end: centerY/3,
+				end: centerY/4,
 				ease: EaseFunctionType.IN_OUT_QUINT,
 				resetOnComplete: true
 			},
@@ -404,15 +462,33 @@ export  function swing(sprite: Sprite, dir: number): Record<string,any> {
 }
 
 
-export function spriteFadeOut(pos: Vec2, dir: Vec2): Record<string,any> {
+export function spriteFadeOut(duration: number = 400): Record<string,any> {
 	let tween = {
 		startDelay: 0,
-		duration: 400,
+		duration: duration,
 		effects: [
 			{
 				property:TweenableProperties.alpha,
 				start: 1,
 				end: 0 ,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+		]
+		// onEnd: InGame_Events.FINISHED_SWING
+	}
+	return tween
+}
+
+export function spriteFadeIn(duration: number = 400): Record<string,any> {
+	let tween = {
+		startDelay: 0,
+		duration: duration,
+		effects: [
+			{
+				property:TweenableProperties.alpha,
+				start: 0,
+				end: 1,
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
