@@ -87,6 +87,7 @@ export class ControlsLayer extends GameLayer {
 		this.sprite.tweens.play('scaleOut');
 		this.backButton.label.active = false;
 		this.backButton.label.tweens.play('scaleOut');
+		this.backButton.sprite.tweens.play('fadeOut');
 	}
 
 }

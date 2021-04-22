@@ -1,14 +1,10 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import UILayer from "../../../Wolfie2D/Scene/Layers/UILayer";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import { UIEvents, UILayers, ButtonNames, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
 import * as Tweens from "../../Utils/Tweens";
-import UIElement from "../../../Wolfie2D/Nodes/UIElement";
-import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
-import Layer from "../../../Wolfie2D/Scene/Layer";
 import GameButton from "../../Classes/GameButton";
 import GameLayer from "../../Classes/GameLayer";
 import BackButton from "../../Classes/BackButton";
@@ -67,6 +63,8 @@ export class LevelSelectLayer extends GameLayer{
 			let sprite = this.scene.add.sprite(name, UILayers.LEVEL_SELECT);
 			sprite.position = position;
 
+			let startScale = new Vec2(0,0);
+			let finalScale = new Vec2(1,1);
 			let label = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_SELECT, { position: new Vec2(position.x, position.y), text: name.toLocaleUpperCase() });
 			label.textColor = textColor;
 			label.fontSize = 48;
@@ -81,8 +79,8 @@ export class LevelSelectLayer extends GameLayer{
 
 			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(position.x, position.y));
 			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(position.x, position.y));
-			sprite.tweens.add('fadeIn', Tweens.spriteFadeIn(300));
-			sprite.tweens.add('fadeOut', Tweens.spriteFadeOut(300));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 300));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 300));
 
 
 			label.onFirstEnter = () => {
@@ -100,7 +98,7 @@ export class LevelSelectLayer extends GameLayer{
 
 	playEntryTweens(): void {
 		for(let button of this.levelSelectButton) {
-			button.sprite.tweens.play('fadeIn');
+			button.sprite.tweens.play('scaleIn');
 			button.label.tweens.play('scaleIn');
 		}
 		this.titleLabel.tweens.play('scaleIn');
@@ -111,13 +109,14 @@ export class LevelSelectLayer extends GameLayer{
 
 	playExitTweens(): void {
 		for(let button of this.levelSelectButton) {
-			button.sprite.tweens.play('fadeOut');
+			button.sprite.tweens.play('scaleOut');
 			button.label.tweens.play('scaleOut');
 		}
 		this.titleLabel.tweens.play('scaleOut');
 		this.sprite.tweens.play('scaleOut');
 		this.backButton.label.active = false;
 		this.backButton.label.tweens.play('scaleOut');
+		this.backButton.sprite.tweens.play('fadeOut');
 	}
 
 
