@@ -342,9 +342,29 @@ export default class BasicPhysicsManager extends PhysicsManager {
 					
 
 					// Create a new collider for this tile
-					let collider = new AABB(tilePos, tileSize.scaled(1/2));
+					let collider; 
 					// let collider = new AABB(tilePos, tileSize.scaled(1/4));
+					if(tilemap.name === "pylons") {
+						collider = new AABB(tilePos, tileSize.scaled(1/8, 1/2));
+					}
+					else if(tilemap.name === "pylon_connectors"){
+						collider = new AABB(tilePos, tileSize.scaled(1/16, 1/2));
 
+					}
+					else {
+						collider = new AABB(tilePos, tileSize.scaled(1/2));
+					}
+					// if(tilemap.upperHalf) {
+					// 	// collider = new AABB(tilePos, tileSize.scaled(2));
+
+					// }
+					// else if(tilemap.lowerHalf) {
+					// 	console.log('balh')
+					// 	collider = new AABB(tilePos, tileSize.scaled(1/8));
+					// }
+					// else {
+					// 	collider = new AABB(tilePos, tileSize.scaled(1/2));
+					// }
 
 					// Calculate collision area between the node and the tile
 					let area = node.sweptRect.overlapArea(collider);

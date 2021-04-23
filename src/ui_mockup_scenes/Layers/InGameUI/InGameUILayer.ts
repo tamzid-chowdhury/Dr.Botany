@@ -128,7 +128,7 @@ export default class InGameUI implements Updateable {
 
             if(event.type === InGame_GUI_Events.CLEAR_DOWNER_LABEL){
                 position = event.data.get("position");
-                announceText = `-${this.materialSlots[1].count} uppers`
+                announceText = `-${this.materialSlots[1].count} downers`
                 announce = true;
                 color = Palette.red()
                 this.materialSlots[1].clearCount()

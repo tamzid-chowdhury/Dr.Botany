@@ -20,7 +20,9 @@ export default abstract class Tilemap extends CanvasNode {
     /** An array of tile collision data */
     protected collisionMap: Array<boolean>;
     
-    halfSize: boolean;
+    upperHalf: boolean;
+    lowerHalf: boolean;
+    pylons: boolean;
 
 
     /** The name of the tilemap */

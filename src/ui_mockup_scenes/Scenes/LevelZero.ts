@@ -37,7 +37,7 @@ export default class LevelZero extends GameLevel {
     overdrawTiles: Array<Sprite> = [];
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_zero", "assets/tilemaps/level_zero/tiled_level_zero.json");
+        this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
         this.load.image("box_top", "assets/misc/test_box.png")
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
 
@@ -142,8 +142,11 @@ export default class LevelZero extends GameLevel {
 
         if (Input.isKeyJustPressed("k")) {
             for (let enemy of this.enemyList) {
-                let enemyController = <EnemyController>enemy._ai;
-                enemyController.damage(50);
+                if(enemy) {
+                    let enemyController = <EnemyController>enemy._ai;
+                    enemyController.damage(50);
+                }
+
             }
         }
 

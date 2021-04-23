@@ -25,10 +25,11 @@ export default class BackButton extends GameButton {
 		this.label.position = this.sprite.position;
 		this.label.size.set((this.sprite.size.x * scale.x) - 16, (this.sprite.size.y * scale.y) - 16);
 		this.label.borderWidth = 0;
-		this.label.setVAlign('bottom');
+		this.label.setHAlign('center');
+		this.label.setVAlign('middle');
 		this.label.borderRadius = 0;
 		this.label.font = Fonts.ABBADON_BOLD;
-		this.label.fontSize = 48;
+		this.label.fontSize = 40;
 		this.label.backgroundColor = Palette.transparent();
 		this.label.borderColor = Palette.transparent();
 		this.label.onClickEventId = UIEvents.TRANSITION_SCREEN;

@@ -69,7 +69,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 		this.levelView = this.owner.getScene().getViewport();
 		this.viewHalfSize = this.levelView.getHalfSize();
 
-        this.shadow.scale = new Vec2(0.7, 0.7);
+        this.shadow.scale = new Vec2(0.6, 0.6);
+        this.shadow.visible = false;
         this.owner.scale = new Vec2(1.5, 1.5);
 
         if(options.mapSize) {
@@ -226,7 +227,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.canDepositDowner = true;
             }
 
-            // TODO: move this into materialManager
+            // TODO: move this into materialManager, have it be tied to pressing e key
             if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
                 let count = this.upperCount;
                 this.canDepositUpper = false;

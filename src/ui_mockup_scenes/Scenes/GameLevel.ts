@@ -62,8 +62,8 @@ export default class GameLevel extends Scene {
         this.load.image("red_orb", "assets/items/redorb.png");
         this.load.spritesheet("swing_sprite", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("plant", "assets/plant/plant.json")
-        this.load.image("upper_deposit", "assets/misc/upper_deposit.png")
-        this.load.image("downer_deposit", "assets/misc/downer_deposit.png")
+        this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
+        this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
         this.load.audio("swing", "assets/sfx/swing_sfx.wav");
         this.load.audio("enemy_hit", "assets/sfx/enemy_hit.wav");
         this.load.audio("enemy_die", "assets/sfx/enemy_die.wav");
@@ -95,6 +95,7 @@ export default class GameLevel extends Scene {
 
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
+        this.addLayer("tertiary", 8);
         this.addLayer(InGameUILayers.ANNOUNCEMENT_BACKDROP, 11);
         this.addLayer(InGameUILayers.ANNOUNCEMENT_TEXT, 12);
 
@@ -266,14 +267,13 @@ export default class GameLevel extends Scene {
     }
 
     initPlant(mapSize: Vec2): void {
-        let xOffset = 32;
         this.plant = this.add.animatedSprite('plant', "primary");
-        this.upperDeposit = this.add.sprite('upper_deposit', "secondary");
-        this.downerDeposit = this.add.sprite('downer_deposit', "secondary");
-        this.plant.position.set((mapSize.x / 2) + xOffset, this.plant.size.y / 2);
+        this.upperDeposit = this.add.sprite('upper_deposit', "tertiary");
+        this.downerDeposit = this.add.sprite('downer_deposit', "tertiary");
+        this.plant.position.set((mapSize.x / 2) - this.plant.size.x, (mapSize.x / 2)- this.plant.size.y);
 
-        this.upperDeposit.position.set((mapSize.x / 2) - 2*this.upperDeposit.size.x + xOffset, this.plant.size.y + this.upperDeposit.size.y);
-        this.downerDeposit.position.set((mapSize.x / 2) + 2*this.downerDeposit.size.x + xOffset, this.plant.size.y + this.downerDeposit.size.y);
+        this.upperDeposit.position.set(this.plant.position.x - this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
+        this.downerDeposit.position.set(this.plant.position.x + this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
 
         this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x - this.upperDeposit.size.x/4, this.upperDeposit.size.y - this.upperDeposit.size.y/4)));
         this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x - this.downerDeposit.size.x/4, this.downerDeposit.size.y - this.downerDeposit.size.y/4)));
@@ -285,8 +285,8 @@ export default class GameLevel extends Scene {
 
 
         this.plant.scale.set(1.0, 1.0);
-        this.upperDeposit.scale.set(1.5, 1.5);
-        this.downerDeposit.scale.set(1.5, 1.5);
+        this.upperDeposit.scale.set(1.0, 1.0);
+        this.downerDeposit.scale.set(1.0, 1.0);
         (<AnimatedSprite>this.plant).animation.play("EH")
         // This has to be touched
         // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
@@ -332,7 +332,7 @@ export default class GameLevel extends Scene {
 
     initViewport(mapSize: Vec2): void {
         let origin = this.viewport.getOrigin();
-        this.viewport.setBounds(origin.x, origin.y, mapSize.x, mapSize.y + 24);
+        this.viewport.setBounds(origin.x+4, origin.y+4, mapSize.x, mapSize.y + 24);
         this.viewport.setSize(480, 270); // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
     }
 
