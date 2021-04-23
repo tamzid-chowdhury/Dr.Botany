@@ -51,6 +51,7 @@ export default class LevelZero extends GameLevel {
 
     startScene(): void {
         super.startScene()
+        
         // this.moodBarTimer.start();
         this.time = Date.now();
         let tilemapLayers = this.add.tilemap("level_zero");

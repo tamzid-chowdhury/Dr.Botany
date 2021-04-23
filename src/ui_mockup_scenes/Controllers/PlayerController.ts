@@ -32,6 +32,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     shadow: Sprite;
     weapons: Array<Sprite> = [];
     equipped: Sprite;
+    stowed: Sprite;
 
 
     downerCount: number = 0;
@@ -56,12 +57,18 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-        this.weapons.push(options.defaultWeapon);
-        this.equipped = options.defaultWeapon;
+        for(let equips of options.defaultWeapons) {
+            this.weapons.push(equips);
+        }
+        this.equipped = options.defaultWeapons[0];
         this.swing = options.swingSprite;
         this.shadow = options.shadow;
         this.viewport = owner.getScene().getViewport();
 
+        // TEMPORARY, JUST TESTING OUT SECOND WEAPON ON BACK
+        this.stowed = options.defaultWeapons[1];
+        // this.stowed.scale = new Vec2(0.8, 0.8)
+        // this.stowed.invertY = true;
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
@@ -76,10 +83,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if(options.mapSize) {
             this.owner.position.set(options.mapSize.x/2, options.mapSize.y/2);
             this.equipped.position.set(options.mapSize.x/2,options.mapSize.y/2);
+            // this.stowed.position.set(options.mapSize.x/2,options.mapSize.y/2);
         }
         else {
             this.owner.position = new Vec2(0,0);
             this.equipped.position = this.owner.position;
+            this.stowed.position = this.owner.position;
         }
         this.shadow.position.set(this.owner.position.x, this.owner.position.y + this.shadowOffset.y);
         this.equipped.invertY = true;
@@ -134,6 +143,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.shadow.position = this.owner.position.clone();
         this.shadow.position.y += this.shadowOffset.y;
         this.equipped.position = this.owner.position.clone();
+        // this.stowed.position = this.owner.position.clone();
         this.swing.position = this.owner.position.clone();
 
         this.playerLookDirection = this.equipped.position.dirTo(rotateTo);

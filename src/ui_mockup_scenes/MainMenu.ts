@@ -17,6 +17,7 @@ import { OptionsLayer } from "./Layers/MainMenu/OptionsLayer";
 import { GameEventType } from "../Wolfie2D/Events/GameEventType";
 import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
+import * as Tweens from "./Utils/Tweens"
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -40,9 +41,11 @@ export default class MainMenu extends Scene {
     scrollSpeed: number = 100;
     defaultFont: string = 'Round';
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
+    viewPortHeight: number = this.viewport.getHalfSize().y * 2;
 
     selectLevelBack: GameButton;
     currentLayer: string = '';
+    screenWipe: Sprite;
     
     loadScene(): void {
         this.load.image("logo", "assets/misc/logo.png");
@@ -57,10 +60,12 @@ export default class MainMenu extends Scene {
         this.load.image("winter", "assets/LevelSelectionButtons/winter.png");
         this.load.audio("temp_music", "assets/music/temp.mp3");
         this.load.audio("button", "assets/sfx/button_sfx.wav");
+        this.load.image("screen_wipe", "assets/misc/screen_wipe.png");
     }
 
     unloadScene(): void {
         this.load.keepAudio("button");
+        this.load.keepImage("screen_wipe");
     }
 
     setDetectDocumentClick(toggle: boolean): void {
@@ -125,26 +130,12 @@ export default class MainMenu extends Scene {
     }
 
     setVisibleLayer(layerName: string): void {
-        // this.uiLayers.forEach((key: string) => {
-        //     if (key !== layerName && key !== UILayers.BACKGROUND && key !== UILayers.CURSOR) {
-        //         this.uiLayers.get(key).disable();
-        //     }
-        //     else if (key === layerName) {
-        //         this.currentLayer = layerName;
-        //         console.log(this.uiLayers.get(key))
-        //         this.uiLayers.get(key).enable();
-        //     }
-        // });
         if(this.currentLayer) {
-            console.log('hiding ', this.currentLayer);
             this.uiLayers.get(this.currentLayer).disable();
 
         }
         this.currentLayer = layerName;
-        console.log('showing ', this.currentLayer);
         this.uiLayers.get(layerName).enable();
-
-
     }
 
     updateScene(deltaT: number) {
@@ -190,6 +181,17 @@ export default class MainMenu extends Scene {
             if (event.type === UIEvents.CLICKED_START) {
 				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
+                
+
+                this.screenWipe = this.add.sprite("screen_wipe", UILayers.CURSOR);
+                this.screenWipe.imageOffset = new Vec2(0, 0);
+                this.screenWipe.scale = new Vec2(2,1)
+                this.screenWipe.position.set(2*this.screenWipe.size.x, this.screenWipe.size.y/2);
+                this.screenWipe.tweens.add("levelZeroTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL_ZERO));
+                this.screenWipe.tweens.play("levelZeroTransition");
+            }
+
+            if (event.type === UIEvents.TRANSITION_LEVEL_ZERO) {
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemies", "materials", "projectiles", "deposits"],
@@ -229,6 +231,7 @@ export default class MainMenu extends Scene {
                     }
                 }
                 this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
+
             }
 
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {

@@ -13,6 +13,8 @@ import PlayerController from "../Controllers/PlayerController";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Material from "../GameSystems/items/Material"
 import MainMenu from "../MainMenu";
+import * as Tweens  from "../Utils/Tweens";
+import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 // import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
@@ -39,8 +41,8 @@ export default class GameLevel extends Scene {
 
     droppedMaterial: Array<Material> = [];
     shouldMaterialMove: boolean = false;
-    boxTop: Sprite;
-
+    screenWipe: Sprite;    
+    swipeLayer: UILayer;
 
     loadScene(): void {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
@@ -58,6 +60,7 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.image("shadow", "assets/player/shadow_sprite.png");
         this.load.image("shovel", "assets/weapons/shovel.png");
+        this.load.image("trash_lid", "assets/weapons/trash_lid.png");
         this.load.image("green_orb", "assets/items/greenorb.png");
         this.load.image("red_orb", "assets/items/redorb.png");
         this.load.spritesheet("swing_sprite", "assets/weapons/swing_sprite.json")
@@ -92,13 +95,19 @@ export default class GameLevel extends Scene {
         ]);
 
 
-
         this.addLayer("primary", 10);
         this.addLayer("secondary", 9);
         this.addLayer("tertiary", 8);
         this.addLayer(InGameUILayers.ANNOUNCEMENT_BACKDROP, 11);
         this.addLayer(InGameUILayers.ANNOUNCEMENT_TEXT, 12);
-
+        this.swipeLayer = this.addUILayer(UILayers.SCREEN_WIPE);
+        this.swipeLayer.setDepth(800);
+        this.screenWipe = this.add.sprite("screen_wipe", UILayers.SCREEN_WIPE);
+        this.screenWipe.imageOffset = new Vec2(0, 0);
+        this.screenWipe.scale = new Vec2(2,1)
+        this.screenWipe.position.set(0, this.screenWipe.size.y/2);
+        this.screenWipe.tweens.add("introTransition", Tweens.slideLeft(0, -2*this.screenWipe.size.x, 800, '', 200));
+        this.screenWipe.tweens.play("introTransition");
     }
 
     updateScene(deltaT: number) {
@@ -308,7 +317,7 @@ export default class GameLevel extends Scene {
             mapSize: mapSize,
             speed: 150,
             shadow: this.add.sprite("shadow", "secondary"),
-            defaultWeapon: this.add.sprite("shovel", "secondary"),
+            defaultWeapons: [this.add.sprite("shovel", "secondary"), this.add.sprite("trash_lid", "secondary")],
             swingSprite: this.add.animatedSprite("swing_sprite", "primary")
         }
         this.player.addAI(PlayerController, playerOptions);
@@ -334,6 +343,7 @@ export default class GameLevel extends Scene {
         let origin = this.viewport.getOrigin();
         this.viewport.setBounds(origin.x+4, origin.y+4, mapSize.x, mapSize.y + 24);
         this.viewport.setSize(480, 270); // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
+        this.viewport.setFocus(new Vec2(this.player.position.x, this.player.position.y));
     }
 
     initReticle(): void {

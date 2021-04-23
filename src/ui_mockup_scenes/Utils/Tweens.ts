@@ -9,6 +9,27 @@ import InGameUI from "../Layers/InGameUI/InGameUILayer";
 import { InGame_Events, UIEvents } from "./Enums";
 
 
+export function slideLeft(startX: number, endX: number, duration: number = 500, event: string = 'blah', delay: number = 0) : Record<string,any> {
+	let tween = {
+		startDelay: delay,
+		duration: duration,
+		effects: [
+			{
+				property: TweenableProperties.posX,
+				start: startX,
+				end: endX,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+
+
+		],
+		onEnd: event
+	};
+	return tween
+}
+
+
+
 export function healthBarSlideX(xPos: number, newXPos: number) : Record<string,any> {
 	let tween = {
 		startDelay: 100,
