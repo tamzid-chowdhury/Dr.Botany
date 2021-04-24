@@ -108,6 +108,7 @@ export default class GameLevel extends Scene {
         this.screenWipe.position.set(0, this.screenWipe.size.y/2);
         this.screenWipe.tweens.add("introTransition", Tweens.slideLeft(0, -2*this.screenWipe.size.x, 800, '', 200));
         this.screenWipe.tweens.play("introTransition");
+        // TODO: Disable input until after screen wipe finished
     }
 
     updateScene(deltaT: number) {
@@ -226,7 +227,6 @@ export default class GameLevel extends Scene {
                 this.droppedMaterial.push(material)
             }
 
-
             if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
                 if ((<PlayerController>this.player._ai).damaged) {
                     if (Date.now() - (<PlayerController>this.player._ai).damageCooldown > 2000) {
@@ -290,7 +290,7 @@ export default class GameLevel extends Scene {
         this.downerDeposit.setGroup('deposits');
 
         this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
-        this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
+        this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_DOWNER_DEPOSIT);
 
 
         this.plant.scale.set(1.0, 1.0);
@@ -307,7 +307,6 @@ export default class GameLevel extends Scene {
         // this.plant.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
     }
     unloadScene(): void {
-        // this.player.destroy();
         this.receiver.destroy();
     }
 
@@ -341,7 +340,7 @@ export default class GameLevel extends Scene {
 
     initViewport(mapSize: Vec2): void {
         let origin = this.viewport.getOrigin();
-        this.viewport.setBounds(origin.x+4, origin.y+4, mapSize.x, mapSize.y + 24);
+        this.viewport.setBounds(origin.x+4, origin.y+4, mapSize.x - 4, mapSize.y + 24);
         this.viewport.setSize(480, 270); // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
         this.viewport.setFocus(new Vec2(this.player.position.x, this.player.position.y));
     }

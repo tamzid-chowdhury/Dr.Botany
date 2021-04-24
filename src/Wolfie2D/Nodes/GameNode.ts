@@ -46,6 +46,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	triggerMask: number;
 	triggerEnters: Array<string>;
 	triggerExits: Array<string>;
+	previouslyEntered: number;
 	_velocity: Vec2;
 	sweptRect: AABB;
 	collidedWithTilemap: boolean;
@@ -201,6 +202,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.triggerMask = 0;
 		this.triggerEnters = new Array(32);
 		this.triggerExits = new Array(32);
+		this.previouslyEntered = -1;
 		this._velocity = Vec2.ZERO;
 		this.sweptRect = new AABB();
 		this.collidedWithTilemap = false;

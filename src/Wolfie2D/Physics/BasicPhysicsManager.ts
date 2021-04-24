@@ -188,7 +188,23 @@ export default class BasicPhysicsManager extends PhysicsManager {
 				let area = node.sweptRect.overlapArea(collider);
 				if(area > 0){
 					// We had a collision
+					(<GameNode>node).previouslyEntered = (<GameNode>other).id;
 					overlaps.push(new AreaCollision(area, collider, other, "GameNode", null));
+				} 
+				else {
+					
+					if((<GameNode>node).previouslyEntered === (<GameNode>other).id) {
+						for(let event of other.triggerExits) {
+							if(event) {
+								this.emitter.fireEvent(event, {
+									node: (<GameNode>node).id,
+									other: (<GameNode>other).id
+								});
+							}
+						}
+						(<GameNode>node).previouslyEntered = -1;
+					}
+
 				}
 			}
 

@@ -14,6 +14,7 @@ import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import AnimatedDialog from "../Classes/AnimatedDialog";
 
 export default class LevelZero extends GameLevel {
 
@@ -24,7 +25,7 @@ export default class LevelZero extends GameLevel {
     enemyList: Array<AnimatedSprite> = [];
     enemyNameList: Array<string> = ["orange_mushroom", "slime_wip"];
 
-    testLabel: Label;
+    testLabel: AnimatedDialog;
 
     // TODO: move mood control into PlantController
     overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
@@ -35,6 +36,7 @@ export default class LevelZero extends GameLevel {
     levelZeroReceiver: Receiver = new Receiver();
 
     overdrawTiles: Array<Sprite> = [];
+    runTest: boolean;
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
@@ -77,11 +79,17 @@ export default class LevelZero extends GameLevel {
             this.overdrawTiles.push(this.add.sprite('box_top', 'primary'));
             this.overdrawTiles[i].visible = false;
         }
+        // this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
     }
 
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
+
+        if(!this.testLabel.finished && this.runTest) {
+            this.testLabel.incrementText();
+        }
+
         if (this.moodBarTimer.isStopped() && this.moodBarTimer.hasRun()) {
             this.moodBarTimer.reset();
 
@@ -93,6 +101,14 @@ export default class LevelZero extends GameLevel {
 
             this.mood = "normal";
         }
+        
+        if (Input.isKeyJustPressed("t")) {
+
+            this.runTest = true;
+
+
+        }
+
 
         if (Input.isKeyJustPressed("o")) {
 
@@ -127,29 +143,21 @@ export default class LevelZero extends GameLevel {
 
         }
 
-        if (Input.isKeyJustPressed("t")) {
-            if(!this.testLabel) {
-                this.testLabel = <Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), text:'test'});
-
-            }
-            for(let i = 0; i < 10; i++) {
-                this.testLabel.text += 'a';
-            }
-
-        }
+        // tween idea: pass an array of chars to tween manager s.t. each loop of the tween appends a letter
 
 
 
 
-        if (Input.isKeyJustPressed("k")) {
-            for (let enemy of this.enemyList) {
-                if(enemy) {
-                    let enemyController = <EnemyController>enemy._ai;
-                    enemyController.damage(50);
-                }
+        // NOTE: Disabling this for now as it crashes if an enemy has died
+        // if (Input.isKeyJustPressed("k")) {
+        //     for (let enemy of this.enemyList) {
+        //         if(enemy) {
+        //             let enemyController = <EnemyController>enemy._ai;
+        //             enemyController.damage(50);
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
         while (this.levelZeroReceiver.hasNextEvent()) {
             let event = this.levelZeroReceiver.getNextEvent();
@@ -214,7 +222,6 @@ export default class LevelZero extends GameLevel {
 
         }
 
-/*
 
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 5 seconds
         if (Date.now() - this.time > 5000) {
@@ -224,17 +231,16 @@ export default class LevelZero extends GameLevel {
             console.log("5 seconds passed, Spawning new enemy");
             if (this.enemyNameList[randomInt] === "orange_mushroom") {
                 let randomScale = Math.random() * (2 - 1) + 1;
-                this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 60 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
+                this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
             }
             else if (this.enemyNameList[randomInt] === "slime_wip") {
                 let randomScale = Math.random() * (2 - 0.5) + 0.5;
 
-                this.addEnemy("slime_wip", new Vec2(randomX, randomY), { speed: 50 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
+                this.addEnemy("slime_wip", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
             }
             this.time = Date.now();
         }
 
-*/
     }
 
 

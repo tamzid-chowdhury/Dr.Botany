@@ -239,6 +239,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
             // TODO: move this into materialManager, have it be tied to pressing e key
             if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
+                let other = event.data.get('other');
+                let box = this.owner.getScene().getSceneGraph().getNode(other);
+                this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
                 let count = this.upperCount;
                 this.canDepositUpper = false;
                 this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, {position: this.owner.position.clone()});
@@ -246,7 +249,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.upperCount = 0;
             }
 
+            if(event.type === InGame_Events.OFF_DOWNER_DEPOSIT || event.type === InGame_Events.OFF_UPPER_DEPOSIT) {
+                this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
+            }
+
             if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
+                let other = event.data.get('other');
+                let box = this.owner.getScene().getSceneGraph().getNode(other);
+                this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
                 let count = this.downerCount;
                 this.canDepositDowner = false;
                 this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, {position: this.owner.position.clone()});

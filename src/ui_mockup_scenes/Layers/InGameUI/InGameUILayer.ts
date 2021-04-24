@@ -36,6 +36,8 @@ export default class InGameUI implements Updateable {
     materialSlots: Array<MaterialSlot> = []; // [0] == upper  [1] == downer
     materialSpriteIds: Array<string> = ["green_orb", "red_orb"];
     receiver: Receiver;
+    interactLabel: Label; 
+    showingInteract: boolean;
     constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
         this.font = font; 
@@ -49,6 +51,7 @@ export default class InGameUI implements Updateable {
         this.moodBar = new MoodBar(scene, center)
         this.equipSlots = new EquipSlots(scene, center);
         let xOffset = this.center.x;
+        this.showingInteract = false;
         for(let i = 0; i < 2; i ++) {
             this.materialSlots.push(new MaterialSlot(scene, center, xOffset, this.materialSpriteIds[i]));
             xOffset += this.materialSlots[i].slot.size.x;
@@ -62,8 +65,9 @@ export default class InGameUI implements Updateable {
             InGame_Events.MOOD_CHANGED,
             InGame_GUI_Events.CLEAR_UPPER_LABEL,
             InGame_GUI_Events.CLEAR_DOWNER_LABEL,
-            InGame_GUI_Events.UPDATE_HEALTHBAR
-
+            InGame_GUI_Events.UPDATE_HEALTHBAR,
+            InGame_GUI_Events.SHOW_INTERACT_LABEL,
+            InGame_GUI_Events. HIDE_INTERACT_LABEL
         ]);
         
 
@@ -116,6 +120,28 @@ export default class InGameUI implements Updateable {
                 }
                 
             }
+            if(event.type === InGame_GUI_Events.SHOW_INTERACT_LABEL){
+                position = event.data.get("position");
+                this.interactLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x, position.y-16), text:"E"});
+                this.interactLabel.font = Fonts.ABBADON_BOLD;
+                this.interactLabel.textColor = Palette.white();
+                this.interactLabel.fontSize = 0;
+                this.interactLabel.scale = Vec2.ZERO;
+                this.interactLabel.tweens.add("scaleTextIn", Tweens.scaleInText(48, 0, 100));
+                this.interactLabel.tweens.add("scaleTextOut", Tweens.scaleOutText(48, 0, 100));
+                this.showingInteract = true;
+                this.interactLabel.tweens.play("scaleTextIn");
+            }
+
+            if(event.type === InGame_GUI_Events.HIDE_INTERACT_LABEL){
+                if(this.interactLabel && this.showingInteract) {
+                    this.showingInteract = false;
+                    this.interactLabel.tweens.play("scaleTextOut");
+                }
+
+            }
+
+           
 
 
             if(event.type === InGame_GUI_Events.CLEAR_UPPER_LABEL){
