@@ -8,6 +8,7 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 // import EquipmentManager from "../GameSystems/EquipmentManager";
 // import Healthpack from "../GameSystems/items/Healthpack";
 import Item from "../GameSystems/items/Item";
@@ -28,8 +29,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     direction: Vec2;
     speed: number;
+    velocity: Vec2 = new Vec2(0,0);
 
-    shadow: Sprite;
     weapons: Array<Sprite> = [];
     equipped: Sprite;
     stowed: Sprite;
@@ -62,7 +63,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
         this.equipped = options.defaultWeapons[0];
         this.swing = options.swingSprite;
-        this.shadow = options.shadow;
         this.viewport = owner.getScene().getViewport();
 
         // TEMPORARY, JUST TESTING OUT SECOND WEAPON ON BACK
@@ -76,9 +76,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 		this.levelView = this.owner.getScene().getViewport();
 		this.viewHalfSize = this.levelView.getHalfSize();
 
-        this.shadow.scale = new Vec2(0.6, 0.6);
-        this.shadow.visible = false;
         this.owner.scale = new Vec2(1.5, 1.5);
+        this.owner.tweens.add('squish', Tweens.squish(this.owner.scale.clone()));
+        // this.owner.tweens.play('squish');
 
         if(options.mapSize) {
             this.owner.position.set(options.mapSize.x/2, options.mapSize.y/2);
@@ -90,7 +90,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.equipped.position = this.owner.position;
             this.stowed.position = this.owner.position;
         }
-        this.shadow.position.set(this.owner.position.x, this.owner.position.y + this.shadowOffset.y);
         this.equipped.invertY = true;
 
         this.swing.position.set(this.owner.position.x, this.owner.position.y);
@@ -119,17 +118,36 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
         this.direction.y = (Input.isPressed("forward") ? -1 : 0) + (Input.isPressed("backward") ? 1 : 0);
 
+        if(this.direction.x === 0) {
+            this.velocity.x += -this.velocity.x/6
+        }
+        else {
+            this.velocity.x +=  this.direction.x * this.speed
+        }
+
+        if(this.direction.y === 0) {
+            this.velocity.y += -this.velocity.y/6
+        }
+        else {
+            this.velocity.y += this.direction.y * this.speed
+
+        }
+
         if(!this.direction.isZero()) {
+            // this.owner.tweens.resume('squish');
+            this.velocity.normalize()
+            this.velocity.mult(new Vec2(this.speed, this.speed));
             this.owner.animation.playIfNotAlready("WALK", true);
         }
         else {
+            // this.owner.tweens.pause('squish');
             this.owner.animation.playIfNotAlready("IDLE", true);
-        }
-		this.owner._velocity.x = this.direction.x;
-		this.owner._velocity.y = this.direction.y;
-		this.owner._velocity.normalize();
-		this.owner._velocity.mult(new Vec2(this.speed, this.speed));
-		this.owner.move(this.owner._velocity.scaled(deltaT));
+        }   
+
+
+        this.owner.move(this.velocity.scaled(deltaT));
+
+
 
 		if(rotateTo.x > this.owner.position.x) {
 			this.owner.invertX = true;
@@ -140,8 +158,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         // ---
 
         // Follower movement/rotation update
-        this.shadow.position = this.owner.position.clone();
-        this.shadow.position.y += this.shadowOffset.y;
         this.equipped.position = this.owner.position.clone();
         // this.stowed.position = this.owner.position.clone();
         this.swing.position = this.owner.position.clone();
@@ -189,7 +205,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.swing.tweens.add('moveAndShrink', Tweens.spriteMoveAndShrink(this.swing.position, this.playerLookDirection))
                 this.swing.tweens.play('moveAndShrink');
 
-                this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut())
+                this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(400, 0.2))
                 this.swing.tweens.play('fadeOut');
 
                 this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})

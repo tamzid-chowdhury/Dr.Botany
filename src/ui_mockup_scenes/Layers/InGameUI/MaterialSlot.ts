@@ -29,6 +29,8 @@ export default class MaterialSlots {
         this.yOffset =  2*this.centerPos.y - (this.slot.size.y) - 4;
         this.slot.position.set(this.xOffset, this.yOffset)
         this.slot.scale = new Vec2(0.4, 0.4);
+		this.slot.alpha = 0.8;
+
         this.materialSprite = scene.add.sprite(materialImageId, UILayers.INGAME_UI);
         this.materialSprite.position = this.slot.position;
         this.materialSprite.scale = new Vec2(0.3, 0.3);

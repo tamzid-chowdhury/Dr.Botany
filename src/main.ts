@@ -1,5 +1,6 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./ui_mockup_scenes/MainMenu";
+import FixedUpdateGameLoop from "./Wolfie2D/Loop/FixedUpdateGameLoop";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
@@ -30,7 +31,8 @@ import MainMenu from "./ui_mockup_scenes/MainMenu";
             {name: "pickup", keys: ["e"]},
             {name: "drop", keys: ["q"]},
             {name: "slot1", keys: ["1"]},
-            {name: "slot2", keys: ["2"]}
+            {name: "slot2", keys: ["2"]},
+            {name: "pause", keys: ["escape"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

@@ -8,6 +8,7 @@ import OrthogonalTilemap from "../Nodes/Tilemaps/OrthogonalTilemap";
 import AreaCollision from "../DataTypes/Physics/AreaCollision";
 import Unique from "../DataTypes/Interfaces/Unique";
 import { InGame_Events } from "../../ui_mockup_scenes/Utils/Enums";
+import PlayerController from "../../ui_mockup_scenes/Controllers/PlayerController";
 
 /**
  * ALGORITHM:
@@ -322,6 +323,8 @@ export default class BasicPhysicsManager extends PhysicsManager {
 				}
 			}
 
+
+
 			// Resolve the collision with the node, and move it
 			node.finishMove();
 		}
@@ -351,53 +354,37 @@ export default class BasicPhysicsManager extends PhysicsManager {
 					// Get the position of this tile
 					let tilePos = new Vec2(col * tileSize.x + tileSize.x/2, row * tileSize.y + tileSize.y/2);
 					
-					
-					// TODO: make smaller AABB, and move collider up
-					// Half height: ray cast point in front of player, if its a tile, render another copy of the
-					// sprite in front of the player
-					
 
 					// Create a new collider for this tile
 					let collider; 
-					// let collider = new AABB(tilePos, tileSize.scaled(1/4));
-					if(tilemap.name === "pylons") {
-						collider = new AABB(tilePos, tileSize.scaled(1/8, 1/2));
-					}
-					else if(tilemap.name === "pylon_connectors"){
-						collider = new AABB(tilePos, tileSize.scaled(1/16, 1/2));
+					collider = new AABB(tilePos, tileSize.scaled(1/2));
 
-					}
-					else {
-						collider = new AABB(tilePos, tileSize.scaled(1/2));
-					}
-					// if(tilemap.upperHalf) {
-					// 	// collider = new AABB(tilePos, tileSize.scaled(2));
-
-					// }
-					// else if(tilemap.lowerHalf) {
-					// 	console.log('balh')
-					// 	collider = new AABB(tilePos, tileSize.scaled(1/8));
-					// }
-					// else {
-					// 	collider = new AABB(tilePos, tileSize.scaled(1/2));
-					// }
 
 					// Calculate collision area between the node and the tile
 					let area = node.sweptRect.overlapArea(collider);
+
+
 // NOTE: OVERDRAW 					
 					// if(node.sweptRect.top <= collider.top) {
 					// 	let collided = tilemap.getTileAtRowCol(new Vec2(col, row));
 					// 	let left = tilemap.getTileAtRowCol(new Vec2(col - 1, row));
 					// 	let right = tilemap.getTileAtRowCol(new Vec2(col + 1, row));
 					// 	let positions = [];
-					// 	if(left === collided) positions.push(new Vec2(tilePos.x - (4*collider.halfSize.x), tilePos.y));
+					// 	if(left === collided) {
+					// 		let leftTilePos = new Vec2((col-1) * tileSize.x + tileSize.x/2, row * tileSize.y + tileSize.y/2);
+					// 		positions.push(leftTilePos);
+					// 	} 
 					// 	positions.push(tilePos);
-					// 	if(right === collided) positions.push(new Vec2(tilePos.x + (4*collider.halfSize.x), tilePos.y));
+					// 	if(right === collided) {
+					// 		let rightTilePos = new Vec2((col+1) * tileSize.x + tileSize.x/2, row * tileSize.y + tileSize.y/2);
+					// 		positions.push(rightTilePos);
+					// 	} 
 
 					// 	this.emitter.fireEvent(InGame_Events.DRAW_OVERLAP_TILE, {positions:positions})
 					// }
 					if(area > 0){
 						// We had a collision
+
 						overlaps.push(new AreaCollision(area, collider, tilemap, "Tilemap", new Vec2(col, row)));
 					}
 				}

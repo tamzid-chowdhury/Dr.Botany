@@ -21,12 +21,14 @@ export default class EquipSlots {
         let yOffset =  this.centerPos.y / 4;
         this.slotOne.position.set(xOffset, yOffset)
         this.slotOne.scale = new Vec2(0.6, 0.6);
+		this.slotOne.alpha = 0.8;
 
 		xOffset += this.centerPos.y / 5;
 
 		this.slotTwo = scene.add.sprite("ui_square", UILayers.INGAME_UI)
         this.slotTwo.position.set(xOffset, yOffset)
         this.slotTwo.scale = new Vec2(0.6, 0.6);
+		this.slotTwo.alpha = 0.8;
 
 	}
 

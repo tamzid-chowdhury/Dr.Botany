@@ -34,6 +34,8 @@ export default class Viewport {
     /** The amount that is zoomed in or out. */
     private ZOOM_FACTOR: number = 1.2;
 
+    
+
     /** The size of the canvas */
     private canvasSize: Vec2;
 
@@ -48,6 +50,8 @@ export default class Viewport {
     trauma: number = 0 ; //  shake strength
 
     trauma_power: number = 2  ;
+
+    smooth_factor: number = 0.07
 
     constructor(canvasSize: Vec2, zoomLevel: number){
         this.view = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -259,8 +263,8 @@ export default class Viewport {
     
         let currentCenter = this.view.center.clone();
 
-        currentCenter.x =  MathUtils.lerp(currentCenter.x, pos.x, 0.125);
-        currentCenter.y =  MathUtils.lerp(currentCenter.y, pos.y, 0.125);
+        currentCenter.x =  MathUtils.lerp(currentCenter.x, pos.x, this.smooth_factor);
+        currentCenter.y =  MathUtils.lerp(currentCenter.y, pos.y, this.smooth_factor);
         if(this.shakeDuration > 0) {
             this.shakeDuration --
             currentCenter.x += (-(this.shakeDir.x) + (Math.random() < 0.5 ? -1 : 1) * 0.4);

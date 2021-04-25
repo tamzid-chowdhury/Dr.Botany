@@ -48,7 +48,7 @@ export default class GameLevel extends Scene {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
         this.load.image("reticle", "assets/misc/reticle.png");
         this.load.image("temp_button", "assets/ui_art/button.png");
-        this.load.image("ui_square", "assets/ui_art/ui_square.png");
+        this.load.image("ui_square", "assets/ui_art/ui_box_v2.png");
         this.load.image("ui_circle", "assets/ui_art/ui_circle.png");
         this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
         this.load.image("healthbar", "assets/ui_art/health_bar_wip-1.png")
@@ -163,8 +163,9 @@ export default class GameLevel extends Scene {
 
 
 
-        if (Input.isKeyJustPressed("p")) {
-            if (this.pauseScreenLayer !== undefined) {
+        if (Input.isKeyJustPressed("escape")) {
+                if (this.pauseScreenLayer !== undefined) {
+                console.log('toggling pause screen')
                 if (this.pauseScreenToggle) {
                     for (let button of this.pauseScreenLayer.menuButtons) {
                         //button.label.tweens.play('slideXFadeIn')
@@ -174,12 +175,12 @@ export default class GameLevel extends Scene {
                     this.pauseScreenToggle = false;
                 }
                 else {
-                    for (let button of this.pauseScreenLayer.menuButtons) {
-                        //button.label.tweens.play('slideXFadeOut')
-                        //button.sprite.tweens.play('spriteSlideXFadeOut')
-                        button.label.textColor.a = 0;
-                    }
-                    this.pauseScreenToggle = true;
+                    // for (let button of this.pauseScreenLayer.menuButtons) {
+                    //     //button.label.tweens.play('slideXFadeOut')
+                    //     //button.sprite.tweens.play('spriteSlideXFadeOut')
+                    //     button.label.textColor.a = 0;
+                    // }
+                    // this.pauseScreenToggle = true;
                 }
             }
 
@@ -191,19 +192,18 @@ export default class GameLevel extends Scene {
             let event = this.receiver.getNextEvent();
 
             // WARNING: No checking that node is actually the enemy, could fail
+            // should be in enemy controller?
             if (event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
                 let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
-                let ms = 30;
-                var currentTime = new Date().getTime();
+                // let ms = 30;
+                // var currentTime = new Date().getTime();
                  
                 // while (currentTime + ms >= new Date().getTime()) { /* I feel filthy  doing this*/}
                 (<EnemyController>node._ai).damage(10);
                 (<EnemyController>node._ai).doKnockBack(knockBackDir);
 
 
-            }
-            if (event.type === WindowEvents.RESIZED) {
             }
 
             if (event.type === InGame_Events.DO_SCREENSHAKE) {
@@ -274,12 +274,12 @@ export default class GameLevel extends Scene {
 
         }
     }
-
+    // TODO: plant init function probably needs to be diff for each level unless the center is always consistent
     initPlant(mapSize: Vec2): void {
         this.plant = this.add.animatedSprite('plant', "primary");
         this.upperDeposit = this.add.sprite('upper_deposit', "tertiary");
         this.downerDeposit = this.add.sprite('downer_deposit', "tertiary");
-        this.plant.position.set((mapSize.x / 2) - this.plant.size.x, (mapSize.x / 2)- this.plant.size.y);
+        this.plant.position.set((mapSize.x / 2) - this.plant.size.x, (mapSize.x / 2) - 1.3*this.plant.size.y);
 
         this.upperDeposit.position.set(this.plant.position.x - this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
         this.downerDeposit.position.set(this.plant.position.x + this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
@@ -296,7 +296,7 @@ export default class GameLevel extends Scene {
         this.plant.scale.set(1.0, 1.0);
         this.upperDeposit.scale.set(1.0, 1.0);
         this.downerDeposit.scale.set(1.0, 1.0);
-        (<AnimatedSprite>this.plant).animation.play("EH")
+        (<AnimatedSprite>this.plant).animation.play("HAPPY")
         // This has to be touched
         // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
         // this.plant.colliderOffset.set(0,10);
@@ -315,7 +315,6 @@ export default class GameLevel extends Scene {
         let playerOptions = {
             mapSize: mapSize,
             speed: 150,
-            shadow: this.add.sprite("shadow", "secondary"),
             defaultWeapons: [this.add.sprite("shovel", "secondary"), this.add.sprite("trash_lid", "secondary")],
             swingSprite: this.add.animatedSprite("swing_sprite", "primary")
         }
@@ -340,7 +339,7 @@ export default class GameLevel extends Scene {
 
     initViewport(mapSize: Vec2): void {
         let origin = this.viewport.getOrigin();
-        this.viewport.setBounds(origin.x+4, origin.y+4, mapSize.x - 4, mapSize.y + 24);
+        this.viewport.setBounds(origin.x+8, origin.y+8, mapSize.x - 4, mapSize.y + 24);
         this.viewport.setSize(480, 270); // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
         this.viewport.setFocus(new Vec2(this.player.position.x, this.player.position.y));
     }

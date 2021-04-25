@@ -9,6 +9,26 @@ import InGameUI from "../Layers/InGameUI/InGameUILayer";
 import { InGame_Events, UIEvents } from "./Enums";
 
 
+export function squish(startScale: Vec2) : Record<string,any>{
+	let tween = {
+		startDelay: 0,
+		duration: 200,
+		effects: [
+			{
+				property: TweenableProperties.scaleY,
+				start: startScale.y,
+				end: startScale.y - 0.2,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+
+
+		],
+		reverseOnComplete: true,
+		loop: true
+	};
+	return tween
+}
+
 export function slideLeft(startX: number, endX: number, duration: number = 500, event: string = 'blah', delay: number = 0) : Record<string,any> {
 	let tween = {
 		startDelay: delay,
@@ -483,7 +503,7 @@ export  function swing(sprite: Sprite, dir: number): Record<string,any> {
 }
 
 
-export function spriteFadeOut(duration: number = 400): Record<string,any> {
+export function spriteFadeOut(duration: number = 400, stopOpacity: number = 0): Record<string,any> {
 	let tween = {
 		startDelay: 0,
 		duration: duration,
@@ -491,7 +511,7 @@ export function spriteFadeOut(duration: number = 400): Record<string,any> {
 			{
 				property:TweenableProperties.alpha,
 				start: 1,
-				end: 0 ,
+				end: stopOpacity,
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},

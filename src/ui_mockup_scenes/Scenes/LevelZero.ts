@@ -79,7 +79,7 @@ export default class LevelZero extends GameLevel {
             this.overdrawTiles.push(this.add.sprite('box_top', 'primary'));
             this.overdrawTiles[i].visible = false;
         }
-        // this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
+        this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
     }
 
@@ -224,22 +224,22 @@ export default class LevelZero extends GameLevel {
 
 
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 5 seconds
-        if (Date.now() - this.time > 5000) {
-            let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
-            let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
-            let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
-            console.log("5 seconds passed, Spawning new enemy");
-            if (this.enemyNameList[randomInt] === "orange_mushroom") {
-                let randomScale = Math.random() * (2 - 1) + 1;
-                this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
-            }
-            else if (this.enemyNameList[randomInt] === "slime_wip") {
-                let randomScale = Math.random() * (2 - 0.5) + 0.5;
+        // if (Date.now() - this.time > 5000) {
+        //     let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
+        //     let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
+        //     let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
+        //     console.log("5 seconds passed, Spawning new enemy");
+        //     if (this.enemyNameList[randomInt] === "orange_mushroom") {
+        //         let randomScale = Math.random() * (2 - 1) + 1;
+        //         this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
+        //     }
+        //     else if (this.enemyNameList[randomInt] === "slime_wip") {
+        //         let randomScale = Math.random() * (2 - 0.5) + 0.5;
 
-                this.addEnemy("slime_wip", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
-            }
-            this.time = Date.now();
-        }
+        //         this.addEnemy("slime_wip", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
+        //     }
+        //     this.time = Date.now();
+        // }
 
     }
 
