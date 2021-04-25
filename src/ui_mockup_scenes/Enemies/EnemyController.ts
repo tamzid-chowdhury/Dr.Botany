@@ -35,6 +35,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     attackRange: number;
     type: String; 
     velocity: Vec2 = Vec2.ZERO;
+    knockBackGuard: number = 1;
 
     knockBackDir: Vec2 = new Vec2(0,0);
     knockBackTimer: number = 0;
@@ -74,6 +75,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
     update(deltaT: number): void {
         super.update(deltaT);
+        if(this.knockBackGuard > 1) this.knockBackGuard--;
         
         if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
         if (this.getOwnerPostion().x + 3 <= this.getPlayerPosition().x) { 
@@ -96,7 +98,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     doKnockBack(direction: Vec2): void {
         this.knockBackDir = direction.clone();
         this.knockBackTimer = 50;
-        this.changeState(EnemyStates.KNOCKBACK);
+        if(this.knockBackGuard <= 1) this.changeState(EnemyStates.KNOCKBACK);
+        
     }
 
     getPlayerPosition(): Vec2 {

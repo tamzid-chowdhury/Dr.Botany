@@ -19,15 +19,18 @@ export default class Knockback extends EnemyState {
 
 		}
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
-		this.force = this.parent.knockBackDir.scale(200, 200);
+		this.force = this.parent.knockBackDir.scale(500 / this.parent.knockBackGuard, 500 / this.parent.knockBackGuard);
 		this.parent.velocity.add(this.force);
 	}
 	// TODO: Knockback that scales with size
 	update(deltaT: number): void {
-		this.parent.velocity.add(new Vec2(-this.parent.velocity.x / 24, -this.parent.velocity.y / 24));
+		this.parent.velocity.add(new Vec2(-this.parent.velocity.x / 6, -this.parent.velocity.y / 6));
 		this.owner.move(this.parent.velocity.scaled(deltaT));
-		this.parent.knockBackTimer--;
-		if (this.parent.knockBackTimer <= 0 && this.parent.health > 0) this.finished(EnemyStates.WALK);
+		this.parent.knockBackTimer -= 3;
+		if (this.parent.knockBackTimer <= 0 && this.parent.health > 0) {
+			this.parent.knockBackGuard = 20;
+			this.finished(EnemyStates.WALK);
+		} 
 		super.update(deltaT);
 
 	}
