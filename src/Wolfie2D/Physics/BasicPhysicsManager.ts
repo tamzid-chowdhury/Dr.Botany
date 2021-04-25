@@ -321,6 +321,8 @@ export default class BasicPhysicsManager extends PhysicsManager {
 						}
 					}
 				}
+
+
 			}
 
 
@@ -362,7 +364,6 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
 					// Calculate collision area between the node and the tile
 					let area = node.sweptRect.overlapArea(collider);
-
 
 // NOTE: OVERDRAW 					
 					// if(node.sweptRect.top <= collider.top) {

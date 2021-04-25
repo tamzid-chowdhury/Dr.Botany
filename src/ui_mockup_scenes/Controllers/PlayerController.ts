@@ -119,14 +119,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.direction.y = (Input.isPressed("forward") ? -1 : 0) + (Input.isPressed("backward") ? 1 : 0);
 
         if(this.direction.x === 0) {
-            this.velocity.x += -this.velocity.x/6
+            this.velocity.x += -this.velocity.x/4
         }
         else {
             this.velocity.x +=  this.direction.x * this.speed
         }
 
         if(this.direction.y === 0) {
-            this.velocity.y += -this.velocity.y/6
+            this.velocity.y += -this.velocity.y/4
         }
         else {
             this.velocity.y += this.direction.y * this.speed
@@ -143,7 +143,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             // this.owner.tweens.pause('squish');
             this.owner.animation.playIfNotAlready("IDLE", true);
         }   
-
 
         this.owner.move(this.velocity.scaled(deltaT));
 
