@@ -57,8 +57,12 @@ export default class GameLevel extends Scene {
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
         this.load.image("moodbar_indicator", "assets/ui_art/mood_bar_indicator.png")
 
+        this.load.image("health_pip", "assets/ui_art/leaf_icon.png");
+        this.load.image("health_pip_shadow", "assets/ui_art/leaf_icon_shadow.png");
+
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.image("shadow", "assets/player/shadow_sprite.png");
+
         this.load.image("shovel", "assets/weapons/shovel.png");
         this.load.image("trash_lid", "assets/weapons/trash_lid.png");
         this.load.image("green_orb", "assets/items/greenorb.png");
@@ -164,26 +168,13 @@ export default class GameLevel extends Scene {
 
 
         if (Input.isKeyJustPressed("escape")) {
-                if (this.pauseScreenLayer !== undefined) {
-                console.log('toggling pause screen')
-                if (this.pauseScreenToggle) {
-                    for (let button of this.pauseScreenLayer.menuButtons) {
-                        //button.label.tweens.play('slideXFadeIn')
-                        //button.sprite.tweens.play('spriteSlideXFadeIn')
-                        button.label.textColor.a = 1;
-                    }
-                    this.pauseScreenToggle = false;
-                }
-                else {
-                    // for (let button of this.pauseScreenLayer.menuButtons) {
-                    //     //button.label.tweens.play('slideXFadeOut')
-                    //     //button.sprite.tweens.play('spriteSlideXFadeOut')
-                    //     button.label.textColor.a = 0;
-                    // }
-                    // this.pauseScreenToggle = true;
-                }
+            this.pauseScreenLayer.toggle();
+            if(!this.pauseScreenLayer.hidden) {
+                // pause
             }
-
+            else {
+                // unpause
+            }
 
         }
 
@@ -337,9 +328,14 @@ export default class GameLevel extends Scene {
 
     }
 
+    initPauseMenu(halfsize: Vec2): void {
+        this.pauseScreenLayer = new PauseScreenLayer(this, halfsize);
+
+    }
+
     initViewport(mapSize: Vec2): void {
         let origin = this.viewport.getOrigin();
-        this.viewport.setBounds(origin.x+8, origin.y+8, mapSize.x - 4, mapSize.y + 24);
+        this.viewport.setBounds(origin.x+8, origin.y+8, mapSize.x - 8, mapSize.y+8);
         this.viewport.setSize(480, 270); // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
         this.viewport.setFocus(new Vec2(this.player.position.x, this.player.position.y));
     }

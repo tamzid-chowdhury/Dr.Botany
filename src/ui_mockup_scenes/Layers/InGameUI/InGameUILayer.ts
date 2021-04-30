@@ -69,9 +69,6 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.SHOW_INTERACT_LABEL,
             InGame_GUI_Events. HIDE_INTERACT_LABEL
         ]);
-        
-
-
 
     }
 
@@ -99,25 +96,8 @@ export default class InGameUI implements Updateable {
 
             if(event.type === InGame_GUI_Events.UPDATE_HEALTHBAR){
                 let damageTaken = event.data.get('damageTaken');
-                console.log("Health decreased by " + damageTaken)
-                this.healthBar.updateText(damageTaken);
-                
-                // let xScale = this.healthBar.sprite.scale.x; 
-                // let newXScale = xScale - .01;
-                // this.healthBar.sprite.tweens.add("scaleX", Tweens.healthBarScaleDown(xScale,newXScale)); 
-                // this.healthBar.sprite.tweens.play("scaleX");
-                if(damageTaken == 10){
-                    let xPos = this.healthBar.sprite.position.x;
-                    let newXPos = this.healthBar.sprite.position.x - 5.6;
-                    this.healthBar.sprite.tweens.add("slideX", Tweens.healthBarSlideX(xPos,newXPos)); 
-                    this.healthBar.sprite.tweens.play("slideX");
-                }
-                else{
-                    let xPos = this.healthBar.sprite.position.x;
-                    let newXPos = this.healthBar.sprite.position.x - 2.8;
-                    this.healthBar.sprite.tweens.add("slideX", Tweens.healthBarSlideX(xPos,newXPos)); 
-                    this.healthBar.sprite.tweens.play("slideX");
-                }
+                this.healthBar.takeDamage();
+
                 
             }
             if(event.type === InGame_GUI_Events.SHOW_INTERACT_LABEL){

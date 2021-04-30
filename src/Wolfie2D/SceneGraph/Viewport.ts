@@ -7,6 +7,7 @@ import AABB from "../DataTypes/Shapes/AABB";
 import Input from "../Input/Input";
 import ParallaxLayer from "../Scene/Layers/ParallaxLayer";
 import UILayer from "../Scene/Layers/UILayer";
+import Perlin from "../Utils/Rand/Perlin";
 
 /**
  * The viewport of the game. Corresponds to the visible window displayed in the browser.
@@ -51,7 +52,11 @@ export default class Viewport {
 
     trauma_power: number = 2  ;
 
-    smooth_factor: number = 0.07
+    smooth_factor: number = 0.1;
+
+    perlin: Perlin = new Perlin();
+    perlinSeed: number = MathUtils.sfc32(-1,7, 90, -50);
+
 
     constructor(canvasSize: Vec2, zoomLevel: number){
         this.view = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -243,7 +248,7 @@ export default class Viewport {
         this.following = node;
     }
 
-    updateView(): void {
+    updateView(deltaT: number): void {
         if(this.lastPositions.getSize() > this.smoothingFactor){
             this.lastPositions.dequeue();
         }
@@ -260,31 +265,33 @@ export default class Viewport {
         // Assure there are no lines in the tilemap
         pos.x = Math.floor(pos.x);
         pos.y = Math.floor(pos.y);
-    
-        let currentCenter = this.view.center.clone();
 
+        // interpolation
+        let currentCenter = this.view.center.clone();
         currentCenter.x =  MathUtils.lerp(currentCenter.x, pos.x, this.smooth_factor);
         currentCenter.y =  MathUtils.lerp(currentCenter.y, pos.y, this.smooth_factor);
-        if(this.shakeDuration > 0) {
-            this.shakeDuration --
-            currentCenter.x += (-(this.shakeDir.x) + (Math.random() < 0.5 ? -1 : 1) * 0.4);
-            currentCenter.y += (-(this.shakeDir.y) + (Math.random() < 0.5 ? -1 : 1) * 0.4); 
+
+        // screenshake
+        if(this.trauma > 0) {
+            this.trauma--;
+
+            // currentCenter.x += this.shakeDir.x + (2 * Math.pow(this.trauma, 3) * (Math.random() < 0.5 ? -1 : 1)); 
+            // currentCenter.y += this.shakeDir.y + (2 * Math.pow(this.trauma, 3) * (Math.random() < 0.5 ? -1 : 1));    
+            currentCenter.x += ((-this.shakeDir.x) + ((Math.random() < 0.5 ? -1 : 1) * 0.4));
+            currentCenter.y += ((-this.shakeDir.y) + ((Math.random() < 0.5 ? -1 : 1) * 0.4)); 
+            
         }
         this.view.center = currentCenter;
 
-        // if(this.shakeDuration > 0) {
-        //     this.shakeDuration --
-        //     this.view.center.x += (this.shakeDir.x + (Math.random() < 0.5 ? -1 : 1));
-        //     this.view.center.y += (this.shakeDir.y + (Math.random() < 0.5 ? -1 : 1)); 
-        // }
         
     }
 
     
     doScreenShake(dir: Vec2): void {
         this.shake = true;
-        this.shakeDuration = 5;
+        this.trauma = 5;
         this.shakeDir = dir;
+        this.shakeDir.normalize();
     }
 
 
@@ -326,8 +333,7 @@ export default class Viewport {
             this.lastPositions.enqueue(this.focus);
         }
 
-        this.trauma = Math.max(this.trauma - this.decay * deltaT, 0);
 
-        this.updateView();
+        this.updateView(deltaT);
     }
 }

@@ -8,10 +8,10 @@ export default class Knockback extends EnemyState {
 	playerSize: Vec2;
 	force: Vec2;
 	onEnter(): void {
+		
 		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemy_hit", loop: false, holdReference: true});
 		
 		if (this.parent.health > 0) {
-		
 			(<AnimatedSprite>this.owner).animation.play("HIT", false);
 		}
 		else {
@@ -29,6 +29,7 @@ export default class Knockback extends EnemyState {
 		this.parent.knockBackTimer -= 3;
 		if (this.parent.knockBackTimer <= 0 && this.parent.health > 0) {
 			this.parent.knockBackGuard = 20;
+
 			this.finished(EnemyStates.WALK);
 		} 
 		super.update(deltaT);

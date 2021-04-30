@@ -5,44 +5,46 @@ import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import { UILayers, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
+
+
+interface HealthPip {
+    icon: Sprite;
+    shadow: Sprite;
+}
+
 export default class HealthBar {
-    sprite: Sprite;
-    spriteOutline: Sprite; 
-	text: Label;
-	textBackdrop: Label;
     centerPos: Vec2;
-    health: number = 100; 
+    health: number = 5; 
+    healthPips: Array<HealthPip> = [];
+    xOffset: number = 0;
+    yOffset: number = 0;
 
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
-        this.spriteOutline = scene.add.sprite("healthbaroutline", UILayers.INGAME_UI)
-        this.sprite = scene.add.sprite("healthbar", UILayers.INGAME_UI)
+        for(let i = 0; i < this.health; i++) {
+            let shadow = scene.add.sprite("health_pip_shadow", UILayers.INGAME_UI);
+            let icon = scene.add.sprite("health_pip", UILayers.INGAME_UI);
 
-        let xOffset =  this.sprite.size.x / 5;
-        let yOffset =  this.centerPos.y / 9;
-        this.sprite.position.set(xOffset, yOffset)
-        this.spriteOutline.position.set(xOffset,yOffset)
+            let xOffset =  (icon.size.x/2) + ((icon.size.x/2 + 4) * i);
+            let yOffset =  this.centerPos.y / 10;
+            icon.position.set(xOffset, yOffset);
+            shadow.position.set(xOffset+1, yOffset+0.5);
 
-        this.sprite.scale = new Vec2(0.5, 0.5);
-        this.spriteOutline.scale = new Vec2(0.5,0.5);
-        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset+0.5, yOffset + 0.5), text:'HP: ' + this.health + '%'});
-        this.textBackdrop.size = this.sprite.size;
-        this.textBackdrop.font = Fonts.ROUND;
-        this.textBackdrop.textColor = Palette.black();
-        this.textBackdrop.fontSize = 24;
+            this.healthPips.push({icon: icon, shadow: shadow});
+        }
 
-		this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, yOffset), text:'HP: ' + this.health + '%'});
-        this.text.size = this.sprite.size;
-        this.text.font = Fonts.ROUND;
-        this.text.textColor = Palette.white();
-        this.text.fontSize = 24;
+
+
+
 	}
 
-	updateText(damageTaken: number): void {
-        // TODO: when player health changes, text has to update
-        this.health = this.health - damageTaken; 
-        this.textBackdrop.text = 'HP: ' + this.health + '%';
-        this.text.text = 'HP: ' + this.health + '%';
+	takeDamage(): void {
+
+        this.health--;
+        let pip = this.healthPips.pop(); 
+        (<HealthPip>pip).icon.visible = false;
+        (<HealthPip>pip).shadow.visible = false;
+
 	}
 
 }

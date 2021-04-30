@@ -69,6 +69,7 @@ export default class LevelZero extends GameLevel {
         super.initPlant(this.collidables.size);
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
+        super.initPauseMenu(this.viewport.getHalfSize());
         super.initReticle();
         this.viewport.follow(this.player);
 

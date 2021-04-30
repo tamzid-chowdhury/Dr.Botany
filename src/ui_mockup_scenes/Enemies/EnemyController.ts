@@ -12,8 +12,8 @@ import Dying from "./EnemyStates/Dying";
 import EnemyState from "./EnemyStates/EnemyState";
 import Idle from "./EnemyStates/Idle"
 import Knockback from "./EnemyStates/Knockback";
-import Walk from "./EnemyStates/Walk"
-
+import Walk from "./EnemyStates/Walk";
+import * as Tweens from "../Utils/Tweens";
 
 
 
@@ -50,6 +50,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.speed = options.speed;
         this.type = options.type; 
         
+
         // have to add some properties for each enemy   I don't know if idle is necessary...
         let idle = new Idle(this, owner);
 		this.addState(EnemyStates.IDLE, idle);
@@ -66,7 +67,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     }
 
     destroy(): void {
-        // this.receiver.destroy()
     }
 
     changeState(stateName: string): void {

@@ -9,6 +9,29 @@ import InGameUI from "../Layers/InGameUI/InGameUILayer";
 import { InGame_Events, UIEvents } from "./Enums";
 
 
+export function hitTween(startScale: Vec2) : Record<string,any>{
+	let tween = {
+		startDelay: 0,
+		duration: 200,
+		effects: [
+			{
+				property: TweenableProperties.scaleY,
+				start: startScale.y,
+				end: startScale.y + 0.5,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+			{
+				property: TweenableProperties.scaleX,
+				start: startScale.x,
+				end: startScale.x - 0.5,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+		],
+		reverseOnComplete: true
+	};
+	return tween
+}
+
 export function squish(startScale: Vec2) : Record<string,any>{
 	let tween = {
 		startDelay: 0,
@@ -408,18 +431,12 @@ export  function slideUpLeft(xPos: number, yPos: number): Record<string,any> {
 			{
 				property: TweenableProperties.posY,
 				start: yPos,
-				end: yPos-2,
+				end: yPos-4,
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
-			// {
-			// 	property: TweenableProperties.posX,
-			// 	start: xPos,
-			// 	end: xPos-2,
-			// 	ease: EaseFunctionType.IN_OUT_QUINT,
-			// 	resetOnComplete: true
-			// },
 		]
+		
 	
 	}
 	return tween;
@@ -432,18 +449,11 @@ export  function slideDownRight(xPos: number, yPos: number): Record<string,any> 
 		effects: [
 			{
 				property: TweenableProperties.posY,
-				start: yPos,
-				end: yPos+2,
+				start: yPos-4,
+				end: yPos,
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
-			// {
-			// 	property: TweenableProperties.posX,
-			// 	start: xPos,
-			// 	end: xPos+2,
-			// 	ease: EaseFunctionType.IN_OUT_QUINT,
-			// 	resetOnComplete: true
-			// },
 		]
 	
 	}

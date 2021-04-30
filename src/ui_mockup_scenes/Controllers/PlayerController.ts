@@ -9,6 +9,7 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+import EquipmentManager from "../GameSystems/EquipmentManager";
 // import EquipmentManager from "../GameSystems/EquipmentManager";
 // import Healthpack from "../GameSystems/items/Healthpack";
 import Item from "../GameSystems/items/Item";
@@ -20,11 +21,7 @@ import ProjectileController from "./ProjectileController";
 export default class PlayerController extends StateMachineAI implements BattlerAI {
     health: number;
     owner: AnimatedSprite;
-    materials: Array<string> = [];
-
-
-    // The inventory of the player
-    //private inventory: EquipmentManager;
+    inventory: EquipmentManager;
 
 
     direction: Vec2;
@@ -53,7 +50,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     doingSwing: boolean = false;
     damaged: boolean = false;
     damageCooldown: number;
-    damageTaken: number = 5; 
+    damageTaken: number = 1; 
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -72,7 +69,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
-        this.health = 100;
+        this.health = 5;
 		this.levelView = this.owner.getScene().getViewport();
 		this.viewHalfSize = this.levelView.getHalfSize();
 
@@ -226,14 +223,15 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             
 
             if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
-
                 if(this.damaged) {
+
                     if (Date.now() - this.damageCooldown > 2000) {
                         this.damaged = false;
                     }
                 }
                 else {
                     // This is where it plays tweens + animation for getting hit
+                    this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
                     this.damage(this.damageTaken);
                     this.damaged = true;
                     this.damageCooldown = Date.now();
@@ -293,7 +291,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
     }
     destroy(): void {
-        // this.receiver.destroy();
+        this.receiver.destroy();
 	}
 
     subscribeToEvents(): void {
