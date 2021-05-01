@@ -16,6 +16,7 @@ import MainMenu from "../MainMenu";
 import * as Tweens  from "../Utils/Tweens";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
+import Equipment from "../Types/items/Equipment";
 // import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
@@ -40,10 +41,12 @@ export default class GameLevel extends Scene {
     defaultEquip: Sprite;
     shadowOffset: Vec2 = new Vec2(0, 10);
 
+    equipmentPrototypes: Array<Equipment> = [];
     droppedMaterial: Array<Material> = [];
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
     swipeLayer: UILayer;
+
 
     loadScene(): void {
         this.load.image("temp_cursor", "assets/misc/cursor.png");
@@ -68,7 +71,7 @@ export default class GameLevel extends Scene {
         this.load.image("trash_lid", "assets/weapons/trash_lid.png");
         this.load.image("green_orb", "assets/items/greenorb.png");
         this.load.image("red_orb", "assets/items/redorb.png");
-        this.load.spritesheet("swing_sprite", "assets/weapons/swing_sprite.json")
+        this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("plant", "assets/plant/plant.json")
         this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
         this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
@@ -106,7 +109,7 @@ export default class GameLevel extends Scene {
         this.addLayer(InGameUILayers.ANNOUNCEMENT_BACKDROP, 11);
         this.addLayer(InGameUILayers.ANNOUNCEMENT_TEXT, 12);
         this.swipeLayer = this.addUILayer(UILayers.SCREEN_WIPE);
-        this.swipeLayer.setDepth(800);
+        this.swipeLayer.setDepth(1000);
         this.screenWipe = this.add.sprite("screen_wipe", UILayers.SCREEN_WIPE);
         this.screenWipe.imageOffset = new Vec2(0, 0);
         this.screenWipe.scale = new Vec2(2,1)
@@ -114,6 +117,8 @@ export default class GameLevel extends Scene {
         this.screenWipe.tweens.add("introTransition", Tweens.slideLeft(0, -2*this.screenWipe.size.x, 800, '', 200));
         this.screenWipe.tweens.play("introTransition");
         // TODO: Disable input until after screen wipe finished
+        this.initReticle();
+        this.initEquipment();
     }
 
     updateScene(deltaT: number) {
@@ -299,6 +304,7 @@ export default class GameLevel extends Scene {
         // this.plant.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
     }
     unloadScene(): void {
+        // pass managers, player controller to next level 
         this.receiver.destroy();
     }
 
@@ -307,8 +313,9 @@ export default class GameLevel extends Scene {
         let playerOptions = {
             mapSize: mapSize,
             speed: 150,
-            defaultWeapons: [this.add.sprite("shovel", "secondary"), this.add.sprite("trash_lid", "secondary")],
-            swingSprite: this.add.animatedSprite("swing_sprite", "primary")
+            defaultWeapon: this.equipmentPrototypes[0]
+            // defaultWeapons: [this.add.sprite("shovel", "secondary"), this.add.sprite("trash_lid", "secondary")],
+            // swingSprite: this.add.animatedSprite("swing_sprite", "primary")
         }
         this.player.addAI(PlayerController, playerOptions);
         this.player.animation.play("IDLE");
@@ -340,6 +347,7 @@ export default class GameLevel extends Scene {
 
     initReticle(): void {
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
+        this.cursorLayer.setDepth(900);
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.7, 0.7);
 
@@ -350,23 +358,22 @@ export default class GameLevel extends Scene {
 
         for(let i = 0; i < equipData.count; i++){
             let equip = equipData.equipment[i];
+            let temp = new Equipment(equip);
+            temp.sprite = this.add.sprite(temp.spriteKey, "secondary");
+            temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
+            this.equipmentPrototypes.push(temp);
+            // Get the constructor of the prototype
+            // let constr = RegistryManager.getRegistry("equipmentTemplates").get(equip.type);
 
-            let constr = RegistryManager.getRegistry("weaponTemplates").get(equip.type);
+            // // Create a weapon type
+            // let equipType = new constr();
 
-            let equipType = new constr();
+            // // Initialize the weapon type
+            // equipType.initialize(equip);
 
-            equipType.initialize(equip);
+            // // Register the weapon type
+            // RegistryManager.getRegistry("equipmentTypes").registerItem(equip.name, equipType)
 
-            RegistryManager.getRegistry("weaponTypes").registerItem(equip.name, equipType)
         }
-        // let constr = RegistryManager.getRegistry("weaponTemplates").get(weaponKey);
-
-        // let weaponType = new constr();
-
-        // weaponType.initialize(weapon);
-
-        // RegistryManager.getRegistry("weaponTypes").registerItem(weapon.name, weaponType)
     }
-
-
 }

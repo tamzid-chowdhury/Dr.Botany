@@ -1,8 +1,7 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./ui_mockup_scenes/MainMenu";
-import FixedUpdateGameLoop from "./Wolfie2D/Loop/FixedUpdateGameLoop";
-import WeaponTemplateRegistry, { WeaponTypeRegistry } from "./ui_mockup_scenes/Registries/WeaponRegistry";
 import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
+import EquipmentTemplateRegistry, { EquipTypeRegistry } from "./ui_mockup_scenes/Registries/EquipmentRegistry";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
@@ -31,7 +30,7 @@ import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
             {name: "left", keys: ["a"]},
             {name: "right", keys: ["d"]},
             {name: "pickup", keys: ["e"]},
-            {name: "drop", keys: ["q"]},
+            {name: "swap", keys: ["q"]},
             {name: "slot1", keys: ["1"]},
             {name: "slot2", keys: ["2"]},
             {name: "pause", keys: ["escape"]}
@@ -40,11 +39,11 @@ import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
 
-    let weaponTemplateRegistry = new WeaponTemplateRegistry();
-    RegistryManager.addCustomRegistry("weaponTemplates", weaponTemplateRegistry);
+    // let equipmentTemplateRegistry = new EquipmentTemplateRegistry();
+    // RegistryManager.addCustomRegistry("equipmentTemplates", equipmentTemplateRegistry);
     
-    let weaponTypeRegistry = new WeaponTypeRegistry();
-    RegistryManager.addCustomRegistry("weaponTypes", weaponTypeRegistry);
+    // let equipTypeRegistry = new EquipTypeRegistry();
+    // RegistryManager.addCustomRegistry("equipmentTypes", equipTypeRegistry);
 
     const game = new Game(options);
     let audio = game.getAudioManager();

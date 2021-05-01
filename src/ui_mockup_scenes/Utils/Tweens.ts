@@ -506,8 +506,6 @@ export  function swing(sprite: Sprite, dir: number): Record<string,any> {
 			},
 
 		],
-		// onEnd: .,
-		// reverseOnComplete: true
 	}
 	return tween;
 }
@@ -526,7 +524,6 @@ export function spriteFadeOut(duration: number = 400, stopOpacity: number = 0): 
 				resetOnComplete: true
 			},
 		]
-		// onEnd: InGame_Events.FINISHED_SWING
 	}
 	return tween
 }
@@ -544,15 +541,14 @@ export function spriteFadeIn(duration: number = 400): Record<string,any> {
 				resetOnComplete: true
 			},
 		]
-		// onEnd: InGame_Events.FINISHED_SWING
 	}
 	return tween
 }
 
-export function spriteMoveAndShrink(pos: Vec2, dir: Vec2): Record<string,any> {
+export function spriteMoveAndShrink(pos: Vec2, dir: Vec2, duration: number = 150): Record<string,any> {
 	let tween = {
 		startDelay: 0,
-		duration: 150,
+		duration: duration,
 		effects: [
 			{
 				property:TweenableProperties.scaleX,
@@ -582,7 +578,6 @@ export function spriteMoveAndShrink(pos: Vec2, dir: Vec2): Record<string,any> {
 			},
 
 		],
-		onEnd: InGame_Events.FINISHED_SWING
 	}
 	return tween
 }
@@ -607,7 +602,6 @@ export function knockBack(velocity: Vec2): Record<string,any> {
 				resetOnComplete: true
 			},
 		]
-		// onEnd: InGame_Events.FINISHED_SWING
 	}
 	return tween
 }

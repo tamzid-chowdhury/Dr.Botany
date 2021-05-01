@@ -8,7 +8,7 @@
   "durationType": "time",
   "animations": [
       { 
-          "name": "SWING",
+          "name": "ATTACK",
           "frames": [ {"index": 0, "duration": 16}, {"index": 1, "duration": 16}, {"index": 2, "duration": 16} ]
       }
 

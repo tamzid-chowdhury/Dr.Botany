@@ -1,9 +1,9 @@
 import Registry from "../../Wolfie2D/Registry/Registries/Registry";
 import ResourceManager from "../../Wolfie2D/ResourceManager/ResourceManager";
-import Projectile from "../Types/items/WeaponTypes/Projectile";
-import WeaponType from "../Types/items/WeaponTypes/WeaponType";
+import Projectile from "../Types/items/EquipTypes/Projectile";
+import WeaponType from "../Types/items/EquipTypes/EquipType";
 
-export default class WeaponTemplateRegistry extends Registry<WeaponConstructor> {
+export default class EquipmentTemplateRegistry extends Registry<EquipmentConstructor> {
     
     public preload(): void {
         const rm = ResourceManager.getInstance();
@@ -21,16 +21,16 @@ export default class WeaponTemplateRegistry extends Registry<WeaponConstructor> 
     // We don't need this for this assignment
     public registerAndPreloadItem(key: string): void {}
 
-    public registerItem(key: string, constr: WeaponConstructor): void {
+    public registerItem(key: string, constr: EquipmentConstructor): void {
         this.add(key, constr);
     }
 }
 
-type WeaponConstructor = new (...args: any) => WeaponType;
+type EquipmentConstructor = new (...args: any) => WeaponType;
 
 
 
-export class WeaponTypeRegistry extends Registry<WeaponType> {
+export class EquipTypeRegistry extends Registry<WeaponType> {
     
     public preload(): void {}
 

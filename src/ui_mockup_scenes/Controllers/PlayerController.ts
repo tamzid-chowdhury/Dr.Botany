@@ -8,15 +8,11 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
-import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import EquipmentManager from "../GameSystems/EquipmentManager";
-// import EquipmentManager from "../GameSystems/EquipmentManager";
-// import Healthpack from "../GameSystems/items/Healthpack";
-import Item from "../Types/items/Item";
+import Equipment from "../Types/items/Equipment";
 import { InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";
-import ProjectileController from "./ProjectileController";
 
 export default class PlayerController extends StateMachineAI implements BattlerAI {
     health: number;
@@ -28,8 +24,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     speed: number;
     velocity: Vec2 = new Vec2(0,0);
 
-    equipped: Sprite;
-
+    equipped: Equipment;
+    onCooldown: boolean = false;
+    coolDownTimer: Timer;
 
     downerCount: number = 0;
     upperCount: number = 0;
@@ -52,9 +49,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-        this.equipment = new EquipmentManager();
-        this.equipped = options.defaultWeapons[0];
-        this.swing = options.swingSprite;
+        this.equipment = new EquipmentManager(options.defaultWeapon);
+        this.equipped = this.equipment.equipped;
         this.viewport = owner.getScene().getViewport();
 
 
@@ -68,29 +64,24 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.owner.tweens.add('squish', Tweens.squish(this.owner.scale.clone()));
         // this.owner.tweens.play('squish');
 
-        if(options.mapSize) {
-            this.owner.position.set(options.mapSize.x/2, options.mapSize.y/2);
-            this.equipped.position.set(options.mapSize.x/2,options.mapSize.y/2);
-            // this.stowed.position.set(options.mapSize.x/2,options.mapSize.y/2);
-        }
-        else {
-            this.owner.position = new Vec2(0,0);
-            this.equipped.position = this.owner.position;
-        }
-        this.equipped.invertY = true;
+        this.owner.position.set(options.mapSize.x/2, options.mapSize.y/2);
 
-        this.swing.position.set(this.owner.position.x, this.owner.position.y);
-        this.swing.visible = false;
-        this.swing.active = false;
-        this.swing.addAI(ProjectileController, {});
-        this.swing.setTrigger("enemies", InGame_Events.PROJECTILE_HIT_ENEMY, null);
         
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
         this.owner.colliderOffset.set(0, 10);
         this.owner.setGroup("player");
         // this.items = options.items;
         // this.inventory = options.inventory;
+
+        this.equipped.init(this.owner.position.clone());
+
         this.subscribeToEvents();
+        // NOTE: this should be tied to the currently equipped weapon 
+        // can potentially be affected by mood
+        this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
+            this.equipment.equipped.finishAttack();
+
+        });
     }
 
     activate(options: Record<string, any>): void {}
@@ -134,66 +125,23 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 			this.owner.invertX = false;
 		}
 
-        this.equipped.position = this.owner.position.clone();
-        this.swing.position = this.owner.position.clone();
-        this.playerLookDirection = this.equipped.position.dirTo(rotateTo);
+        this.playerLookDirection = this.equipped.sprite.position.dirTo(rotateTo);
+        this.equipped.updatePos(this.owner.position.clone())
+        this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
 
-        if(mousePos.x > this.equipped.position.x) {
-            this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
-        }
-        else {
-            this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
-        } 
-
-
-        this.equipped.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
+        // TODO: See if sprite position looks better with this additional offset
+        // this.equipped.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
 
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-            // TODO: Abstract MOUSE_DOWN event to doAttack, specific implementations in weapontype files 
-            if(event.type === GameEventType.MOUSE_DOWN && !this.doingSwing) {
-                this.emitter.fireEvent(InGame_Events.START_SWING);
-                this.doingSwing = true;
-            }
-            if(event.type === InGame_Events.START_SWING) {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "swing", loop: false, holdReference: true});
-
-                // NOTE: Right now the swing cooldown is tied to the duration of the swing tween
-                // this is because the tween would kind of bug outit you didnt let it finish
-                // a fix might be to have two copies of the swing tween and swap between them
-                // for alternating swing, which should give each enough time to finish
-                this.swing.position.set(this.owner.position.x + (20*this.playerLookDirection.x), this.owner.position.y + (20*this.playerLookDirection.y));
-                
-                // Ideally, the equipped weapon would own the swing sprite, and they'd receive START_SWING and handle this stuff itself
-                // this.emitter.fireEvent(InGame_Events.DOING_SWING);
-                (<AnimatedSprite>this.swing).animation.play("SWING", false);
-                this.equipped.tweens.add('swingdown', Tweens.swing(this.equipped, this.swingDir))
-                this.equipped.tweens.play('swingdown');
-                this.swing.rotation = -this.equipped.rotation;
-                this.swing.visible = true;
-                this.swing.active = true;
-                this.swing.tweens.add('moveAndShrink', Tweens.spriteMoveAndShrink(this.swing.position, this.playerLookDirection))
-                this.swing.tweens.play('moveAndShrink');
-
-                this.swing.tweens.add('fadeOut', Tweens.spriteFadeOut(400, 0.2))
-                this.swing.tweens.play('fadeOut');
-
-                this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
-
-            }
-
-            if(event.type === InGame_Events.FINISHED_SWING) {
-                this.swing.active = false;
-                this.swing.visible = false;
-                if(Input.isMouseJustPressed()) {
-                    this.swingDir *= -1;
-                    this.emitter.fireEvent(InGame_Events.START_SWING);
-                } 
-                else {
-                    this.swingDir *= -1;
-                    this.doingSwing = false;
-                } 
+            if(event.type === GameEventType.MOUSE_DOWN) {
+                if(!this.coolDownTimer.isActive()) {
+                    this.equipment.equipped.doAttack(this.playerLookDirection);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipment.equipped.sfxKey, loop: false, holdReference: true});
+                    this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
+                    this.coolDownTimer.start();
+                }
             }
             
 
@@ -274,9 +222,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             GameEventType.MOUSE_DOWN,
             GameEventType.MOUSE_UP,
             GameEventType.KEY_DOWN,
-            InGame_Events.DOING_SWING,
-            InGame_Events.FINISHED_SWING,
-            InGame_Events.START_SWING,
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
             InGame_GUI_Events.INCREMENT_UPPER_COUNT,

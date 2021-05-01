@@ -1,12 +1,13 @@
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import { Equipment } from "../Types/items/Equipment";
+import Equipment from "../Types/items/Equipment";
 
 export default class EquipmentManager {
 	equipped: Equipment;
 	stowed: Equipment;
 
-	constructor() {
-		
+	constructor(defaultEquip: Equipment) {
+		this.equipped = defaultEquip;
+		this.stowed = null;
 	}
 
 	dropEquipped() {

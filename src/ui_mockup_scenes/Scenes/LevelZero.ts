@@ -70,8 +70,6 @@ export default class LevelZero extends GameLevel {
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
-        super.initReticle();
-        super.initEquipment()
         this.viewport.follow(this.player);
 
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
@@ -141,11 +139,8 @@ export default class LevelZero extends GameLevel {
         if (Input.isKeyJustPressed("l")) {
 
             this.addEnemy("slime_wip", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 50 , player: this.player, health: 40, type: "Downer" }, 1.5)
-
-
         }
 
-        // tween idea: pass an array of chars to tween manager s.t. each loop of the tween appends a letter
 
 
 
@@ -163,25 +158,7 @@ export default class LevelZero extends GameLevel {
 
         while (this.levelZeroReceiver.hasNextEvent()) {
             let event = this.levelZeroReceiver.getNextEvent();
-// NOTE: OVERDRAW 
-            // if(event.type === InGame_Events.DRAW_OVERLAP_TILE) {
-            //     let positions = event.data.get('positions');
-            //     for(let i = 0; i < positions.length; i++ ) {
-            //         let entry = positions[i];
-            //         this.overdrawTiles[i].position = entry;
-            //         // if(this.overdrawTiles[i].position.x > this.tilemapSize.x &&
-            //         //     this.overdrawTiles[i].position.y > this.tilemapSize.y) {
-            //         //     this.overdrawTiles[i].position.x -= 1/4;
-            //             this.overdrawTiles[i].position.y -= 1/4;
 
-            //         // }
-            //         // if(this.overdrawTiles[i].position.y > this.tilemapSize.y/2) {
-
-            //         // }
-                    
-            //         this.overdrawTiles[i].visible = true;
-            //     }
-            // }
 
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
                 this.mood = "angry";

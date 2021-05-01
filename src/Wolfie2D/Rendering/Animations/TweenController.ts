@@ -77,7 +77,7 @@ export default class TweenController {
             // Set the initial values
             for(let effect of tween.effects){
                 if(effect.resetOnComplete){
-                    effect.initialValue = this.owner[effect.property];
+                    effect.initialValue = effect.start;
                 }
             }
 

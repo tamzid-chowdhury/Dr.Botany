@@ -3,12 +3,11 @@
 	"equipment": [
 		{
 			"type": "projectile",
-			"name": "shovel",
-			"displayName": "Shovel",
-            "animationSprite": "swing",
+			"name": "Shovel",
+            "projectileSpriteKey": "swing",
             "spriteKey": "shovel",
             "damage": 1,
-            "cooldown": 200,
+            "cooldown": 150,
 			"sfxKey": "swing"
 		}
 	]
