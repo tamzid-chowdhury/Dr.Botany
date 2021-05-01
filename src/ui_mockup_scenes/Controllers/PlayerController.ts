@@ -12,7 +12,7 @@ import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import EquipmentManager from "../GameSystems/EquipmentManager";
 // import EquipmentManager from "../GameSystems/EquipmentManager";
 // import Healthpack from "../GameSystems/items/Healthpack";
-import Item from "../GameSystems/items/Item";
+import Item from "../Types/items/Item";
 import { InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";
@@ -21,16 +21,14 @@ import ProjectileController from "./ProjectileController";
 export default class PlayerController extends StateMachineAI implements BattlerAI {
     health: number;
     owner: AnimatedSprite;
-    inventory: EquipmentManager;
+    equipment: EquipmentManager;
 
 
     direction: Vec2;
     speed: number;
     velocity: Vec2 = new Vec2(0,0);
 
-    weapons: Array<Sprite> = [];
     equipped: Sprite;
-    stowed: Sprite;
 
 
     downerCount: number = 0;
@@ -38,7 +36,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     canDepositUpper: boolean = false;
     canDepositDowner: boolean = false;
 
-    // WHAT IF TWO SHOVELS AT ONE TIME POWERUP???? ALTERNATING SWINGS
 
     swing: Sprite;
     viewport: Viewport;
@@ -55,17 +52,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-        for(let equips of options.defaultWeapons) {
-            this.weapons.push(equips);
-        }
+        this.equipment = new EquipmentManager();
         this.equipped = options.defaultWeapons[0];
         this.swing = options.swingSprite;
         this.viewport = owner.getScene().getViewport();
 
-        // TEMPORARY, JUST TESTING OUT SECOND WEAPON ON BACK
-        this.stowed = options.defaultWeapons[1];
-        // this.stowed.scale = new Vec2(0.8, 0.8)
-        // this.stowed.invertY = true;
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
@@ -85,7 +76,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         else {
             this.owner.position = new Vec2(0,0);
             this.equipped.position = this.owner.position;
-            this.stowed.position = this.owner.position;
         }
         this.equipped.invertY = true;
 
@@ -115,20 +105,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
         this.direction.y = (Input.isPressed("forward") ? -1 : 0) + (Input.isPressed("backward") ? 1 : 0);
 
-        if(this.direction.x === 0) {
-            this.velocity.x += -this.velocity.x/4
-        }
-        else {
-            this.velocity.x +=  this.direction.x * this.speed
-        }
+        if(this.direction.x === 0)  this.velocity.x += -this.velocity.x/4
+        else                        this.velocity.x +=  this.direction.x * this.speed
 
-        if(this.direction.y === 0) {
-            this.velocity.y += -this.velocity.y/4
-        }
-        else {
-            this.velocity.y += this.direction.y * this.speed
+        if(this.direction.y === 0)  this.velocity.y += -this.velocity.y/4
+        else                        this.velocity.y += this.direction.y * this.speed
 
-        }
 
         if(!this.direction.isZero()) {
             // this.owner.tweens.resume('squish');
@@ -151,27 +133,20 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 		else {
 			this.owner.invertX = false;
 		}
-        // ---
 
-        // Follower movement/rotation update
         this.equipped.position = this.owner.position.clone();
-        // this.stowed.position = this.owner.position.clone();
         this.swing.position = this.owner.position.clone();
-
         this.playerLookDirection = this.equipped.position.dirTo(rotateTo);
 
         if(mousePos.x > this.equipped.position.x) {
             this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
-            // this.equipped.rotation += 3.14/2
         }
         else {
             this.equipped.rotation = -Vec2.UP.angleToCCW(this.playerLookDirection);
-            // this.equipped.rotation -= 3.14/2
         } 
 
 
         this.equipped.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
-        // ---
 
 
         while (this.receiver.hasNextEvent()) {

@@ -10,7 +10,6 @@ import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
 // import EquipmentManager from "../GameSystems/EquipmentManager";
 // import Healthpack from "../GameSystems/items/Healthpack";
-import Item from "../GameSystems/items/Item";
 import { InGame_Events } from "../Utils/Enums";
 import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";

@@ -11,10 +11,11 @@ import EnemyController from "../Enemies/EnemyController"
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Material from "../GameSystems/items/Material"
+import Material from "../Types/items/Material";
 import MainMenu from "../MainMenu";
 import * as Tweens  from "../Utils/Tweens";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
+import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
 // import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
@@ -319,9 +320,6 @@ export default class GameLevel extends Scene {
 
     }
 
-    initEquipment(): void {
-
-    }
 
     initGameUI(halfsize: Vec2): void {
         this.inGameUILayer = new InGameUILayer(this, halfsize, this.defaultFont, this.viewport);
@@ -345,6 +343,29 @@ export default class GameLevel extends Scene {
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.7, 0.7);
 
+    }
+
+    initEquipment(): void{
+        let equipData = this.load.getObject("equipmentData");
+
+        for(let i = 0; i < equipData.count; i++){
+            let equip = equipData.equipment[i];
+
+            let constr = RegistryManager.getRegistry("weaponTemplates").get(equip.type);
+
+            let equipType = new constr();
+
+            equipType.initialize(equip);
+
+            RegistryManager.getRegistry("weaponTypes").registerItem(equip.name, equipType)
+        }
+        // let constr = RegistryManager.getRegistry("weaponTemplates").get(weaponKey);
+
+        // let weaponType = new constr();
+
+        // weaponType.initialize(weapon);
+
+        // RegistryManager.getRegistry("weaponTypes").registerItem(weapon.name, weaponType)
     }
 
 

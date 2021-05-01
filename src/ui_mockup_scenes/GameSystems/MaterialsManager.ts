@@ -4,7 +4,7 @@ import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import Material from "./items/Material";
+import Material from "../Types/items/Material";
 
 export default class MaterialsManager {
 

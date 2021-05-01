@@ -1,0 +1,15 @@
+{
+	"count": 1,
+	"equipment": [
+		{
+			"type": "projectile",
+			"name": "shovel",
+			"displayName": "Shovel",
+            "animationSprite": "swing",
+            "spriteKey": "shovel",
+            "damage": 1,
+            "cooldown": 200,
+			"sfxKey": "swing"
+		}
+	]
+}

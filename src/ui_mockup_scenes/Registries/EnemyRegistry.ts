@@ -1,9 +1,9 @@
 import Registry from "../../Wolfie2D/Registry/Registries/Registry";
 import ResourceManager from "../../Wolfie2D/ResourceManager/ResourceManager";
-import EnemyType from "../GameSystems/enemies/EnemyType";
-import Leaping from "../GameSystems/enemies/LeapingType";
-import Ram from "../GameSystems/enemies/RamType";
-import Spitting from "../GameSystems/enemies/SpittingType";
+import EnemyType from "../Types/enemies/EnemyType";
+import Leaping from "../Types/enemies/LeapingType";
+import Ram from "../Types/enemies/RamType";
+import Spitting from "../Types/enemies/SpittingType";
 
 export default class EnemyTemplateRegistry extends Registry<EnemyConstructor> {
     

@@ -1,6 +1,6 @@
 import Registry from "../../Wolfie2D/Registry/Registries/Registry";
 import ResourceManager from "../../Wolfie2D/ResourceManager/ResourceManager";
-import MaterialType from "../GameSystems/items/MaterialTypes/MaterialType";
+import MaterialType from "../Types/items/MaterialTypes/MaterialType";
 
 export default class MaterialsRegistry extends Registry<MaterialConstructor> {
     

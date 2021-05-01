@@ -1,11 +1,12 @@
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import { Equipment } from "../Types/items/Equipment";
 
 export default class EquipmentManager {
-	equipped: Sprite;
-	stowed: Sprite;
+	equipped: Equipment;
+	stowed: Equipment;
 
 	constructor() {
-
+		
 	}
 
 	dropEquipped() {
@@ -17,7 +18,7 @@ export default class EquipmentManager {
 		// swap currently equipped with item on ground
 	}
 
-	swapEquipped() {
+	switchEquipped() {
 		// switch equipped with stowed
 	}
 }

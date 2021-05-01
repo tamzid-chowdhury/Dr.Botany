@@ -42,7 +42,7 @@ export default class LevelZero extends GameLevel {
         this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
         this.load.image("box_top", "assets/misc/test_box.png")
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
-
+        this.load.object("equipmentData", "assets/data/equipmentData.json");
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
         this.load.spritesheet("slime_wip", "assets/enemies/slime_wip.json")
     }
@@ -71,6 +71,7 @@ export default class LevelZero extends GameLevel {
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
         super.initReticle();
+        super.initEquipment()
         this.viewport.follow(this.player);
 
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
