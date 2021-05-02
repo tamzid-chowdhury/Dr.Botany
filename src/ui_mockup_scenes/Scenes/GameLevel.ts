@@ -17,6 +17,7 @@ import * as Tweens  from "../Utils/Tweens";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
 import Equipment from "../Types/items/Equipment";
+import MaterialsManager from "../GameSystems/MaterialsManager";
 // import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
@@ -42,6 +43,8 @@ export default class GameLevel extends Scene {
     shadowOffset: Vec2 = new Vec2(0, 10);
 
     equipmentPrototypes: Array<Equipment> = [];
+
+    materialsManager: MaterialsManager;
 
     inactiveDowners: Array<Material> = [];
     activeDowners: Array<Material> = [];
@@ -123,7 +126,8 @@ export default class GameLevel extends Scene {
         // TODO: Disable input until after screen wipe finished
         this.initReticle();
         this.initEquipment();
-        this.initLevelMaterials()
+        this.materialsManager = new MaterialsManager(this);
+        this.initLevelMaterials();
     }
 
     updateScene(deltaT: number) {
@@ -145,85 +149,8 @@ export default class GameLevel extends Scene {
 
         // }
 
-        // for (let material of this.droppedMaterial) {
-        //     if (material.sprite.position.distanceTo(this.player.position) < 15) {
-        //         if (material.type === "upper") {
-        //             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
-        //             this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT, {position: this.player.position.clone()})
-        //         }
-        //         if (material.type === "downer") {
-        //             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
-        //             this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT, {position: this.player.position.clone()})
-        //         }
-
-        //         material.sprite.destroy();
-
-        //         let index = this.droppedMaterial.indexOf(material)
-        //         this.droppedMaterial.splice(index, 1)
-
-        //     }
-
-        //     if (material.sprite.position.distanceTo(this.player.position) < 400) {
-        //         let dirToPlayer = material.sprite.position.dirTo(this.player.position);
-        //         material.sprite._velocity = dirToPlayer;
-        //         let dist = material.sprite.position.distanceSqTo(this.player.position);
-        //         let speedSq = Math.pow(350, 2);
-        //         material.sprite._velocity.normalize();
-        //         material.sprite._velocity.mult(new Vec2(speedSq / (dist/3), speedSq / (dist/3)));
-        //         material.sprite.move(material.sprite._velocity.scaled(deltaT));
-        //     }
-        // }
-        for(let material of this.activeDowners) {
-            if (material.sprite.position.distanceTo(this.player.position) < 15) {
-                // this.activeDowners.splice(i,1)
-                let index = this.activeDowners.indexOf(material)
-                this.activeDowners.splice(index, 1)
-                material.sprite.active = false;
-                material.sprite.visible = false;
-                material.sprite.position.set(0,0)
-
-                this.inactiveDowners.push(material);
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
-                this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT, {position: this.player.position})
-
-            }
-                if (material.sprite.position.distanceTo(this.player.position) < 400) {
-                let dirToPlayer = material.sprite.position.dirTo(this.player.position);
-                material.sprite._velocity = dirToPlayer;
-                let dist = material.sprite.position.distanceSqTo(this.player.position);
-                let speedSq = Math.pow(350, 2);
-                material.sprite._velocity.normalize();
-                material.sprite._velocity.mult(new Vec2(speedSq / (dist/3), speedSq / (dist/3)));
-                material.sprite.move(material.sprite._velocity.scaled(deltaT));
-            }
-
-        }
-
-        for(let material of this.activeUppers) {
-            if (material.sprite.position.distanceTo(this.player.position) < 15) {
-                // this.activeDowners.splice(i,1)
-                let index = this.activeUppers.indexOf(material)
-                this.activeUppers.splice(index, 1)
-                material.sprite.active = false;
-                material.sprite.visible = false;
-                material.sprite.position.set(0,0)
-
-                this.inactiveUppers.push(material);
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
-                this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT, {position: this.player.position})
-
-            }
-                if (material.sprite.position.distanceTo(this.player.position) < 400) {
-                let dirToPlayer = material.sprite.position.dirTo(this.player.position);
-                material.sprite._velocity = dirToPlayer;
-                let dist = material.sprite.position.distanceSqTo(this.player.position);
-                let speedSq = Math.pow(350, 2);
-                material.sprite._velocity.normalize();
-                material.sprite._velocity.mult(new Vec2(speedSq / (dist/3), speedSq / (dist/3)));
-                material.sprite.move(material.sprite._velocity.scaled(deltaT));
-            }
-
-        }
+       this.materialsManager.resolveMaterials(this.player.position, deltaT);
+        
 
         if (Input.isKeyJustPressed("escape")) {
             this.pauseScreenLayer.toggle();
@@ -281,24 +208,14 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.SPAWN_UPPER) {
                 let position = event.data.get("position");
-                let material = this.inactiveUppers.pop();
-                if(material) {
-                    this.activeUppers.push(material);
-                    material.sprite.position = position.clone();
-                    material.sprite.visible = true;
-                    material.sprite.active = true;
-                }
+                this.materialsManager.spawnUpper(position);
+
             }
 
             if (event.type === InGame_Events.SPAWN_DOWNER) {
                 let position = event.data.get("position");
-                let material = this.inactiveDowners.pop();
-                if(material) {
-                    this.activeDowners.push(material);
-                    material.sprite.position = position.clone();
-                    material.sprite.visible = true;
-                    material.sprite.active = true;
-                }
+                this.materialsManager.spawnDowner(position);
+
             }
 
             if (event.type === InGame_Events.PLAYER_DIED) {
