@@ -9,31 +9,38 @@ import * as Palette from "../../Utils/Colors";
 export default class EquipSlots {
 	slotOne: Sprite;
 	slotTwo: Sprite;
+	equippedBackdrop: Sprite;
 	text: Label;
 	textBackdrop: Label;
 	centerPos: Vec2;
 	type: string;
-
+	scene: Scene;
+	xOffset: number;
+	yOffset: number;
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
-		this.slotOne = scene.add.sprite("ui_square", UILayers.INGAME_UI)
-        let xOffset =  this.slotOne.size.x / 3;
-        let yOffset =  this.centerPos.y / 4;
-        this.slotOne.position.set(xOffset, yOffset)
-        this.slotOne.scale = new Vec2(0.6, 0.6);
-		this.slotOne.alpha = 0.8;
-
-		xOffset += this.centerPos.y / 5;
-
-		this.slotTwo = scene.add.sprite("ui_square", UILayers.INGAME_UI)
-        this.slotTwo.position.set(xOffset, yOffset)
-        this.slotTwo.scale = new Vec2(0.6, 0.6);
-		this.slotTwo.alpha = 0.8;
-
+		this.scene = scene;
+		this.xOffset = this.centerPos.x / 16;
+		this.yOffset = this.centerPos.y / 4 ;
 	}
 
-	updateSlot(): void {
-		
+	updateSlot(slot: number, spriteKey: string): void {
+		if(slot === 0) {
+			this.equippedBackdrop = this.scene.add.sprite("ui_square", UILayers.INGAME_UI);
+			this.equippedBackdrop.position.set(this.xOffset, this.yOffset)
+			this.equippedBackdrop.scale = new Vec2(0.6, 0.6);
+			this.equippedBackdrop.alpha = 0.7;
+			this.equippedBackdrop.rotation = -Math.PI / 4;
+			this.slotOne = this.scene.add.sprite(spriteKey, UILayers.INGAME_UI);
+			this.slotOne.position.set(this.xOffset+0.25, this.yOffset+3)
+			this.slotOne.scale = new Vec2(0.5, 0.5);
+		}
+		else {
+			// this.slotTwo = this.scene.add.sprite(spriteKey, UILayers.INGAME_UI);
+			// this.slotTwo.position.set(this.xOffset + (this.centerPos.x / 16), this.yOffset)
+			// this.slotTwo.scale = new Vec2(0.5, 0.5);
+			// this.slotTwo.rotation = -Math.PI / 4;
+		}
 		// TODO: load a sprite of the item to be in this slot, check if melee or projectile and display ammo if projectile
 	}
 

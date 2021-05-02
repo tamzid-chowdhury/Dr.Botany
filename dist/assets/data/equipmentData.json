@@ -7,7 +7,7 @@
             "projectileSpriteKey": "swing",
             "spriteKey": "shovel",
             "damage": 1,
-            "cooldown": 150,
+            "cooldown": 200,
 			"sfxKey": "swing"
 		}
 	]

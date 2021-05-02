@@ -71,7 +71,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         // this.inventory = options.inventory;
 
         this.equipped.init(this.owner.position.clone());
-
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
         this.subscribeToEvents();
         // NOTE: this should be tied to the currently equipped weapon 
         // can potentially be affected by mood
@@ -137,6 +137,13 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.playerLookDirection = this.equipped.sprite.position.dirTo(rotateTo);
         this.equipped.updatePos(this.owner.position.clone())
         this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
+
+
+        if (Input.isKeyJustPressed("q")) {
+            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
+        }
+
+
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();

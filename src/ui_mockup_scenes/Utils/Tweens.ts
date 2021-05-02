@@ -538,7 +538,6 @@ export function spriteFadeOut(duration: number = 400, stopOpacity: number = 0): 
 				start: 1,
 				end: stopOpacity,
 				ease: EaseFunctionType.OUT_SINE,
-				resetOnComplete: true
 			},
 		]
 	}

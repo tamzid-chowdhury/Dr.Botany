@@ -69,7 +69,7 @@ export default class Equipment {
 		this.projectileSprite.tweens.add('moveAndShrink', Tweens.spriteMoveAndShrink(this.projectileSprite.position, direction))
 		this.projectileSprite.tweens.play('moveAndShrink');
 
-		this.projectileSprite.tweens.add('fadeOut', Tweens.spriteFadeOut(400, 0.2))
+		this.projectileSprite.tweens.add('fadeOut', Tweens.spriteFadeOut(200, 0))
 		this.projectileSprite.tweens.play('fadeOut');
 
 	}

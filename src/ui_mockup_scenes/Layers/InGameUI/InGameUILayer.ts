@@ -67,7 +67,8 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.CLEAR_DOWNER_LABEL,
             InGame_GUI_Events.UPDATE_HEALTHBAR,
             InGame_GUI_Events.SHOW_INTERACT_LABEL,
-            InGame_GUI_Events. HIDE_INTERACT_LABEL
+            InGame_GUI_Events. HIDE_INTERACT_LABEL,
+            InGame_GUI_Events.UPDATE_EQUIP_SLOT
         ]);
 
     }
@@ -95,10 +96,7 @@ export default class InGameUI implements Updateable {
             }
 
             if(event.type === InGame_GUI_Events.UPDATE_HEALTHBAR){
-                let damageTaken = event.data.get('damageTaken');
                 this.healthBar.takeDamage();
-
-                
             }
             if(event.type === InGame_GUI_Events.SHOW_INTERACT_LABEL){
                 position = event.data.get("position");
@@ -121,7 +119,11 @@ export default class InGameUI implements Updateable {
 
             }
 
-           
+            if(event.type === InGame_GUI_Events.UPDATE_EQUIP_SLOT){ 
+                let slotNum = event.data.get("slotNum");
+                let spriteKey = event.data.get("spriteKey");
+                this.equipSlots.updateSlot(slotNum, spriteKey);
+            }
 
 
             if(event.type === InGame_GUI_Events.CLEAR_UPPER_LABEL){
