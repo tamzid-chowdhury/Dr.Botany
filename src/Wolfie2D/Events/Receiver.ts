@@ -14,7 +14,7 @@ export default class Receiver {
 
 	/** Creates a new Receiver */
 	constructor(){
-		this.MAX_SIZE = 100;
+		this.MAX_SIZE = 200;
         this.q = new Queue(this.MAX_SIZE);
 	}
 

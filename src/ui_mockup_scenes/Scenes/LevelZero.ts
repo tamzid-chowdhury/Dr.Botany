@@ -44,7 +44,7 @@ export default class LevelZero extends GameLevel {
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
         this.load.object("equipmentData", "assets/data/equipmentData.json");
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
-        this.load.spritesheet("slime_wip", "assets/enemies/slime_wip.json")
+        this.load.spritesheet("green_slime", "assets/enemies/slime_wip.json")
     }
 
     unloadScene(): void {
@@ -80,7 +80,8 @@ export default class LevelZero extends GameLevel {
             this.overdrawTiles[i].visible = false;
         }
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
-
+        let lid = this.add.sprite('trash_lid', 'primary');
+        lid.position = new Vec2(300,200)
     }
 
     updateScene(deltaT: number) {
@@ -137,8 +138,11 @@ export default class LevelZero extends GameLevel {
         }
 
         if (Input.isKeyJustPressed("l")) {
+            this.addEnemy("green_slime", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 50 , player: this.player, health: 40, type: "Downer" }, 1.5)
+        }
 
-            this.addEnemy("slime_wip", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 50 , player: this.player, health: 40, type: "Downer" }, 1.5)
+        if (Input.isKeyJustPressed("m")) {
+            this.addEnemy("orange_mushroom", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 80 , player: this.player, health: 40, type: "Upper" }, 1)
         }
 
 

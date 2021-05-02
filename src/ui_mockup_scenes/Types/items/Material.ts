@@ -4,29 +4,20 @@ import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import Item from "./Item";
-import MaterialType from "./MaterialTypes/MaterialType";
 
 export default class Material extends Item {
-    /** The type of this weapon */
+
     type: String;
-
-    /** A list of assets this material needs to be animated */
+    name: String;
     sprite: Sprite; 
-
-    constructor(sprite: Sprite, type: String){
-        super(sprite);
-
-        // Set the material type
+    effects: Array<String>;
+    constructor(sprite: Sprite, type: String, name: String = '', effects: Array<String> = []){
+        super(sprite, name);
         this.type = type;
-
+        // if we get time to implement extra effects for the materials
+        this.effects = effects;
     }
 
-    // @override
-    use(user: GameNode, userType: string, direction: Vec2): boolean {
-
-
-        return true;
-    }
 
     destroy(){
         this.sprite.destroy;

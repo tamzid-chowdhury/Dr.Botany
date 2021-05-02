@@ -5,9 +5,11 @@ import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 export default abstract class Item {
     /** The sprite that represents this weapon in the world or in an inventory */
     sprite: Sprite;
+    name: String;
 
-    constructor(sprite: Sprite){
+    constructor(sprite: Sprite, name: String = ''){
         this.sprite = sprite;
+        this.name = name;
     }
 
     moveSprite(position: Vec2, layer?: string){
@@ -24,5 +26,4 @@ export default abstract class Item {
         this.sprite.position.copy(position);
     }
 
-    abstract use(user: GameNode, ...args: any): void;
 }

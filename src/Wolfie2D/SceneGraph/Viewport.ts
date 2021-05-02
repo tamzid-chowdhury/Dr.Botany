@@ -272,15 +272,20 @@ export default class Viewport {
         currentCenter.y =  MathUtils.lerp(currentCenter.y, pos.y, this.smooth_factor);
 
         // screenshake
-        if(this.trauma > 0) {
-            this.trauma--;
-
-            // currentCenter.x += this.shakeDir.x + (2 * Math.pow(this.trauma, 3) * (Math.random() < 0.5 ? -1 : 1)); 
-            // currentCenter.y += this.shakeDir.y + (2 * Math.pow(this.trauma, 3) * (Math.random() < 0.5 ? -1 : 1));    
-            currentCenter.x += ((-this.shakeDir.x) + ((Math.random() < 0.5 ? -1 : 1) * 0.4));
-            currentCenter.y += ((-this.shakeDir.y) + ((Math.random() < 0.5 ? -1 : 1) * 0.4)); 
-            
+        if(this.shakeDuration > 0) {
+            this.shakeDuration --
+            currentCenter.x += (-(this.shakeDir.x) + (Math.random() < 0.5 ? -1 : 1) * 0.4);
+            currentCenter.y += (-(this.shakeDir.y) + (Math.random() < 0.5 ? -1 : 1) * 0.4); 
         }
+        // if(this.trauma > 0) {
+        //     this.trauma--;
+
+        //     // currentCenter.x += this.shakeDir.x + (2 * Math.pow(this.trauma, 3) * (Math.random() < 0.5 ? -1 : 1)); 
+        //     // currentCenter.y += this.shakeDir.y + (2 * Math.pow(this.trauma, 3) * (Math.random() < 0.5 ? -1 : 1));    
+        //     currentCenter.x += ((-this.shakeDir.x) + ((Math.random() < 0.5 ? -1 : 1) * 0.4));
+        //     currentCenter.y += ((-this.shakeDir.y) + ((Math.random() < 0.5 ? -1 : 1) * 0.4)); 
+            
+        // }
         this.view.center = currentCenter;
 
         
@@ -290,6 +295,7 @@ export default class Viewport {
     doScreenShake(dir: Vec2): void {
         this.shake = true;
         this.trauma = 5;
+        this.shakeDuration = 5;
         this.shakeDir = dir;
         this.shakeDir.normalize();
     }

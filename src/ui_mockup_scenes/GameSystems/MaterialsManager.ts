@@ -19,41 +19,37 @@ export default class MaterialsManager {
     private selectedSlot: Rect;
 
     constructor(scene: Scene, size: number, inventorySlot: string, position: Vec2, padding: number){
-        this.items = new Array(size);
-        this.inventorySlots = new Array(size);
-        this.padding = padding;
-        this.position = position;
-        this.currentSlot = 0;
+        // this.items = new Array(size);
+        // this.inventorySlots = new Array(size);
+        // this.padding = padding;
+        // this.position = position;
+        // this.currentSlot = 0;
 
-        // Add layers
-        this.slotLayer = "slots";
-        scene.addUILayer(this.slotLayer).setDepth(100);
-        this.itemLayer = "items";
-        scene.addUILayer(this.itemLayer).setDepth(101);
+        // // Add layers
+        // this.slotLayer = "slots";
+        // scene.addUILayer(this.slotLayer).setDepth(100);
+        // this.itemLayer = "items";
+        // scene.addUILayer(this.itemLayer).setDepth(101);
 
     }
+
+    /*
 
     getItem(): Material {
         return this.items[this.currentSlot];
     }
 
-    /**
-     * Changes the currently selected slot
-     */
+
     changeSlot(slot: number): void {
         this.currentSlot = slot;
     }
 
-    /**
-     * Gets the currently selected slot
-     */
+
     getSlot(): number {
         return this.currentSlot;
     }
 
-    /**
-     * Adds an item to the currently selected slot
-     */
+
     addItem(item: Material): boolean {
         if(!this.items[this.currentSlot]){
             // Add the item to the inventory
@@ -66,9 +62,6 @@ export default class MaterialsManager {
         return false;
     }
 
-    /**
-     * Removes and returns an item from the the currently selected slot, if possible
-     */
     removeItem(): Material {
         let item = this.items[this.currentSlot];
 
@@ -80,4 +73,6 @@ export default class MaterialsManager {
             return null;
         }
     }
+
+    */
 }

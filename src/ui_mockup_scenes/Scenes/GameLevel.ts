@@ -42,10 +42,17 @@ export default class GameLevel extends Scene {
     shadowOffset: Vec2 = new Vec2(0, 10);
 
     equipmentPrototypes: Array<Equipment> = [];
-    droppedMaterial: Array<Material> = [];
+
+    inactiveDowners: Array<Material> = [];
+    activeDowners: Array<Material> = [];
+    activeUppers: Array<Material> = [];
+    inactiveUppers: Array<Material> = [];
+
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
     swipeLayer: UILayer;
+    maxMaterials: number = 48;
+
 
 
     loadScene(): void {
@@ -60,27 +67,23 @@ export default class GameLevel extends Scene {
         this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
         this.load.image("moodbar_indicator", "assets/ui_art/mood_bar_indicator.png")
-
         this.load.image("health_pip", "assets/ui_art/leaf_icon.png");
         this.load.image("health_pip_shadow", "assets/ui_art/leaf_icon_shadow.png");
-
-        this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.image("shadow", "assets/player/shadow_sprite.png");
-
         this.load.image("shovel", "assets/weapons/shovel.png");
         this.load.image("shovel_outline", "assets/weapons/shovel_select_outline.png");
         this.load.image("trash_lid", "assets/weapons/trash_lid.png");
         this.load.image("green_orb", "assets/items/greenorb.png");
         this.load.image("red_orb", "assets/items/redorb.png");
-        this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
-        this.load.spritesheet("plant", "assets/plant/plant.json")
         this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
         this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
         this.load.audio("swing", "assets/sfx/swing_sfx.wav");
         this.load.audio("enemy_hit", "assets/sfx/enemy_hit.wav");
         this.load.audio("enemy_die", "assets/sfx/enemy_die.wav");
         this.load.audio("material_get", "assets/sfx/material_get_sfx.wav");
-
+        this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
+        this.load.spritesheet("player", "assets/player/dr_botany.json")
+        this.load.spritesheet("plant", "assets/plant/plant.json")
     }
 
     startScene(): void {
@@ -120,6 +123,7 @@ export default class GameLevel extends Scene {
         // TODO: Disable input until after screen wipe finished
         this.initReticle();
         this.initEquipment();
+        this.initLevelMaterials()
     }
 
     updateScene(deltaT: number) {
@@ -141,26 +145,49 @@ export default class GameLevel extends Scene {
 
         // }
 
-        for (let material of this.droppedMaterial) {
+        // for (let material of this.droppedMaterial) {
+        //     if (material.sprite.position.distanceTo(this.player.position) < 15) {
+        //         if (material.type === "upper") {
+        //             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
+        //             this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT, {position: this.player.position.clone()})
+        //         }
+        //         if (material.type === "downer") {
+        //             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
+        //             this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT, {position: this.player.position.clone()})
+        //         }
+
+        //         material.sprite.destroy();
+
+        //         let index = this.droppedMaterial.indexOf(material)
+        //         this.droppedMaterial.splice(index, 1)
+
+        //     }
+
+        //     if (material.sprite.position.distanceTo(this.player.position) < 400) {
+        //         let dirToPlayer = material.sprite.position.dirTo(this.player.position);
+        //         material.sprite._velocity = dirToPlayer;
+        //         let dist = material.sprite.position.distanceSqTo(this.player.position);
+        //         let speedSq = Math.pow(350, 2);
+        //         material.sprite._velocity.normalize();
+        //         material.sprite._velocity.mult(new Vec2(speedSq / (dist/3), speedSq / (dist/3)));
+        //         material.sprite.move(material.sprite._velocity.scaled(deltaT));
+        //     }
+        // }
+        for(let material of this.activeDowners) {
             if (material.sprite.position.distanceTo(this.player.position) < 15) {
-                if (material.type === "upper") {
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
+                // this.activeDowners.splice(i,1)
+                let index = this.activeDowners.indexOf(material)
+                this.activeDowners.splice(index, 1)
+                material.sprite.active = false;
+                material.sprite.visible = false;
+                material.sprite.position.set(0,0)
 
-                    this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT, {position: this.player.position.clone()})
-                }
-                if (material.type === "downer") {
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
-                    this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT, {position: this.player.position.clone()})
-                }
-
-                material.sprite.destroy();
-
-                let index = this.droppedMaterial.indexOf(material)
-                this.droppedMaterial.splice(index, 1)
+                this.inactiveDowners.push(material);
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
+                this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_DOWNER_COUNT, {position: this.player.position})
 
             }
-
-            if (material.sprite.position.distanceTo(this.player.position) < 400) {
+                if (material.sprite.position.distanceTo(this.player.position) < 400) {
                 let dirToPlayer = material.sprite.position.dirTo(this.player.position);
                 material.sprite._velocity = dirToPlayer;
                 let dist = material.sprite.position.distanceSqTo(this.player.position);
@@ -169,10 +196,34 @@ export default class GameLevel extends Scene {
                 material.sprite._velocity.mult(new Vec2(speedSq / (dist/3), speedSq / (dist/3)));
                 material.sprite.move(material.sprite._velocity.scaled(deltaT));
             }
+
         }
 
+        for(let material of this.activeUppers) {
+            if (material.sprite.position.distanceTo(this.player.position) < 15) {
+                // this.activeDowners.splice(i,1)
+                let index = this.activeUppers.indexOf(material)
+                this.activeUppers.splice(index, 1)
+                material.sprite.active = false;
+                material.sprite.visible = false;
+                material.sprite.position.set(0,0)
 
+                this.inactiveUppers.push(material);
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "material_get", loop: false, holdReference: true});
+                this.emitter.fireEvent(InGame_GUI_Events.INCREMENT_UPPER_COUNT, {position: this.player.position})
 
+            }
+                if (material.sprite.position.distanceTo(this.player.position) < 400) {
+                let dirToPlayer = material.sprite.position.dirTo(this.player.position);
+                material.sprite._velocity = dirToPlayer;
+                let dist = material.sprite.position.distanceSqTo(this.player.position);
+                let speedSq = Math.pow(350, 2);
+                material.sprite._velocity.normalize();
+                material.sprite._velocity.mult(new Vec2(speedSq / (dist/3), speedSq / (dist/3)));
+                material.sprite.move(material.sprite._velocity.scaled(deltaT));
+            }
+
+        }
 
         if (Input.isKeyJustPressed("escape")) {
             this.pauseScreenLayer.toggle();
@@ -214,17 +265,6 @@ export default class GameLevel extends Scene {
                 this.screenCenter = this.viewport.getHalfSize();
             }
 
-            if (event.type === InGame_Events.SPAWN_UPPER) {
-                let position = event.data.get("position");
-                let upper = this.add.sprite("green_orb", 'primary');
-                upper.position = position;
-                upper.scale.set(0.6, 0.6);
-                let material = new Material(upper, "upper")
-                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-                material.sprite.setGroup("materials");
-                this.droppedMaterial.push(material)
-            }
-
             if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
                 if ((<PlayerController>this.player._ai).damaged) {
                     if (Date.now() - (<PlayerController>this.player._ai).damageCooldown > 2000) {
@@ -239,15 +279,26 @@ export default class GameLevel extends Scene {
                 }
             }
 
+            if (event.type === InGame_Events.SPAWN_UPPER) {
+                let position = event.data.get("position");
+                let material = this.inactiveUppers.pop();
+                if(material) {
+                    this.activeUppers.push(material);
+                    material.sprite.position = position.clone();
+                    material.sprite.visible = true;
+                    material.sprite.active = true;
+                }
+            }
+
             if (event.type === InGame_Events.SPAWN_DOWNER) {
                 let position = event.data.get("position");
-                let downer = this.add.sprite("red_orb", 'primary');
-                downer.position = position;
-                downer.scale.set(0.6, 0.6);
-                let material = new Material(downer, "downer")
-                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-                material.sprite.setGroup("materials");
-                this.droppedMaterial.push(material)
+                let material = this.inactiveDowners.pop();
+                if(material) {
+                    this.activeDowners.push(material);
+                    material.sprite.position = position.clone();
+                    material.sprite.visible = true;
+                    material.sprite.active = true;
+                }
             }
 
             if (event.type === InGame_Events.PLAYER_DIED) {
@@ -351,6 +402,33 @@ export default class GameLevel extends Scene {
         this.cursorLayer.setDepth(900);
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.7, 0.7);
+
+    }
+
+    initLevelMaterials(): void {
+        for(let i = 0; i < this.maxMaterials; i ++) {
+            if(i % 2 === 0) {
+                let upper = this.add.sprite("green_orb", 'primary');
+                upper.scale.set(0.6, 0.6);
+                let material = new Material(upper, "upper", 'upper', []);
+                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+                material.sprite.setGroup("materials");
+                material.sprite.visible = false;
+                material.sprite.active = false;
+                this.inactiveUppers.push(material);
+            }
+            else {
+                let downer = this.add.sprite("red_orb", 'primary');
+                downer.scale.set(0.6, 0.6);
+                let material = new Material(downer, "downer", 'downer', []);
+                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
+                material.sprite.setGroup("materials");
+                material.sprite.visible = false;
+                material.sprite.active = false;
+                this.inactiveDowners.push(material);
+            }
+            
+        }
 
     }
 

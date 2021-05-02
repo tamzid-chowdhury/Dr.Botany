@@ -69,7 +69,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.owner.setGroup("player");
         // this.items = options.items;
         // this.inventory = options.inventory;
-
         this.equipped.init(this.owner.position.clone());
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
         this.subscribeToEvents();
