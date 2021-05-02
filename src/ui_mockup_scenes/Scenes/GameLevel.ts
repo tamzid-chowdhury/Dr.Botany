@@ -46,11 +46,6 @@ export default class GameLevel extends Scene {
 
     materialsManager: MaterialsManager;
 
-    inactiveDowners: Array<Material> = [];
-    activeDowners: Array<Material> = [];
-    activeUppers: Array<Material> = [];
-    inactiveUppers: Array<Material> = [];
-
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
     swipeLayer: UILayer;
@@ -127,7 +122,6 @@ export default class GameLevel extends Scene {
         this.initReticle();
         this.initEquipment();
         this.materialsManager = new MaterialsManager(this);
-        this.initLevelMaterials();
     }
 
     updateScene(deltaT: number) {
@@ -135,7 +129,6 @@ export default class GameLevel extends Scene {
         this.inGameUILayer.update(deltaT);
         // update positions and rotations
         let mousePos = Input.getMousePosition();
-        let rotateTo = Input.getGlobalMousePosition();
         this.reticle.position = mousePos;
 
 
@@ -149,8 +142,7 @@ export default class GameLevel extends Scene {
 
         // }
 
-       this.materialsManager.resolveMaterials(this.player.position, deltaT);
-        
+        this.materialsManager.resolveMaterials(this.player.position, deltaT);
 
         if (Input.isKeyJustPressed("escape")) {
             this.pauseScreenLayer.toggle();
@@ -319,33 +311,6 @@ export default class GameLevel extends Scene {
         this.cursorLayer.setDepth(900);
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.7, 0.7);
-
-    }
-
-    initLevelMaterials(): void {
-        for(let i = 0; i < this.maxMaterials; i ++) {
-            if(i % 2 === 0) {
-                let upper = this.add.sprite("green_orb", 'primary');
-                upper.scale.set(0.6, 0.6);
-                let material = new Material(upper, "upper", 'upper', []);
-                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-                material.sprite.setGroup("materials");
-                material.sprite.visible = false;
-                material.sprite.active = false;
-                this.inactiveUppers.push(material);
-            }
-            else {
-                let downer = this.add.sprite("red_orb", 'primary');
-                downer.scale.set(0.6, 0.6);
-                let material = new Material(downer, "downer", 'downer', []);
-                material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-                material.sprite.setGroup("materials");
-                material.sprite.visible = false;
-                material.sprite.active = false;
-                this.inactiveDowners.push(material);
-            }
-            
-        }
 
     }
 
