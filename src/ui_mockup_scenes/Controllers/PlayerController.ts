@@ -27,7 +27,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     equipped: Equipment;
     onCooldown: boolean = false;
     coolDownTimer: Timer;
-
+    hitTimer: Timer;
     downerCount: number = 0;
     upperCount: number = 0;
     canDepositUpper: boolean = false;
@@ -41,6 +41,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     damaged: boolean = false;
     damageCooldown: number;
     damageTaken: number = 1; 
+    hitFlashCooldown: number;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -58,7 +59,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.owner.scale = new Vec2(1.5, 1.5);
         this.owner.tweens.add('squish', Tweens.squish(this.owner.scale.clone()));
-        // this.owner.tweens.play('squish');
+        this.owner.tweens.add('hit', Tweens.playerHit(this.owner.alpha));
 
         this.owner.position.set(options.mapSize.x/2, options.mapSize.y/2);
 
@@ -76,6 +77,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         // can potentially be affected by mood
         this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
             this.equipment.equipped.finishAttack();
+
+        });
+
+        this.hitTimer = new Timer(300, () => {
+            this.owner.alpha = 1;
 
         });
     }
@@ -109,6 +115,13 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             // this.owner.tweens.pause('squish');
             this.owner.animation.playIfNotAlready("IDLE", true);
         }   
+
+        if(this.hitTimer.isActive()) {
+            if (Date.now() - this.hitFlashCooldown > 50) {
+                this.owner.alpha = this.owner.alpha === 1 ? 0 : 1;
+                this.hitFlashCooldown = Date.now();
+            }
+        }
 
         this.owner.move(this.velocity.scaled(deltaT));
 
@@ -146,6 +159,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
                 else {
                     // This is where it plays tweens + animation for getting hit
+                    this.hitFlashCooldown = Date.now();
+                    this.hitTimer.start();
                     this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
                     this.damage(this.damageTaken);
                     this.damaged = true;

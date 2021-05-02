@@ -9,6 +9,23 @@ import InGameUI from "../Layers/InGameUI/InGameUILayer";
 import { InGame_Events, UIEvents } from "./Enums";
 
 
+export function playerHit(alpha: number) : Record<string,any>{
+	let tween = {
+		startDelay: 0,
+		duration: 200,
+		effects: [
+			{
+				property: TweenableProperties.alpha,
+				start: 1.0,
+				end: 0,
+				ease: EaseFunctionType.IN_OUT_QUAD,
+			},
+		],
+		reverseOnComplete: true
+	};
+	return tween
+}
+
 export function hitTween(startScale: Vec2) : Record<string,any>{
 	let tween = {
 		startDelay: 0,
