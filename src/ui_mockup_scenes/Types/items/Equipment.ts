@@ -5,6 +5,9 @@ import ProjectileController from "../../Controllers/ProjectileController";
 import { InGame_Events } from "../../Utils/Enums";
 import * as Tweens from "../../Utils/Tweens";
 
+
+// NOTE: this should probably be a "single projectile" class that extends equipment
+
 export default class Equipment {
 	type: string;
 	name: string;

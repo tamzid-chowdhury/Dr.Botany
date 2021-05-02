@@ -33,15 +33,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     canDepositUpper: boolean = false;
     canDepositDowner: boolean = false;
 
-
-    swing: Sprite;
     viewport: Viewport;
     shadowOffset: Vec2 = new Vec2(0, 10);
 	levelView: Viewport;
 	viewHalfSize: Vec2;
     playerLookDirection: Vec2 = new Vec2(0,0);
-    swingDir: number = -1; 
-    doingSwing: boolean = false;
     damaged: boolean = false;
     damageCooldown: number;
     damageTaken: number = 1; 
@@ -128,10 +124,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.playerLookDirection = this.equipped.sprite.position.dirTo(rotateTo);
         this.equipped.updatePos(this.owner.position.clone())
         this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
-
-        // TODO: See if sprite position looks better with this additional offset
-        // this.equipped.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
-
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();

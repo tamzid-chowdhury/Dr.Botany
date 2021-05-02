@@ -12,7 +12,7 @@ export default class Knockback extends EnemyState {
 		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemy_hit", loop: false, holdReference: true});
 		
 		if (this.parent.health > 0) {
-			(<AnimatedSprite>this.owner).animation.play("HIT", false);
+			(<AnimatedSprite>this.owner).animation.play("HIT", true);
 		}
 		else {
 			this.finished(EnemyStates.DYING);
