@@ -16,8 +16,8 @@ export class ControlsLayer extends GameLayer {
 	controls: Array<string> = 
 	[	
 		"W - Move Up", "A - Move Left", "S - Move Down", 
-		"D - Move Right", "E - Pick up Items", "Q, Mouse Wheel - Equipment Change",
-		"Right Mouse Button - Block", "Left Mouse Button - Attack"
+		"D - Move Right", "E - Interact", "Q, Mouse Wheel - Change Equipment",
+		"Left Mouse Button - Attack"
 	]
 	lines: Array<Label> = [];
 	constructor(scene: Scene, position: Vec2, font: string) {

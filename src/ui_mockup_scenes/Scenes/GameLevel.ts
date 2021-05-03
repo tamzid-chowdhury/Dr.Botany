@@ -273,7 +273,7 @@ export default class GameLevel extends Scene {
         this.player = this.add.animatedSprite("player", "primary");
         let playerOptions = {
             mapSize: mapSize,
-            speed: 150,
+            speed: 125,
             defaultWeapon: this.equipmentPrototypes[0]
             // defaultWeapons: [this.add.sprite("shovel", "secondary"), this.add.sprite("trash_lid", "secondary")],
             // swingSprite: this.add.animatedSprite("swing_sprite", "primary")

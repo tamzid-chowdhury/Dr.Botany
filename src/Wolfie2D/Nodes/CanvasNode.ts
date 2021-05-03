@@ -31,6 +31,10 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		this._hasCustomShader = false;
 	}
 
+	getNodeId(): number {
+		return this.id;
+	}
+
 	get alpha(): number {
 		return this._alpha;
 	}

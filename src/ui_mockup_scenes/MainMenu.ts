@@ -46,6 +46,7 @@ export default class MainMenu extends Scene {
     selectLevelBack: GameButton;
     currentLayer: string = '';
     screenWipe: Sprite;
+    toggleEvents: number = 0;
     
     loadScene(): void {
         this.load.image("logo", "assets/misc/logo.png");
@@ -61,6 +62,8 @@ export default class MainMenu extends Scene {
         this.load.audio("temp_music", "assets/music/temp.mp3");
         this.load.audio("button", "assets/sfx/button_sfx.wav");
         this.load.image("screen_wipe", "assets/misc/screen_wipe.png");
+        this.load.image("toggle_box", "assets/ui_art/toggle_box.png");
+        this.load.image("toggle_box_fill", "assets/ui_art/toggle_box_fill.png");
     }
 
     unloadScene(): void {
@@ -126,6 +129,7 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe(WindowEvents.RESIZED);
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
+        this.receiver.subscribe(UIEvents.CLICKED_TOGGLE);
 
     }
 
@@ -167,6 +171,21 @@ export default class MainMenu extends Scene {
             if (event.type === WindowEvents.RESIZED) {
                 this.backgroundLayer.initLogo();
 
+            }
+
+            // This stupid fucking label sends 2 events per click so this dumb bit of code is necessary
+            if (event.type === UIEvents.CLICKED_TOGGLE) {
+                this.toggleEvents++;
+                if(this.toggleEvents % 2 === 0) {
+                    let id = event.data.get('id');
+                    for(let toggle of this.optionsLayer.toggles) {
+                        if(id === toggle.invisibleLabel.id) {
+                                toggle.toggleFill();
+                        }
+                    }
+                }
+                
+                    
             }
 
             if (event.type === GameEventType.MOUSE_DOWN) {

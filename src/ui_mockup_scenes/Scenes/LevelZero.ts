@@ -81,6 +81,7 @@ export default class LevelZero extends GameLevel {
         }
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
         let lid = this.add.sprite('trash_lid', 'primary');
+        lid.scale = new Vec2(0.6, 0.6);
         lid.position = new Vec2(300,200)
     }
 
