@@ -24,8 +24,14 @@
         {
             "name": "HIT",
             "frames": [
-                {"index" : 2, "duration" : 5},
-                {"index" : 3, "duration" : 5}
+                {"index" : 16, "duration" : 10},
+                {"index" : 17, "duration" : 10},
+                {"index" : 16, "duration" : 10},
+                {"index" : 17, "duration" : 10},
+                {"index" : 16, "duration" : 5},
+                {"index" : 17, "duration" : 5},
+                {"index" : 16, "duration" : 5},
+                {"index" : 17, "duration" : 5}
             ]
         },
         {

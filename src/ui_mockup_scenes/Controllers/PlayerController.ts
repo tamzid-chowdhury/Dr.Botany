@@ -116,9 +116,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }   
 
         if(this.hitTimer.isActive()) {
+            
             if (Date.now() - this.hitFlashCooldown > 50) {
-                this.owner.alpha = this.owner.alpha === 1 ? 0 : 1;
+                // this.owner.alpha = this.owner.alpha === 1 ? 0 : 1;
                 this.hitFlashCooldown = Date.now();
+                this.owner.animation.playIfNotAlready("HIT", true);
             }
         }
 

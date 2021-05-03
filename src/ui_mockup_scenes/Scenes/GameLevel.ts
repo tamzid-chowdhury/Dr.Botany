@@ -7,6 +7,7 @@ import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
+import GameOverScreenLayer from "../Layers/GameOverScreenLayer";
 import EnemyController from "../Enemies/EnemyController"
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
@@ -31,6 +32,7 @@ export default class GameLevel extends Scene {
     cursorLayer: Layer;
     inGameUILayer: InGameUILayer;
     pauseScreenLayer: PauseScreenLayer;
+    gameOverScreenLayer:GameOverScreenLayer;
 
     reticle: Sprite;
     player: AnimatedSprite;
@@ -155,6 +157,14 @@ export default class GameLevel extends Scene {
 
         }
 
+        // This is temporary for testing
+        if (Input.isKeyJustPressed("k")) {
+            this.gameOverScreenLayer.toggle()
+            if(!this.gameOverScreenLayer.hidden) {
+                
+            }
+        }
+
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
@@ -212,7 +222,8 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.PLAYER_DIED) {
                 console.log("Player Died. Go to main menu")
-                this.sceneManager.changeToScene(MainMenu, {}) 
+                this.player.animation.play("DYING", false);
+                // this.sceneManager.changeToScene(MainMenu, {}) 
             }
 
             if (event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
@@ -297,6 +308,9 @@ export default class GameLevel extends Scene {
     initPauseMenu(halfsize: Vec2): void {
         this.pauseScreenLayer = new PauseScreenLayer(this, halfsize);
 
+    }
+    initGameOverScreen(halfSize:Vec2) : void {
+        this.gameOverScreenLayer = new GameOverScreenLayer(this, halfSize);
     }
 
     initViewport(mapSize: Vec2): void {

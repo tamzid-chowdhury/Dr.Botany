@@ -15,6 +15,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import AnimatedDialog from "../Classes/AnimatedDialog";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class LevelZero extends GameLevel {
 
@@ -45,6 +46,7 @@ export default class LevelZero extends GameLevel {
         this.load.object("equipmentData", "assets/data/equipmentData.json");
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
         this.load.spritesheet("green_slime", "assets/enemies/slime_wip.json")
+        this.load.audio("background_music", "assets/music/in_game_music.mp3")
     }
 
     unloadScene(): void {
@@ -53,6 +55,7 @@ export default class LevelZero extends GameLevel {
 
     startScene(): void {
         super.startScene()
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
         // this.moodBarTimer.start();
         this.time = Date.now();
@@ -83,6 +86,8 @@ export default class LevelZero extends GameLevel {
         let lid = this.add.sprite('trash_lid', 'primary');
         lid.scale = new Vec2(0.6, 0.6);
         lid.position = new Vec2(300,200)
+
+        this.addEnemy("orange_mushroom", new Vec2(500, 500), { speed: 20, player: this.player, health: 40, type: "Downer" }, 1.5);
     }
 
     updateScene(deltaT: number) {
