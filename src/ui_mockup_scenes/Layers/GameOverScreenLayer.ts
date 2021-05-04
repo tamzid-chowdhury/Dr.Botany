@@ -9,7 +9,7 @@ import * as Tweens from "../Utils/Tweens";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
 
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import GameButton from "../Classes/GameButton";
+import GameButton, {ButtonPositions} from "../Classes/GameButton";
 import { Fonts } from '../Utils/Enums';
 import BackButton from "../Classes/BackButton";
 import GameLayer from "../Classes/GameLayer";
@@ -23,7 +23,7 @@ export default class GameOverScreenLayer extends GameLayer {
 	hidden: boolean = true;
 	restartLabel: Label;
 	backToMainMenuLabel: Label;
-	buttonSprite: Sprite;
+	gameOverButtonNames: Array<ButtonPositions> = [];
 	
 	// resumeButton: ;
 	// quitButton: ;
@@ -37,12 +37,12 @@ export default class GameOverScreenLayer extends GameLayer {
 		this.overlay = scene.add.sprite("screen_wipe", UILayers.GAMEOVER_SCREEN);
 		this.overlay.alpha = 0.5;
 
-		this.initButtons();
+		this.initButtons(scene);
 
 	}
 
 
-	initButtons(): void {
+	initButtons(scene: Scene): void {
 		let center = this.position.clone();
 		this.sprite = this.scene.add.sprite('ui_rect', UILayers.GAMEOVER_SCREEN);
 		
@@ -64,39 +64,46 @@ export default class GameOverScreenLayer extends GameLayer {
 		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
 		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
 
+		this.gameOverButtonNames.push({name: 'Restart', position: new Vec2(center.x , this.sprite.position.y - this.sprite.size.y/4), eventId: UIEvents.CLICKED_RESTART});
+		this.gameOverButtonNames.push({name: 'Quit', position: new Vec2(center.x , this.sprite.position.y + this.sprite.size.y/4), eventId: UIEvents.CLICKED_QUIT});
 
-		this.buttonSprite = this.scene.add.sprite('temp_button', UILayers.GAMEOVER_SCREEN);
-		this.buttonSprite.visible = false;
-		this.buttonSprite.tweens.add('scaleIn', Tweens.scaleIn(new Vec2(0, 0), new Vec2(1.5, 1)));
-		this.buttonSprite.position.set(center.x - this.sprite.size.x / 2, this.sprite.position.y + this.sprite.size.y / 3);
 
-		const restartLevel = "Restart"
-		this.restartLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.GAMEOVER_SCREEN,
-			{ position: new Vec2(center.x - this.sprite.size.x / 2, this.sprite.position.y + this.sprite.size.y / 3), text: restartLevel });
 
-		this.restartLabel.textColor = Palette.black();
-		this.restartLabel.size.set(85, 30);
-		this.restartLabel.fontSize = 48;
-		this.restartLabel.font = Fonts.ABBADON_LIGHT;
-		this.restartLabel.tweens.add('scaleIn', Tweens.scaleInText(this.restartLabel.fontSize, 0, 300));
-		this.restartLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.restartLabel.fontSize, 0, 300));
-		this.restartLabel.onClickEventId = UIEvents.CLICKED_RESTART;
+		for(let entry of this.gameOverButtonNames) {
+			let { name, position, eventId } = entry;
+			let sprite = scene.add.sprite("temp_button", UILayers.GAMEOVER_SCREEN);
+			sprite.position = position;
+
+			let startScale = new Vec2(0,0);
+			let finalScale = new Vec2(1.0,0.8);
+			let label = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.GAMEOVER_SCREEN, { position: new Vec2(position.x, position.y), text: name.toLocaleUpperCase() });
+			label.textColor = textColor;
+			label.fontSize = 40;
+			label.size.set((sprite.size.x * sprite.scale.x) - sprite.size.x/4, (sprite.size.y * sprite.scale.y) - sprite.size.y/4)
+			label.font = Fonts.ABBADON_LIGHT;
+			label.onClickEventId = eventId;
 		
+			label.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
+			label.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
+			label.tweens.add('slideUpLeft', Tweens.slideUpLeft(position.x, position.y));
+			label.tweens.add('slideDownRight', Tweens.slideDownRight(position.x, position.y));
+
+			sprite.tweens.add('slideUpLeft', Tweens.slideUpLeft(position.x, position.y));
+			sprite.tweens.add('slideDownRight', Tweens.slideDownRight(position.x, position.y));
+			sprite.tweens.add('scaleIn', Tweens.scaleIn(startScale , finalScale,  0, 300));
+			sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 300));
 
 
-		const backToMainMenu = "To Main Menu"
-		this.backToMainMenuLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.GAMEOVER_SCREEN,
-			{ position: new Vec2(center.x + this.sprite.size.x / 2, this.sprite.position.y + this.sprite.size.y / 3), text: backToMainMenu });
-		this.backToMainMenuLabel.size.set(85, 30);
-
-		this.backToMainMenuLabel.textColor = Palette.black();
-		this.backToMainMenuLabel.fontSize = 48;
-		this.backToMainMenuLabel.font = Fonts.ABBADON_LIGHT;
-		this.backToMainMenuLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
-		this.backToMainMenuLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
-		this.backToMainMenuLabel.onClickEventId = UIEvents.CLICKED_QUIT;
-
-
+			label.onFirstEnter = () => {
+				label.tweens.play('slideUpLeft');
+				sprite.tweens.play('slideUpLeft');
+			}
+			label.onLeave = () => {
+				sprite.tweens.play('slideDownRight');
+				label.tweens.play('slideDownRight');
+			}
+			this.menuButtons.push(new GameButton(sprite, label));
+		}
 	}
 
 
@@ -105,20 +112,23 @@ export default class GameOverScreenLayer extends GameLayer {
 		this.hidden = !this.hidden;
 		this.layer.setHidden(this.hidden);
 		this.titleLabel.tweens.play('scaleIn');
-
-		this.restartLabel.tweens.play('scaleIn');
-		this.buttonSprite.tweens.play('scaleIn')
-		this.backToMainMenuLabel.tweens.play('scaleIn');
 		this.sprite.tweens.play('scaleIn');
+		for(let button of this.menuButtons) {
+			button.sprite.tweens.play('scaleIn');
+			button.label.tweens.play('scaleIn');
+		}
 
 	}
 
 	playExitTweens(): void {
 		this.hidden = !this.hidden;
 		this.titleLabel.tweens.play('scaleOut');
-		this.restartLabel.tweens.play('scaleOut');
-		this.backToMainMenuLabel.tweens.play('scaleOut');
 		this.sprite.tweens.play('scaleOut');
+		for(let button of this.menuButtons) {
+			button.sprite.tweens.play('scaleOut');
+			button.label.tweens.play('scaleOut');
+
+		}
 	}
 
 }
