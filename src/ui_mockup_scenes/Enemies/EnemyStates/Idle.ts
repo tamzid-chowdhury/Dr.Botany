@@ -4,7 +4,7 @@ import EnemyState from "./EnemyState";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 export default class Idle extends EnemyState {
-	onEnter(): void {console.log('jlahsdh')}
+	onEnter(): void {}
 
 	handleInput(event: GameEvent): void {
 		super.handleInput(event);

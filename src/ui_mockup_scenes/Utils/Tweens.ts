@@ -387,7 +387,7 @@ export function scaleInText(size: number, delay: number = 300, duration = 300): 
 	return tween;
 };
 
-export function scaleOutText(size: number, delay: number = 300, duration = 300): Record<string,any> {
+export function scaleOutText(size: number, delay: number = 300, duration = 300, event: string = UIEvents.SHOW_MAIN_MENU): Record<string,any> {
 	let tween =  {
 		startDelay: delay,
 		duration: duration,
@@ -399,7 +399,7 @@ export function scaleOutText(size: number, delay: number = 300, duration = 300):
 				ease: EaseFunctionType.IN_OUT_QUINT,
 			},
 		],
-		onEnd: UIEvents.SHOW_MAIN_MENU
+		onEnd: event
 	};
 	return tween;
 };

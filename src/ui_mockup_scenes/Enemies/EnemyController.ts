@@ -63,7 +63,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.addState(EnemyStates.DYING, dying)
 
         this.initialize(EnemyStates.WALK);
-        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE])
+        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER])
 
     }
 
@@ -75,7 +75,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     handleEvent(event: GameEvent): void {
-        if(event.type === InGame_Events.TOGGLE_PAUSE) {
+        if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
             if(this.pauseExecution) {
                 this.pauseExecution = false;
                 this.changeState(EnemyStates.WALK);

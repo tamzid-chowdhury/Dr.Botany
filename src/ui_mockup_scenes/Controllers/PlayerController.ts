@@ -160,7 +160,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             let event = this.receiver.getNextEvent();
 
 
-            if (event.type === InGame_Events.TOGGLE_PAUSE) {
+            if (event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
                 if(this.pauseExecution) this.pauseExecution = false;
                 else this.pauseExecution = true;
             }
@@ -250,7 +250,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             InGame_Events.ON_DOWNER_DEPOSIT,
             InGame_Events.OFF_UPPER_DEPOSIT,
             InGame_Events.OFF_DOWNER_DEPOSIT,
-            InGame_Events.TOGGLE_PAUSE
+            InGame_Events.TOGGLE_PAUSE,
+            InGame_Events.GAME_OVER
 
         ]);
     }

@@ -35,6 +35,7 @@ export default class GameLevel extends Scene {
     gameOverScreenLayer:GameOverScreenLayer;
 
     reticle: Sprite;
+    cursor: Sprite;
     player: AnimatedSprite;
     plant: Sprite;
     upperDeposit: Sprite;
@@ -105,7 +106,8 @@ export default class GameLevel extends Scene {
             InGame_Events.ENEMY_DEATH_ANIM_OVER,
             InGame_Events.ON_UPPER_DEPOSIT,
             InGame_Events.ON_DOWNER_DEPOSIT,
-            InGame_Events.TOGGLE_PAUSE
+            InGame_Events.TOGGLE_PAUSE,
+            InGame_Events.TOGGLE_PAUSE_TRANSITION
         ]);
 
 
@@ -134,6 +136,7 @@ export default class GameLevel extends Scene {
         // update positions and rotations
         let mousePos = Input.getMousePosition();
         this.reticle.position = mousePos;
+        this.cursor.position = mousePos;
 
 
         // if (Input.isKeyJustPressed("o")) {
@@ -149,14 +152,20 @@ export default class GameLevel extends Scene {
         this.materialsManager.resolveMaterials(this.player.position, deltaT);
 
         if (Input.isKeyJustPressed("escape")) {
-            this.pauseScreenLayer.toggle();
-            if(!this.pauseScreenLayer.hidden) {
-                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+            if(this.pauseScreenLayer.hidden) {
+                this.pauseScreenLayer.playEntryTweens();
+
+                this.reticle.visible = false;
+                this.cursor.visible = true;
+
+
             }
             else {
-                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+                this.pauseScreenLayer.playExitTweens();
+                this.reticle.visible = true;
+                this.cursor.visible = false;
             }
-
+            this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
         }
 
         // This is temporary for testing
@@ -170,6 +179,9 @@ export default class GameLevel extends Scene {
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
+            if (event.type === InGame_Events.TOGGLE_PAUSE_TRANSITION) {
+                this.pauseScreenLayer.layer.setHidden(true);
+            }
 
             // WARNING: No checking that node is actually the enemy, could fail
             // should be in enemy controller?
@@ -331,7 +343,9 @@ export default class GameLevel extends Scene {
         this.cursorLayer.setDepth(900);
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.7, 0.7);
-
+        this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
+        this.cursor.scale = new Vec2(0.3, 0.3)
+        this.cursor.visible = false;
     }
 
     initEquipment(): void{

@@ -69,6 +69,9 @@ export default class MainMenu extends Scene {
     unloadScene(): void {
         this.load.keepAudio("button");
         this.load.keepImage("screen_wipe");
+        this.load.keepImage("ui_rect");
+        this.load.keepImage("temp_cursor");
+        this.load.keepImage("temp_button");
     }
 
     setDetectDocumentClick(toggle: boolean): void {
