@@ -330,6 +330,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.TRANSITION_SCREEN) {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 switch(this.currentLayer) {
                     case(UILayers.CONTROLS):
                         this.controlsLayer.playExitTweens()

@@ -161,7 +161,7 @@ export default class GameLevel extends Scene {
         if (Input.isKeyJustPressed("k")) {
             this.gameOverScreenLayer.toggle()
             if(!this.gameOverScreenLayer.hidden) {
-                
+
             }
         }
 
@@ -222,7 +222,6 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.PLAYER_DIED) {
                 console.log("Player Died. Go to main menu")
-                this.player.animation.play("DYING", false);
                 // this.sceneManager.changeToScene(MainMenu, {}) 
             }
 
