@@ -4,7 +4,7 @@ import EnemyState from "./EnemyState";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 export default class Idle extends EnemyState {
-	onEnter(): void {}
+	onEnter(): void {console.log('jlahsdh')}
 
 	handleInput(event: GameEvent): void {
 		super.handleInput(event);
@@ -12,9 +12,9 @@ export default class Idle extends EnemyState {
 
 	update(deltaT: number): void {	
 		super.update(deltaT);
-		if(this.owner.active){
-			this.finished(EnemyStates.WALK);
-		}
+		// if(this.owner.active){
+		// 	this.finished(EnemyStates.WALK);
+		// }
 	}
 
 	onExit(): Record<string, any> {

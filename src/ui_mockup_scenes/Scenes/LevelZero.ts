@@ -24,7 +24,7 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     time: number;
     enemyList: Array<AnimatedSprite> = [];
-    enemyNameList: Array<string> = ["orange_mushroom", "slime_wip"];
+    enemyNameList: Array<string> = ["orange_mushroom", "green_slime"];
 
     testLabel: AnimatedDialog;
 
@@ -38,6 +38,7 @@ export default class LevelZero extends GameLevel {
 
     overdrawTiles: Array<Sprite> = [];
     runTest: boolean;
+    pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
@@ -208,6 +209,10 @@ export default class LevelZero extends GameLevel {
                 }
             }
 
+            if(event.type === InGame_Events.TOGGLE_PAUSE) {
+                this.pauseExecution = true;
+            }
+
 
         }
 
@@ -222,10 +227,10 @@ export default class LevelZero extends GameLevel {
         //         let randomScale = Math.random() * (2 - 1) + 1;
         //         this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
         //     }
-        //     else if (this.enemyNameList[randomInt] === "slime_wip") {
+        //     else if (this.enemyNameList[randomInt] === "green_slime") {
         //         let randomScale = Math.random() * (2 - 0.5) + 0.5;
 
-        //         this.addEnemy("slime_wip", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
+        //         this.addEnemy("green_slime", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
         //     }
         //     this.time = Date.now();
         // }
@@ -241,7 +246,8 @@ export default class LevelZero extends GameLevel {
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DIED,
             InGame_Events.ADD_TO_MOOD,
-            InGame_Events.DRAW_OVERLAP_TILE
+            InGame_Events.DRAW_OVERLAP_TILE,
+            InGame_Events.TOGGLE_PAUSE
 
         ]);
     }

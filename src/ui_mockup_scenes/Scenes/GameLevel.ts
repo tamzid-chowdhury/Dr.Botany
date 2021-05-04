@@ -52,6 +52,7 @@ export default class GameLevel extends Scene {
     screenWipe: Sprite;    
     swipeLayer: UILayer;
     maxMaterials: number = 48;
+    pauseExecution: boolean = false;
 
 
 
@@ -103,7 +104,8 @@ export default class GameLevel extends Scene {
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DEATH_ANIM_OVER,
             InGame_Events.ON_UPPER_DEPOSIT,
-            InGame_Events.ON_DOWNER_DEPOSIT
+            InGame_Events.ON_DOWNER_DEPOSIT,
+            InGame_Events.TOGGLE_PAUSE
         ]);
 
 
@@ -149,10 +151,10 @@ export default class GameLevel extends Scene {
         if (Input.isKeyJustPressed("escape")) {
             this.pauseScreenLayer.toggle();
             if(!this.pauseScreenLayer.hidden) {
-                // pause
+                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
             }
             else {
-                // unpause
+                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
             }
 
         }
@@ -192,6 +194,10 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();
+            }
+
+            if (event.type === InGame_Events.TOGGLE_PAUSE) {
+                this.pauseExecution = true;
             }
 
             if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
@@ -337,17 +343,6 @@ export default class GameLevel extends Scene {
             temp.sprite = this.add.sprite(temp.spriteKey, "secondary");
             temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
             this.equipmentPrototypes.push(temp);
-            // Get the constructor of the prototype
-            // let constr = RegistryManager.getRegistry("equipmentTemplates").get(equip.type);
-
-            // // Create a weapon type
-            // let equipType = new constr();
-
-            // // Initialize the weapon type
-            // equipType.initialize(equip);
-
-            // // Register the weapon type
-            // RegistryManager.getRegistry("equipmentTypes").registerItem(equip.name, equipType)
 
         }
     }

@@ -119,7 +119,9 @@ export enum InGame_Events {
 	ADD_TO_MOOD = "AddToMood",
 	MOOD_CHANGED = "MoodChanged",
 	ENEMY_DEATH_ANIM_OVER = "EnemyDeathAnimOver",
-	DRAW_OVERLAP_TILE = "DrawOverlapTile"
+	DRAW_OVERLAP_TILE = "DrawOverlapTile",
+	TOGGLE_PAUSE = "TOGGLE_PAUSE"
+
 }
 
 
