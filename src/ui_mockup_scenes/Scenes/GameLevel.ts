@@ -311,7 +311,22 @@ export default class GameLevel extends Scene {
             //     }
             // }
 
+            if (event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
+                let node = this.sceneGraph.getNode(event.data.get("owner"));
+                let ownerPosition = (<EnemyController>node._ai).owner.position.clone();
+                if (Math.random() < 0.9) {
+                    if ((<EnemyController>node._ai).type == "Upper") {
+                        this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, { position: ownerPosition });
+                    }
+                    if ((<EnemyController>node._ai).type == "Downer") {
+                        this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, { position: ownerPosition });
+                    }
+                }
+                node.destroy();
+            }
+
             if (event.type === UIEvents.CLICKED_QUIT) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music" });
                 this.sceneManager.changeToScene(MainMenu, {});
             }
 

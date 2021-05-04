@@ -18,7 +18,7 @@ import AnimatedDialog from "../Classes/AnimatedDialog";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import MainMenu from "../MainMenu";
 
-export default class LevelZero extends GameLevel {
+export default class LevelOne extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
@@ -46,7 +46,9 @@ export default class LevelZero extends GameLevel {
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
+        this.load.tilemap("level_one", "assets/tilemaps/tutorialLevel/level1.json");
+
+    
         this.load.image("box_top", "assets/misc/test_box.png")
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
         this.load.object("equipmentData", "assets/data/equipmentData.json");
@@ -65,7 +67,7 @@ export default class LevelZero extends GameLevel {
         
         // this.moodBarTimer.start();
         this.time = Date.now();
-        let tilemapLayers = this.add.tilemap("level_zero");
+        let tilemapLayers = this.add.tilemap("level_one");
         for (let layer of tilemapLayers) {
             let obj = layer.getItems()[0];
             if (obj.isCollidable) {
@@ -261,7 +263,7 @@ export default class LevelZero extends GameLevel {
                     }
                 }
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music" });
-                this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
+                this.sceneManager.changeToScene(LevelOne, {}, sceneOptions);
             }
             
 
