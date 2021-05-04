@@ -1,5 +1,5 @@
 {
-	"count": 1,
+	"count": 2,
 	"equipment": [
 		{
 			"type": "projectile",
@@ -8,7 +8,19 @@
             "spriteKey": "shovel",
             "damage": 1,
             "cooldown": 200,
-			"sfxKey": "swing"
+			"sfxKey": "swing",
+			"scale": 1
+		},
+		{
+			"type": "projectile",
+			"name": "TrashLid",
+            "projectileSpriteKey": "swing",
+            "spriteKey": "trash_lid",
+            "damage": 1,
+            "cooldown": 500,
+			"sfxKey": "swing",
+			"scale": 0.6
+
 		}
 	]
 }

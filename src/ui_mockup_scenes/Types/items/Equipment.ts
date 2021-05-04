@@ -16,9 +16,10 @@ export default class Equipment {
 	sfxKey: string;
 	sprite: Sprite;
 	projectileSprite: Sprite;
-	damage: number;
+	damage: number = 1;
 	cooldown: number;
 	swingDir: number = 1;
+	scale: number = 1;
 	// TODO: extend/have equipment implement a projectile type to treat
 	// diff projectiles in appropriate manner 
 	constructor(data: Record<string,any>) {
@@ -29,19 +30,31 @@ export default class Equipment {
 		this.name = data.name;
 		this.cooldown = data.cooldown;
 		this.sfxKey = data.sfxKey;
+		this.scale = data.scale;
 	}
 
 	init(position: Vec2): void {
         this.sprite.position.set(position.x, position.y);
 		this.projectileSprite.position.set(position.x, position.y);
-        this.sprite.invertY = true;
+        this.sprite.scale = new Vec2(this.scale, this.scale);
+		this.sprite.invertY = true;
+		this.sprite.visible = false;
 		this.projectileSprite.visible = false;
         this.projectileSprite.active = false;
         this.projectileSprite.addAI(ProjectileController, {});
         this.projectileSprite.setTrigger("enemies", InGame_Events.PROJECTILE_HIT_ENEMY, null);
 	}
 
-	updatePos(position: Vec2): void {
+	setActive(position: Vec2): void {
+		this.sprite.position.set(position.x, position.y);
+		this.projectileSprite.position.set(position.x, position.y);
+        this.sprite.invertY = true;
+        this.sprite.visible = true;
+		this.projectileSprite.visible = false;
+        this.projectileSprite.active = false;
+	}
+
+	updatePos(position: Vec2, playerLookDirection: Vec2): void {
 		// TODO: See if sprite position looks better with this additional offset
         // this.equipped.position.add(new Vec2(-8 * this.playerLookDirection.x,-8 *this.playerLookDirection.y));
 		this.sprite.position.set(position.x, position.y);

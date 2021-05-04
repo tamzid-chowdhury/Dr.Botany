@@ -43,11 +43,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     damageTaken: number = 1; 
     hitFlashCooldown: number;
     pauseExecution: boolean = false;
+    returnEquipment: boolean = false;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-        this.equipment = new EquipmentManager(options.defaultWeapon);
+        this.equipment = new EquipmentManager(options.defaults);
         this.equipped = this.equipment.equipped;
         this.viewport = owner.getScene().getViewport();
 
@@ -68,16 +69,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
         this.owner.colliderOffset.set(0, 10);
         this.owner.setGroup("player");
-        // this.items = options.items;
-        // this.inventory = options.inventory;
-        this.equipped.init(this.owner.position.clone());
+        for(let e of this.equipment.prototypes) {
+            e.init(this.owner.position.clone())
+        }
+
+        this.equipped.setActive(this.owner.position.clone());
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
         this.subscribeToEvents();
         // NOTE: this should be tied to the currently equipped weapon 
         // can potentially be affected by mood
         this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
             this.equipment.equipped.finishAttack();
-
         });
 
         this.hitTimer = new Timer(300, () => {
@@ -135,8 +137,27 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
 
         this.playerLookDirection = this.equipped.sprite.position.dirTo(rotateTo);
-        this.equipped.updatePos(this.owner.position.clone())
-        this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
+        // if the equip is not at the player, move it closer
+        // if(this.returnEquipment) {
+        //     let sprite = this.equipped.sprite;
+        //     if (sprite.position.distanceTo(this.owner.position) > 8) {
+        //         let dirToPlayer = sprite.position.dirTo(this.owner.position);
+        //         sprite._velocity = dirToPlayer;
+        //         sprite._velocity.normalize();
+        //         sprite._velocity.mult(new Vec2(10,10));
+        //         sprite.move(sprite._velocity.scaled(deltaT));
+        //     }
+        //     else {
+        //         this.returnEquipment = false;
+        //     }
+            
+        // }
+        // else {
+        //     this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection)
+        // }
+            this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection)
+            this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
+
 
         if(Input.isMouseJustPressed()) {
             if(!this.coolDownTimer.isActive()) {
@@ -148,7 +169,15 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
 
         if (Input.isKeyJustPressed("q")) {
-            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
+            this.equipment.switchEquipped()
+            this.equipped = this.equipment.getEquipped();
+            this.equipped.setActive(this.owner.position.clone());
+            this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
+                this.equipment.equipped.finishAttack();
+    
+            });
+
+            // this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
         }
     }
 
@@ -158,7 +187,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-
+			if(event.type === InGame_Events.TRASH_LID_APEX) {
+                this.returnEquipment = true;
+			}
 
             if (event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
                 if(this.pauseExecution) this.pauseExecution = false;
@@ -251,7 +282,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             InGame_Events.OFF_UPPER_DEPOSIT,
             InGame_Events.OFF_DOWNER_DEPOSIT,
             InGame_Events.TOGGLE_PAUSE,
-            InGame_Events.GAME_OVER
+            InGame_Events.GAME_OVER,
+            InGame_Events.TRASH_LID_APEX
 
         ]);
     }

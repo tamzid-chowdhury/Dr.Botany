@@ -8,7 +8,7 @@ export default class Knockback extends EnemyState {
 	playerSize: Vec2;
 	force: Vec2;
 	onEnter(): void {
-		
+		console.log('got hit')
 		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemy_hit", loop: false, holdReference: true});
 		
 		if (this.parent.health > 0) {

@@ -1,4 +1,4 @@
-import Registry from "../../Wolfie2D/Registry/Registries/Registry";
+/*import Registry from "../../Wolfie2D/Registry/Registries/Registry";
 import ResourceManager from "../../Wolfie2D/ResourceManager/ResourceManager";
 import Projectile from "../Types/items/EquipTypes/Projectile";
 import WeaponType from "../Types/items/EquipTypes/EquipType";
@@ -40,3 +40,4 @@ export class EquipTypeRegistry extends Registry<WeaponType> {
         this.add(key, type);
     }
 }
+*/
