@@ -221,7 +221,7 @@ export default class LevelZero extends GameLevel {
                 this.pauseExecution = true;
             }
 
-            if (event.type === InGame_Events.CLICKED_RESTART) {
+            if (event.type === UIEvents.CLICKED_RESTART) {
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemies", "materials", "projectiles", "deposits"],
@@ -304,8 +304,7 @@ export default class LevelZero extends GameLevel {
             InGame_Events.ADD_TO_MOOD,
             InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
-            InGame_Events.CLICKED_MAIN_MENU,
-            InGame_Events.CLICKED_RESTART
+            UIEvents.CLICKED_RESTART
 
         ]);
     }

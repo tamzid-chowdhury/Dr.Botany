@@ -3,7 +3,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import Scene from "../../Wolfie2D/Scene/Scene";
-import { UILayers, ButtonNames, PauseButtonNames, InGame_Events } from "../Utils/Enums";
+import { UILayers, ButtonNames, PauseButtonNames, InGame_Events, UIEvents } from "../Utils/Enums";
 import * as Palette from "../Utils/Colors";
 import * as Tweens from "../Utils/Tweens";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
@@ -80,7 +80,7 @@ export default class GameOverScreenLayer extends GameLayer {
 		this.restartLabel.font = Fonts.ABBADON_LIGHT;
 		this.restartLabel.tweens.add('scaleIn', Tweens.scaleInText(this.restartLabel.fontSize, 0, 300));
 		this.restartLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.restartLabel.fontSize, 0, 300));
-		this.restartLabel.onClickEventId = InGame_Events.CLICKED_RESTART;
+		this.restartLabel.onClickEventId = UIEvents.CLICKED_RESTART;
 		
 
 
@@ -94,7 +94,7 @@ export default class GameOverScreenLayer extends GameLayer {
 		this.backToMainMenuLabel.font = Fonts.ABBADON_LIGHT;
 		this.backToMainMenuLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
 		this.backToMainMenuLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
-		this.backToMainMenuLabel.onClickEventId = InGame_Events.CLICKED_MAIN_MENU;
+		this.backToMainMenuLabel.onClickEventId = UIEvents.CLICKED_QUIT;
 
 
 	}
