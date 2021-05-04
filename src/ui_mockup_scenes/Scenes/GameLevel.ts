@@ -5,7 +5,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
+import { UIEvents, UILayers, ButtonNames, InGameUILayers, WindowEvents, InGame_Events, InGame_GUI_Events, Scenes } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import GameOverScreenLayer from "../Layers/GameOverScreenLayer";
 import EnemyController from "../Enemies/EnemyController"
@@ -54,6 +54,7 @@ export default class GameLevel extends Scene {
     swipeLayer: UILayer;
     maxMaterials: number = 48;
     pauseExecution: boolean = false;
+    nextLevel: string;
 
 
 
@@ -107,7 +108,10 @@ export default class GameLevel extends Scene {
             InGame_Events.ON_UPPER_DEPOSIT,
             InGame_Events.ON_DOWNER_DEPOSIT,
             InGame_Events.TOGGLE_PAUSE,
-            InGame_Events.TOGGLE_PAUSE_TRANSITION
+            InGame_Events.TOGGLE_PAUSE_TRANSITION,
+            UIEvents.CLICKED_QUIT,
+            UIEvents.CLICKED_RESUME,
+            UIEvents.TRANSITION_LEVEL
         ]);
 
 
@@ -204,12 +208,41 @@ export default class GameLevel extends Scene {
 
             }
 
+            if (event.type === UIEvents.TRANSITION_LEVEL) {
+                switch(this.nextLevel) {
+                    case Scenes.MAIN_MENU:
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+
+                        this.sceneManager.changeToScene(MainMenu, {}) 
+
+                        break;
+                    default:
+                        // level1
+                        break;
+                }
+            }
+
             if (event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();
             }
 
             if (event.type === InGame_Events.TOGGLE_PAUSE) {
                 this.pauseExecution = true;
+            }
+
+            if (event.type === UIEvents.CLICKED_RESUME) {
+                this.pauseScreenLayer.playExitTweens();
+                this.reticle.visible = true;
+                this.cursor.visible = false;
+                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+            }
+            if (event.type === UIEvents.CLICKED_QUIT) {
+                this.nextLevel = Scenes.MAIN_MENU;
+                this.screenWipe.imageOffset = new Vec2(0, 0);
+                this.screenWipe.scale = new Vec2(2,1)
+                this.screenWipe.position.set(2*this.screenWipe.size.x, this.screenWipe.size.y/2);
+                this.screenWipe.tweens.add("levelTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL));
+                this.screenWipe.tweens.play("levelTransition");
             }
 
             if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
@@ -344,7 +377,7 @@ export default class GameLevel extends Scene {
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.7, 0.7);
         this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
-        this.cursor.scale = new Vec2(0.3, 0.3)
+        this.cursor.scale = new Vec2(0.3, 0.3);
         this.cursor.visible = false;
     }
 

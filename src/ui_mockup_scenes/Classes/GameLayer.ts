@@ -15,7 +15,7 @@ export default abstract class GameLayer {
 	backButton: BackButton;
 	titleLabel: Label;
 
-	abstract initButtons(): void;
+	abstract initButtons(scene?: Scene): void;
 	abstract playEntryTweens(): void;
 	abstract playExitTweens(): void;
 }

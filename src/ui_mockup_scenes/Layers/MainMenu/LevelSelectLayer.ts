@@ -5,15 +5,10 @@ import Scene from "../../../Wolfie2D/Scene/Scene";
 import { UIEvents, UILayers, ButtonNames, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
 import * as Tweens from "../../Utils/Tweens";
-import GameButton from "../../Classes/GameButton";
+import GameButton, {ButtonPositions} from "../../Classes/GameButton";
 import GameLayer from "../../Classes/GameLayer";
 import BackButton from "../../Classes/BackButton";
 
-interface ButtonPositions {
-	name: string;
-	position: Vec2;
-	eventId: string;
-  }
 
 
 export class LevelSelectLayer extends GameLayer{

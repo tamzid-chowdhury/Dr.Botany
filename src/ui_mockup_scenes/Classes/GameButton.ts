@@ -6,6 +6,12 @@ import Color from "../../Wolfie2D/Utils/Color";
 import * as Tweens from "../Utils/Tweens";
 import * as Palette from "../Utils/Colors";
 
+export interface ButtonPositions {
+	name: string;
+	position: Vec2;
+	eventId: string;
+}
+
 // Im thinking this button could encapsulate a position and clickId, and we could swap out a label and sprite interchangeably
 export default class GameButton {
 	sprite: Sprite;
