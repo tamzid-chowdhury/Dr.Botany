@@ -4,10 +4,11 @@ import Equipment from "../Types/items/Equipment";
 export default class EquipmentManager {
 	equipped: Equipment;
 	stowed: Equipment;
-
-	constructor(defaultEquip: Equipment) {
-		this.equipped = defaultEquip;
-		this.stowed = null;
+	prototypes: Array<Equipment>;
+	constructor(defaults: Array<Equipment>) {
+		this.prototypes = defaults;
+		this.equipped = this.prototypes[0];
+		this.stowed = this.prototypes[1];
 	}
 
 	dropEquipped() {
@@ -21,5 +22,14 @@ export default class EquipmentManager {
 
 	switchEquipped() {
 		// switch equipped with stowed
+		let equipped = this.prototypes.find((p) => p === this.equipped);
+		let swap = this.prototypes.find((p) => p === this.stowed);
+		equipped.sprite.visible = false;
+		this.equipped = swap;
+		this.stowed = equipped;
+	}
+
+	getEquipped(): Equipment {
+		return this.equipped;
 	}
 }

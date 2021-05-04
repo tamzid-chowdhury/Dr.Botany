@@ -37,12 +37,12 @@ export default class ProjectileController extends StateMachineAI {
     handleEvent(event: GameEvent): void {}
 
     update(deltaT: number): void {
-		while (this.receiver.hasNextEvent()) {
-            let event = this.receiver.getNextEvent();
-            if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
-                this.owner.active = false;
-            }
-		}
+      while (this.receiver.hasNextEvent()) {
+              let event = this.receiver.getNextEvent();
+              if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
+                  this.owner.active = false;
+              }
+      }
 
     }
 
@@ -52,7 +52,42 @@ export default class ProjectileController extends StateMachineAI {
 	}
 
     subscribeToEvents(): void {
-		this.receiver.subscribe([InGame_Events.PROJECTILE_HIT_ENEMY])
+      this.receiver.subscribe([InGame_Events.PROJECTILE_HIT_ENEMY])
     }
 
+}
+
+export class TrashLidController extends ProjectileController {
+	owner: AnimatedSprite;
+	direction: Vec2;
+	speed: number = 50;
+	// WHAT IF TWO SHOVELS AT ONE TIME POWERUP???? ALTERNATING SWINGS
+
+
+
+	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
+		this.owner = owner;
+		this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
+		this.owner.active = false;
+		this.owner.setGroup("projectiles");
+
+
+		this.subscribeToEvents();
+	}
+
+	activate(options: Record<string, any>): void {}
+
+	handleEvent(event: GameEvent): void {}
+
+	update(deltaT: number): void {
+
+	}
+
+
+	destroy(): void {
+
+    }
+
+	subscribeToEvents(): void {
+	}
 }

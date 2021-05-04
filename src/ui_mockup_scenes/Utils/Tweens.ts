@@ -8,6 +8,76 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import InGameUI from "../Layers/InGameUI/InGameUILayer";
 import { InGame_Events, UIEvents } from "./Enums";
 
+export function trashLidThrow(pos: Vec2, dir: Vec2, duration: number = 150, rotation: number): Record<string,any> {
+	let tween = {
+		startDelay: 0,
+		duration: duration,
+		effects: [
+
+			{
+				property:TweenableProperties.posX,
+				start: pos.x,
+				end: pos.x + (100 * dir.x) ,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property:TweenableProperties.posY,
+				start: pos.y,
+				end: pos.y + (100 * dir.y) ,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property:TweenableProperties.rotation,
+				start: rotation,
+				end: rotation * Math.PI * 3,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+
+		],
+		// onEnd: InGame_Events.TRASH_LID_APEX,
+		reverseOnComplete: true
+	}
+	return tween
+}
+
+export function trashLidReturn(start: Vec2, end: Vec2, duration: number = 150, rotation: number): Record<string,any> {
+	let tween = {
+		startDelay: 0,
+		duration: duration,
+		effects: [
+
+			{
+				property:TweenableProperties.posX,
+				start: start.x,
+				end: end.x ,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property:TweenableProperties.posY,
+				start: start.y,
+				end: end.y,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property:TweenableProperties.rotation,
+				start: rotation,
+				end: rotation * Math.PI * 3,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+
+		],
+	}
+	return tween
+}
+
+
+
 
 export function playerHit(alpha: number) : Record<string,any>{
 	let tween = {

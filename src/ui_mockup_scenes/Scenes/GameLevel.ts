@@ -20,6 +20,8 @@ import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
 import Equipment from "../Types/items/Equipment";
 import MaterialsManager from "../GameSystems/MaterialsManager";
+import Shovel from "../Types/items/EquipTypes/Shovel";
+import TrashLid from "../Types/items/EquipTypes/TrashLid";
 // import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
@@ -372,10 +374,11 @@ export default class GameLevel extends Scene {
 
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
+        console.log(this.equipmentPrototypes)
         let playerOptions = {
             mapSize: mapSize,
             speed: 125,
-            defaultWeapon: this.equipmentPrototypes[0]
+            defaults: this.equipmentPrototypes
             // defaultWeapons: [this.add.sprite("shovel", "secondary"), this.add.sprite("trash_lid", "secondary")],
             // swingSprite: this.add.animatedSprite("swing_sprite", "primary")
         }
@@ -433,9 +436,19 @@ export default class GameLevel extends Scene {
 
         for(let i = 0; i < equipData.count; i++){
             let equip = equipData.equipment[i];
-            let temp = new Equipment(equip);
-            temp.sprite = this.add.sprite(temp.spriteKey, "secondary");
-            temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
+            let temp ;
+            if(equip.name === "Shovel") {
+                temp = new Shovel(equip);
+                temp.sprite = this.add.sprite(temp.spriteKey, "secondary");
+                temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
+            }
+            else {
+                temp = new TrashLid(equip);
+                temp.sprite = this.add.sprite(temp.spriteKey, "primary");
+                temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
+            }
+            
+
             this.equipmentPrototypes.push(temp);
 
         }

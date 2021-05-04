@@ -52,6 +52,7 @@ export default class LevelZero extends GameLevel {
         this.load.object("equipmentData", "assets/data/equipmentData.json");
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
         this.load.spritesheet("green_slime", "assets/enemies/slime_wip.json")
+        this.load.spritesheet("wisp", "assets/enemies/wisp.json")
         this.load.audio("background_music", "assets/music/in_game_music.mp3")
     }
 
@@ -90,9 +91,6 @@ export default class LevelZero extends GameLevel {
             this.overdrawTiles[i].visible = false;
         }
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
-        let lid = this.add.sprite('trash_lid', 'primary');
-        lid.scale = new Vec2(0.6, 0.6);
-        lid.position = new Vec2(300,200)
 
         
 
@@ -158,6 +156,9 @@ export default class LevelZero extends GameLevel {
 
         if (Input.isKeyJustPressed("m")) {
             this.addEnemy("orange_mushroom", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 80 , player: this.player, health: 40, type: "Upper" }, 1)
+        }
+        if (Input.isKeyJustPressed("n")) {
+            this.addEnemy("wisp", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 90 , player: this.player, health: 40, type: "Upper" }, 1)
         }
 
 

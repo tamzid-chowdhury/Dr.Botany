@@ -1,7 +1,7 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./ui_mockup_scenes/MainMenu";
-import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
-import EquipmentTemplateRegistry, { EquipTypeRegistry } from "./ui_mockup_scenes/Registries/EquipmentRegistry";
+// import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
+// import EquipmentTemplateRegistry, { EquipTypeRegistry } from "./ui_mockup_scenes/Registries/EquipmentRegistry";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){

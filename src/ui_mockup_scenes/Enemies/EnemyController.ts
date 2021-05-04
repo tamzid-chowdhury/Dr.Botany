@@ -40,7 +40,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     knockBackDir: Vec2 = new Vec2(0,0);
     knockBackTimer: number = 0;
     pauseExecution: boolean = false;
+
     damage(damage: number) : void {
+        console.log(damage)
         this.health -= damage;
     };
 
@@ -109,6 +111,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     doKnockBack(direction: Vec2): void {
         this.knockBackDir = direction.clone();
         this.knockBackTimer = 50;
+
         if(this.knockBackGuard <= 1) this.changeState(EnemyStates.KNOCKBACK);
         
     }
