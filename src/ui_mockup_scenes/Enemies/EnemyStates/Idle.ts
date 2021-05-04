@@ -12,9 +12,9 @@ export default class Idle extends EnemyState {
 
 	update(deltaT: number): void {	
 		super.update(deltaT);
-		if(this.owner.active){
-			this.finished(EnemyStates.WALK);
-		}
+		// if(this.owner.active){
+		// 	this.finished(EnemyStates.WALK);
+		// }
 	}
 
 	onExit(): Record<string, any> {

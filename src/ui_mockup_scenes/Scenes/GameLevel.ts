@@ -14,6 +14,7 @@ import PlayerController from "../Controllers/PlayerController";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Material from "../Types/items/Material";
 import MainMenu from "../MainMenu";
+import LevelZero from "../Scenes/LevelZero"
 import * as Tweens  from "../Utils/Tweens";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
@@ -35,6 +36,8 @@ export default class GameLevel extends Scene {
     gameOverScreenLayer:GameOverScreenLayer;
 
     reticle: Sprite;
+    cursor: Sprite;
+    cursor2: Sprite; // clicked cursor 
     player: AnimatedSprite;
     plant: Sprite;
     upperDeposit: Sprite;
@@ -52,16 +55,17 @@ export default class GameLevel extends Scene {
     screenWipe: Sprite;    
     swipeLayer: UILayer;
     maxMaterials: number = 48;
+    pauseExecution: boolean = false;
 
 
 
     loadScene(): void {
-        this.load.image("temp_cursor", "assets/misc/cursor.png");
+        
         this.load.image("reticle", "assets/misc/reticle.png");
-        this.load.image("temp_button", "assets/ui_art/button.png");
+        
         this.load.image("ui_square", "assets/ui_art/ui_box_v2.png");
         this.load.image("ui_circle", "assets/ui_art/ui_circle.png");
-        this.load.image("cursor_clicked", "assets/misc/cursor_clicked.png")
+        
         this.load.image("healthbar", "assets/ui_art/health_bar_wip-1.png")
         this.load.image("healthbaroutline", "assets/ui_art/ui_bar_outline.png")
         this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
@@ -103,7 +107,12 @@ export default class GameLevel extends Scene {
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DEATH_ANIM_OVER,
             InGame_Events.ON_UPPER_DEPOSIT,
-            InGame_Events.ON_DOWNER_DEPOSIT
+            InGame_Events.ON_DOWNER_DEPOSIT,
+            InGame_Events.TOGGLE_PAUSE,
+            InGame_Events.TOGGLE_PAUSE_TRANSITION,
+            InGame_Events.PLAYER_DEATH_ANIM_OVER,
+            InGame_Events.CLICKED_MAIN_MENU,
+            InGame_Events.CLICKED_RESTART
         ]);
 
 
@@ -132,6 +141,7 @@ export default class GameLevel extends Scene {
         // update positions and rotations
         let mousePos = Input.getMousePosition();
         this.reticle.position = mousePos;
+        this.cursor.position = mousePos;
 
 
         // if (Input.isKeyJustPressed("o")) {
@@ -147,27 +157,36 @@ export default class GameLevel extends Scene {
         this.materialsManager.resolveMaterials(this.player.position, deltaT);
 
         if (Input.isKeyJustPressed("escape")) {
-            this.pauseScreenLayer.toggle();
-            if(!this.pauseScreenLayer.hidden) {
-                // pause
+            if(this.pauseScreenLayer.hidden) {
+                this.pauseScreenLayer.playEntryTweens();
+
+                this.reticle.visible = false;
+                this.cursor.visible = true;
+
+
             }
             else {
-                // unpause
+                this.pauseScreenLayer.playExitTweens();
+                this.reticle.visible = true;
+                this.cursor.visible = false;
             }
-
+            this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
         }
 
         // This is temporary for testing
         if (Input.isKeyJustPressed("k")) {
-            this.gameOverScreenLayer.toggle()
-            if(!this.gameOverScreenLayer.hidden) {
-
-            }
+            (<PlayerController>this.player._ai).damage(100);
         }
 
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
+
+            
+            if (event.type === InGame_Events.TOGGLE_PAUSE_TRANSITION) {
+                this.pauseScreenLayer.layer.setHidden(true);
+            }
+
 
             // WARNING: No checking that node is actually the enemy, could fail
             // should be in enemy controller?
@@ -192,6 +211,10 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();
+            }
+
+            if (event.type === InGame_Events.TOGGLE_PAUSE) {
+                this.pauseExecution = true;
             }
 
             if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
@@ -221,9 +244,41 @@ export default class GameLevel extends Scene {
             }
 
             if (event.type === InGame_Events.PLAYER_DIED) {
-                console.log("Player Died. Go to main menu")
-                // this.sceneManager.changeToScene(MainMenu, {}) 
+                
+                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+                this.gameOverScreenLayer.layer.setHidden(false);
+                if(this.gameOverScreenLayer.hidden) {
+                    this.gameOverScreenLayer.playEntryTweens();
+    
+                    this.reticle.visible = false;
+                    this.cursor.visible = true;
+    
+                }
+                else {
+                    this.gameOverScreenLayer.playExitTweens();
+                    this.reticle.visible = true;
+                    this.cursor.visible = false;
+                }
             }
+
+            // I Cant seem to get the dying animation to work properly, (I think its the same reason why swing animation doesnt work)
+
+            // if( event.type === InGame_Events.PLAYER_DEATH_ANIM_OVER) {
+                
+            //     this.gameOverScreenLayer.layer.setHidden(false);
+            //     if(this.gameOverScreenLayer.hidden) {
+            //         this.gameOverScreenLayer.playEntryTweens();
+    
+            //         this.reticle.visible = false;
+            //         this.cursor.visible = true;
+    
+            //     }
+            //     else {
+            //         this.gameOverScreenLayer.playExitTweens();
+            //         this.reticle.visible = true;
+            //         this.cursor.visible = false;
+            //     }
+            // }
 
             if (event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
                 let node = this.sceneGraph.getNode(event.data.get("owner"));
@@ -324,7 +379,17 @@ export default class GameLevel extends Scene {
         this.cursorLayer.setDepth(900);
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.7, 0.7);
+        
+        
+        
+        this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
+        this.cursor.scale = new Vec2(0.22, 0.22)
+        this.cursor.visible = false;
 
+
+        this.cursor2 = this.add.sprite("cursor_clicked", UILayers.CURSOR);
+        this.cursor2.scale = new Vec2(0.25, 0.25)
+        this.cursor2.visible = false;
     }
 
     initEquipment(): void{
@@ -336,17 +401,6 @@ export default class GameLevel extends Scene {
             temp.sprite = this.add.sprite(temp.spriteKey, "secondary");
             temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
             this.equipmentPrototypes.push(temp);
-            // Get the constructor of the prototype
-            // let constr = RegistryManager.getRegistry("equipmentTemplates").get(equip.type);
-
-            // // Create a weapon type
-            // let equipType = new constr();
-
-            // // Initialize the weapon type
-            // equipType.initialize(equip);
-
-            // // Register the weapon type
-            // RegistryManager.getRegistry("equipmentTypes").registerItem(equip.name, equipType)
 
         }
     }

@@ -42,6 +42,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     damageCooldown: number;
     damageTaken: number = 1; 
     hitFlashCooldown: number;
+    pauseExecution: boolean = false;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -89,11 +90,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     handleEvent(event: GameEvent): void {}
 
-    update(deltaT: number): void {
-
-        let mousePos = Input.getMousePosition();
+    resolvePlayerInput(deltaT: number): void {
         let rotateTo = Input.getGlobalMousePosition();
-        
+    
         this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
         this.direction.y = (Input.isPressed("forward") ? -1 : 0) + (Input.isPressed("backward") ? 1 : 0);
 
@@ -128,33 +127,42 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
 
-		if(rotateTo.x > this.owner.position.x) {
-			this.owner.invertX = true;
-		}
-		else {
-			this.owner.invertX = false;
-		}
+        if(rotateTo.x > this.owner.position.x) {
+            this.owner.invertX = true;
+        }
+        else {
+            this.owner.invertX = false;
+        }
 
         this.playerLookDirection = this.equipped.sprite.position.dirTo(rotateTo);
         this.equipped.updatePos(this.owner.position.clone())
         this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
 
+        if(Input.isMouseJustPressed()) {
+            if(!this.coolDownTimer.isActive()) {
+                this.equipment.equipped.doAttack(this.playerLookDirection);
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipment.equipped.sfxKey, loop: false, holdReference: true});
+                this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
+                this.coolDownTimer.start();
+            }
+        }
 
         if (Input.isKeyJustPressed("q")) {
             this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
         }
+    }
 
+    update(deltaT: number): void {
 
+        if(!this.pauseExecution) this.resolvePlayerInput(deltaT);
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-            if(event.type === GameEventType.MOUSE_DOWN) {
-                if(!this.coolDownTimer.isActive()) {
-                    this.equipment.equipped.doAttack(this.playerLookDirection);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipment.equipped.sfxKey, loop: false, holdReference: true});
-                    this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
-                    this.coolDownTimer.start();
-                }
+
+
+            if (event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
+                if(this.pauseExecution) this.pauseExecution = false;
+                else this.pauseExecution = true;
             }
             
 
@@ -223,8 +231,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.health -= damage;
 
         if(this.health <= 0){
-            console.log("Game Over");
-            this.owner.animation.play("DYING", false);
             this.emitter.fireEvent(InGame_Events.PLAYER_DIED);
         }
     }
@@ -234,9 +240,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     subscribeToEvents(): void {
         this.receiver.subscribe([
-            GameEventType.MOUSE_DOWN,
-            GameEventType.MOUSE_UP,
-            GameEventType.KEY_DOWN,
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
             InGame_GUI_Events.INCREMENT_UPPER_COUNT,
@@ -245,6 +248,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             InGame_Events.ON_DOWNER_DEPOSIT,
             InGame_Events.OFF_UPPER_DEPOSIT,
             InGame_Events.OFF_DOWNER_DEPOSIT,
+            InGame_Events.TOGGLE_PAUSE,
+            InGame_Events.GAME_OVER
 
         ]);
     }

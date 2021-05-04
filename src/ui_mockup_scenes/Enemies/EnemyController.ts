@@ -39,6 +39,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
     knockBackDir: Vec2 = new Vec2(0,0);
     knockBackTimer: number = 0;
+    pauseExecution: boolean = false;
     damage(damage: number) : void {
         this.health -= damage;
     };
@@ -62,7 +63,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.addState(EnemyStates.DYING, dying)
 
         this.initialize(EnemyStates.WALK);
-        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER])
+        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER])
 
     }
 
@@ -73,24 +74,34 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		super.changeState(stateName);
 	}
 
+    handleEvent(event: GameEvent): void {
+        if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
+            if(this.pauseExecution) {
+                this.pauseExecution = false;
+                this.changeState(EnemyStates.WALK);
+
+            }
+            else {
+                this.pauseExecution = true;
+                this.changeState(EnemyStates.IDLE);
+            }
+
+            
+        }
+    }
+
     update(deltaT: number): void {
         super.update(deltaT);
-        if(this.knockBackGuard > 1) this.knockBackGuard--;
-        
-        if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
-        if (this.getOwnerPostion().x + 3 <= this.getPlayerPosition().x) { 
-            this.owner.invertX = true; 
-		}
-		else {
-			this.owner.invertX = false;
-		}
-        while (this.receiver.hasNextEvent()) {
-            let event = this.receiver.getNextEvent();
-            // if(event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
+        if(!this.pauseExecution) {
+            if(this.knockBackGuard > 1) this.knockBackGuard--;
+            if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
+            if (this.getOwnerPostion().x + 3 <= this.getPlayerPosition().x) { 
+                this.owner.invertX = true; 
+            }
+            else {
+                this.owner.invertX = false;
+            }
 
-                
-
-            // }
         }
         
 	}

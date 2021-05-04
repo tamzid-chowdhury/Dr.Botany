@@ -69,6 +69,10 @@ export default class MainMenu extends Scene {
     unloadScene(): void {
         this.load.keepAudio("button");
         this.load.keepImage("screen_wipe");
+        this.load.keepImage("ui_rect");
+        this.load.keepImage("temp_cursor");
+        this.load.keepImage("cursor_clicked");
+        this.load.keepImage("temp_button");
     }
 
     setDetectDocumentClick(toggle: boolean): void {
@@ -80,7 +84,7 @@ export default class MainMenu extends Scene {
 
     startScene(): void {
         this.viewport.setZoomLevel(1);
-        this.center = new Vec2(this.viewport.getCanvasSize().x/2, this.viewport.getCanvasSize().y/2);
+        this.center = new Vec2(this.viewport.getCanvasSize().x/2, this.viewport.getCanvasSize().y/2);        
         
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "temp_music", loop: true, holdReference: true });
         window.onresize = (e: UIEvent) => { this.emitter.fireEvent(WindowEvents.RESIZED, { eventObject: e }) };
@@ -153,6 +157,11 @@ export default class MainMenu extends Scene {
             this.backgroundLayer.bg.position.x = -this.backgroundLayer.bg.size.x / 2;
 
         }
+
+        if(Input.isMouseJustPressed()) {
+            console.log(mousePos);
+        }
+
 
         if (this.backgroundLayer.bgCopy.position.x > this.backgroundLayer.bg.size.x) {
             this.backgroundLayer.bgCopy.position.x = -this.backgroundLayer.bg.size.x / 2;
