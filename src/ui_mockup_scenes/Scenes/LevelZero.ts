@@ -16,6 +16,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import AnimatedDialog from "../Classes/AnimatedDialog";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import MainMenu from "../MainMenu";
 
 export default class LevelZero extends GameLevel {
 
@@ -24,7 +25,11 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     time: number;
     enemyList: Array<AnimatedSprite> = [];
-    enemyNameList: Array<string> = ["orange_mushroom", "green_slime"];
+
+    enemyNameList: Array<string> = ["orange_mushroom", "slime_wip"];
+    // This should be a variable to each level I guess? 
+    maxEnemyNumber: number;
+
 
     testLabel: AnimatedDialog;
 
@@ -75,6 +80,7 @@ export default class LevelZero extends GameLevel {
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
+        super.initGameOverScreen(this.viewport.getHalfSize());
         this.viewport.follow(this.player);
 
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
@@ -85,6 +91,8 @@ export default class LevelZero extends GameLevel {
             this.overdrawTiles[i].visible = false;
         }
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
+
+        
 
         this.addEnemy("orange_mushroom", new Vec2(500, 500), { speed: 20, player: this.player, health: 40, type: "Downer" }, 1.5);
     }
@@ -214,27 +222,75 @@ export default class LevelZero extends GameLevel {
                 this.pauseExecution = true;
             }
 
+            if (event.type === UIEvents.CLICKED_RESTART) {
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemies", "materials", "projectiles", "deposits"],
+                        collisions:
+                            [
+                                /*
+                                    Init the next scene with physics collisions:
+    
+                                                ground  player  enemy   materials   equipment
+                                    ground        No       --      --     --            --
+                                    player        Yes      No      --     --            --
+                                    enemy         Yes      No      No     --            No
+                                    materials     Yes       No      No     No           No
+                                    equipment     Yes       No      No     No           No
+    
+                                    Each layer becomes a number. In this case, 4 bits matter for each
+    
+                                    ground: self - 0001, collisions - 0110
+                                    player: self - 0010, collisions - 1001
+                                    enemy:  self - 0100, collisions - 0001
+                                    coin:   self - 1000, collisions - 0010
+                                */
+                                // [0, 1, 1, 1, 1],
+                                // [1, 0, 0, 0, 0],
+                                // [1, 0, 0, 0, 0],
+                                // [1, 0, 0, 0, 0],
+                                // [1, 0, 0, 0, 0]
+
+                                // TODO: figure out if commented out matrix is correct or not for materials/equipment
+                                [0, 1, 1, 0, 1, 0],
+                                [1, 0, 0, 1, 0, 0],
+                                [1, 0, 1, 0, 0, 0],
+                                [0, 1, 0, 0, 0, 0],
+                                [1, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0]
+                            ]
+                    }
+                }
+                this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
+            }
+            
+
 
         }
 
 
         // We want to randomly select the position, and time and maybe some counter ( max enemies in the map ) currently spawning every 5 seconds
-        // if (Date.now() - this.time > 5000) {
-        //     let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
-        //     let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
-        //     let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
-        //     console.log("5 seconds passed, Spawning new enemy");
-        //     if (this.enemyNameList[randomInt] === "orange_mushroom") {
-        //         let randomScale = Math.random() * (2 - 1) + 1;
-        //         this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
-        //     }
-        //     else if (this.enemyNameList[randomInt] === "green_slime") {
-        //         let randomScale = Math.random() * (2 - 0.5) + 0.5;
 
-        //         this.addEnemy("green_slime", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
-        //     }
-        //     this.time = Date.now();
-        // }
+        // We just need to use enemyList correctly when destroyed, unshift the arrays 
+
+        // if(this.enemyList.length > this.maxEnemyNumber) {
+        //     if (Date.now() - this.time > 5000) {
+        //         let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
+        //         let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
+        //         let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
+        //         console.log("5 seconds passed, Spawning new enemy");
+        //         if (this.enemyNameList[randomInt] === "orange_mushroom") {
+        //             let randomScale = Math.random() * (2 - 1) + 1;
+        //             this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
+        //         }
+        //         else if (this.enemyNameList[randomInt] === "slime_wip") {
+        //             let randomScale = Math.random() * (2 - 0.5) + 0.5;
+    
+        //             this.addEnemy("slime_wip", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
+        //         }
+        //         this.time = Date.now();
+
+        
 
     }
 
@@ -248,7 +304,8 @@ export default class LevelZero extends GameLevel {
             InGame_Events.ENEMY_DIED,
             InGame_Events.ADD_TO_MOOD,
             InGame_Events.DRAW_OVERLAP_TILE,
-            InGame_Events.TOGGLE_PAUSE
+            InGame_Events.TOGGLE_PAUSE,
+            UIEvents.CLICKED_RESTART
 
         ]);
     }
