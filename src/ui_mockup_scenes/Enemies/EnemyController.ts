@@ -33,7 +33,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     speed: number = 30;
     player: GameNode;
     attackRange: number;
-    type: String; 
+    dropType: String; 
+    controllerType: String = 'Enemy'; 
     velocity: Vec2 = Vec2.ZERO;
     knockBackGuard: number = 1;
 
@@ -51,7 +52,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.health = options.health;
         this.player = options.player;
         this.speed = options.speed;
-        this.type = options.type; 
+        this.dropType = options.type; 
         
 
         // have to add some properties for each enemy   I don't know if idle is necessary...

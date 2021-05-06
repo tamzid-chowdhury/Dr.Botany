@@ -23,14 +23,14 @@ export default class Shovel extends Equipment {
 	}
 
 	doAttack(direction: Vec2) {
+
 	    this.projectileSprite.position.set(this.sprite.position.x + (20*direction.x), this.sprite.position.y + (20*direction.y));
 		(<AnimatedSprite>this.projectileSprite).animation.play("ATTACK", false);
 		this.projectileSprite.rotation = -this.sprite.rotation;
 		this.projectileSprite.visible = true;
 		this.projectileSprite.active = true;
+		this.projectileSprite.moving = true;
 
-		// swingDir is specific to the shovel since it toggles whether its
-		// swing up->down or down->up 
 		this.sprite.tweens.add('swingdown', Tweens.swing(this.sprite, this.swingDir))
 		this.sprite.tweens.play('swingdown');
 		this.projectileSprite.rotation = -this.sprite.rotation;
@@ -51,9 +51,11 @@ export default class Shovel extends Equipment {
 	}
 
 	finishAttack() {
+
 		this.swingDir *= -1;
 		this.projectileSprite.tweens.stopAll();
 		this.projectileSprite.visible = false;
 		this.projectileSprite.active = false;
+		this.projectileSprite.moving = false;
 	}
 }

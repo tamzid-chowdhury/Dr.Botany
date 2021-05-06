@@ -59,6 +59,7 @@ export default class GameLevel extends Scene {
     maxMaterials: number = 48;
     pauseExecution: boolean = false;
     nextLevel: string;
+    gameOver: boolean = false;
 
 
 
@@ -158,29 +159,34 @@ export default class GameLevel extends Scene {
 
         // }
 
-        this.materialsManager.resolveMaterials(this.player.position, deltaT);
-
-        if (Input.isKeyJustPressed("escape")) {
-            if(this.pauseScreenLayer.hidden) {
-                this.pauseScreenLayer.playEntryTweens();
-
-                this.reticle.visible = false;
-                this.cursor.visible = true;
-
-
+        if(!this.gameOver) {
+            if(!this.pauseExecution) {
+                this.materialsManager.resolveMaterials(this.player.position, deltaT);
+    
             }
-            else {
-                this.pauseScreenLayer.playExitTweens();
-                this.reticle.visible = true;
-                this.cursor.visible = false;
+            if (Input.isKeyJustPressed("escape")) {
+                if(this.pauseScreenLayer.hidden) {
+                    this.pauseScreenLayer.playEntryTweens();
+    
+                    this.reticle.visible = false;
+                    this.cursor.visible = true;
+    
+    
+                }
+                else {
+                    this.pauseScreenLayer.playExitTweens();
+                    this.reticle.visible = true;
+                    this.cursor.visible = false;
+                }
+                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
             }
-            this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+    
+            // This is temporary for testing
+            if (Input.isKeyJustPressed("k")) {
+                (<PlayerController>this.player._ai).damage(100);
+            }
         }
 
-        // This is temporary for testing
-        if (Input.isKeyJustPressed("k")) {
-            (<PlayerController>this.player._ai).damage(100);
-        }
 
 
         while (this.receiver.hasNextEvent()) {
@@ -196,13 +202,20 @@ export default class GameLevel extends Scene {
             // should be in enemy controller?
             if (event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
-                let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
-                // let ms = 30;
-                // var currentTime = new Date().getTime();
-                 
-                // while (currentTime + ms >= new Date().getTime()) { /* I feel filthy  doing this*/}
-                (<EnemyController>node._ai).damage(10);
-                (<EnemyController>node._ai).doKnockBack(knockBackDir);
+                let other = this.sceneGraph.getNode(event.data.get("other"));
+                // console.log(other);
+
+                if((<EnemyController>node._ai).controllerType === 'Enemy') {
+                    let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
+
+                    // let ms = 30;
+                    // var currentTime = new Date().getTime();
+                     
+                    // while (currentTime + ms >= new Date().getTime()) { /* I feel filthy  doing this*/}
+                    (<EnemyController>node._ai).damage(10);
+                    (<EnemyController>node._ai).doKnockBack(knockBackDir);
+                }
+
 
 
             }
@@ -232,7 +245,8 @@ export default class GameLevel extends Scene {
             }
 
             if (event.type === InGame_Events.TOGGLE_PAUSE) {
-                this.pauseExecution = true;
+                if(this.pauseExecution) this.pauseExecution = false;
+                else this.pauseExecution = true;
             }
 
             if (event.type === UIEvents.CLICKED_RESUME) {
@@ -279,6 +293,8 @@ export default class GameLevel extends Scene {
             if (event.type === InGame_Events.PLAYER_DIED) {
                 
                 this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+                this.emitter.fireEvent(InGame_Events.GAME_OVER);
+                this.gameOver = true;
                 this.gameOverScreenLayer.layer.setHidden(false);
                 if(this.gameOverScreenLayer.hidden) {
                     this.gameOverScreenLayer.playEntryTweens();
@@ -317,10 +333,10 @@ export default class GameLevel extends Scene {
                 let node = this.sceneGraph.getNode(event.data.get("owner"));
                 let ownerPosition = (<EnemyController>node._ai).owner.position.clone();
                 if (Math.random() < 0.9) {
-                    if ((<EnemyController>node._ai).type == "Upper") {
+                    if ((<EnemyController>node._ai).dropType == "Upper") {
                         this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, { position: ownerPosition });
                     }
-                    if ((<EnemyController>node._ai).type == "Downer") {
+                    if ((<EnemyController>node._ai).dropType == "Downer") {
                         this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, { position: ownerPosition });
                     }
                 }
@@ -374,13 +390,10 @@ export default class GameLevel extends Scene {
 
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
-        console.log(this.equipmentPrototypes)
         let playerOptions = {
             mapSize: mapSize,
             speed: 125,
             defaults: this.equipmentPrototypes
-            // defaultWeapons: [this.add.sprite("shovel", "secondary"), this.add.sprite("trash_lid", "secondary")],
-            // swingSprite: this.add.animatedSprite("swing_sprite", "primary")
         }
         this.player.addAI(PlayerController, playerOptions);
         this.player.animation.play("IDLE");

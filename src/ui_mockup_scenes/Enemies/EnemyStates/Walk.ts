@@ -35,8 +35,8 @@ export default class Walk extends EnemyState {
 		// 	this.owner._velocity.y = 0;
 			
 		// }
-		if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 2) ) this.parent.velocity.x = 0;
-		if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 2) + 6) this.parent.velocity.y = 0;
+		if(Math.abs(ownerPosX - playerPosX) < (this.playerSize.x / 4) ) this.parent.velocity.x = 0;
+		if(Math.abs(ownerPosY - playerPosY) < (this.playerSize.y / 4) + 6) this.parent.velocity.y = 0;
 		this.parent.velocity.normalize();
 		this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
 		this.owner.move(this.parent.velocity.scaled(deltaT));

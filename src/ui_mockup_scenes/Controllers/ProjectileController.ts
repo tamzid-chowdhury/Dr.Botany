@@ -1,5 +1,6 @@
 import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
@@ -18,6 +19,7 @@ export default class ProjectileController extends StateMachineAI {
     owner: AnimatedSprite;
     direction: Vec2;
     speed: number = 50;
+    attacking: boolean = false;
     // WHAT IF TWO SHOVELS AT ONE TIME POWERUP???? ALTERNATING SWINGS
 
 
@@ -61,17 +63,15 @@ export class TrashLidController extends ProjectileController {
 	owner: AnimatedSprite;
 	direction: Vec2;
 	speed: number = 50;
-	// WHAT IF TWO SHOVELS AT ONE TIME POWERUP???? ALTERNATING SWINGS
 
 
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
 		this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
+		// this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/4));
 		this.owner.active = false;
 		this.owner.setGroup("projectiles");
-
-
 		this.subscribeToEvents();
 	}
 
@@ -80,9 +80,23 @@ export class TrashLidController extends ProjectileController {
 	handleEvent(event: GameEvent): void {}
 
 	update(deltaT: number): void {
-
+        if(this.attacking) {
+            this.owner._velocity = this.direction;
+            this.owner._velocity.normalize();
+            this.owner._velocity.mult(new Vec2(350,350));
+            this.owner.move(this.owner._velocity.scaled(deltaT));
+        }
 	}
 
+    beginThrow(direction: Vec2) {
+        this.direction = direction.clone();
+        this.attacking = true;
+    }
+
+    endThrow(): void {
+        this.attacking = false;
+
+    }
 
 	destroy(): void {
 

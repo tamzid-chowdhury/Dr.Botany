@@ -13,6 +13,7 @@ import Equipment from "../Types/items/Equipment";
 import { InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
 import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";
+import ProjectileController from "./ProjectileController";
 
 export default class PlayerController extends StateMachineAI implements BattlerAI {
     health: number;
@@ -44,6 +45,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     hitFlashCooldown: number;
     pauseExecution: boolean = false;
     returnEquipment: boolean = false;
+    gameOver: boolean = false;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -155,8 +157,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         // else {
         //     this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection)
         // }
-            this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection)
-            this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
+
+        this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection);
+        this.equipment.stowed.updatePos(this.owner.position.clone(), this.playerLookDirection);
+        this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
+
 
 
         if(Input.isMouseJustPressed()) {
@@ -177,85 +182,87 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     
             });
 
-            // this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
         }
     }
 
     update(deltaT: number): void {
+        if(!this.gameOver) {
+            if(!this.pauseExecution ) this.resolvePlayerInput(deltaT);
 
-        if(!this.pauseExecution) this.resolvePlayerInput(deltaT);
-
-        while (this.receiver.hasNextEvent()) {
-            let event = this.receiver.getNextEvent();
-			if(event.type === InGame_Events.TRASH_LID_APEX) {
-                this.returnEquipment = true;
-			}
-
-            if (event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
-                if(this.pauseExecution) this.pauseExecution = false;
-                else this.pauseExecution = true;
-            }
-            
-
-            if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
-                if(this.damaged) {
-
-                    if (Date.now() - this.damageCooldown > 2000) {
-                        this.damaged = false;
-                    }
+            while (this.receiver.hasNextEvent()) {
+                let event = this.receiver.getNextEvent();
+                if(event.type === InGame_Events.TRASH_LID_APEX) {
                 }
-                else {
-                    // This is where it plays tweens + animation for getting hit
-                    this.hitFlashCooldown = Date.now();
-                    this.hitTimer.start();
-                    this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
-                    this.damage(this.damageTaken);
-                    this.damaged = true;
-                    this.damageCooldown = Date.now();
-                    this.emitter.fireEvent(InGame_GUI_Events.UPDATE_HEALTHBAR, {damageTaken: this.damageTaken});
+                if(event.type === InGame_Events.GAME_OVER) {
+                    this.gameOver = true;
+                }
+
+                if (event.type === InGame_Events.TOGGLE_PAUSE) {
+                    
+                    if (this.pauseExecution) this.pauseExecution = false;
+                    else this.pauseExecution = true;
                 }
                 
-            }
 
-            if(event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT) {
-                this.upperCount++;
-                this.canDepositUpper = true;
-            }
+                if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
+                    if(this.damaged) {
 
-            if(event.type === InGame_GUI_Events.INCREMENT_DOWNER_COUNT) {
-                this.downerCount++;
-                this.canDepositDowner = true;
-            }
+                        if (Date.now() - this.damageCooldown > 2000) {
+                            this.damaged = false;
+                        }
+                    }
+                    else {
+                        // This is where it plays tweens + animation for getting hit
+                        this.hitFlashCooldown = Date.now();
+                        this.hitTimer.start();
+                        this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
+                        this.damage(this.damageTaken);
+                        this.damaged = true;
+                        this.damageCooldown = Date.now();
+                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_HEALTHBAR, {damageTaken: this.damageTaken});
+                    }
+                    
+                }
 
-            // TODO: move this into materialManager, have it be tied to pressing e key
-            if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
-                let other = event.data.get('other');
-                let box = this.owner.getScene().getSceneGraph().getNode(other);
-                this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
-                let count = this.upperCount;
-                this.canDepositUpper = false;
-                this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, {position: this.owner.position.clone()});
-                this.emitter.fireEvent(InGame_Events.ADD_TO_MOOD, {type: 1, count: count});
-                this.upperCount = 0;
-            }
+                if(event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT) {
+                    this.upperCount++;
+                    this.canDepositUpper = true;
+                }
 
-            if(event.type === InGame_Events.OFF_DOWNER_DEPOSIT || event.type === InGame_Events.OFF_UPPER_DEPOSIT) {
-                this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
-            }
+                if(event.type === InGame_GUI_Events.INCREMENT_DOWNER_COUNT) {
+                    this.downerCount++;
+                    this.canDepositDowner = true;
+                }
 
-            if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
-                let other = event.data.get('other');
-                let box = this.owner.getScene().getSceneGraph().getNode(other);
-                this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
-                let count = this.downerCount;
-                this.canDepositDowner = false;
-                this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, {position: this.owner.position.clone()});
-                this.emitter.fireEvent(InGame_Events.ADD_TO_MOOD, {type: -1, count: count});
-                this.downerCount = 0;
-            }
+                // TODO: move this into materialManager, have it be tied to pressing e key
+                if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
+                    let other = event.data.get('other');
+                    let box = this.owner.getScene().getSceneGraph().getNode(other);
+                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
+                    let count = this.upperCount;
+                    this.canDepositUpper = false;
+                    this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, {position: this.owner.position.clone()});
+                    this.emitter.fireEvent(InGame_Events.ADD_TO_MOOD, {type: 1, count: count});
+                    this.upperCount = 0;
+                }
 
+                if(event.type === InGame_Events.OFF_DOWNER_DEPOSIT || event.type === InGame_Events.OFF_UPPER_DEPOSIT) {
+                    this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
+                }
+
+                if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
+                    let other = event.data.get('other');
+                    let box = this.owner.getScene().getSceneGraph().getNode(other);
+                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
+                    let count = this.downerCount;
+                    this.canDepositDowner = false;
+                    this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, {position: this.owner.position.clone()});
+                    this.emitter.fireEvent(InGame_Events.ADD_TO_MOOD, {type: -1, count: count});
+                    this.downerCount = 0;
+                }
+
+            }
         }
-
     }
 
     damage(damage: number): void {

@@ -18,38 +18,29 @@ export default class TrashLid extends Equipment {
         this.sprite.active = false;
         this.sprite.addAI(TrashLidController, {});
         this.sprite.setTrigger("enemies", InGame_Events.PROJECTILE_HIT_ENEMY, null);
+
 	}
-
+	// get a ref to the array of enemies, then do an intersection test between lid and enemies. This has to be done per update loop
 	doAttack(direction: Vec2) {
-	    // this.sprite.position.set(this.sprite.position.x + (20*direction.x), this.sprite.position.y + (20*direction.y));
-		// (<AnimatedSprite>this.projectileSprite).animation.play("ATTACK", false);
-		// this.sprite.visible = true;
 		this.sprite.active = true;
+		(<TrashLidController>this.sprite._ai).beginThrow(direction);
 
-		// // swingDir is specific to the shovel since it toggles whether its
-		// // swing up->down or down->up 
-		// this.sprite.tweens.add('swingdown', Tweens.swing(this.sprite, this.swingDir))
-		// this.sprite.tweens.play('swingdown');
-		// this.projectileSprite.rotation = -this.sprite.rotation;
-		// this.projectileSprite.visible = true;
-		// this.projectileSprite.active = true;
-		this.sprite.tweens.add('trashLidThrow', Tweens.trashLidThrow(this.projectileSprite.position, direction, this.cooldown/2, this.sprite.rotation))
-		this.sprite.tweens.play('trashLidThrow');
-
+        // this.sprite.position.add(new Vec2(50 * direction.x,50 *direction.y));
 
 	}
 
 	updatePos(position: Vec2, playerLookDirection: Vec2): void {
-		// TODO: See if sprite position looks better with this additional offset
-		this.sprite.position.set(position.x, position.y);
-        this.sprite.position.add(new Vec2(+8 * playerLookDirection.x,+8 *playerLookDirection.y));
-		this.projectileSprite.position.set(position.x, position.y);
+		if(!(<TrashLidController>this.sprite._ai).attacking) {
+			this.sprite.position.set(position.x, position.y);
+			this.sprite.position.add(new Vec2(8 * playerLookDirection.x,8 *playerLookDirection.y));
+		}
+
 	}
 
 	finishAttack() {
-		this.swingDir *= -1;
-		this.sprite.tweens.stopAll();
-		// this.sprite.visible = false;
+		// this.sprite.tweens.stopAll();
+		// this.sprite.moving = false;
+		(<TrashLidController>this.sprite._ai).endThrow();
 		this.sprite.active = false;
 	}
 }

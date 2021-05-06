@@ -9,6 +9,7 @@ import AreaCollision from "../DataTypes/Physics/AreaCollision";
 import Unique from "../DataTypes/Interfaces/Unique";
 import { InGame_Events } from "../../ui_mockup_scenes/Utils/Enums";
 import PlayerController from "../../ui_mockup_scenes/Controllers/PlayerController";
+import Sprite from "../Nodes/Sprites/Sprite";
 
 /**
  * ALGORITHM:
@@ -143,13 +144,17 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			node.collidedWithTilemap = false;
 			node.isColliding = false;
 
+
 			// If this node is not active, don't process it
 			if(!node.active){
 				continue;
 			}
 
+
+
 			// Update the swept shapes of each node
 			if(node.moving){
+
 				// If moving, reflect that in the swept shape
 				node.sweptRect.sweep(node._velocity, node.collisionShape.center, node.collisionShape.halfSize);
 			} else {
@@ -223,12 +228,14 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			// Sort the overlaps by area
 			overlaps = overlaps.sort((a, b) => b.area - a.area);
 
+
 			// Keep track of hits to use later
 			let hits = [];
 
 			/*---------- RESOLUTION PHASE ----------*/
 			// For every overlap, determine if we need to collide with it and when
 			for(let overlap of overlaps){
+
 				// Ignore nodes we don't interact with
 				if((this.collisionMasks[groupIndex] & overlap.other.group) === 0) continue;
 
@@ -242,9 +249,13 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
 				const hit = otherAABB.intersectSegment(node.collisionShape.center, node._velocity, node.collisionShape.halfSize);
 
+
+
 				overlap.hit = hit;
 
 				if(hit !== null){
+					
+
 					hits.push(hit);
 
 					// We got a hit, resolve with the time inside of the hit
@@ -282,6 +293,8 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			// Check if we ended up on the ground, ceiling or wall
 			// Also check for triggers
 			for(let overlap of overlaps){
+				
+
 				// Check for a trigger. If we care about the trigger, react
 				if(overlap.other.isTrigger && (overlap.other.triggerMask & node.group)){
 					// Get the bit that this group is represented by

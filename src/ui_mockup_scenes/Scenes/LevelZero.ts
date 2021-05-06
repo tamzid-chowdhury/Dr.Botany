@@ -26,7 +26,7 @@ export default class LevelZero extends GameLevel {
     time: number;
     enemyList: Array<AnimatedSprite> = [];
 
-    enemyNameList: Array<string> = ["orange_mushroom", "green_slime"];
+    enemyNameList: Array<string> = ["orange_mushroom", "green_slime", "wisp"];
     // This should be a variable to each level I guess? 
     maxEnemyNumber: number;
 
@@ -94,7 +94,6 @@ export default class LevelZero extends GameLevel {
 
         
 
-        this.addEnemy("orange_mushroom", new Vec2(500, 500), { speed: 20, player: this.player, health: 40, type: "Downer" }, 1.5);
     }
 
     updateScene(deltaT: number) {
@@ -218,9 +217,6 @@ export default class LevelZero extends GameLevel {
                 }
             }
 
-            if(event.type === InGame_Events.TOGGLE_PAUSE) {
-                this.pauseExecution = true;
-            }
 
             if (event.type === UIEvents.CLICKED_RESTART) {
                 let sceneOptions = {
@@ -252,11 +248,11 @@ export default class LevelZero extends GameLevel {
                                 // [1, 0, 0, 0, 0]
 
                                 // TODO: figure out if commented out matrix is correct or not for materials/equipment
-                                [0, 1, 1, 0, 1, 0],
-                                [1, 0, 0, 1, 0, 0],
-                                [1, 0, 1, 0, 0, 0],
-                                [0, 1, 0, 0, 0, 0],
+                                [0, 1, 1, 0, 0, 0],
                                 [1, 0, 0, 0, 0, 0],
+                                [1, 0, 1, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0],
                                 [0, 0, 0, 0, 0, 0]
                             ]
                     }
@@ -274,27 +270,30 @@ export default class LevelZero extends GameLevel {
 
         // We just need to use enemyList correctly when destroyed, unshift the arrays 
 
-        if (Date.now() - this.time > 3000) {
-            let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
-            let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
-            let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
-            console.log("5 seconds passed, Spawning new enemy");
-            if (this.enemyNameList[randomInt] === "orange_mushroom") {
-                let randomScale = Math.random() * (2 - 1) + 1;
-                this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
+        if(!this.pauseExecution) {
+            if (Date.now() - this.time > 3000) {
+                let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
+                let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
+                let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
+                // console.log('spawn', randomInt)
+                if (this.enemyNameList[randomInt] === "orange_mushroom") {
+                    let randomScale = Math.random() * (2 - 1) + 1;
+                    this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
+                }
+                else if (this.enemyNameList[randomInt] === "green_slime") {
+                    let randomScale = Math.random() * (2 - 0.5) + 0.5;
+    
+                    this.addEnemy("green_slime", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
+                }
+                else if (this.enemyNameList[randomInt] === "wisp") {
+                    let randomScale = Math.random() * (2 - 0.5) + 0.5;
+                    this.addEnemy("wisp", new Vec2(randomX, randomY), { speed: 70 * (1 / randomScale), player: this.player, health: 40, type: "Upper" }, 1)
+    
+                }
+                this.time = Date.now();
             }
-            else if (this.enemyNameList[randomInt] === "green_slime") {
-                let randomScale = Math.random() * (2 - 0.5) + 0.5;
-
-                this.addEnemy("green_slime", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
-            }
-            else if (this.enemyNameList[randomInt] === "wisp") {
-                let randomScale = Math.random() * (2 - 0.5) + 0.5;
-
-                this.addEnemy("wisp", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
-            }
-            this.time = Date.now();
         }
+        
 
     }
 
@@ -321,9 +320,9 @@ export default class LevelZero extends GameLevel {
         let collisionShape = enemy.size;
         // This has to be touched
         // this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.halfSize.scaled(this.scene.getViewScale())
-        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(((collisionShape.x / 2) - 2) * scale, (collisionShape.y / 2 - collisionShape.y / 3) * scale)));
+        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(( (collisionShape.x / 2)) * scale, (collisionShape.y / 4) * scale) ));
 
-        enemy.colliderOffset.set(0, (collisionShape.y / 3) * scale);
+        enemy.colliderOffset.set(0, (collisionShape.y / 4) * scale);
         // play with this // maybe add a condition for each enemy
 
         enemy.addAI(EnemyController, aiOptions);
