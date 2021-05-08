@@ -62,17 +62,23 @@ export default class ProjectileController extends StateMachineAI {
 export class TrashLidController extends ProjectileController {
 	owner: AnimatedSprite;
 	direction: Vec2;
-	speed: number = 50;
-
-
-
+	returnDirection: Vec2 ;
+	power: number = 0;
+    throwTimer: Timer;
+    cooldown: number;
+    returning: boolean;
+    powerCurve: number;
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
-		this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
-		// this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/4));
+		// this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
+		this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/4));
 		this.owner.active = false;
 		this.owner.setGroup("projectiles");
 		this.subscribeToEvents();
+        this.throwTimer = new Timer((options.cooldown/2)-10, () => {
+            this.attacking = false;
+            this.returning = true;
+        });
 	}
 
 	activate(options: Record<string, any>): void {}
@@ -83,19 +89,47 @@ export class TrashLidController extends ProjectileController {
         if(this.attacking) {
             this.owner._velocity = this.direction;
             this.owner._velocity.normalize();
-            this.owner._velocity.mult(new Vec2(350,350));
+            this.owner._velocity.mult(new Vec2(this.power,this.power));
             this.owner.move(this.owner._velocity.scaled(deltaT));
+            this.power = this.power / (this.power * this.easeOut(this.powerCurve));
+            this.powerCurve += 0.00005
+        }
+        else if(this.returning && this.returnDirection) {
+            if(this.owner.position.distanceTo(this.returnDirection) < this.owner.collisionShape.hh/2) {
+                this.endThrow();
+            } 
+            let dirToPlayer = this.owner.position.dirTo(this.returnDirection);
+            this.owner._velocity = dirToPlayer;
+            this.owner._velocity.normalize();
+            this.owner._velocity.mult(new Vec2(this.power,this.power));
+            this.owner.move(this.owner._velocity.scaled(deltaT));
+            this.power = this.power * (this.power * this.easeOut(this.powerCurve));
+            this.powerCurve += 0.0001
         }
 	}
 
     beginThrow(direction: Vec2) {
         this.direction = direction.clone();
         this.attacking = true;
+        this.throwTimer.start();
+        this.power = 450;
+        this.powerCurve = 0.0001;
+    }
+
+    easeOut(x: number): number {
+        return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+        
+    }
+
+    returnToPlayer(direction: Vec2): void {
+        this.returnDirection = direction;
+        this.power = 450;
+        this.powerCurve = 0.0001;
     }
 
     endThrow(): void {
-        this.attacking = false;
-
+		this.owner.active = false;
+        this.returning = false;
     }
 
 	destroy(): void {

@@ -139,25 +139,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
 
         this.playerLookDirection = this.equipped.sprite.position.dirTo(rotateTo);
-        // if the equip is not at the player, move it closer
-        // if(this.returnEquipment) {
-        //     let sprite = this.equipped.sprite;
-        //     if (sprite.position.distanceTo(this.owner.position) > 8) {
-        //         let dirToPlayer = sprite.position.dirTo(this.owner.position);
-        //         sprite._velocity = dirToPlayer;
-        //         sprite._velocity.normalize();
-        //         sprite._velocity.mult(new Vec2(10,10));
-        //         sprite.move(sprite._velocity.scaled(deltaT));
-        //     }
-        //     else {
-        //         this.returnEquipment = false;
-        //     }
-            
-        // }
-        // else {
-        //     this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection)
-        // }
-
         this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection);
         this.equipment.stowed.updatePos(this.owner.position.clone(), this.playerLookDirection);
         this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))

@@ -44,8 +44,6 @@ export default class Equipment {
 	}
 
 	updatePos(position: Vec2, playerLookDirection: Vec2): void {
-		this.sprite.position.set(position.x, position.y);
-		this.projectileSprite.position.set(position.x, position.y);
 	}
 
 	setRot(rotation: number): void {

@@ -270,6 +270,8 @@ export default class LevelZero extends GameLevel {
 
         // We just need to use enemyList correctly when destroyed, unshift the arrays 
 
+/*
+
         if(!this.pauseExecution) {
             if (Date.now() - this.time > 3000) {
                 let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
@@ -293,7 +295,7 @@ export default class LevelZero extends GameLevel {
                 this.time = Date.now();
             }
         }
-        
+*/    
 
     }
 

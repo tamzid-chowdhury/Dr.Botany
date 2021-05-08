@@ -22,12 +22,15 @@ export default class Timer implements Updateable {
     /** The number of times this timer has been run */
     protected numRuns: number;
 
+    timePast: number;
+
     constructor(time: number, onEnd?: Function, loop: boolean = false){
         // Register this timer
         TimerManager.getInstance().addTimer(this);
         
         this.totalTime = time;
         this.timeLeft = 0;
+        this.timePast = 0;
         this.onEnd = onEnd;
         this.loop = loop;
         this.state = TimerState.STOPPED;
@@ -60,6 +63,7 @@ export default class Timer implements Updateable {
         }
         this.state = TimerState.ACTIVE;
         this.timeLeft = this.totalTime;
+        this.timePast = 1;
     }
 
     /** Resets this timer. Sets the progress back to zero, and sets the number of runs back to zero */
@@ -75,7 +79,7 @@ export default class Timer implements Updateable {
     update(deltaT: number){
         if(this.state === TimerState.ACTIVE){
             this.timeLeft -= deltaT*1000;
-
+            this.timePast = (this.totalTime - this.timeLeft) + 1;
             if(this.timeLeft <= 0){
                 this.timeLeft = MathUtils.clampLow0(this.timeLeft);
                 this.end();
