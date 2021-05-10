@@ -95,7 +95,7 @@ export class TrashLidController extends ProjectileController {
             this.powerCurve += 0.00005
         }
         else if(this.returning && this.returnDirection) {
-            if(this.owner.position.distanceTo(this.returnDirection) < this.owner.collisionShape.hh/2) {
+            if(this.owner.position.distanceTo(this.returnDirection) < this.owner.collisionShape.hh) {
                 this.endThrow();
             } 
             let dirToPlayer = this.owner.position.dirTo(this.returnDirection);

@@ -10,6 +10,7 @@ import * as Tweens from "../../Utils/Tweens";
 export default class MaterialSlots {
 
     slot: Sprite;
+    slotSize: Vec2 = new Vec2(32,32);
     text: Label;
     textBackdrop: Label;
 
@@ -24,19 +25,19 @@ export default class MaterialSlots {
 	constructor(scene: Scene, centerPos: Vec2, xOffset: number, materialImageId: string) {
 
 		this.centerPos = centerPos;
-        this.slot = scene.add.sprite("ui_square", UILayers.INGAME_UI)
-        this.xOffset = xOffset - this.slot.size.x/2;
-        this.yOffset =  2*this.centerPos.y - (this.slot.size.y) - 4;
-        this.slot.position.set(this.xOffset, this.yOffset)
-        this.slot.scale = new Vec2(0.4, 0.4);
-		this.slot.alpha = 0.8;
+        // this.slot = scene.add.sprite("ui_square", UILayers.INGAME_UI);
+        this.xOffset = xOffset - this.slotSize.x/2;
+        this.yOffset =  2*this.centerPos.y - (this.slotSize.y) - 4;
+        // this.slot.position.set(this.xOffset, this.yOffset)
+        // this.slot.scale = new Vec2(0.4, 0.4);
+		// this.slot.alpha = 0.8;
 
         this.materialSprite = scene.add.sprite(materialImageId, UILayers.INGAME_UI);
-        this.materialSprite.position = this.slot.position;
-        this.materialSprite.scale = new Vec2(0.3, 0.3);
+        this.materialSprite.position.set(this.xOffset, this.yOffset)
+        this.materialSprite.scale = new Vec2(0.5, 0.5);
 
 
-        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.slot.position.x+0.5, this.slot.position.y + 0.5), text:`x${this.count}`});
+        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.xOffset+0.5, this.yOffset + 0.5), text:`x${this.count}`});
         this.textBackdrop.size.set(50,50)
         this.textBackdrop.font = Fonts.ROUND;
         this.textBackdrop.textColor = Palette.black();
@@ -45,7 +46,7 @@ export default class MaterialSlots {
         this.textBackdrop.setVAlign('bottom');
         this.textBackdrop.tweens.add("itemIncrement", Tweens.itemIncrement(this.textBackdrop.fontSize))
 
-        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.slot.position.x, this.slot.position.y), text:`x${this.count}`});
+        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.xOffset, this.yOffset), text:`x${this.count}`});
         this.text.size.set(50,50)
         this.text.font = Fonts.ROUND;
         this.text.textColor = Palette.white();

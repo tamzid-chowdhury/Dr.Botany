@@ -80,9 +80,11 @@ export default class GameLevel extends Scene {
         this.load.image("shadow", "assets/player/shadow_sprite.png");
         this.load.image("shovel", "assets/weapons/shovel.png");
         this.load.image("shovel_outline", "assets/weapons/shovel_select_outline.png");
-        this.load.image("trash_lid", "assets/weapons/trash_lid.png");
-        this.load.image("green_orb", "assets/items/greenorb.png");
-        this.load.image("red_orb", "assets/items/redorb.png");
+        this.load.image("trash_lid", "assets/weapons/trash_lid_icon.png");
+        this.load.image("trash_lid_icon", "assets/weapons/trash_lid_icon.png");
+        this.load.image("shovel_icon", "assets/weapons/shovel_icon.png");
+        this.load.image("upper", "assets/items/good_vibe.png");
+        this.load.image("downer", "assets/items/bad_vibe.png");
         this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
         this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
         this.load.audio("swing", "assets/sfx/swing_sfx.wav");

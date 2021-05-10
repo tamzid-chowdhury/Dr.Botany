@@ -11,7 +11,7 @@ export default class TrashLid extends Equipment {
 
 	init(position: Vec2): void {
         this.sprite.position.set(position.x, position.y);
-        this.sprite.scale = new Vec2(this.scale, this.scale);
+        this.sprite.scale = new Vec2(1.2, 1.2);
 		this.sprite.invertY = true;
 		this.sprite.visible = false;
         this.sprite.active = false;

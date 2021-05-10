@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
@@ -15,6 +16,7 @@ export default class AnimatedDialog {
 	position: Vec2;
 	scene: Scene;
 	finished: boolean = false;
+	bg: Sprite;
 	// note make intervalTime a constructor arg to have variable wait time, so that sentences are fast and then maybe ellipses are slower
 	constructor(fullString: string, position: Vec2, scene: Scene) {
 		this.fullString = fullString;
@@ -22,12 +24,21 @@ export default class AnimatedDialog {
 		this.currentString = '';
 		this.position = position;
 		this.scene = scene;
-		this.label = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x, position.y-16), text: this.currentString});
+
+		this.label = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x, position.y), text: this.currentString});
 		this.label.font = Fonts.ABBADON_BOLD
+
 	}
 
-	// have to schedule this using the update loop
-	// when 
+	start(): void {
+		this.label.visible = true;
+		this.finished = false;
+		this.currentString = '';
+		this.label.text = this.currentString;
+		this.revealedLen = 0;
+		this.elapsedTime = 0;
+	}
+
 	incrementText(): void {
 		// emit textwrite sfx
 		if(this.elapsedTime % this.intervalTime === 0) {
@@ -42,12 +53,17 @@ export default class AnimatedDialog {
 			this.label.text = this.currentString;
 			if(this.revealedLen === this.fullLen) {
 				// maybe a better way would be to subscribe to an event while an animated dialog is playing and then unsub when finished
-				this.finished = true;
-				this.elapsedTime = 0;
+
+				this.finish();
 			}
 		}
 		
 		this.elapsedTime ++;
+	}
+
+	finish(): void {
+		this.finished = true;
+
 	}
 
 

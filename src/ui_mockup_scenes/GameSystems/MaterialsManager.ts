@@ -2,11 +2,8 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
-import Color from "../../Wolfie2D/Utils/Color";
 import Material from "../Types/items/Material";
 import { InGame_GUI_Events } from "../Utils/Enums";
 
@@ -24,13 +21,14 @@ export default class MaterialsManager {
     scene: Scene;
     emitter: Emitter;
 
+
     constructor(scene: Scene, size: number = 48) { 
         this.scene = scene;
         this.emitter = new Emitter();
         this.maxMaterials = size;
         for(let i = 0; i < this.maxMaterials; i ++) {
             if(i % 2 === 0) {
-                let upper = this.scene.add.sprite("green_orb", 'primary');
+                let upper = this.scene.add.sprite("upper", 'primary');
                 upper.scale.set(0.6, 0.6);
                 let material = new Material(upper, "upper", 'upper', []);
                 material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
@@ -40,7 +38,7 @@ export default class MaterialsManager {
                 this.inactiveUppers.push(material);
             }
             else {
-                let downer = this.scene.add.sprite("red_orb", 'primary');
+                let downer = this.scene.add.sprite("downer", 'primary');
                 downer.scale.set(0.6, 0.6);
                 let material = new Material(downer, "downer", 'downer', []);
                 material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));

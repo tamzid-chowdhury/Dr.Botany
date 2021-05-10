@@ -34,7 +34,7 @@ export default class InGameUI implements Updateable {
     moodBar: MoodBar;
     equipSlots: EquipSlots;
     materialSlots: Array<MaterialSlot> = []; // [0] == upper  [1] == downer
-    materialSpriteIds: Array<string> = ["green_orb", "red_orb"];
+    materialSpriteIds: Array<string> = ["upper", "downer"];
     receiver: Receiver;
     interactLabel: Label; 
     showingInteract: boolean;
@@ -54,7 +54,8 @@ export default class InGameUI implements Updateable {
         this.showingInteract = false;
         for(let i = 0; i < 2; i ++) {
             this.materialSlots.push(new MaterialSlot(scene, center, xOffset, this.materialSpriteIds[i]));
-            xOffset += this.materialSlots[i].slot.size.x;
+            xOffset += 32;
+            // xOffset += this.materialSlots[i].slot.size.x;
         }
 
 

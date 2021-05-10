@@ -77,6 +77,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.equipped.setActive(this.owner.position.clone());
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 1, spriteKey: this.equipment.stowed.spriteKey});
         this.subscribeToEvents();
         // NOTE: this should be tied to the currently equipped weapon 
         // can potentially be affected by mood

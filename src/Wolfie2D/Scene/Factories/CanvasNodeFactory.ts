@@ -66,7 +66,6 @@ export default class CanvasNodeFactory {
 
 		// Add instance to layer
 		layer.addNode(instance)
-
 		return instance;
 	}
 

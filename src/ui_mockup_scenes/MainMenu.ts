@@ -19,6 +19,7 @@ import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
 import * as Tweens from "./Utils/Tweens"
 import LevelOne from "./Scenes/LevelOne";
+import { Physics } from "./Utils/PhysicsOptions"
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -40,7 +41,7 @@ export default class MainMenu extends Scene {
 
     center: Vec2;
     scrollSpeed: number = 100;
-    defaultFont: string = 'Round';
+    defaultFont: string = 'Abbadon Bold';
     viewPortWidth: number = this.viewport.getHalfSize().x * 2;
     viewPortHeight: number = this.viewport.getHalfSize().y * 2;
 
@@ -109,9 +110,7 @@ export default class MainMenu extends Scene {
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
         this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
 
-        let mousePos = Input.getMousePosition();
         this.cursor.scale = new Vec2(0.8, 0.8)
-        // this.cursor.rotation = 3.14
         this.cursor.visible = false;
 
 
@@ -158,11 +157,6 @@ export default class MainMenu extends Scene {
             this.backgroundLayer.bg.position.x = -this.backgroundLayer.bg.size.x / 2;
 
         }
-
-        if(Input.isMouseJustPressed()) {
-            console.log(mousePos);
-        }
-
 
         if (this.backgroundLayer.bgCopy.position.x > this.backgroundLayer.bg.size.x) {
             this.backgroundLayer.bgCopy.position.x = -this.backgroundLayer.bg.size.x / 2;
@@ -222,42 +216,7 @@ export default class MainMenu extends Scene {
 
             if (event.type === UIEvents.TRANSITION_LEVEL_ZERO) {
                 let sceneOptions = {
-                    physics: {
-                        groupNames: ["ground", "player", "enemies", "materials", "projectiles", "deposits"],
-                        collisions:
-                            [
-                                /*
-                                    Init the next scene with physics collisions:
-    
-                                                ground  player  enemy   materials   equipment
-                                    ground        No       --      --     --            --
-                                    player        Yes      No      --     --            --
-                                    enemy         Yes      No      No     --            No
-                                    materials     Yes       No      No     No           No
-                                    equipment     Yes       No      No     No           No
-    
-                                    Each layer becomes a number. In this case, 4 bits matter for each
-    
-                                    ground: self - 0001, collisions - 0110
-                                    player: self - 0010, collisions - 1001
-                                    enemy:  self - 0100, collisions - 0001
-                                    coin:   self - 1000, collisions - 0010
-                                */
-                                // [0, 1, 1, 1, 1],
-                                // [1, 0, 0, 0, 0],
-                                // [1, 0, 0, 0, 0],
-                                // [1, 0, 0, 0, 0],
-                                // [1, 0, 0, 0, 0]
-
-                                // TODO: figure out if commented out matrix is correct or not for materials/equipment
-                                [0, 1, 1, 0, 0, 0],
-                                [1, 0, 0, 0, 0, 0],
-                                [1, 0, 1, 0, 0, 0],
-                                [0, 0, 0, 0, 0, 0],
-                                [0, 0, 0, 0, 0, 0],
-                                [0, 0, 0, 0, 0, 0]
-                            ]
-                    }
+                    physics: Physics
                 }
                 this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
 
@@ -273,7 +232,6 @@ export default class MainMenu extends Scene {
 
             }
             if (event.type === UIEvents.CLICKED_SPRING) {
-                console.log('spring')
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
                 
 
@@ -330,7 +288,6 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_SUMMER) {
-                console.log('summer')
 				// this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 // this.setVisibleLayer(UILayers.SUMMER_LEVELS);
                 // this.summerLevelLayer.enbleButtons();
@@ -339,7 +296,6 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_FALL) {
-                console.log('fall')
 				// this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 // this.setVisibleLayer(UILayers.FALL_LEVELS);
                 // this.fallLevelLayer.enbleButtons();
@@ -347,7 +303,6 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_WINTER) {
-                console.log('winter')
 				// this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button", loop: false, holdReference: true});
                 // this.setVisibleLayer(UILayers.WINTER_LEVELS);
                 // this.winterLevelLayer.enbleButtons();

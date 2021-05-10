@@ -161,3 +161,4 @@ export enum CheatCodes {
 	ENABLE_INVINCIBILITY = "EnableInvincibility",
 	ENABLE_UNLIMITED_AMMO = "EnableUnlimitedAmmo",
 }
+

@@ -110,7 +110,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
 	// @override
 	deregisterObject(node: Physical): void {
-		console.log("Deregistering physics object");
+		// console.log("Deregistering physics object");
 		if(node.isStatic){
 			// Remove the node from the static list
 			const index = this.staticNodes.indexOf(node);
