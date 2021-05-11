@@ -64,7 +64,6 @@ export default class InGameUI implements Updateable {
         for(let i = 0; i < 2; i ++) {
             this.materialSlots.push(new MaterialSlot(scene, center, xOffset, this.materialSpriteIds[i]));
             xOffset += 32;
-            // xOffset += this.materialSlots[i].slot.size.x;
         }
 
         this.growthBarFill = this.scene.add.sprite('growth_bar_fill', InGameUILayers.ANNOUNCEMENT_TEXT);
@@ -89,7 +88,8 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.UPDATE_EQUIP_SLOT,
             InGame_GUI_Events.SHOW_GROWTH_BAR,
             InGame_GUI_Events.HIDE_GROWTH_BAR,
-            InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE
+            InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE,
+            InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO
         ]);
 
     }
@@ -161,11 +161,19 @@ export default class InGameUI implements Updateable {
                 }
 
             }
+            if(event.type === InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO){ 
+                let spriteKey = event.data.get("spriteKey");
+                let ammo = event.data.get("ammo");
+                this.equipSlots.updateCounter(spriteKey, ammo);
+            }
+
+            
 
             if(event.type === InGame_GUI_Events.UPDATE_EQUIP_SLOT){ 
-                let slotNum = event.data.get("slotNum");
                 let spriteKey = event.data.get("spriteKey");
-                this.equipSlots.updateSlot(slotNum, spriteKey);
+                let ammo = event.data.get("ammo");
+                let hasAmmo = event.data.get("hasAmmo");
+                this.equipSlots.updateSlot(spriteKey, hasAmmo, ammo);
             }
 
             if(event.type === InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE){ 

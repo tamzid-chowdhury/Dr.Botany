@@ -12,7 +12,9 @@ export default class Equipment {
 	damage: number = 1;
 	cooldown: number;
 	swingDir: number = 1;
+	charges: number;
 	scale: number = 1;
+
 	constructor(data: Record<string,any>) {
 		this.type = data.type;
 		this.spriteKey = data.spriteKey;
@@ -22,6 +24,7 @@ export default class Equipment {
 		this.cooldown = data.cooldown;
 		this.sfxKey = data.sfxKey;
 		this.scale = data.scale;
+		this.charges = data.charges;
 
 	}
 

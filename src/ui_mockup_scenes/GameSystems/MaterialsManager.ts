@@ -6,6 +6,7 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Material from "../Types/items/Material";
 import { InGame_GUI_Events } from "../Utils/Enums";
+import { PhysicsGroups } from "../Utils/PhysicsOptions";
 
 export default class MaterialsManager {
 
@@ -30,7 +31,7 @@ export default class MaterialsManager {
                 upper.scale.set(0.6, 0.6);
                 let material = new Material(upper, "upper", 'upper', []);
                 material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-                material.sprite.setGroup("materials");
+                material.sprite.setGroup(PhysicsGroups.MATERIAL);
                 material.sprite.visible = false;
                 material.sprite.active = false;
                 this.inactiveUppers.push(material);
@@ -40,7 +41,7 @@ export default class MaterialsManager {
                 downer.scale.set(0.6, 0.6);
                 let material = new Material(downer, "downer", 'downer', []);
                 material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-                material.sprite.setGroup("materials");
+                material.sprite.setGroup(PhysicsGroups.MATERIAL);
                 material.sprite.visible = false;
                 material.sprite.active = false;
                 this.inactiveDowners.push(material);

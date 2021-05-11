@@ -154,7 +154,8 @@ export enum InGame_GUI_Events {
 	UPDATE_EQUIP_SLOT = "UPDATE_EQUIP_SLOT",
 	SHOW_GROWTH_BAR = "SHOW_GROWTH_BAR",
 	HIDE_GROWTH_BAR = "HIDE_GROWTH_BAR",
-	UPDATE_EQUIP_SLOT_OUTLINE = "UPDATE_EQUIP_SLOT_OUTLINE"
+	UPDATE_EQUIP_SLOT_OUTLINE = "UPDATE_EQUIP_SLOT_OUTLINE",
+	UPDATE_EQUIP_SLOT_AMMO = "UPDATE_EQUIP_SLOT_AMMO"
 }
 
 export enum CheatCodes {
@@ -167,3 +168,8 @@ export enum CheatCodes {
 	ENABLE_UNLIMITED_AMMO = "EnableUnlimitedAmmo",
 }
 
+
+export enum WeaponTypes {
+	UNLIMITED = "unlimited",
+	AMMO = "ammo",
+}

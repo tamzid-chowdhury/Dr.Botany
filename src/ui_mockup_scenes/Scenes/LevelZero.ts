@@ -17,7 +17,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import AnimatedDialog from "../Classes/AnimatedDialog";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import MainMenu from "../MainMenu";
-import { Physics } from "../Utils/PhysicsOptions";
+import { Physics, PhysicsGroups } from "../Utils/PhysicsOptions";
 
 export default class LevelZero extends GameLevel {
 
@@ -294,7 +294,7 @@ export default class LevelZero extends GameLevel {
         // play with this // maybe add a condition for each enemy
 
         enemy.addAI(EnemyController, aiOptions);
-        enemy.setGroup("enemies");
+        enemy.setGroup(PhysicsGroups.ENEMY);
         enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
         enemy.setTrigger("projectiles", InGame_Events.PROJECTILE_HIT_ENEMY, null)
 

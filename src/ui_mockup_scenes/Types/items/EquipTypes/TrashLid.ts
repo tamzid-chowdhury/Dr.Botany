@@ -5,6 +5,7 @@ import { InGame_Events } from "../../../Utils/Enums";
 
 export default class TrashLid extends Equipment { 
 	
+
 	constructor(data: Record<string,any>) {
 		super(data);
 	}
@@ -20,9 +21,11 @@ export default class TrashLid extends Equipment {
 
 	}
 	doAttack(direction: Vec2): void {
-		this.sprite.active = true;
-		(<TrashLidController>this.sprite._ai).beginThrow(direction);
-
+		if(this.charges > 0) {
+			this.sprite.active = true;
+			(<TrashLidController>this.sprite._ai).beginThrow(direction);
+			this.charges--;
+		}
 	}
 
 	updatePos(position: Vec2, playerLookDirection: Vec2): void {

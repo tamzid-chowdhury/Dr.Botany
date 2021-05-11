@@ -22,6 +22,7 @@ import Equipment from "../Types/items/Equipment";
 import MaterialsManager from "../GameSystems/MaterialsManager";
 import Shovel from "../Types/items/EquipTypes/Shovel";
 import TrashLid from "../Types/items/EquipTypes/TrashLid";
+import { PhysicsGroups } from "../Utils/PhysicsOptions";
 // import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
@@ -371,9 +372,9 @@ export default class GameLevel extends Scene {
         this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x/2, this.upperDeposit.size.y - this.upperDeposit.size.y/4)));
         this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x/2, this.downerDeposit.size.y - this.downerDeposit.size.y/4)));
         this.plant.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.plant.size.x/2 , this.plant.size.y)));
-        this.upperDeposit.setGroup('deposits');
-        this.downerDeposit.setGroup('deposits');
-        this.plant.setGroup('deposits');
+        this.upperDeposit.setGroup(PhysicsGroups.DEPOSIT);
+        this.downerDeposit.setGroup(PhysicsGroups.DEPOSIT);
+        this.plant.setGroup(PhysicsGroups.DEPOSIT);
 
         this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
         this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_DOWNER_DEPOSIT);

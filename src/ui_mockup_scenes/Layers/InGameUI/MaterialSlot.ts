@@ -1,12 +1,9 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
-import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../../Wolfie2D/Scene/Scene";
-import { UILayers, Fonts } from "../../Utils/Enums";
-import * as Palette from "../../Utils/Colors";
-import * as Tweens from "../../Utils/Tweens";
-
+import { UILayers } from "../../Utils/Enums";
+import Counter from "../../Classes/Counter";
 export default class MaterialSlots {
 
     slot: Sprite;
@@ -21,59 +18,33 @@ export default class MaterialSlots {
     xOffset: number;
     yOffset: number;
     count: number = 0; 
-
+    counter: Counter;
 	constructor(scene: Scene, centerPos: Vec2, xOffset: number, materialImageId: string) {
 
 		this.centerPos = centerPos;
-        // this.slot = scene.add.sprite("ui_square", UILayers.INGAME_UI);
         this.xOffset = xOffset - this.slotSize.x/2;
         this.yOffset =  2*this.centerPos.y - (this.slotSize.y) - 4;
-        // this.slot.position.set(this.xOffset, this.yOffset)
-        // this.slot.scale = new Vec2(0.4, 0.4);
-		// this.slot.alpha = 0.8;
 
         this.materialSprite = scene.add.sprite(materialImageId, UILayers.INGAME_UI);
         this.materialSprite.position.set(this.xOffset, this.yOffset)
         this.materialSprite.scale = new Vec2(0.5, 0.5);
 
-
-        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.xOffset+0.5, this.yOffset + 0.5), text:`x${this.count}`});
-        this.textBackdrop.size.set(50,50)
-        this.textBackdrop.font = Fonts.ROUND;
-        this.textBackdrop.textColor = Palette.black();
-        this.textBackdrop.fontSize = 16;
-        this.textBackdrop.setHAlign('right');
-        this.textBackdrop.setVAlign('bottom');
-        this.textBackdrop.tweens.add("itemIncrement", Tweens.itemIncrement(this.textBackdrop.fontSize))
-
-        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(this.xOffset, this.yOffset), text:`x${this.count}`});
-        this.text.size.set(50,50)
-        this.text.font = Fonts.ROUND;
-        this.text.textColor = Palette.white();
-        this.text.fontSize = 16;
-        this.text.setHAlign('right');
-        this.text.setVAlign('bottom')
-        this.text.tweens.add("itemIncrement", Tweens.itemIncrement(this.textBackdrop.fontSize))
-
+        this.counter = new Counter(scene, this.count, new Vec2(50,50), new Vec2(this.xOffset, this.yOffset))
 
 	}
 
     updateCount(): void {
-        this.textBackdrop.tweens.play("itemIncrement");
-        this.text.tweens.play("itemIncrement")
+
         this.count = this.count+1;
-        this.textBackdrop.text = `x${this.count}`;
-        this.text.text = `x${this.count}`; 
+        this.counter.setCount(this.count)
+
     }
 
     clearCount(): void {
         this.count = 0;
-        this.textBackdrop.text = `x${this.count}`;
-        this.text.text = `x${this.count}`; 
+        this.counter.setCount(this.count)
+
     }
 
-	updateText(): void {
-		// TODO: when player health changes, text has to update
-	}
 }
 

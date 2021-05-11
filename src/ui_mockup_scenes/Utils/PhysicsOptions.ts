@@ -26,11 +26,21 @@ export const Physics = {
                                 // [1, 0, 0, 0, 0]
 
                                 // TODO: figure out if commented out matrix is correct or not for materials/equipment
+                                // NOTE: As of 5/11 enemies wont collide w/ each other 
                                 [0, 1, 1, 0, 0, 0],
                                 [1, 0, 0, 0, 0, 0],
-                                [1, 0, 1, 0, 0, 0],
+                                [1, 0, 0, 0, 0, 0],
                                 [0, 0, 0, 0, 0, 0],
                                 [0, 0, 0, 0, 0, 0],
                                 [0, 0, 0, 0, 0, 0]
                             ]
+}
+
+export enum PhysicsGroups {
+    PLAYER = "player",
+    PROJECTILE = "projectiles",
+    ENEMY = "enemies",
+    MATERIAL = "materials",
+    GROUND = "ground",
+    DEPOSIT = "deposits",
 }

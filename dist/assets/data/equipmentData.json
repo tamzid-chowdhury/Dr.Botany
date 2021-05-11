@@ -2,25 +2,27 @@
 	"count": 2,
 	"equipment": [
 		{
-			"type": "projectile",
+			"type": "unlimited",
 			"name": "Shovel",
             "projectileSpriteKey": "swing",
             "spriteKey": "shovel",
             "damage": 1,
             "cooldown": 300,
 			"sfxKey": "swing",
-			"scale": 1
+			"scale": 1,
+			"charges": 1
+
 		},
 		{
-			"type": "projectile",
+			"type": "ammo",
 			"name": "TrashLid",
             "projectileSpriteKey": "swing",
             "spriteKey": "trash_lid",
             "damage": 1,
             "cooldown": 600,
 			"sfxKey": "swing",
-			"scale": 0.6
-
+			"scale": 0.6,
+			"charges": 5
 		}
 	]
 }

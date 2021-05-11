@@ -5,10 +5,13 @@ import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import { UILayers, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
+import Counter from "../../Classes/Counter";
+
+interface StringIndex {
+	[index: string]: any;
+}
 
 export default class EquipSlots {
-	slotOne: Sprite;
-	slotTwo: Sprite;
 	equippedBackdrop: Sprite;
 	text: Label;
 	textBackdrop: Label;
@@ -18,7 +21,8 @@ export default class EquipSlots {
 	xOffset: number;
 	yOffset: number;
 	outline: Sprite;
-
+	slots: Array<Sprite> = [];
+	ammoSlots: StringIndex = [];
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
 		this.scene = scene;
@@ -26,24 +30,19 @@ export default class EquipSlots {
 		this.yOffset = this.centerPos.y / 4;
 	}
 
-	updateSlot(slot: number, spriteKey: string): void {
-		if(slot === 0) {
-			// this.equippedBackdrop = this.scene.add.sprite("ui_square", UILayers.INGAME_UI);
-			// this.equippedBackdrop.position.set(this.xOffset, this.yOffset)
-			// this.equippedBackdrop.scale = new Vec2(0.6, 0.6);
-			// this.equippedBackdrop.alpha = 0.7;
-			// this.equippedBackdrop.rotation = -Math.PI / 4;
-			this.slotOne = this.scene.add.sprite(`${spriteKey}_icon`, UILayers.INGAME_UI);
-			this.slotOne.position.set(this.xOffset, this.yOffset);
+	updateSlot(spriteKey: string, hasAmmo: boolean, ammo: number): void {
+		let sprite = this.scene.add.sprite(`${spriteKey}_icon`, UILayers.INGAME_UI);
+		let xOffset = this.xOffset + (24 * this.slots.length)
+		sprite.position.set(xOffset, this.yOffset); // each successive slot is 24 px away from previous
+		this.slots.push(sprite)
+		if(hasAmmo) {
+			let counter = new Counter(this.scene, ammo, new Vec2(50,50), new Vec2(xOffset+4, this.yOffset+4), 16);
+			this.ammoSlots[spriteKey] = counter;
 		}
-		else {
-			this.slotTwo = this.scene.add.sprite(`${spriteKey}_icon`, UILayers.INGAME_UI);
-			this.slotTwo.position.set(this.xOffset + 24, this.yOffset)
-			// this.slotTwo = this.scene.add.sprite(spriteKey, UILayers.INGAME_UI);
-			// this.slotTwo.position.set(this.xOffset + (this.centerPos.x / 16), this.yOffset)
-			// this.slotTwo.scale = new Vec2(0.5, 0.5);
-			// this.slotTwo.rotation = -Math.PI / 4;
-		}
+	}
+
+	updateCounter(spriteKey: string, count: number): void{
+		(<Counter>this.ammoSlots[spriteKey]).setCount(count);
 	}
 
 	drawOutline(spriteKey: string): void {
@@ -53,8 +52,12 @@ export default class EquipSlots {
 
 		}
 		this.outline = this.scene.add.sprite(`${spriteKey}_outline`, UILayers.INGAME_UI);
-		if(this.slotOne.imageId === spriteKey) 	this.outline.position = this.slotOne.position;
-		else 			this.outline.position = this.slotTwo.position;
+		for(let slot of this.slots) {
+			if(slot.imageId === spriteKey) {
+				this.outline.position = slot.position;
+				break;
+			}
+		}
 	}
 
 }

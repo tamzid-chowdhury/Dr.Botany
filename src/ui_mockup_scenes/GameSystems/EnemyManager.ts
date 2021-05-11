@@ -4,6 +4,7 @@ import Emitter from '../../Wolfie2D/Events/Emitter';
 import Scene from '../../Wolfie2D/Scene/Scene';
 import EnemyController from '../Enemies/EnemyController';
 import { InGame_Events } from '../Utils/Enums';
+import { PhysicsGroups } from '../Utils/PhysicsOptions';
 
 export default class EnemyManager {
 	maxEnemies: number; // dunno if this is too much
@@ -28,7 +29,7 @@ export default class EnemyManager {
         enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(( (collisionShape.x / 2)) * scale, (collisionShape.y / 4) * scale) ));
         enemy.colliderOffset.set(0, (collisionShape.y / 4) * scale);
         enemy.addAI(EnemyController, aiOptions);
-        enemy.setGroup("enemies");
+        enemy.setGroup(PhysicsGroups.ENEMY);
         enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
         enemy.setTrigger("projectiles", InGame_Events.PROJECTILE_HIT_ENEMY, null)
 		this.inactivePool.push()

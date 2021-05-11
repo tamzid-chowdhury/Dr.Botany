@@ -10,7 +10,8 @@ import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import EquipmentManager from "../GameSystems/EquipmentManager";
 import Equipment from "../Types/items/Equipment";
-import { InGame_Events, InGame_GUI_Events } from "../Utils/Enums";
+import { InGame_Events, InGame_GUI_Events, WeaponTypes } from "../Utils/Enums";
+import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";
 import ProjectileController from "./ProjectileController";
@@ -70,15 +71,20 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
         this.owner.colliderOffset.set(0, 10);
-        this.owner.setGroup("player");
+        this.owner.setGroup(PhysicsGroups.PLAYER);
         for(let e of this.equipment.prototypes) {
             e.init(this.owner.position.clone())
+            let hasAmmo = e.type === WeaponTypes.AMMO ? true : false;
+            let ammo = 1;
+            if(hasAmmo) {
+                ammo = e.charges;
+            }
+            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {spriteKey: e.spriteKey, hasAmmo: hasAmmo, ammo: ammo});
+
         }
 
         this.equipped.setActive(this.owner.position.clone());
-        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
-        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 1, spriteKey: this.equipment.stowed.spriteKey});
-        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {slotNum: 0, spriteKey: this.equipment.equipped.spriteKey});
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipment.equipped.spriteKey});
         this.subscribeToEvents();
         // NOTE: this should be tied to the currently equipped weapon 
         // can potentially be affected by mood
@@ -110,13 +116,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
         if(!this.direction.isZero()) {
-            // this.owner.tweens.resume('squish');
             this.velocity.normalize()
             this.velocity.mult(new Vec2(this.speed, this.speed));
             this.owner.animation.playIfNotAlready("WALK", true);
         }
         else {
-            // this.owner.tweens.pause('squish');
             this.owner.animation.playIfNotAlready("IDLE", true);
         }   
 
@@ -130,8 +134,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
 
         this.owner.move(this.velocity.scaled(deltaT));
-
-
 
         if(rotateTo.x > this.owner.position.x) {
             this.owner.invertX = true;
@@ -149,10 +151,16 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         if(Input.isMouseJustPressed()) {
             if(!this.coolDownTimer.isActive()) {
-                this.equipment.equipped.doAttack(this.playerLookDirection);
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipment.equipped.sfxKey, loop: false, holdReference: true});
-                this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
-                this.coolDownTimer.start();
+                if(this.equipped.charges) {
+                    this.equipment.equipped.doAttack(this.playerLookDirection);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipment.equipped.sfxKey, loop: false, holdReference: true});
+                    this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
+                    if(this.equipped.type === WeaponTypes.AMMO) {
+                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, {spriteKey:this.equipment.equipped.spriteKey, ammo: this.equipped.charges})
+
+                    }
+                    this.coolDownTimer.start();
+                }
             }
         }
 

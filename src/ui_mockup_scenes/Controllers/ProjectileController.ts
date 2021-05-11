@@ -6,6 +6,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import { InGame_Events } from "../Utils/Enums";
+import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import * as Tweens from '../Utils/Tweens'
 
 export default class ProjectileController extends StateMachineAI {
@@ -18,7 +19,7 @@ export default class ProjectileController extends StateMachineAI {
         this.owner = owner;
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
         this.owner.active = false;
-        this.owner.setGroup("projectiles");
+        this.owner.setGroup(PhysicsGroups.PROJECTILE);
 
 
         this.subscribeToEvents();
@@ -64,7 +65,7 @@ export class TrashLidController extends ProjectileController {
 		// this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
 		this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/4));
 		this.owner.active = false;
-		this.owner.setGroup("projectiles");
+		this.owner.setGroup(PhysicsGroups.PROJECTILE);
 		this.subscribeToEvents();
         this.throwTimer = new Timer((options.cooldown/2)-10, () => {
             this.attacking = false;
