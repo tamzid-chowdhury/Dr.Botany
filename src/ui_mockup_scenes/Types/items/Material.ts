@@ -7,11 +7,11 @@ import Item from "./Item";
 
 export default class Material extends Item {
 
-    type: String;
-    name: String;
+    type: string;
+    name: string;
     sprite: Sprite; 
-    effects: Array<String>;
-    constructor(sprite: Sprite, type: String, name: String = '', effects: Array<String> = []){
+    effects: Array<string>;
+    constructor(sprite: Sprite, type: string, name: string = '', effects: Array<string> = []){
         super(sprite, name);
         this.type = type;
         // if we get time to implement extra effects for the materials

@@ -48,12 +48,7 @@ export default class LevelZero extends GameLevel {
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
-        this.load.image("box_top", "assets/misc/test_box.png")
-        this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
-        this.load.object("equipmentData", "assets/data/equipmentData.json");
-        this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
-        this.load.spritesheet("green_slime", "assets/enemies/slime_wip.json")
-        this.load.spritesheet("wisp", "assets/enemies/wisp.json")
+
         this.load.audio("background_music", "assets/music/in_game_music.mp3")
     }
 
@@ -87,10 +82,6 @@ export default class LevelZero extends GameLevel {
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
         this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
-        for(let i = 0; i < 3; i++) {
-            this.overdrawTiles.push(this.add.sprite('box_top', 'primary'));
-            this.overdrawTiles[i].visible = false;
-        }
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
         
@@ -150,15 +141,8 @@ export default class LevelZero extends GameLevel {
 
         }
 
-        if (Input.isKeyJustPressed("l")) {
-            this.addEnemy("green_slime", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 50 , player: this.player, health: 40, type: "Downer" }, 1.5)
-        }
-
-        if (Input.isKeyJustPressed("m")) {
-            this.addEnemy("orange_mushroom", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 80 , player: this.player, health: 40, type: "Upper" }, 1)
-        }
         if (Input.isKeyJustPressed("n")) {
-            this.addEnemy("wisp", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 90 , player: this.player, health: 40, type: "Upper" }, 1)
+            this.enemyManager.spawnEnemy(this.player);
         }
 
 

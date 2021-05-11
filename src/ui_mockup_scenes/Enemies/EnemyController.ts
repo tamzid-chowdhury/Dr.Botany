@@ -30,7 +30,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     owner: AnimatedSprite;
     health: number;
     direction: Vec2 = Vec2.ZERO;
-    speed: number = 30;
+    speed: number;
     player: GameNode;
     attackRange: number;
     dropType: String; 
@@ -65,7 +65,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         let dying = new Dying(this, owner);
         this.addState(EnemyStates.DYING, dying)
 
-        this.initialize(EnemyStates.WALK);
+        this.initialize(EnemyStates.IDLE);
         this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER])
 
     }
@@ -98,15 +98,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         if(!this.pauseExecution) {
             if(this.knockBackGuard > 1) this.knockBackGuard--;
             if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
-            if (this.getOwnerPostion().x + 3 <= this.getPlayerPosition().x) { 
-                this.owner.invertX = true; 
-            }
-            else {
-                this.owner.invertX = false;
-            }
-
         }
-        
 	}
 
     doKnockBack(direction: Vec2): void {
@@ -116,6 +108,15 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         if(this.knockBackGuard <= 1) this.changeState(EnemyStates.KNOCKBACK);
         
     }
+
+    wake(player: GameNode): void {
+        this.player = player;
+        this.changeState(EnemyStates.WALK);
+    } 
+
+    sleep(): void {
+        this.changeState(EnemyStates.IDLE);
+    } 
 
     getPlayerPosition(): Vec2 {
         return this.player.position;

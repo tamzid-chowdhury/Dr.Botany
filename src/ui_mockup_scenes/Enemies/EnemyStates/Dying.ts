@@ -17,21 +17,7 @@ export default class Dying extends EnemyState {
 
     update(deltaT: number): void {
         super.update(deltaT);
-        // console.log("called")
-        // if (!(<AnimatedSprite>this.owner).animation.isPlaying("DYING")) {
-        //     let ownerPosition = this.owner.position.clone();
-        //     if (Math.random() < 0.9) {
-        //         if (this.parent.type == "Upper") {
-        //             this.emitter.fireEvent(InGame_Events.SPAWN_UPPER, { position: ownerPosition });
-        //         }
-        //         if (this.parent.type == "Downer") {
-        //             this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, { position: ownerPosition });
-        //         }
-        //     }
-        //     this.owner.setAIActive(false, {});
-        //     this.owner.isCollidable = false;
-        //     this.owner.destroy();
-        // }
+
 
     }
 

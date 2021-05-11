@@ -14,7 +14,12 @@ export default class Walk extends EnemyState {
 
 	update(deltaT: number): void {
 		super.update(deltaT);
-
+		if (this.parent.getOwnerPostion().x + 3 <= this.parent.getPlayerPosition().x) { 
+			this.parent.owner.invertX = true; 
+		}
+		else {
+			this.parent.owner.invertX = false;
+		}
 
 		let ownerPosX = this.parent.getOwnerPostion().x;
 		let ownerPosY = this.parent.getOwnerPostion().y;

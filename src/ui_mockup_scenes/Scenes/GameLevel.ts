@@ -23,6 +23,7 @@ import MaterialsManager from "../GameSystems/MaterialsManager";
 import Shovel from "../Types/items/EquipTypes/Shovel";
 import TrashLid from "../Types/items/EquipTypes/TrashLid";
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
+import EnemyManager from "../GameSystems/EnemyManager";
 // import GameOver from "../Scenes/GameOver";
 
 export default class GameLevel extends Scene {
@@ -53,6 +54,7 @@ export default class GameLevel extends Scene {
     equipmentPrototypes: Array<Equipment> = [];
 
     materialsManager: MaterialsManager;
+    enemyManager: EnemyManager;
 
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
@@ -100,6 +102,13 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.spritesheet("plant", "assets/plant/plant.json")
+
+
+        this.load.object("equipmentData", "assets/data/equipmentData.json");
+        this.load.object("enemyData", "assets/data/enemyData.json");
+        this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
+        this.load.spritesheet("green_slime", "assets/enemies/slime_wip.json")
+        this.load.spritesheet("wisp", "assets/enemies/wisp.json")
     }
 
     startScene(): void {
@@ -146,6 +155,7 @@ export default class GameLevel extends Scene {
         this.initReticle();
         this.initEquipment();
         this.materialsManager = new MaterialsManager(this);
+        this.enemyManager = new EnemyManager(this);
     }
 
     updateScene(deltaT: number) {
@@ -348,7 +358,8 @@ export default class GameLevel extends Scene {
                         this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, { position: ownerPosition });
                     }
                 }
-                node.destroy();
+                this.enemyManager.despawnEnemy(node);
+                // node.destroy();
             }
 
             if (event.type === UIEvents.CLICKED_QUIT) {
@@ -371,7 +382,7 @@ export default class GameLevel extends Scene {
 
         this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x/2, this.upperDeposit.size.y - this.upperDeposit.size.y/4)));
         this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x/2, this.downerDeposit.size.y - this.downerDeposit.size.y/4)));
-        this.plant.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.plant.size.x/2 , this.plant.size.y)));
+        this.plant.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.plant.size.x/2 , this.plant.size.y/2)));
         this.upperDeposit.setGroup(PhysicsGroups.DEPOSIT);
         this.downerDeposit.setGroup(PhysicsGroups.DEPOSIT);
         this.plant.setGroup(PhysicsGroups.DEPOSIT);
@@ -455,7 +466,7 @@ export default class GameLevel extends Scene {
         this.cursor2.visible = false;
     }
 
-    initEquipment(): void{
+    initEquipment(): void {
         let equipData = this.load.getObject("equipmentData");
 
         for(let i = 0; i < equipData.count; i++){

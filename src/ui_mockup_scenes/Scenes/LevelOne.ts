@@ -48,8 +48,6 @@ export default class LevelOne extends GameLevel {
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level_one", "assets/tilemaps/tutorialLevel/level1.json");
-
-    
         this.load.image("box_top", "assets/misc/test_box.png")
         this.load.spritesheet("temp_enemy", "assets/enemies/temp_enemy.json")
         this.load.object("equipmentData", "assets/data/equipmentData.json");

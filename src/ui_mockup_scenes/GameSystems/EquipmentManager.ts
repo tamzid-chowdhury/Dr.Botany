@@ -1,4 +1,3 @@
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Equipment from "../Types/items/Equipment";
 
 export default class EquipmentManager {
@@ -10,6 +9,9 @@ export default class EquipmentManager {
 		this.equipped = this.prototypes[0];
 		this.stowed = this.prototypes[1];
 	}
+
+
+	
 
 	dropEquipped() {
 		// drop equipped on ground

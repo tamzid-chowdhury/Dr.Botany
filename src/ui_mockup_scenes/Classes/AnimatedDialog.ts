@@ -26,6 +26,7 @@ export default class AnimatedDialog {
 		this.scene = scene;
 
 		this.label = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x, position.y), text: this.currentString});
+		this.label.setHAlign('left')
 		this.label.font = Fonts.ABBADON_BOLD
 
 	}
