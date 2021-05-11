@@ -14,8 +14,6 @@ export default class MaterialsManager {
     activeUppers: Array<Material> = [];
     inactiveUppers: Array<Material> = [];
 
-    activeMaterials: Array<Material> = [];
-    inactiveMaterials: Array<Material> = [];
 
     maxMaterials: number;
     scene: Scene;
@@ -86,7 +84,6 @@ export default class MaterialsManager {
     resolveMaterials(position: Vec2, deltaT: number): void {
         for(let material of this.activeDowners) {
             if (material.sprite.position.distanceTo(position) < 15) {
-                // this.activeDowners.splice(i,1)
                 let index = this.activeDowners.indexOf(material)
                 this.activeDowners.splice(index, 1)
                 material.sprite.active = false;
@@ -105,7 +102,6 @@ export default class MaterialsManager {
 
         for(let material of this.activeUppers) {
             if (material.sprite.position.distanceTo(position) < 15) {
-                // this.activeDowners.splice(i,1)
                 let index = this.activeUppers.indexOf(material)
                 this.activeUppers.splice(index, 1)
                 material.sprite.active = false;

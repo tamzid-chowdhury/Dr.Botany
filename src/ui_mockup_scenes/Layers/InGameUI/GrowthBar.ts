@@ -6,7 +6,7 @@ import Scene from "../../../Wolfie2D/Scene/Scene";
 import { UILayers, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
 
-export default class Growthbar {
+export default class GrowthBar {
 	sprite: Sprite;
 	text: Label;
 	textBackdrop: Label;

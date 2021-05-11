@@ -8,26 +8,11 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import InGameUI from "../Layers/InGameUI/InGameUILayer";
 import { InGame_Events, UIEvents } from "./Enums";
 
-export function trashLidThrow(pos: Vec2, dir: Vec2, duration: number = 150, rotation: number): Record<string,any> {
+export function trashLidThrow(duration: number = 150, rotation: number): Record<string,any> {
 	let tween = {
 		startDelay: 0,
 		duration: duration,
 		effects: [
-
-			{
-				property:TweenableProperties.posX,
-				start: pos.x,
-				end: pos.x + (100 * dir.x) ,
-				ease: EaseFunctionType.OUT_SINE,
-				resetOnComplete: true
-			},
-			{
-				property:TweenableProperties.posY,
-				start: pos.y,
-				end: pos.y + (100 * dir.y) ,
-				ease: EaseFunctionType.OUT_SINE,
-				resetOnComplete: true
-			},
 			{
 				property:TweenableProperties.rotation,
 				start: rotation,
@@ -37,7 +22,6 @@ export function trashLidThrow(pos: Vec2, dir: Vec2, duration: number = 150, rota
 			},
 
 		],
-		// onEnd: InGame_Events.TRASH_LID_APEX,
 		reverseOnComplete: true
 	}
 	return tween
@@ -624,7 +608,6 @@ export function spriteFadeIn(duration: number = 400): Record<string,any> {
 				start: 0,
 				end: 1,
 				ease: EaseFunctionType.OUT_SINE,
-				resetOnComplete: true
 			},
 		]
 	}

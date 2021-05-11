@@ -22,6 +22,7 @@ import MaterialSlot from "./MaterialSlot";
 import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import Receiver from "../../../Wolfie2D/Events/Receiver"
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
+import GrowthBar from "./GrowthBar";
 
 export default class InGameUI implements Updateable {
     layer: Layer; 
@@ -32,12 +33,20 @@ export default class InGameUI implements Updateable {
 
     healthBar: HealthBar;
     moodBar: MoodBar;
+    // growthBar: GrowthBar;
     equipSlots: EquipSlots;
     materialSlots: Array<MaterialSlot> = []; // [0] == upper  [1] == downer
     materialSpriteIds: Array<string> = ["upper", "downer"];
     receiver: Receiver;
     interactLabel: Label; 
     showingInteract: boolean;
+
+
+    // temporary for testing
+    growthBarOutline: Sprite;
+    growthBarFill: Sprite;
+    showingGrowth: boolean = false;
+    // 
     constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
         this.font = font; 
@@ -58,6 +67,14 @@ export default class InGameUI implements Updateable {
             // xOffset += this.materialSlots[i].slot.size.x;
         }
 
+        this.growthBarFill = this.scene.add.sprite('growth_bar_fill', InGameUILayers.ANNOUNCEMENT_TEXT);
+        this.growthBarOutline = this.scene.add.sprite('growth_bar_outline', InGameUILayers.ANNOUNCEMENT_TEXT);
+
+        this.growthBarFill.tweens.add('scaleIn', Tweens.scaleIn(new Vec2(0,0) , new Vec2(1,1),  0, 200));
+        this.growthBarFill.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1,1) , new Vec2(0,0),  0, 200));
+
+        this.growthBarOutline.tweens.add('scaleIn', Tweens.scaleIn(new Vec2(0,0) , new Vec2(1,1),  0, 200));
+        this.growthBarOutline.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1,1) , new Vec2(0,0),  0, 200));
 
         //subscribe to events
         this.receiver.subscribe([
@@ -69,7 +86,10 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.UPDATE_HEALTHBAR,
             InGame_GUI_Events.SHOW_INTERACT_LABEL,
             InGame_GUI_Events. HIDE_INTERACT_LABEL,
-            InGame_GUI_Events.UPDATE_EQUIP_SLOT
+            InGame_GUI_Events.UPDATE_EQUIP_SLOT,
+            InGame_GUI_Events.SHOW_GROWTH_BAR,
+            InGame_GUI_Events.HIDE_GROWTH_BAR,
+            InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE
         ]);
 
     }
@@ -94,6 +114,28 @@ export default class InGameUI implements Updateable {
                 this.moodBar.indicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.indicator.scale));        
                 this.moodBar.indicator.tweens.play("slideX");        
                 this.moodBar.indicator.tweens.play("scale");        
+            }
+
+            if(event.type === InGame_GUI_Events.SHOW_GROWTH_BAR){
+                if(!this.showingGrowth) {
+                    this.showingGrowth = true;
+                    position = event.data.get("position");
+                    this.growthBarFill.position.set(position.x, position.y - 48);
+                    this.growthBarOutline.position.set(position.x, position.y - 48);
+                    // this.growthBarFill.tweens.add("fadeIn", Tweens.spriteFadeIn(200));
+                    // this.growthBarOutline.tweens.add("fadeIn", Tweens.spriteFadeIn(200));
+                    // this.growthBarFill.tweens.add("fadeOut", Tweens.spriteFadeOut(200));
+                    // this.growthBarOutline.tweens.add("fadeOut", Tweens.spriteFadeOut(200));
+                    this.growthBarFill.tweens.play("scaleIn");
+                    this.growthBarOutline.tweens.play("scaleIn");
+                }
+
+            }
+
+            if(event.type === InGame_GUI_Events.HIDE_GROWTH_BAR){
+                this.growthBarFill.tweens.play("scaleOut");
+                this.growthBarOutline.tweens.play("scaleOut");
+                this.showingGrowth = false;
             }
 
             if(event.type === InGame_GUI_Events.UPDATE_HEALTHBAR){
@@ -124,6 +166,11 @@ export default class InGameUI implements Updateable {
                 let slotNum = event.data.get("slotNum");
                 let spriteKey = event.data.get("spriteKey");
                 this.equipSlots.updateSlot(slotNum, spriteKey);
+            }
+
+            if(event.type === InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE){ 
+                let spriteKey = event.data.get("spriteKey");
+                this.equipSlots.drawOutline(spriteKey);
             }
 
 

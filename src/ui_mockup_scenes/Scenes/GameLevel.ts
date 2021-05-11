@@ -69,10 +69,13 @@ export default class GameLevel extends Scene {
         
         this.load.image("ui_square", "assets/ui_art/ui_box_v2.png");
         this.load.image("ui_circle", "assets/ui_art/ui_circle.png");
+
+        this.load.image("growth_bar_outline", "assets/ui_art/generic_bar_outline.png");
+        this.load.image("growth_bar_fill", "assets/ui_art/generic_bar_fill.png");
         
         this.load.image("healthbar", "assets/ui_art/health_bar_wip-1.png")
         this.load.image("healthbaroutline", "assets/ui_art/ui_bar_outline.png")
-        this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
+        // this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
         this.load.image("moodbar_indicator", "assets/ui_art/mood_bar_indicator.png")
         this.load.image("health_pip", "assets/ui_art/leaf_icon.png");
@@ -82,7 +85,9 @@ export default class GameLevel extends Scene {
         this.load.image("shovel_outline", "assets/weapons/shovel_select_outline.png");
         this.load.image("trash_lid", "assets/weapons/trash_lid_icon.png");
         this.load.image("trash_lid_icon", "assets/weapons/trash_lid_icon.png");
+        this.load.image("trash_lid_icon_outline", "assets/weapons/trash_lid_icon_outline.png");
         this.load.image("shovel_icon", "assets/weapons/shovel_icon.png");
+        this.load.image("shovel_icon_outline", "assets/weapons/shovel_icon_outline.png");
         this.load.image("upper", "assets/items/good_vibe.png");
         this.load.image("downer", "assets/items/bad_vibe.png");
         this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
@@ -363,18 +368,21 @@ export default class GameLevel extends Scene {
         this.upperDeposit.position.set(this.plant.position.x - this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
         this.downerDeposit.position.set(this.plant.position.x + this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
 
-        this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x - this.upperDeposit.size.x/4, this.upperDeposit.size.y - this.upperDeposit.size.y/4)));
-        this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x - this.downerDeposit.size.x/4, this.downerDeposit.size.y - this.downerDeposit.size.y/4)));
+        this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x/2, this.upperDeposit.size.y - this.upperDeposit.size.y/4)));
+        this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x/2, this.downerDeposit.size.y - this.downerDeposit.size.y/4)));
+        this.plant.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.plant.size.x/2 , this.plant.size.y)));
         this.upperDeposit.setGroup('deposits');
         this.downerDeposit.setGroup('deposits');
+        this.plant.setGroup('deposits');
 
         this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
         this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_DOWNER_DEPOSIT);
+        // this.plant.setTrigger("player", InGame_Events.ON_PLANT, InGame_Events.OFF_PLANT);
 
 
-        this.plant.scale.set(1.0, 1.0);
-        this.upperDeposit.scale.set(1.0, 1.0);
-        this.downerDeposit.scale.set(1.0, 1.0);
+        this.plant.scale.set(0.5, 0.5);
+        this.upperDeposit.scale.set(1, 1);
+        this.downerDeposit.scale.set(1, 1);
         (<AnimatedSprite>this.plant).animation.play("HAPPY")
         // This has to be touched
         // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));

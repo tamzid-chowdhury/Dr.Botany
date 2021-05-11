@@ -19,7 +19,7 @@ export default class TrashLid extends Equipment {
         this.sprite.setTrigger("enemies", InGame_Events.PROJECTILE_HIT_ENEMY, null);
 
 	}
-	doAttack(direction: Vec2) {
+	doAttack(direction: Vec2): void {
 		this.sprite.active = true;
 		(<TrashLidController>this.sprite._ai).beginThrow(direction);
 
@@ -40,6 +40,5 @@ export default class TrashLid extends Equipment {
 
 	}
 
-	finishAttack() {
-	}
+	finishAttack(): void { }
 }

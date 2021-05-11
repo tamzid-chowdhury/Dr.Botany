@@ -3,17 +3,10 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import Input from "../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
-// import EquipmentManager from "../GameSystems/EquipmentManager";
-// import Healthpack from "../GameSystems/items/Healthpack";
 import { InGame_Events } from "../Utils/Enums";
-import * as Tweens from "../Utils/Tweens"
-import BattlerAI from "./BattlerAI";
+import * as Tweens from '../Utils/Tweens'
 
 export default class ProjectileController extends StateMachineAI {
     owner: AnimatedSprite;
@@ -21,9 +14,6 @@ export default class ProjectileController extends StateMachineAI {
     speed: number = 50;
     attacking: boolean = false;
     // WHAT IF TWO SHOVELS AT ONE TIME POWERUP???? ALTERNATING SWINGS
-
-
-
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
@@ -39,12 +29,12 @@ export default class ProjectileController extends StateMachineAI {
     handleEvent(event: GameEvent): void {}
 
     update(deltaT: number): void {
-      while (this.receiver.hasNextEvent()) {
-              let event = this.receiver.getNextEvent();
-              if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
-                  this.owner.active = false;
-              }
-      }
+		while (this.receiver.hasNextEvent()) {
+			let event = this.receiver.getNextEvent();
+			if(event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
+				this.owner.active = false;
+			}
+		}
 
     }
 
@@ -70,6 +60,7 @@ export class TrashLidController extends ProjectileController {
     powerCurve: number;
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
+		this.cooldown = options.cooldown;
 		// this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
 		this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/4));
 		this.owner.active = false;
@@ -114,6 +105,8 @@ export class TrashLidController extends ProjectileController {
         this.throwTimer.start();
         this.power = 450;
         this.powerCurve = 0.0001;
+		this.owner.tweens.add('trashLidThrow', Tweens.trashLidThrow(this.cooldown/2, this.owner.rotation))
+		this.owner.tweens.play('trashLidThrow');
     }
 
     easeOut(x: number): number {

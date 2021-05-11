@@ -1,12 +1,5 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
-import ProjectileController from "../../Controllers/ProjectileController";
-import { InGame_Events } from "../../Utils/Enums";
-import * as Tweens from "../../Utils/Tweens";
-
-
-// NOTE: this should probably be a "single projectile" class that extends equipment
 
 export default class Equipment {
 	type: string;
@@ -50,7 +43,7 @@ export default class Equipment {
 		this.sprite.rotation = rotation;
 	}
 
-	doAttack(direction: Vec2) { }
+	doAttack(direction: Vec2) {}
 
 	finishAttack(): void {}
 }

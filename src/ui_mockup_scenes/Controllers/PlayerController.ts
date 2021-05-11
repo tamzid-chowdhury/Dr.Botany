@@ -78,6 +78,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.equipped.setActive(this.owner.position.clone());
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 0, spriteKey: this.equipped.spriteKey});
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotNum: 1, spriteKey: this.equipment.stowed.spriteKey});
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {slotNum: 0, spriteKey: this.equipment.equipped.spriteKey});
         this.subscribeToEvents();
         // NOTE: this should be tied to the currently equipped weapon 
         // can potentially be affected by mood
@@ -159,6 +160,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.equipment.switchEquipped()
             this.equipped = this.equipment.getEquipped();
             this.equipped.setActive(this.owner.position.clone());
+            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipment.equipped.spriteKey});
+
             this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
                 this.equipment.equipped.finishAttack();
     
@@ -216,11 +219,22 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.canDepositDowner = true;
                 }
 
+                if(event.type === InGame_Events.ON_PLANT) {
+                    let other = event.data.get('other');
+                    let plant = this.owner.getScene().getSceneGraph().getNode(other);
+                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_GROWTH_BAR, {position: plant.position.clone()});
+                }
+
+                if(event.type === InGame_Events.OFF_PLANT) {
+                    this.emitter.fireEvent(InGame_GUI_Events.HIDE_GROWTH_BAR);
+
+                }
+
                 // TODO: move this into materialManager, have it be tied to pressing e key
                 if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
                     let other = event.data.get('other');
                     let box = this.owner.getScene().getSceneGraph().getNode(other);
-                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
+                    // this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
                     let count = this.upperCount;
                     this.canDepositUpper = false;
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, {position: this.owner.position.clone()});
@@ -235,7 +249,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
                     let other = event.data.get('other');
                     let box = this.owner.getScene().getSceneGraph().getNode(other);
-                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
+                    // this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
                     let count = this.downerCount;
                     this.canDepositDowner = false;
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, {position: this.owner.position.clone()});
@@ -266,8 +280,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             InGame_GUI_Events.INCREMENT_DOWNER_COUNT,
             InGame_Events.ON_UPPER_DEPOSIT,
             InGame_Events.ON_DOWNER_DEPOSIT,
+            InGame_Events.ON_PLANT,
             InGame_Events.OFF_UPPER_DEPOSIT,
             InGame_Events.OFF_DOWNER_DEPOSIT,
+            InGame_Events.OFF_PLANT,
             InGame_Events.TOGGLE_PAUSE,
             InGame_Events.GAME_OVER,
             InGame_Events.TRASH_LID_APEX

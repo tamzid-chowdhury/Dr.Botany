@@ -17,6 +17,8 @@ export default class EquipSlots {
 	scene: Scene;
 	xOffset: number;
 	yOffset: number;
+	outline: Sprite;
+
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
 		this.scene = scene;
@@ -32,7 +34,7 @@ export default class EquipSlots {
 			// this.equippedBackdrop.alpha = 0.7;
 			// this.equippedBackdrop.rotation = -Math.PI / 4;
 			this.slotOne = this.scene.add.sprite(`${spriteKey}_icon`, UILayers.INGAME_UI);
-			this.slotOne.position.set(this.xOffset, this.yOffset)
+			this.slotOne.position.set(this.xOffset, this.yOffset);
 		}
 		else {
 			this.slotTwo = this.scene.add.sprite(`${spriteKey}_icon`, UILayers.INGAME_UI);
@@ -42,6 +44,17 @@ export default class EquipSlots {
 			// this.slotTwo.scale = new Vec2(0.5, 0.5);
 			// this.slotTwo.rotation = -Math.PI / 4;
 		}
+	}
+
+	drawOutline(spriteKey: string): void {
+		spriteKey += '_icon'
+		if(this.outline) {
+			this.outline.destroy()
+
+		}
+		this.outline = this.scene.add.sprite(`${spriteKey}_outline`, UILayers.INGAME_UI);
+		if(this.slotOne.imageId === spriteKey) 	this.outline.position = this.slotOne.position;
+		else 			this.outline.position = this.slotTwo.position;
 	}
 
 }
