@@ -1,12 +1,7 @@
-import AABB from '../../Wolfie2D/DataTypes/Shapes/AABB';
-import Vec2 from '../../Wolfie2D/DataTypes/Vec2';
-import Emitter from '../../Wolfie2D/Events/Emitter';
 import GameNode from '../../Wolfie2D/Nodes/GameNode';
 import Scene from '../../Wolfie2D/Scene/Scene';
 import EnemyController from '../Enemies/EnemyController';
 import Enemy from '../Types/enemies/Enemy';
-import { InGame_Events } from '../Utils/Enums';
-import { PhysicsGroups } from '../Utils/PhysicsOptions';
 
 export default class EnemyManager {
 	maxEnemies: number; 
@@ -15,13 +10,10 @@ export default class EnemyManager {
     scene: Scene;
     // choice % number of types of enemies === selection. Round robin picking
     choice: number = 0;
-    enemyTypes: number = 3; // hardcoded for now, should come from enemy data file 
     prototypes: Array<Record<string, any>> = [];
-    // emitter: Emitter;
 
 	constructor(scene: Scene, size: number = 3) {
 		this.scene = scene;
-        // this.emitter = new Emitter();
         this.maxEnemies = size;
         this.initPrototypes();
         for(let i = 0; i < this.maxEnemies; i ++) {
@@ -58,8 +50,7 @@ export default class EnemyManager {
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
         (<EnemyController>enemy.sprite.ai).wake(player);
-        console.log(this.inactivePool, this.activePool);
-
+        console.log(this.inactivePool, this.activePool)
     }
 
     despawnEnemy(node: GameNode): void {
@@ -76,9 +67,5 @@ export default class EnemyManager {
                 break;
             }
         }
-        console.log(this.inactivePool, this.activePool);
-
     }
-
-
 }

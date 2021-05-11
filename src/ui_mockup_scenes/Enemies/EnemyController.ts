@@ -41,6 +41,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     knockBackDir: Vec2 = new Vec2(0,0);
     knockBackTimer: number = 0;
     pauseExecution: boolean = false;
+    options:Record<string, any>;
 
     damage(damage: number) : void {
         console.log(damage)
@@ -53,7 +54,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.player = options.player;
         this.speed = options.speed;
         this.dropType = options.type; 
-        
+        this.options = options;
 
         // have to add some properties for each enemy   I don't know if idle is necessary...
         let idle = new Idle(this, owner);
@@ -111,6 +112,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
     wake(player: GameNode): void {
         this.player = player;
+        this.health = this.options.health;
+        this.speed = this.options.speed;
         this.changeState(EnemyStates.WALK);
     } 
 
