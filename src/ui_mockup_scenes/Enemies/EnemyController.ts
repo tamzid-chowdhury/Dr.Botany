@@ -79,24 +79,27 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     handleEvent(event: GameEvent): void {
-        if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
-            if(this.pauseExecution) {
-                this.pauseExecution = false;
-                this.changeState(EnemyStates.WALK);
-
+        if(this.owner.active) {
+            if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
+                if(this.pauseExecution) {
+                    this.pauseExecution = false;
+                    this.changeState(EnemyStates.WALK);
+    
+                }
+                else {
+                    this.pauseExecution = true;
+                    this.changeState(EnemyStates.IDLE);
+                }
+    
+                
             }
-            else {
-                this.pauseExecution = true;
-                this.changeState(EnemyStates.IDLE);
-            }
-
-            
         }
+
     }
 
     update(deltaT: number): void {
         super.update(deltaT);
-        if(!this.pauseExecution) {
+        if(!this.pauseExecution && this.owner.active) {
             if(this.knockBackGuard > 1) this.knockBackGuard--;
             if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
         }
@@ -105,7 +108,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     doKnockBack(direction: Vec2): void {
         this.knockBackDir = direction.clone();
         this.knockBackTimer = 50;
-
         if(this.knockBackGuard <= 1) this.changeState(EnemyStates.KNOCKBACK);
         
     }

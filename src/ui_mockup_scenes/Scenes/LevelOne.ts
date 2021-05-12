@@ -91,11 +91,6 @@ export default class LevelOne extends GameLevel {
             this.overdrawTiles[i].visible = false;
         }
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
-        let lid = this.add.sprite('trash_lid', 'primary');
-        lid.scale = new Vec2(0.6, 0.6);
-        lid.position = new Vec2(300,200)
-
-        
 
         this.addEnemy("orange_mushroom", new Vec2(500, 500), { speed: 20, player: this.player, health: 40, type: "Downer" }, 1.5);
     }

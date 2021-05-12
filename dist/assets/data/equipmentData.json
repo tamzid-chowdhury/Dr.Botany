@@ -13,6 +13,7 @@
 			"charges": 1
 
 		},
+
 		{
 			"type": "ammo",
 			"name": "TrashLid",
@@ -23,6 +24,18 @@
 			"sfxKey": "swing",
 			"scale": 0.6,
 			"charges": 5
+		},
+		{
+			"type": "ammo",
+			"name": "PillBottle",
+            "projectileSpriteKey": "pill",
+            "spriteKey": "pill_bottle",
+            "damage": 1,
+            "cooldown": 100,
+			"sfxKey": "swing",
+			"scale": 1,
+			"charges": 50
+
 		}
 	]
 }

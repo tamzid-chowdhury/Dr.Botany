@@ -1,0 +1,26 @@
+{
+	"count": 3,
+	"enemies": [
+		{
+			"type": "Downer",
+            "health": 50,
+            "scale": 1.5,
+            "speed": 40,
+			"spriteKey": "green_slime"
+		},
+		{
+			"type": "Upper",
+            "health": 30,
+            "scale": 1,
+            "speed": 80,
+			"spriteKey": "orange_mushroom"
+		},
+		{
+			"type": "Upper",
+            "health": 40,
+            "scale": 0.8,
+            "speed": 60,
+			"spriteKey": "wisp"
+		}
+	]
+}

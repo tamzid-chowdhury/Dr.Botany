@@ -50,7 +50,6 @@ export default class EnemyManager {
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
         (<EnemyController>enemy.sprite.ai).wake(player);
-        console.log(this.inactivePool, this.activePool)
     }
 
     despawnEnemy(node: GameNode): void {
@@ -61,8 +60,8 @@ export default class EnemyManager {
                 this.activePool.splice(i, 1)
 
                 enemy.sprite.position.set(-1000,-1000)
-                enemy.sprite.active = true;
-                enemy.sprite.visible = true;
+                enemy.sprite.active = false;
+                enemy.sprite.visible = false;
                 this.inactivePool.push(enemy);
                 break;
             }

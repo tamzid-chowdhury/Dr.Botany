@@ -146,20 +146,6 @@ export default class LevelZero extends GameLevel {
         }
 
 
-
-
-
-        // NOTE: Disabling this for now as it crashes if an enemy has died
-        // if (Input.isKeyJustPressed("k")) {
-        //     for (let enemy of this.enemyList) {
-        //         if(enemy) {
-        //             let enemyController = <EnemyController>enemy._ai;
-        //             enemyController.damage(50);
-        //         }
-
-        //     }
-        // }
-
         while (this.levelZeroReceiver.hasNextEvent()) {
             let event = this.levelZeroReceiver.getNextEvent();
 
@@ -171,7 +157,6 @@ export default class LevelZero extends GameLevel {
                     this.increaseEnemyStrength();
                 }
 
-                // this.levelZeroReceiver.unsubscribe(InGame_Events.ANGRY_MOOD_REACHED)
 
             }
 
@@ -182,7 +167,6 @@ export default class LevelZero extends GameLevel {
                     console.log("Happy mood reached, have to implement faster enemies' speed behavior")
                     // this.increaseEnemySpeed(); // increase speed buggy 
                 }
-                // this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
             }
 
             if (event.type === InGame_Events.ADD_TO_MOOD) {
@@ -249,9 +233,6 @@ export default class LevelZero extends GameLevel {
 
     }
 
-
-
-
     protected subscribeToEvents() {
         this.levelZeroReceiver.subscribe([
             InGame_Events.PLAYER_ENEMY_COLLISION,
@@ -265,25 +246,7 @@ export default class LevelZero extends GameLevel {
         ]);
     }
 
-    protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>, scale: number): void {
-        let enemy = this.add.animatedSprite(spriteKey, "primary");
-        enemy.position.set(tilePos.x, tilePos.y);
-        enemy.scale.set(scale, scale);
-        let collisionShape = enemy.size;
-        // This has to be touched
-        // this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.halfSize.scaled(this.scene.getViewScale())
-        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(( (collisionShape.x / 2)) * scale, (collisionShape.y / 4) * scale) ));
 
-        enemy.colliderOffset.set(0, (collisionShape.y / 4) * scale);
-        // play with this // maybe add a condition for each enemy
-
-        enemy.addAI(EnemyController, aiOptions);
-        enemy.setGroup(PhysicsGroups.ENEMY);
-        enemy.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
-        enemy.setTrigger("projectiles", InGame_Events.PROJECTILE_HIT_ENEMY, null)
-
-        this.enemyList.push(enemy);
-    }
     // TODO: make it so that new created enemies have doubled speed, because when the timer is done, newly created enemies with normal speed gets slower than normal
     protected increaseEnemySpeed(): void {
         for (let enemy of this.enemyList) {
