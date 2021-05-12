@@ -21,6 +21,7 @@ import Shovel from "../Types/items/EquipTypes/Shovel";
 import TrashLid from "../Types/items/EquipTypes/TrashLid";
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import EnemyManager from "../GameSystems/EnemyManager";
+import PillGun from "../Types/items/EquipTypes/PillGun";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -75,8 +76,12 @@ export default class GameLevel extends Scene {
         this.load.image("health_pip_shadow", "assets/ui_art/leaf_icon_shadow.png");
         this.load.image("shadow", "assets/player/shadow_sprite.png");
         this.load.image("shovel", "assets/weapons/shovel.png");
+
         this.load.image("pill_bottle", "assets/weapons/pill_bottle.png");
         this.load.image("pill", "assets/weapons/pill.png");
+        this.load.image("pill_icon", "assets/weapons/pill_icon.png");
+        this.load.image("pill_icon_outline", "assets/weapons/pill_icon_outline.png");
+
         this.load.image("shovel_outline", "assets/weapons/shovel_select_outline.png");
         this.load.image("trash_lid", "assets/weapons/trash_lid_icon.png");
         this.load.image("trash_lid_icon", "assets/weapons/trash_lid_icon.png");
@@ -461,15 +466,15 @@ export default class GameLevel extends Scene {
                     temp = new TrashLid(equip);
                     temp.sprite = this.add.sprite(temp.spriteKey, "primary");
                     temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
+                    break;
+                case "PillBottle":
+                    temp = new PillGun(equip);
+                    temp.sprite = this.add.sprite(temp.spriteKey, "primary");
+                    temp.projectileSprite = this.add.sprite(temp.projectileSpriteKey, "primary");
                 default:
                     break;
             }
-            // if(equip.name === "Shovel") {
-
-            // }
-            // else {
-
-            // }
+            console.log(this.equipmentPrototypes)
             this.equipmentPrototypes.push(temp);
         }
     }

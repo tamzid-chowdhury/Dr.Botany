@@ -1,10 +1,11 @@
 {
-	"count": 2,
+	"count": 3,
 	"equipment": [
 		{
 			"type": "unlimited",
 			"name": "Shovel",
             "projectileSpriteKey": "swing",
+            "iconSpriteKey": "shovel_icon",
             "spriteKey": "shovel",
             "damage": 1,
             "cooldown": 300,
@@ -19,6 +20,7 @@
 			"name": "TrashLid",
             "projectileSpriteKey": "swing",
             "spriteKey": "trash_lid",
+            "iconSpriteKey": "trash_lid_icon",
             "damage": 1,
             "cooldown": 600,
 			"sfxKey": "swing",
@@ -29,6 +31,7 @@
 			"type": "ammo",
 			"name": "PillBottle",
             "projectileSpriteKey": "pill",
+            "iconSpriteKey": "pill_icon",
             "spriteKey": "pill_bottle",
             "damage": 1,
             "cooldown": 100,

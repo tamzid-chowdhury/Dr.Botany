@@ -30,30 +30,28 @@ export default class EquipSlots {
 		this.yOffset = this.centerPos.y / 4;
 	}
 
-	updateSlot(spriteKey: string, hasAmmo: boolean, ammo: number): void {
-		let sprite = this.scene.add.sprite(`${spriteKey}_icon`, UILayers.INGAME_UI);
+	updateSlot(iconKey: string, hasAmmo: boolean, ammo: number): void {
+		let sprite = this.scene.add.sprite(iconKey, UILayers.INGAME_UI);
 		let xOffset = this.xOffset + (24 * this.slots.length)
 		sprite.position.set(xOffset, this.yOffset); // each successive slot is 24 px away from previous
 		this.slots.push(sprite)
 		if(hasAmmo) {
 			let counter = new Counter(this.scene, ammo, new Vec2(50,50), new Vec2(xOffset+4, this.yOffset+4), 16);
-			this.ammoSlots[spriteKey] = counter;
+			this.ammoSlots[iconKey] = counter;
 		}
 	}
 
-	updateCounter(spriteKey: string, count: number): void{
-		(<Counter>this.ammoSlots[spriteKey]).setCount(count);
+	updateCounter(iconKey: string, count: number): void{
+		(<Counter>this.ammoSlots[iconKey]).setCount(count);
 	}
 
-	drawOutline(spriteKey: string): void {
-		spriteKey += '_icon'
+	drawOutline(iconKey: string): void {
 		if(this.outline) {
 			this.outline.destroy()
-
 		}
-		this.outline = this.scene.add.sprite(`${spriteKey}_outline`, UILayers.INGAME_UI);
+		this.outline = this.scene.add.sprite(`${iconKey}_outline`, UILayers.INGAME_UI);
 		for(let slot of this.slots) {
-			if(slot.imageId === spriteKey) {
+			if(slot.imageId === iconKey) {
 				this.outline.position = slot.position;
 				break;
 			}

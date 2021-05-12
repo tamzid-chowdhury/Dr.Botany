@@ -6,6 +6,7 @@ export default class Equipment {
 	name: string;
 	spriteKey: string;
 	projectileSpriteKey: string;
+	iconSpriteKey: string;
 	sfxKey: string;
 	sprite: Sprite;
 	projectileSprite: Sprite;
@@ -18,6 +19,7 @@ export default class Equipment {
 	constructor(data: Record<string,any>) {
 		this.type = data.type;
 		this.spriteKey = data.spriteKey;
+		this.iconSpriteKey = data.iconSpriteKey;
 		this.projectileSpriteKey = data.projectileSpriteKey;
 		this.damage = data.damage;
 		this.name = data.name;

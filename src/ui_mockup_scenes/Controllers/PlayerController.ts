@@ -79,12 +79,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             if(hasAmmo) {
                 ammo = e.charges;
             }
-            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {spriteKey: e.spriteKey, hasAmmo: hasAmmo, ammo: ammo});
+            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {spriteKey: e.iconSpriteKey, hasAmmo: hasAmmo, ammo: ammo});
 
         }
 
         this.equipped.setActive(this.owner.position.clone());
-        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipment.equipped.spriteKey});
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipment.equipped.iconSpriteKey});
         this.subscribeToEvents();
         // NOTE: this should be tied to the currently equipped weapon 
         // can potentially be affected by mood
@@ -156,7 +156,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipment.equipped.sfxKey, loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
                     if(this.equipped.type === WeaponTypes.AMMO) {
-                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, {spriteKey:this.equipment.equipped.spriteKey, ammo: this.equipped.charges})
+                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, {spriteKey:this.equipment.equipped.iconSpriteKey, ammo: this.equipped.charges})
 
                     }
                     this.coolDownTimer.start();
@@ -168,7 +168,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.equipment.switchEquipped()
             this.equipped = this.equipment.getEquipped();
             this.equipped.setActive(this.owner.position.clone());
-            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipment.equipped.spriteKey});
+            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipment.equipped.iconSpriteKey});
 
             this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
                 this.equipment.equipped.finishAttack();

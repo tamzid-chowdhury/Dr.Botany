@@ -133,3 +133,69 @@ export class TrashLidController extends ProjectileController {
 	subscribeToEvents(): void {
 	}
 }
+
+
+export class PillGunController extends ProjectileController {
+	owner: AnimatedSprite;
+	direction: Vec2;
+	power: number = 0;
+    throwTimer: Timer;
+    cooldown: number;
+    returning: boolean;
+    powerCurve: number;
+	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
+		this.owner = owner;
+		this.cooldown = options.cooldown;
+		// this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
+		this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/4));
+		this.owner.active = false;
+		this.owner.setGroup(PhysicsGroups.PROJECTILE);
+		this.subscribeToEvents();
+        this.throwTimer = new Timer((options.cooldown/2)-10, () => {
+        });
+	}
+
+	activate(options: Record<string, any>): void {}
+
+	handleEvent(event: GameEvent): void {}
+
+	update(deltaT: number): void {
+        if(this.attacking) {
+            this.owner._velocity = this.direction;
+            this.owner._velocity.normalize();
+            this.owner._velocity.mult(new Vec2(this.power,this.power));
+            this.owner.move(this.owner._velocity.scaled(deltaT));
+            this.power = this.power / (this.power * this.easeOut(this.powerCurve));
+            this.powerCurve += 0.00005
+        }
+
+	}
+
+    beginThrow(direction: Vec2) {
+        this.direction = direction.clone();
+        this.attacking = true;
+        this.throwTimer.start();
+        this.power = 450;
+        this.powerCurve = 0.0001;
+		this.owner.tweens.add('trashLidThrow', Tweens.trashLidThrow(this.cooldown/2, this.owner.rotation))
+		this.owner.tweens.play('trashLidThrow');
+    }
+
+    easeOut(x: number): number {
+        return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+        
+    }
+
+
+    endThrow(): void {
+		this.owner.active = false;
+        this.returning = false;
+    }
+
+	destroy(): void {
+
+    }
+
+	subscribeToEvents(): void {
+	}
+}

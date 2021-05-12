@@ -6,7 +6,7 @@ export default class EquipmentManager {
 	prototypes: Array<Equipment>;
 	constructor(defaults: Array<Equipment>) {
 		this.prototypes = defaults;
-		this.equipped = this.prototypes[0];
+		this.equipped = this.prototypes[2];
 		this.stowed = this.prototypes[1];
 	}
 
