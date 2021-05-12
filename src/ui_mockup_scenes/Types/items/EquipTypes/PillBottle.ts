@@ -1,12 +1,13 @@
+import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
-import { PillGunController } from "../../../Controllers/ProjectileController";
+import { PillBottleController } from "../../../Controllers/ProjectileController";
 import { InGame_Events } from "../../../Utils/Enums";
 import { PhysicsGroups } from "../../../Utils/PhysicsOptions";
 import Equipment from "../Equipment";
 
-export default class PillGun extends Equipment{
+export default class PillBottle extends Equipment{
 	constructor(data: Record<string,any>, sprite: Sprite, projSprite: Sprite) {
 		super(data);
 		this.sprite = sprite;
@@ -16,24 +17,26 @@ export default class PillGun extends Equipment{
 
 	init(position: Vec2): void {
         this.sprite.position.set(position.x, position.y);
-        this.sprite.scale = new Vec2(1.2, 1.2);
+        this.sprite.scale = new Vec2(this.scale, this.scale);
 		this.sprite.invertY = true;
 		this.sprite.visible = false;
-        this.sprite.active = false;
-        // this.sprite.addAI(PillGunController, {cooldown: this.cooldown});
+        this.sprite.active = true;
+        this.sprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/2)));
+
+        this.sprite.addAI(PillBottleController, {cooldown: this.cooldown});
         // this.sprite.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
 		// this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.OVERLAP_EQUIP, InGame_Events.NOT_OVERLAP_EQUIP);
 	}
 
 	onPickup(): void {
-		this.inInventory = true;
+		super.onPickup();
+		this.sprite.removeTrigger(PhysicsGroups.PLAYER);
 
 	}
 
 	onDrop(position: Vec2): void {
-		this.sprite.position.set(position.x, position.y)
-		this.sprite.visible = true;
-		this.inInventory = false;
+		super.onDrop(position);
+		this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.OVERLAP_EQUIP, InGame_Events.NOT_OVERLAP_EQUIP);
 
 	}
 
@@ -56,8 +59,9 @@ export default class PillGun extends Equipment{
 		// else {
 			this.sprite.position.set(position.x, position.y);
 			// this.sprite.position.add(new Vec2(8 * playerLookDirection.x,8 *playerLookDirection.y));
-			this.sprite.position.add(new Vec2(0,8 *playerLookDirection.y));
-		// }
+			this.sprite.position.add(new Vec2(0,-8*playerLookDirection.y));
+			// this.sprite.position.y += 2;
+			// }
 
 
 	}

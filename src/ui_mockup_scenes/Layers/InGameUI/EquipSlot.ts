@@ -23,6 +23,7 @@ export default class EquipSlots {
 	outline: Sprite;
 	slots: Array<Sprite> = [];
 	ammoSlots: StringIndex = [];
+	maxSlots: number = 2;
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
 		this.scene = scene;
@@ -30,15 +31,26 @@ export default class EquipSlots {
 		this.yOffset = this.centerPos.y / 4;
 	}
 
-	updateSlot(iconKey: string, hasAmmo: boolean, ammo: number): void {
+	updateSlot(iconKey: string, hasAmmo: boolean, ammo: number, slot: number): void {
 		let sprite = this.scene.add.sprite(iconKey, UILayers.INGAME_UI);
-		let xOffset = this.xOffset + (24 * this.slots.length)
+		let xOffset = this.xOffset + (24 * slot)
 		sprite.position.set(xOffset, this.yOffset); // each successive slot is 24 px away from previous
-		this.slots.push(sprite)
+		this.slots[slot] = sprite;
 		if(hasAmmo) {
 			let counter = new Counter(this.scene, ammo, new Vec2(50,50), new Vec2(xOffset+4, this.yOffset+4), 16);
 			this.ammoSlots[iconKey] = counter;
 		}
+	}
+
+	removeSlot(index: number): void {
+		if(this.slots[index] !== undefined) {
+			let key = this.slots[index];
+			if(this.ammoSlots[key.imageId] !== undefined) {
+				(<Counter>this.ammoSlots[key.imageId]).destroy(); 
+			}
+			this.slots[index].destroy();
+		}
+
 	}
 
 	updateCounter(iconKey: string, count: number): void{

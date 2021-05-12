@@ -149,6 +149,10 @@ export default class LevelZero extends GameLevel {
             this.equipmentManager.spawnEquipment("TrashLid", new Vec2(300,300))
         }
 
+        if (Input.isKeyJustPressed("l")) {
+            this.equipmentManager.spawnEquipment("PillBottle", new Vec2(300,400))
+        }
+
         while (this.levelZeroReceiver.hasNextEvent()) {
             let event = this.levelZeroReceiver.getNextEvent();
 

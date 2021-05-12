@@ -170,10 +170,15 @@ export default class InGameUI implements Updateable {
             
 
             if(event.type === InGame_GUI_Events.UPDATE_EQUIP_SLOT){ 
-                let spriteKey = event.data.get("spriteKey");
-                let ammo = event.data.get("ammo");
-                let hasAmmo = event.data.get("hasAmmo");
-                this.equipSlots.updateSlot(spriteKey, hasAmmo, ammo);
+                let slotData = event.data.get("slotData");
+                for(let i = 0; i < slotData.length; i ++) {
+                    let spriteKey = slotData[i].spriteKey;
+                    let ammo = slotData[i].ammo;
+                    let hasAmmo = slotData[i].hasAmmo;
+                    this.equipSlots.removeSlot(i);
+                    this.equipSlots.updateSlot(spriteKey, hasAmmo, ammo, i);
+                }
+
             }
 
             if(event.type === InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE){ 

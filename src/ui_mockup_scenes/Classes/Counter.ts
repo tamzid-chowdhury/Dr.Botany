@@ -36,5 +36,10 @@ export default class Counter {
         this.text.text = `x${count}`; 
     }
 
+    destroy(): void {
+        this.textBackdrop.destroy()
+        this.text.destroy()
+    }
+
 
 }

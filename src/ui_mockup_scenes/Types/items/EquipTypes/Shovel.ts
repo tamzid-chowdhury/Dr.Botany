@@ -27,20 +27,19 @@ export default class Shovel extends Equipment {
         this.projectileSprite.active = false;
         this.projectileSprite.addAI(ProjectileController, {});
         this.projectileSprite.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
-        // this.sprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/2)));
-		// this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.OVERLAP_EQUIP, InGame_Events.NOT_OVERLAP_EQUIP);
+        this.sprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/2)));
+        this.sprite.setGroup(PhysicsGroups.PROJECTILE);
 	}
 
 	onPickup(): void {
-		this.inInventory = true;
+		super.onPickup();
+		this.sprite.removeTrigger(PhysicsGroups.PLAYER);
 
 	}
 
 	onDrop(position: Vec2): void {
-		this.sprite.position.set(position.x, position.y)
-		this.sprite.visible = true;
-		this.inInventory = false;
-
+		super.onDrop(position);
+		this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.OVERLAP_EQUIP, InGame_Events.NOT_OVERLAP_EQUIP);
 	}
 
 	doAttack(direction: Vec2) {

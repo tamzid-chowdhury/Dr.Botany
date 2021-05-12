@@ -18,7 +18,7 @@ export default class TrashLid extends Equipment {
 
 	init(position: Vec2): void {
         this.sprite.position.set(position.x, position.y);
-        this.sprite.scale = new Vec2(1.2, 1.2);
+        this.sprite.scale = new Vec2(this.scale, this.scale);
 		this.sprite.invertY = true;
 		this.sprite.visible = false;
         this.sprite.active = false;
@@ -28,17 +28,13 @@ export default class TrashLid extends Equipment {
 	}
 
 	onPickup(): void {
-		this.inInventory = true;
-		this.sprite.active = false;
+		super.onPickup();
 		this.sprite.removeTrigger(PhysicsGroups.PLAYER);
 
 	}
 
 	onDrop(position: Vec2): void {
-		this.sprite.position.set(position.x, position.y)
-		this.sprite.visible = true;
-		this.sprite.active = true;
-		this.inInventory = false;
+		super.onDrop(position);
 		this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.OVERLAP_EQUIP, InGame_Events.NOT_OVERLAP_EQUIP);
 
 	}

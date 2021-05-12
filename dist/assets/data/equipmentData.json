@@ -24,7 +24,7 @@
             "damage": 1,
             "cooldown": 600,
 			"sfxKey": "swing",
-			"scale": 0.6,
+			"scale": 1,
 			"charges": 10
 		},
 		{

@@ -3,7 +3,7 @@ import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import ProjectileController from "../Controllers/ProjectileController";
 import Equipment from "../Types/items/Equipment";
-import PillGun from "../Types/items/EquipTypes/PillGun";
+import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import Shovel from "../Types/items/EquipTypes/Shovel";
 import TrashLid from "../Types/items/EquipTypes/TrashLid";
 import { InGame_Events } from "../Utils/Enums";
@@ -35,7 +35,7 @@ export default class EquipmentManager {
                 case "PillBottle":
 					sprite = this.scene.add.sprite(equip.spriteKey, "primary");
 					projSprite = this.scene.add.sprite(equip.projectileSpriteKey, "primary");
-                    temp = new PillGun(equip, sprite, projSprite);
+                    temp = new PillBottle(equip, sprite, projSprite);
                 default:
                     break;
             }
@@ -49,7 +49,6 @@ export default class EquipmentManager {
 		for(let p of this.prototypes) {
 			if(p.name === name) {
 				p.onDrop(position);
-				p.sprite.scale = new Vec2(0.8, 0.8);
 			}
 		}
 	}
@@ -85,16 +84,4 @@ export default class EquipmentManager {
 		return equip;
 	}
 
-	switchEquipped(): void {
-		return;
-		// let equipped = this.prototypes.find((p) => p === this.equipped);
-		// let swap = this.prototypes.find((p) => p === this.stowed);
-		// equipped.sprite.visible = false;
-		// this.equipped = swap;
-		// this.stowed = equipped;
-	}
-
-	// getEquipped(): Equipment {
-	// 	return this.equipped;
-	// }
 }

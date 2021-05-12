@@ -21,7 +21,7 @@ import Shovel from "../Types/items/EquipTypes/Shovel";
 import TrashLid from "../Types/items/EquipTypes/TrashLid";
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import EnemyManager from "../GameSystems/EnemyManager";
-import PillGun from "../Types/items/EquipTypes/PillGun";
+import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import EquipmentManager from "../GameSystems/EquipmentManager";
 
 export default class GameLevel extends Scene {

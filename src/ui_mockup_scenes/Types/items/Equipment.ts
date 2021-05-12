@@ -15,7 +15,6 @@ export default class Equipment {
 	swingDir: number = 1;
 	charges: number;
 	scale: number = 1;
-
 	inInventory: boolean = false;
 	onGround: boolean = false;
 	constructor(data: Record<string,any>) {
@@ -32,10 +31,21 @@ export default class Equipment {
 
 	}
 
-	init(position: Vec2): void { }
+	init(position: Vec2): void { 
+	}
 
-	onPickup(): void {};
-	onDrop(position: Vec2): void {};
+	onPickup(): void {
+		this.inInventory = true;
+		this.sprite.visible = true;
+		this.sprite.active = false;
+	};
+	onDrop(position: Vec2): void {
+		this.sprite.position.set(position.x, position.y)
+		this.sprite.visible = true;
+		this.sprite.active = true;
+		this.inInventory = false;
+
+	};
 
 	setActive(position: Vec2): void {
 		this.sprite.position.set(position.x, position.y);
