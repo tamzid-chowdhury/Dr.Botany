@@ -22,6 +22,7 @@ import TrashLid from "../Types/items/EquipTypes/TrashLid";
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import EnemyManager from "../GameSystems/EnemyManager";
 import PillGun from "../Types/items/EquipTypes/PillGun";
+import EquipmentManager from "../GameSystems/EquipmentManager";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -50,6 +51,7 @@ export default class GameLevel extends Scene {
 
     materialsManager: MaterialsManager;
     enemyManager: EnemyManager;
+    equipmentManager: EquipmentManager;
 
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
@@ -128,10 +130,12 @@ export default class GameLevel extends Scene {
             InGame_Events.ON_DOWNER_DEPOSIT,
             InGame_Events.TOGGLE_PAUSE,
             InGame_Events.TOGGLE_PAUSE_TRANSITION,
+            InGame_Events.OVERLAP_EQUIP,
+            InGame_Events.NOT_OVERLAP_EQUIP,
             UIEvents.CLICKED_QUIT,
             UIEvents.CLICKED_RESUME,
             UIEvents.TRANSITION_LEVEL,
-            UIEvents.CLICKED_RESTART
+            UIEvents.CLICKED_RESTART,
         ]);
 
 
@@ -153,6 +157,7 @@ export default class GameLevel extends Scene {
         this.initEquipment();
         this.materialsManager = new MaterialsManager(this);
         this.enemyManager = new EnemyManager(this);
+        this.equipmentManager = new EquipmentManager(this);
     }
 
     updateScene(deltaT: number) {
@@ -161,6 +166,7 @@ export default class GameLevel extends Scene {
         let mousePos = Input.getMousePosition();
         this.reticle.position = mousePos;
         this.cursor.position = mousePos;
+        
         if(!this.gameOver) {
             if(!this.pauseExecution) {
                 this.materialsManager.resolveMaterials(this.player.position, deltaT);
@@ -193,6 +199,8 @@ export default class GameLevel extends Scene {
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
+
+
 
             
             if (event.type === InGame_Events.TOGGLE_PAUSE_TRANSITION) {
@@ -398,7 +406,8 @@ export default class GameLevel extends Scene {
         let playerOptions = {
             mapSize: mapSize,
             speed: 125,
-            defaults: this.equipmentPrototypes
+            defaults: this.equipmentPrototypes,
+            equipmentManager: this.equipmentManager
         }
         this.player.addAI(PlayerController, playerOptions);
         this.player.animation.play("IDLE");
@@ -451,31 +460,31 @@ export default class GameLevel extends Scene {
     }
 
     initEquipment(): void {
-        let equipData = this.load.getObject("equipmentData");
+        // let equipData = this.load.getObject("equipmentData");
 
-        for(let i = 0; i < equipData.count; i++){
-            let equip = equipData.equipment[i];
-            let temp ;
-            switch(equip.name) {
-                case "Shovel":
-                    temp = new Shovel(equip);
-                    temp.sprite = this.add.sprite(temp.spriteKey, "secondary");
-                    temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
-                    break;
-                case "TrashLid":
-                    temp = new TrashLid(equip);
-                    temp.sprite = this.add.sprite(temp.spriteKey, "primary");
-                    temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
-                    break;
-                case "PillBottle":
-                    temp = new PillGun(equip);
-                    temp.sprite = this.add.sprite(temp.spriteKey, "primary");
-                    temp.projectileSprite = this.add.sprite(temp.projectileSpriteKey, "primary");
-                default:
-                    break;
-            }
-            console.log(this.equipmentPrototypes)
-            this.equipmentPrototypes.push(temp);
-        }
+        // for(let i = 0; i < equipData.count; i++){
+        //     let equip = equipData.equipment[i];
+        //     let temp ;
+        //     switch(equip.name) {
+        //         case "Shovel":
+        //             temp = new Shovel(equip);
+        //             temp.sprite = this.add.sprite(temp.spriteKey, "secondary");
+        //             temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
+        //             break;
+        //         case "TrashLid":
+        //             temp = new TrashLid(equip);
+        //             temp.sprite = this.add.sprite(temp.spriteKey, "primary");
+        //             temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
+        //             break;
+        //         case "PillBottle":
+        //             temp = new PillGun(equip);
+        //             temp.sprite = this.add.sprite(temp.spriteKey, "primary");
+        //             temp.projectileSprite = this.add.sprite(temp.projectileSpriteKey, "primary");
+        //         default:
+        //             break;
+        //     }
+        //     console.log(this.equipmentPrototypes)
+        //     this.equipmentPrototypes.push(temp);
+        // }
     }
 }

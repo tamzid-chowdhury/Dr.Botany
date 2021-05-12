@@ -319,6 +319,29 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.triggerExits[index] = onExit;
 	};
 
+	removeTrigger(group: string): void {
+		// Make this object a trigger
+		this.isTrigger = true;
+
+		// Get the number of the physics layer
+		let layerNumber = this.scene.getPhysicsManager().getGroupNumber(group);
+
+		if(layerNumber === 0){
+			console.warn(`Trigger for GameNode ${this.id} not set - group "${group}" was not recognized by the physics manager.`);
+			return;
+		}
+
+		// Add this to the trigger mask
+		this.triggerMask |= (layerNumber & 0);
+
+		// Layer numbers are bits, so get which bit it is
+		let index = Math.log2(layerNumber);
+
+		// Set the event names
+		this.triggerEnters[index] = null;
+		this.triggerExits[index] = null;
+	};
+
 	// @implemented
 	/**
 	 * @param group The physics group this node should belong to

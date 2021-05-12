@@ -19,14 +19,15 @@ import ProjectileController from "./ProjectileController";
 export default class PlayerController extends StateMachineAI implements BattlerAI {
     health: number;
     owner: AnimatedSprite;
-    equipment: EquipmentManager;
-
+    equipment: Array<Equipment> = [];
+    equipmentManager: EquipmentManager;
 
     direction: Vec2;
     speed: number;
     velocity: Vec2 = new Vec2(0,0);
 
     equipped: Equipment;
+    stowed: Equipment = null;
     onCooldown: boolean = false;
     coolDownTimer: Timer;
     hitTimer: Timer;
@@ -47,14 +48,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     pauseExecution: boolean = false;
     returnEquipment: boolean = false;
     gameOver: boolean = false;
+    nearEquip: number = -1;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-        this.equipment = new EquipmentManager(options.defaults);
-        this.equipped = this.equipment.equipped;
-        this.viewport = owner.getScene().getViewport();
 
+        this.viewport = owner.getScene().getViewport();
+        this.equipmentManager = options.equipmentManager;
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
@@ -72,30 +73,43 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 2)));
         this.owner.colliderOffset.set(0, 10);
         this.owner.setGroup(PhysicsGroups.PLAYER);
-        for(let e of this.equipment.prototypes) {
-            e.init(this.owner.position.clone())
-            let hasAmmo = e.type === WeaponTypes.AMMO ? true : false;
-            let ammo = 1;
-            if(hasAmmo) {
-                ammo = e.charges;
-            }
-            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {spriteKey: e.iconSpriteKey, hasAmmo: hasAmmo, ammo: ammo});
 
-        }
+        this.equipment.push((<EquipmentManager>options.equipmentManager).pickupEquipped("Shovel"));
+        this.equipped = this.equipment[0];
+        this.stowed = new Equipment({})
+        this.initEquip();
 
-        this.equipped.setActive(this.owner.position.clone());
-        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipment.equipped.iconSpriteKey});
-        this.subscribeToEvents();
+
         // NOTE: this should be tied to the currently equipped weapon 
         // can potentially be affected by mood
         this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
-            this.equipment.equipped.finishAttack();
+            this.equipped.finishAttack();
         });
 
         this.hitTimer = new Timer(300, () => {
             this.owner.alpha = 1;
 
         });
+
+        this.subscribeToEvents();
+
+    }
+    initEquip(): void {
+        let hasAmmo = this.equipped.type === WeaponTypes.AMMO ? true : false;
+        let ammo = 1;
+        if(hasAmmo) {
+            ammo = this.equipped.charges;
+        }
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {spriteKey: this.equipped.iconSpriteKey, hasAmmo: hasAmmo, ammo: ammo});
+        this.equipped.setActive(this.owner.position.clone());
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipped.iconSpriteKey});
+    }
+
+    switchEquipped(): void {
+        let temp = this.equipped;
+        this.equipped = this.stowed;
+		temp.sprite.visible = false;
+		this.stowed = temp;
     }
 
     activate(options: Record<string, any>): void {}
@@ -144,7 +158,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.playerLookDirection = this.equipped.sprite.position.dirTo(rotateTo);
         this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection);
-        this.equipment.stowed.updatePos(this.owner.position.clone(), this.playerLookDirection);
+        this.stowed.updatePos(this.owner.position.clone(), this.playerLookDirection);
         this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
 
 
@@ -152,11 +166,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if(Input.isMouseJustPressed()) {
             if(!this.coolDownTimer.isActive()) {
                 if(this.equipped.charges) {
-                    this.equipment.equipped.doAttack(this.playerLookDirection);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipment.equipped.sfxKey, loop: false, holdReference: true});
+                    this.equipped.doAttack(this.playerLookDirection);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipped.sfxKey, loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
                     if(this.equipped.type === WeaponTypes.AMMO) {
-                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, {spriteKey:this.equipment.equipped.iconSpriteKey, ammo: this.equipped.charges})
+                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, {spriteKey:this.equipped.iconSpriteKey, ammo: this.equipped.charges})
 
                     }
                     this.coolDownTimer.start();
@@ -164,18 +178,28 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             }
         }
 
-        if (Input.isKeyJustPressed("q")) {
-            this.equipment.switchEquipped()
-            this.equipped = this.equipment.getEquipped();
+        if (Input.isKeyJustPressed("q") && this.stowed.type != undefined) {
+            this.switchEquipped()
             this.equipped.setActive(this.owner.position.clone());
-            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipment.equipped.iconSpriteKey});
+            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipped.iconSpriteKey});
 
             this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
-                this.equipment.equipped.finishAttack();
+                console.log('done')
+                this.equipped.finishAttack();
     
             });
 
         }
+        if (Input.isKeyJustPressed("e") && (this.nearEquip> 0)) {
+            this.emitter.fireEvent(InGame_Events.NOT_OVERLAP_EQUIP)
+            let pickup = this.equipmentManager.pickupEquipped(this.nearEquip);
+            this.stowed = pickup;
+            this.equipment.push(pickup);
+            this.switchEquipped()
+            this.initEquip();
+        }
+
+
     }
 
     update(deltaT: number): void {
@@ -184,8 +208,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
             while (this.receiver.hasNextEvent()) {
                 let event = this.receiver.getNextEvent();
-                if(event.type === InGame_Events.TRASH_LID_APEX) {
-                }
                 if(event.type === InGame_Events.GAME_OVER) {
                     this.gameOver = true;
                 }
@@ -194,6 +216,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     
                     if (this.pauseExecution) this.pauseExecution = false;
                     else this.pauseExecution = true;
+                }
+
+                if (event.type === InGame_Events.OVERLAP_EQUIP && (this.nearEquip < 0)) {
+                    let other = event.data.get('other');
+                    this.nearEquip = other;
+                    let equip = this.owner.getScene().getSceneGraph().getNode(other);
+                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: equip.position.clone()});
+                }
+                if (event.type === InGame_Events.NOT_OVERLAP_EQUIP) {
+                    this.nearEquip = -1;
+                    this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
                 }
                 
 
@@ -238,11 +271,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 }
 
-                // TODO: move this into materialManager, have it be tied to pressing e key
                 if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
                     let other = event.data.get('other');
                     let box = this.owner.getScene().getSceneGraph().getNode(other);
-                    // this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
                     let count = this.upperCount;
                     this.canDepositUpper = false;
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, {position: this.owner.position.clone()});
@@ -294,7 +325,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             InGame_Events.OFF_PLANT,
             InGame_Events.TOGGLE_PAUSE,
             InGame_Events.GAME_OVER,
-            InGame_Events.TRASH_LID_APEX
+            InGame_Events.TRASH_LID_APEX,
+            InGame_Events.OVERLAP_EQUIP,
+            InGame_Events.NOT_OVERLAP_EQUIP
 
         ]);
     }

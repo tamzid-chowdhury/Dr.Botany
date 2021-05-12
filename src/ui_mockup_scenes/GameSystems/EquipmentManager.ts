@@ -1,37 +1,100 @@
+import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import Scene from "../../Wolfie2D/Scene/Scene";
+import ProjectileController from "../Controllers/ProjectileController";
 import Equipment from "../Types/items/Equipment";
+import PillGun from "../Types/items/EquipTypes/PillGun";
+import Shovel from "../Types/items/EquipTypes/Shovel";
+import TrashLid from "../Types/items/EquipTypes/TrashLid";
+import { InGame_Events } from "../Utils/Enums";
+import { PhysicsGroups } from "../Utils/PhysicsOptions";
 
 export default class EquipmentManager {
-	equipped: Equipment;
-	stowed: Equipment;
-	prototypes: Array<Equipment>;
-	constructor(defaults: Array<Equipment>) {
-		this.prototypes = defaults;
-		this.equipped = this.prototypes[2];
-		this.stowed = this.prototypes[1];
+	prototypes: Array<Equipment> = [];
+	scene: Scene;
+	constructor(scene: Scene) {
+		this.scene = scene;
+		let equipData = this.scene.load.getObject("equipmentData");
+
+        for(let i = 0; i < equipData.count; i++){
+            let equip = equipData.equipment[i];
+            let temp ;
+			let sprite;
+			let projSprite;
+            switch(equip.name) {
+                case "Shovel":
+					sprite = this.scene.add.sprite(equip.spriteKey, "secondary");
+					projSprite = this.scene.add.animatedSprite(equip.projectileSpriteKey, "primary");
+                    temp = new Shovel(equip, sprite, projSprite);
+					break;
+                case "TrashLid":
+					sprite = this.scene.add.sprite(equip.spriteKey, "primary");
+					projSprite = this.scene.add.animatedSprite(equip.projectileSpriteKey, "primary");
+                    temp = new TrashLid(equip, sprite, projSprite);
+                    break;
+                case "PillBottle":
+					sprite = this.scene.add.sprite(equip.spriteKey, "primary");
+					projSprite = this.scene.add.sprite(equip.projectileSpriteKey, "primary");
+                    temp = new PillGun(equip, sprite, projSprite);
+                default:
+                    break;
+            }
+            this.prototypes.push(temp);
+		}
 	}
 
+
+
+	spawnEquipment(name: string, position: Vec2): void {
+		for(let p of this.prototypes) {
+			if(p.name === name) {
+				p.onDrop(position);
+				p.sprite.scale = new Vec2(0.8, 0.8);
+			}
+		}
+	}
 
 	
 
-	dropEquipped() {
+	dropEquipped(): void {
+		return;
 		// drop equipped on ground
 	}
 
-	pickupEquipped() {
-		// if player already has two equips
-		// swap currently equipped with item on ground
+	pickupEquipped(id: any): Equipment {
+		let equip;
+		if(typeof id === 'string') {
+			for(let p of this.prototypes) {
+				if(p.name === id) {
+					p.onPickup();
+					equip = p;
+					break;
+				}
+			}
+		}
+		else if(typeof id === 'number') {
+			for(let p of this.prototypes) {
+				if(p.sprite.id === id) {
+					p.onPickup();
+					equip = p;
+					break;
+				}
+			}
+		}
+
+		return equip;
 	}
 
-	switchEquipped() {
-		// switch equipped with stowed
-		let equipped = this.prototypes.find((p) => p === this.equipped);
-		let swap = this.prototypes.find((p) => p === this.stowed);
-		equipped.sprite.visible = false;
-		this.equipped = swap;
-		this.stowed = equipped;
+	switchEquipped(): void {
+		return;
+		// let equipped = this.prototypes.find((p) => p === this.equipped);
+		// let swap = this.prototypes.find((p) => p === this.stowed);
+		// equipped.sprite.visible = false;
+		// this.equipped = swap;
+		// this.stowed = equipped;
 	}
 
-	getEquipped(): Equipment {
-		return this.equipped;
-	}
+	// getEquipped(): Equipment {
+	// 	return this.equipped;
+	// }
 }

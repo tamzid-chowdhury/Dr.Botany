@@ -25,7 +25,7 @@
             "cooldown": 600,
 			"sfxKey": "swing",
 			"scale": 0.6,
-			"charges": 5
+			"charges": 10
 		},
 		{
 			"type": "ammo",

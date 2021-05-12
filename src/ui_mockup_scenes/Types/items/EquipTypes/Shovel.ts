@@ -4,10 +4,16 @@ import Equipment from "../Equipment";
 import * as Tweens from "../../../Utils/Tweens";
 import ProjectileController from "../../../Controllers/ProjectileController";
 import { InGame_Events } from "../../../Utils/Enums";
+import { PhysicsGroups } from "../../../Utils/PhysicsOptions";
+import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
+import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 
 export default class Shovel extends Equipment { 
-	constructor(data: Record<string,any>) {
+	constructor(data: Record<string,any>, sprite: Sprite, projSprite: AnimatedSprite) {
 		super(data);
+		this.sprite = sprite;
+		this.projectileSprite = projSprite;
+		this.init(new Vec2(-1000,-1000))
 	}
 
 	init(position: Vec2): void {
@@ -16,10 +22,25 @@ export default class Shovel extends Equipment {
         this.sprite.scale = new Vec2(this.scale, this.scale);
 		this.sprite.invertY = true;
 		this.sprite.visible = false;
+		this.sprite.active = true;
 		this.projectileSprite.visible = false;
         this.projectileSprite.active = false;
         this.projectileSprite.addAI(ProjectileController, {});
-        this.projectileSprite.setTrigger("enemies", InGame_Events.PROJECTILE_HIT_ENEMY, null);
+        this.projectileSprite.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
+        // this.sprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/2)));
+		// this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.OVERLAP_EQUIP, InGame_Events.NOT_OVERLAP_EQUIP);
+	}
+
+	onPickup(): void {
+		this.inInventory = true;
+
+	}
+
+	onDrop(position: Vec2): void {
+		this.sprite.position.set(position.x, position.y)
+		this.sprite.visible = true;
+		this.inInventory = false;
+
 	}
 
 	doAttack(direction: Vec2) {

@@ -63,7 +63,7 @@ export class TrashLidController extends ProjectileController {
 		this.owner = owner;
 		this.cooldown = options.cooldown;
 		// this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
-		this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/4));
+		this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/2));
 		this.owner.active = false;
 		this.owner.setGroup(PhysicsGroups.PROJECTILE);
 		this.subscribeToEvents();
