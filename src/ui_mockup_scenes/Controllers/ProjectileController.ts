@@ -143,38 +143,47 @@ class PillProjectile {
     powerLoss: number = 10;
     sprite: Sprite;
     dead: boolean;
+    drift: number;
     constructor(sprite: Sprite, cooldown: number) {
         this.sprite = sprite;
         this.liveTime = cooldown;
         this.dead = false;
-        this.liveTimer = new Timer(3*cooldown, () => {
-            this.deactivate();
-        });
+        // this.liveTimer = new Timer(3*this.liveTime, () => {
+        //     this.deactivate();
+        // });
+
     }
 
     update(deltaT: number) {
-        this.sprite._velocity = this.sprite.getLastVelocity();
-        this.sprite._velocity.normalize();
-        this.sprite._velocity.mult(new Vec2(this.power,this.power));
-        this.power -= this.powerLoss;
-        this.sprite.move(this.sprite._velocity.scaled(deltaT));
+        if(!this.dead) {
+            this.sprite._velocity = this.sprite.getLastVelocity();
+            this.sprite._velocity.normalize();
+            this.sprite._velocity.rotateCCW(this.drift * 0.01);
+            this.sprite._velocity.mult(new Vec2(this.power ,this.power ));
+            this.sprite.move(this.sprite._velocity.scaled(deltaT));
+        }
+
     }
 
     activate(direction: Vec2, position: Vec2, rotation: number, deltaT: number) {
-        this.power = 850;
+        this.drift = Math.random() < 0.5 ? 1 : -1;
+        this.power = 900 ;
         this.direction = direction;
         this.dead = false;
         this.sprite.position.set(position.x, position.y);
         this.sprite.rotation = -rotation;
 
         this.sprite.active = true;
-        this.sprite.visible = true;
-
         this.sprite._velocity = this.direction;
         this.sprite._velocity.normalize();
         this.sprite._velocity.mult(new Vec2(this.power,this.power));
+        this.sprite.visible = true;
+        
         this.sprite.move(this.sprite._velocity.scaled(deltaT));
-        this.liveTimer.start()
+        this.liveTimer = new Timer(4*this.liveTime, () => {
+            this.deactivate();
+        });
+        this.liveTimer.start();
     }
 
     deactivate() {

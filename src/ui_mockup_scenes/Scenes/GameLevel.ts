@@ -203,6 +203,7 @@ export default class GameLevel extends Scene {
                 this.pauseScreenLayer.layer.disable();
 
             }
+            
 
             if (event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
