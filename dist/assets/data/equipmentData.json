@@ -8,7 +8,7 @@
             "iconSpriteKey": "shovel_icon",
             "spriteKey": "shovel",
             "damage": 1,
-            "cooldown": 300,
+            "cooldown": 500,
 			"sfxKey": "swing",
 			"scale": 1,
 			"charges": 1
@@ -34,11 +34,11 @@
             "iconSpriteKey": "pill_icon",
             "spriteKey": "pill_bottle",
             "damage": 1,
-            "cooldown": 100,
+            "cooldown": 200,
 			"sfxKey": "swing",
 			"scale": 1,
-			"charges": 50
-
+			"charges": 50,
+			"projectileCopies": 20
 		}
 	]
 }

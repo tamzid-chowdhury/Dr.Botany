@@ -1,5 +1,6 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import ProjectileController from "../Controllers/ProjectileController";
 import Equipment from "../Types/items/Equipment";
@@ -34,8 +35,15 @@ export default class EquipmentManager {
                     break;
                 case "PillBottle":
 					sprite = this.scene.add.sprite(equip.spriteKey, "primary");
-					projSprite = this.scene.add.sprite(equip.projectileSpriteKey, "primary");
-                    temp = new PillBottle(equip, sprite, projSprite);
+					let clip: Array<Sprite> = [];
+					let projectileCopies = equip.projectileCopies;
+					for(let i = 0; i < projectileCopies; i ++) {
+						let charge = this.scene.add.sprite(equip.projectileSpriteKey, "primary");
+						charge.visible = false;
+						charge.active = false;
+						clip.push(charge)
+					}
+                    temp = new PillBottle(equip, sprite, clip);
                 default:
                     break;
             }

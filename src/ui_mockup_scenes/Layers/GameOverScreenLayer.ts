@@ -95,6 +95,7 @@ export default class GameOverScreenLayer extends GameLayer {
 
 
 			label.onFirstEnter = () => {
+
 				label.tweens.play('slideUpLeft');
 				sprite.tweens.play('slideUpLeft');
 			}
@@ -104,11 +105,13 @@ export default class GameOverScreenLayer extends GameLayer {
 			}
 			this.menuButtons.push(new GameButton(sprite, label));
 		}
+		this.layer.disable();
 	}
 
 
 
 	playEntryTweens(): void {
+		this.layer.enable();
 		this.hidden = !this.hidden;
 		this.layer.setHidden(this.hidden);
 		this.titleLabel.tweens.play('scaleIn');
@@ -129,6 +132,7 @@ export default class GameOverScreenLayer extends GameLayer {
 			button.label.tweens.play('scaleOut');
 
 		}
+
 	}
 
 }

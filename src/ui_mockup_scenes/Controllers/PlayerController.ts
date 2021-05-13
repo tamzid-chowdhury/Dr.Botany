@@ -81,11 +81,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.initEquip();
 
 
-        // NOTE: this should be tied to the currently equipped weapon 
-        // can potentially be affected by mood
-        this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
-            this.equipped.finishAttack();
-        });
+
 
         this.hitTimer = new Timer(300, () => {
             this.owner.alpha = 1;
@@ -111,6 +107,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             }
             slotData.push({spriteKey: this.stowed.iconSpriteKey,hasAmmo: hasAmmo, ammo: ammo});
         }   
+        this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
+            this.equipped.finishAttack();
+
+        });
+
 
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT, {slotData: slotData});
         this.equipped.setActive(this.owner.position.clone());
@@ -122,6 +123,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.equipped = this.stowed;
 		temp.sprite.visible = false;
 		this.stowed = temp;
+        
     }
 
     activate(options: Record<string, any>): void {}
@@ -175,10 +177,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
 
-        if(Input.isMouseJustPressed()) {
+        if(Input.isMousePressed()) {
             if(!this.coolDownTimer.isActive()) {
                 if(this.equipped.charges) {
-                    this.equipped.doAttack(this.playerLookDirection);
+                    this.equipped.doAttack(this.playerLookDirection, deltaT);
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipped.sfxKey, loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
                     if(this.equipped.type === WeaponTypes.AMMO) {
@@ -194,7 +196,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.switchEquipped()
             this.equipped.setActive(this.owner.position.clone());
             this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE, {spriteKey: this.equipped.iconSpriteKey});
-
             this.coolDownTimer = new Timer(this.equipped.cooldown, () => {
                 this.equipped.finishAttack();
     

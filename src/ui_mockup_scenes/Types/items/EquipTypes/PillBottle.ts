@@ -2,16 +2,18 @@ import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
-import { PillBottleController } from "../../../Controllers/ProjectileController";
+import ProjectileController, { PillBottleController } from "../../../Controllers/ProjectileController";
 import { InGame_Events } from "../../../Utils/Enums";
 import { PhysicsGroups } from "../../../Utils/PhysicsOptions";
 import Equipment from "../Equipment";
 
-export default class PillBottle extends Equipment{
-	constructor(data: Record<string,any>, sprite: Sprite, projSprite: Sprite) {
+export default class PillBottle extends Equipment {
+	clip: Array<Sprite>;
+	projectileCopyCount: number = 20;
+	constructor(data: Record<string,any>, sprite: Sprite, clip: Array<Sprite>) {
 		super(data);
 		this.sprite = sprite;
-		this.projectileSprite = projSprite;
+		this.clip = clip;
 		this.init(new Vec2(-1000,-1000))
 	}
 
@@ -22,10 +24,14 @@ export default class PillBottle extends Equipment{
 		this.sprite.visible = false;
         this.sprite.active = true;
         this.sprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/2)));
-
-        this.sprite.addAI(PillBottleController, {cooldown: this.cooldown});
-        // this.sprite.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
-		// this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.OVERLAP_EQUIP, InGame_Events.NOT_OVERLAP_EQUIP);
+		this.sprite.container = this;
+        this.sprite.addAI(PillBottleController, {cooldown: this.cooldown, clip: this.clip});
+		for(let c of this.clip) {
+			c.container = this;
+			c.setGroup(PhysicsGroups.PROJECTILE);
+			c.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/2)));
+			c.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
+		}
 	}
 
 	onPickup(): void {
@@ -40,29 +46,23 @@ export default class PillBottle extends Equipment{
 
 	}
 
+	setActive(position: Vec2): void {
+		this.sprite.position.set(position.x, position.y);
+        this.sprite.invertY = true;
+        this.sprite.visible = true;
+	}
 
-	doAttack(direction: Vec2): void {
-		// if(this.charges > 0) {
-		// 	this.sprite.active = true;
-		// 	(<TrashLidController>this.sprite._ai).beginThrow(direction);
-		// 	this.charges--;
-		// }
+
+	doAttack(direction: Vec2, deltaT: number): void {
+		if(this.charges > 0) {
+			(<PillBottleController>this.sprite._ai).fire(direction, deltaT);
+			this.charges--;
+		}
 	}
 
 	updatePos(position: Vec2, playerLookDirection: Vec2): void {
-		// if((<TrashLidController>this.sprite._ai).attacking) {
-		// 	// do nothing
-		// }
-		// else if((<TrashLidController>this.sprite._ai).returning) {
-		// 	(<TrashLidController>this.sprite._ai).returnToPlayer(position);
-		// }
-		// else {
-			this.sprite.position.set(position.x, position.y);
-			// this.sprite.position.add(new Vec2(8 * playerLookDirection.x,8 *playerLookDirection.y));
-			this.sprite.position.add(new Vec2(0,-8*playerLookDirection.y));
-			// this.sprite.position.y += 2;
-			// }
-
+		this.sprite.position.set(position.x, position.y);
+		this.sprite.position.add(new Vec2(0,-8*playerLookDirection.y));
 
 	}
 

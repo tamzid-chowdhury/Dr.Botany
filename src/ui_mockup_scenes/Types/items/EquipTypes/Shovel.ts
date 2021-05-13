@@ -26,6 +26,8 @@ export default class Shovel extends Equipment {
 		this.projectileSprite.visible = false;
         this.projectileSprite.active = false;
         this.projectileSprite.addAI(ProjectileController, {});
+		this.projectileSprite.container = this;
+		this.sprite.container = this;
         this.projectileSprite.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
         this.sprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/2)));
         this.sprite.setGroup(PhysicsGroups.PROJECTILE);
@@ -42,7 +44,7 @@ export default class Shovel extends Equipment {
 		this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.OVERLAP_EQUIP, InGame_Events.NOT_OVERLAP_EQUIP);
 	}
 
-	doAttack(direction: Vec2) {
+	doAttack(direction: Vec2, deltaT: number) {
 
 	    this.projectileSprite.position.set(this.sprite.position.x + (20*direction.x), this.sprite.position.y + (20*direction.y));
 		(<AnimatedSprite>this.projectileSprite).animation.play("ATTACK", false);

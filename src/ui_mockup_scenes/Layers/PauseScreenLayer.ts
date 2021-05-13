@@ -97,12 +97,14 @@ export default class PauseScreenLayer extends GameLayer{
 			}
 			this.menuButtons.push(new GameButton(sprite, label));
 		}
+		this.layer.disable();
 		
 	}
 
 
 
 	playEntryTweens(): void {
+		this.layer.enable();
 		this.hidden = !this.hidden;
 		this.layer.setHidden(this.hidden);
 		this.titleLabel.tweens.play('scaleIn');
@@ -123,6 +125,7 @@ export default class PauseScreenLayer extends GameLayer{
 			button.label.tweens.play('scaleOut');
 
 		}
+
 	}
 
 }

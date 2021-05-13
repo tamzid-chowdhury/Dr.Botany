@@ -22,9 +22,10 @@ export default class TrashLid extends Equipment {
 		this.sprite.invertY = true;
 		this.sprite.visible = false;
         this.sprite.active = false;
-        this.sprite.addAI(TrashLidController, {cooldown: this.cooldown});
+        this.sprite.addAI(TrashLidController, {cooldown: this.cooldown-50, container: this});
 		this.sprite.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
-
+		this.projectileSprite.container = this;
+		this.sprite.container = this;
 	}
 
 	onPickup(): void {
@@ -39,8 +40,8 @@ export default class TrashLid extends Equipment {
 
 	}
 
-	doAttack(direction: Vec2): void {
-		if(this.charges > 0) {
+	doAttack(direction: Vec2, deltaT: number): void {
+		if(this.charges > 0 && !(<TrashLidController>this.sprite._ai).returning) {
 			this.sprite.active = true;
 			(<TrashLidController>this.sprite._ai).beginThrow(direction);
 			this.charges--;

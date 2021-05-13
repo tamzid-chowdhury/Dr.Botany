@@ -15,6 +15,8 @@ export default class Sprite extends CanvasNode {
     /** Whether or not the y-axis should be inverted on render */
     invertY: boolean;
 
+    container: any;
+
     constructor(imageId: string){
         super();
         this.imageId = imageId;

@@ -4,7 +4,9 @@ import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import Equipment from "../Types/items/Equipment";
 import { InGame_Events } from "../Utils/Enums";
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import * as Tweens from '../Utils/Tweens'
@@ -20,7 +22,6 @@ export default class ProjectileController extends StateMachineAI {
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
         this.owner.active = false;
         this.owner.setGroup(PhysicsGroups.PROJECTILE);
-
 
         this.subscribeToEvents();
     }
@@ -67,7 +68,7 @@ export class TrashLidController extends ProjectileController {
 		this.owner.active = false;
 		this.owner.setGroup(PhysicsGroups.PROJECTILE);
 		this.subscribeToEvents();
-        this.throwTimer = new Timer((options.cooldown/2)-10, () => {
+        this.throwTimer = new Timer((options.cooldown/2), () => {
             this.attacking = false;
             this.returning = true;
         });
@@ -134,63 +135,118 @@ export class TrashLidController extends ProjectileController {
 	}
 }
 
+class PillProjectile {
+    direction: Vec2;
+	power: number = 0;
+    liveTime: number;
+    liveTimer: Timer;
+    powerLoss: number = 10;
+    sprite: Sprite;
+    dead: boolean;
+    constructor(sprite: Sprite, cooldown: number) {
+        this.sprite = sprite;
+        this.liveTime = cooldown;
+        this.dead = false;
+        this.liveTimer = new Timer(3*cooldown, () => {
+            this.deactivate();
+        });
+    }
+
+    update(deltaT: number) {
+        this.sprite._velocity = this.sprite.getLastVelocity();
+        this.sprite._velocity.normalize();
+        this.sprite._velocity.mult(new Vec2(this.power,this.power));
+        this.power -= this.powerLoss;
+        this.sprite.move(this.sprite._velocity.scaled(deltaT));
+    }
+
+    activate(direction: Vec2, position: Vec2, rotation: number, deltaT: number) {
+        this.power = 850;
+        this.direction = direction;
+        this.dead = false;
+        this.sprite.position.set(position.x, position.y);
+        this.sprite.rotation = -rotation;
+
+        this.sprite.active = true;
+        this.sprite.visible = true;
+
+        this.sprite._velocity = this.direction;
+        this.sprite._velocity.normalize();
+        this.sprite._velocity.mult(new Vec2(this.power,this.power));
+        this.sprite.move(this.sprite._velocity.scaled(deltaT));
+        this.liveTimer.start()
+    }
+
+    deactivate() {
+        this.sprite.visible = false;
+        this.sprite.active = false;
+        this.dead = true;
+    }
+
+
+}
 
 export class PillBottleController extends ProjectileController {
 	owner: AnimatedSprite;
 	direction: Vec2;
 	power: number = 0;
-    throwTimer: Timer;
     cooldown: number;
     returning: boolean;
     powerCurve: number;
+    inactivePills: Array<PillProjectile> = [];
+    activePills: Array<PillProjectile> = [];
+
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
 		this.cooldown = options.cooldown;
 		// this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
-		this.owner.addPhysics(new Circle(Vec2.ZERO, this.owner.size.x/4));
 		this.owner.active = false;
 		this.owner.setGroup(PhysicsGroups.PROJECTILE);
 		this.subscribeToEvents();
-        this.throwTimer = new Timer((options.cooldown/2)-10, () => {
-        });
+        let pillSprites = options.clip;
+        for(let p of pillSprites) {
+            this.inactivePills.push(new PillProjectile(p, this.cooldown));
+
+        }
+
 	}
+
+    recycle(deadPill: PillProjectile): void {
+        let pill = this.activePills.shift();
+        if(pill !== undefined) {
+            this.inactivePills.push(pill);
+
+        }
+    }
 
 	activate(options: Record<string, any>): void {}
 
 	handleEvent(event: GameEvent): void {}
 
 	update(deltaT: number): void {
-        if(this.attacking) {
-            this.owner._velocity = this.direction;
-            this.owner._velocity.normalize();
-            this.owner._velocity.mult(new Vec2(this.power,this.power));
-            this.owner.move(this.owner._velocity.scaled(deltaT));
-            this.power = this.power / (this.power * this.easeOut(this.powerCurve));
-            this.powerCurve += 0.00005
+        for(let p of this.activePills) {
+            if(p.dead) {
+                this.recycle(p);
+            }
+            else {
+                p.update(deltaT)
+
+            }
+           
         }
+
 
 	}
 
-    beginThrow(direction: Vec2) {
-        this.direction = direction.clone();
-        this.attacking = true;
-        this.throwTimer.start();
-        this.power = 450;
-        this.powerCurve = 0.0001;
-		this.owner.tweens.add('trashLidThrow', Tweens.trashLidThrow(this.cooldown/2, this.owner.rotation))
-		this.owner.tweens.play('trashLidThrow');
-    }
-
-    easeOut(x: number): number {
-        return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
-        
+    fire(direction: Vec2, deltaT: number) {
+        if(this.inactivePills.length > 0) {
+            let pill = this.inactivePills.pop();
+            this.activePills.push(pill);
+            pill.activate(direction.clone(), this.owner.position, this.owner.rotation, deltaT);
+        }
     }
 
 
-    endThrow(): void {
-		this.owner.active = false;
-        this.returning = false;
-    }
 
 	destroy(): void {
 

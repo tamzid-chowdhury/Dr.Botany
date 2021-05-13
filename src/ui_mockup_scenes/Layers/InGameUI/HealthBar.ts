@@ -1,10 +1,7 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
-import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
-import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../../Wolfie2D/Scene/Scene";
-import { UILayers, Fonts } from "../../Utils/Enums";
-import * as Palette from "../../Utils/Colors";
+import { UILayers } from "../../Utils/Enums";
 
 
 interface HealthPip {
