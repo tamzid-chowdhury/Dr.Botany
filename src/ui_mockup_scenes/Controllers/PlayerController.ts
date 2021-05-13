@@ -249,7 +249,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
                     if(this.damaged) {
-
+                        // console.log("Testing")
                         if (Date.now() - this.damageCooldown > 2000) {
                             this.damaged = false;
                         }

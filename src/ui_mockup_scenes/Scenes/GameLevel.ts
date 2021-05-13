@@ -487,4 +487,8 @@ export default class GameLevel extends Scene {
         //     this.equipmentPrototypes.push(temp);
         // }
     }
+
+    initEnemyPool(): void {
+        
+    }
 }

@@ -27,6 +27,7 @@ export default class Enemy {
         this.sprite.colliderOffset.set(0, (collisionShape.y / 4) * data.scale);
         this.sprite.addAI(EnemyController, aiOptions);
         this.sprite.setGroup(PhysicsGroups.ENEMY);
+        this.sprite.setTrigger("ground", InGame_Events.ENEMY_HIT_WALL, null );
         this.sprite.setTrigger(PhysicsGroups.PLAYER, InGame_Events.PLAYER_ENEMY_COLLISION, null);
         this.sprite.setTrigger(PhysicsGroups.PROJECTILE, InGame_Events.PROJECTILE_HIT_ENEMY, null);
         this.sprite.visible = false;

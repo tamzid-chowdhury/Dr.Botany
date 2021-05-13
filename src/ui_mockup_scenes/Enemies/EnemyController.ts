@@ -14,6 +14,7 @@ import Idle from "./EnemyStates/Idle"
 import Knockback from "./EnemyStates/Knockback";
 import Walk from "./EnemyStates/Walk";
 import * as Tweens from "../Utils/Tweens";
+import { PhysicsGroups } from "../Utils/PhysicsOptions";
 
 
 
@@ -44,7 +45,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     options:Record<string, any>;
 
     damage(damage: number) : void {
-        console.log(damage)
         this.health -= damage;
     };
 
@@ -67,7 +67,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.addState(EnemyStates.DYING, dying)
 
         this.initialize(EnemyStates.IDLE);
-        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER])
+        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER, InGame_Events.ENEMY_HIT_WALL])
 
     }
 
@@ -79,12 +79,13 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     handleEvent(event: GameEvent): void {
+        console.log(this.owner.active);
+        
         if(this.owner.active) {
             if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
                 if(this.pauseExecution) {
                     this.pauseExecution = false;
                     this.changeState(EnemyStates.WALK);
-    
                 }
                 else {
                     this.pauseExecution = true;
@@ -92,6 +93,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
                 }
     
                 
+            }
+            if(event.type === InGame_Events.ENEMY_HIT_WALL) {
+                console.log("enemy hit the wall");
             }
         }
 
@@ -102,6 +106,13 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         if(!this.pauseExecution && this.owner.active) {
             if(this.knockBackGuard > 1) this.knockBackGuard--;
             if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
+        }
+        while(this.receiver.hasNextEvent()) {
+            let event = this.receiver.getNextEvent();
+
+            if(event.type === InGame_Events.ENEMY_HIT_WALL) {
+                this.handleEvent(event);
+            }
         }
 	}
 
