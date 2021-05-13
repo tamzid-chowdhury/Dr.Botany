@@ -16,7 +16,6 @@ export default class Equipment {
 	charges: number;
 	scale: number = 1;
 	inInventory: boolean = false;
-	onGround: boolean = false;
 	constructor(data: Record<string,any>) {
 		this.type = data.type;
 		this.spriteKey = data.spriteKey;
@@ -63,7 +62,7 @@ export default class Equipment {
 		this.sprite.rotation = rotation;
 	}
 
-	doAttack(direction: Vec2) {}
+	doAttack(direction: Vec2, deltaT: number) {}
 
 	finishAttack(): void {}
 }

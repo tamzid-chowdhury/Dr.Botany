@@ -80,6 +80,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
     handleEvent(event: GameEvent): void {
         console.log(this.owner.active);
+        console.log(this.owner.onCeiling);
         
         if(this.owner.active) {
             if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
@@ -91,8 +92,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
                     this.pauseExecution = true;
                     this.changeState(EnemyStates.IDLE);
                 }
-    
-                
+
             }
             if(event.type === InGame_Events.ENEMY_HIT_WALL) {
                 console.log("enemy hit the wall");
@@ -107,13 +107,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
             if(this.knockBackGuard > 1) this.knockBackGuard--;
             if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
         }
-        while(this.receiver.hasNextEvent()) {
-            let event = this.receiver.getNextEvent();
-
-            if(event.type === InGame_Events.ENEMY_HIT_WALL) {
-                this.handleEvent(event);
-            }
-        }
+        
 	}
 
     doKnockBack(direction: Vec2): void {

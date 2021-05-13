@@ -23,6 +23,7 @@ import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import EnemyManager from "../GameSystems/EnemyManager";
 import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import EquipmentManager from "../GameSystems/EquipmentManager";
+import ProjectileController from "../Controllers/ProjectileController";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -65,9 +66,6 @@ export default class GameLevel extends Scene {
     loadScene(): void {
         
         this.load.image("reticle", "assets/misc/reticle.png");
-        
-        this.load.image("ui_square", "assets/ui_art/ui_box_v2.png");
-
         this.load.image("growth_bar_outline", "assets/ui_art/generic_bar_outline.png");
         this.load.image("growth_bar_fill", "assets/ui_art/generic_bar_fill.png");
         
@@ -77,19 +75,20 @@ export default class GameLevel extends Scene {
         this.load.image("health_pip", "assets/ui_art/leaf_icon.png");
         this.load.image("health_pip_shadow", "assets/ui_art/leaf_icon_shadow.png");
         this.load.image("shadow", "assets/player/shadow_sprite.png");
-        this.load.image("shovel", "assets/weapons/shovel.png");
 
+        this.load.image("shovel", "assets/weapons/shovel.png");
+        this.load.image("shovel_outline", "assets/weapons/shovel_select_outline.png");
+        this.load.image("shovel_icon", "assets/weapons/shovel_icon.png");
+        this.load.image("shovel_icon_outline", "assets/weapons/shovel_icon_outline.png");
         this.load.image("pill_bottle", "assets/weapons/pill_bottle.png");
         this.load.image("pill", "assets/weapons/pill.png");
         this.load.image("pill_icon", "assets/weapons/pill_icon.png");
         this.load.image("pill_icon_outline", "assets/weapons/pill_icon_outline.png");
 
-        this.load.image("shovel_outline", "assets/weapons/shovel_select_outline.png");
         this.load.image("trash_lid", "assets/weapons/trash_lid_icon.png");
         this.load.image("trash_lid_icon", "assets/weapons/trash_lid_icon.png");
         this.load.image("trash_lid_icon_outline", "assets/weapons/trash_lid_icon_outline.png");
-        this.load.image("shovel_icon", "assets/weapons/shovel_icon.png");
-        this.load.image("shovel_icon_outline", "assets/weapons/shovel_icon_outline.png");
+    
         this.load.image("upper", "assets/items/good_vibe.png");
         this.load.image("downer", "assets/items/bad_vibe.png");
         this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
@@ -154,7 +153,6 @@ export default class GameLevel extends Scene {
         this.screenWipe.tweens.play("introTransition");
         // TODO: Disable input until after screen wipe finished
         this.initReticle();
-        this.initEquipment();
         this.materialsManager = new MaterialsManager(this);
         this.enemyManager = new EnemyManager(this);
         this.equipmentManager = new EquipmentManager(this);
@@ -199,27 +197,29 @@ export default class GameLevel extends Scene {
 
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-
-
-
             
             if (event.type === InGame_Events.TOGGLE_PAUSE_TRANSITION) {
                 this.pauseScreenLayer.layer.setHidden(true);
+                this.pauseScreenLayer.layer.disable();
+
             }
 
             if (event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
                 let other = this.sceneGraph.getNode(event.data.get("other"));
-
                 if((<EnemyController>node._ai).controllerType === 'Enemy') {
-                    let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
-                    // let ms = 30;
-                    // var currentTime = new Date().getTime();
-                    // while (currentTime + ms >= new Date().getTime()) { /* I feel filthy  doing this*/}
-                    // TODO: Non constant damage
-                    (<EnemyController>node._ai).damage(10);
-                    (<EnemyController>node._ai).doKnockBack(knockBackDir);
+                    // make sure dropped weapons dont cause damage
+                    if((<Sprite>other).container.inInventory) { 
+                        let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
+                        // let ms = 30;
+                        // var currentTime = new Date().getTime();
+                        // while (currentTime + ms >= new Date().getTime()) { /* I feel filthy  doing this*/}
+                        // TODO: Non constant damage
+                        (<EnemyController>node._ai).damage(10);
+                        (<EnemyController>node._ai).doKnockBack(knockBackDir);
+                    }
                 }
+                
             }
 
             if (event.type === InGame_Events.DO_SCREENSHAKE) {
@@ -247,7 +247,9 @@ export default class GameLevel extends Scene {
             }
 
             if (event.type === InGame_Events.TOGGLE_PAUSE) {
-                if(this.pauseExecution) this.pauseExecution = false;
+                if(this.pauseExecution){
+                    this.pauseExecution = false;
+                } 
                 else this.pauseExecution = true;
             }
 
@@ -257,6 +259,7 @@ export default class GameLevel extends Scene {
                 this.cursor.visible = false;
                 this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
             }
+
             if (event.type === UIEvents.CLICKED_QUIT) {
                 this.nextLevel = Scenes.MAIN_MENU;
                 this.screenWipe.imageOffset = new Vec2(0, 0);
@@ -293,7 +296,7 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.SPAWN_AMMO) {
                 let position = event.data.get("position");
-                // create ammo that refills small amount of charge weapons
+                // TODO: create ammo that refills small amount of charge weapons
             }
 
             if (event.type === InGame_Events.PLAYER_DIED) {
@@ -347,8 +350,7 @@ export default class GameLevel extends Scene {
                     }
                 }
                 if (Math.random() < 0.2) {
-                    // this.emitter.fireEvent(InGame_Events.SPAWN_AMMO, { position: ownerPosition });
-
+                    this.emitter.fireEvent(InGame_Events.SPAWN_AMMO, { position: ownerPosition });
                 }
 
                 this.enemyManager.despawnEnemy(node);
@@ -415,9 +417,6 @@ export default class GameLevel extends Scene {
 
     }
 
-    initInventory(): void {
-
-    }
 
 
     initGameUI(halfsize: Vec2): void {
@@ -430,7 +429,7 @@ export default class GameLevel extends Scene {
 
     }
 
-    initGameOverScreen(halfSize:Vec2) : void {
+    initGameOverScreen(halfSize: Vec2) : void {
         this.gameOverScreenLayer = new GameOverScreenLayer(this, halfSize);
     }
 
@@ -447,48 +446,13 @@ export default class GameLevel extends Scene {
         this.reticle = this.add.sprite("reticle", UILayers.CURSOR);
         this.reticle.scale = new Vec2(0.7, 0.7);
         
-        
-        
         this.cursor = this.add.sprite("temp_cursor", UILayers.CURSOR);
         this.cursor.scale = new Vec2(0.22, 0.22)
         this.cursor.visible = false;
-
 
         this.cursor2 = this.add.sprite("cursor_clicked", UILayers.CURSOR);
         this.cursor2.scale = new Vec2(0.25, 0.25)
         this.cursor2.visible = false;
     }
 
-    initEquipment(): void {
-        // let equipData = this.load.getObject("equipmentData");
-
-        // for(let i = 0; i < equipData.count; i++){
-        //     let equip = equipData.equipment[i];
-        //     let temp ;
-        //     switch(equip.name) {
-        //         case "Shovel":
-        //             temp = new Shovel(equip);
-        //             temp.sprite = this.add.sprite(temp.spriteKey, "secondary");
-        //             temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
-        //             break;
-        //         case "TrashLid":
-        //             temp = new TrashLid(equip);
-        //             temp.sprite = this.add.sprite(temp.spriteKey, "primary");
-        //             temp.projectileSprite = this.add.animatedSprite(temp.projectileSpriteKey, "primary");
-        //             break;
-        //         case "PillBottle":
-        //             temp = new PillGun(equip);
-        //             temp.sprite = this.add.sprite(temp.spriteKey, "primary");
-        //             temp.projectileSprite = this.add.sprite(temp.projectileSpriteKey, "primary");
-        //         default:
-        //             break;
-        //     }
-        //     console.log(this.equipmentPrototypes)
-        //     this.equipmentPrototypes.push(temp);
-        // }
-    }
-
-    initEnemyPool(): void {
-        
-    }
 }
