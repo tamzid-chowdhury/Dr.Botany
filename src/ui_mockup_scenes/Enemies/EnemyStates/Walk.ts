@@ -5,6 +5,7 @@ import { EnemyStates } from "../EnemyController";
 import EnemyState from "./EnemyState";
 import Idle from "./Idle"
 import * as Tweens from "../../Utils/Tweens"
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Walk extends EnemyState {
 	playerSize: Vec2;
@@ -89,21 +90,24 @@ export default class Walk extends EnemyState {
     
 		// if the coordinates are within its range, go to attack depending on its class
 		if (this.owner.onCeiling) {
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "up", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 			
 		}
 		else if(this.owner.onGround) {
-
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "down", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 			
 		}
 		else if(this.owner.onWall && this.parent.direction.x === 1) {
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "right", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 		}
 		else if(this.owner.onWall && this.parent.direction.x === -1) {
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "left", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 		}

@@ -95,6 +95,7 @@ export default class GameLevel extends Scene {
         this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
         this.load.audio("swing", "assets/sfx/swing_sfx.wav");
         this.load.audio("enemy_hit", "assets/sfx/enemy_hit.wav");
+        this.load.audio("enemy_jump", "assets/sfx/enemy_jump.wav");
         this.load.audio("enemy_die", "assets/sfx/enemy_die.wav");
         this.load.audio("material_get", "assets/sfx/material_get_sfx.wav");
         this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")

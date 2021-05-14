@@ -3,7 +3,7 @@
     "spriteSheetImage": "dr_botany.png",
     "spriteWidth": 14,
     "spriteHeight": 16,
-    "columns": 16,
+    "columns": 18,
     "rows": 1,
     "durationType": "time",
     "animations": [
@@ -24,14 +24,14 @@
         {
             "name": "HIT",
             "frames": [
-                {"index" : 16, "duration" : 20},
-                {"index" : 17, "duration" : 20},
-                {"index" : 16, "duration" : 20},
-                {"index" : 17, "duration" : 20},
-                {"index" : 16, "duration" : 10},
-                {"index" : 17, "duration" : 10},
-                {"index" : 16, "duration" : 10},
-                {"index" : 17, "duration" : 10}
+                {"index" : 16, "duration" : 5},
+                {"index" : 17, "duration" : 5},
+                {"index" : 16, "duration" : 5},
+                {"index" : 17, "duration" : 5},
+                {"index" : 16, "duration" : 3},
+                {"index" : 17, "duration" : 3},
+                {"index" : 16, "duration" : 3},
+                {"index" : 17, "duration" : 3}
             ]
         },
         {
@@ -50,10 +50,10 @@
         {
             "name" : "SWING",
             "frames": [
-                {"index": 12, "duration" : 200},
-                {"index": 13, "duration" : 200},
-                {"index": 14, "duration" : 200},
-                {"index": 15, "duration" : 200}
+                {"index": 12, "duration" : 5},
+                {"index": 13, "duration" : 5},
+                {"index": 14, "duration" : 5},
+                {"index": 15, "duration" : 5}
             ]
         }
     ]

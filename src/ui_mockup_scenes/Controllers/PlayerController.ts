@@ -155,9 +155,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if(this.hitTimer.isActive()) {
             
             if (Date.now() - this.hitFlashCooldown > 50) {
-                // this.owner.alpha = this.owner.alpha === 1 ? 0 : 1;
+                this.owner.alpha = this.owner.alpha === 1 ? 0 : 1;
                 this.hitFlashCooldown = Date.now();
-                this.owner.animation.playIfNotAlready("HIT", false);
             }
         }
 
@@ -179,7 +178,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         if(Input.isMousePressed()) {
             if(!this.coolDownTimer.isActive()) {
-                this.owner.animation.play("SWING", false);
+                this.owner.animation.play("SWING", false); //  it is here
                 if(this.equipped.charges) {
                     
                     
@@ -192,6 +191,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     }
                     this.coolDownTimer.start();
                 }
+                this.owner.animation.playIfNotAlready("IDLE", true);
             }
         }
 
