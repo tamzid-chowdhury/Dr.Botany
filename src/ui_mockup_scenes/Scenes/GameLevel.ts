@@ -24,6 +24,7 @@ import EnemyManager from "../GameSystems/EnemyManager";
 import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import EquipmentManager from "../GameSystems/EquipmentManager";
 import ProjectileController from "../Controllers/ProjectileController";
+import SupportManager from "../GameSystems/SupportManager"
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -53,6 +54,7 @@ export default class GameLevel extends Scene {
     materialsManager: MaterialsManager;
     enemyManager: EnemyManager;
     equipmentManager: EquipmentManager;
+    supportManager: SupportManager; 
 
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
@@ -91,6 +93,8 @@ export default class GameLevel extends Scene {
     
         this.load.image("upper", "assets/items/good_vibe.png");
         this.load.image("downer", "assets/items/bad_vibe.png");
+        this.load.image("healthpack", "assets/items/healthpack.png");
+        this.load.image("ammopack", "assets/items/ammopack.png");
         this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
         this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
         this.load.audio("swing", "assets/sfx/swing_sfx.wav");
@@ -121,6 +125,7 @@ export default class GameLevel extends Scene {
             InGame_Events.DO_SCREENSHAKE,
             InGame_Events.SPAWN_UPPER,
             InGame_Events.SPAWN_DOWNER,
+            InGame_Events.SPAWN_AMMO,
             InGame_Events.PLAYER_ATTACK_ENEMY,
             InGame_Events.PROJECTILE_HIT_ENEMY,
             InGame_Events.PLAYER_DIED,
@@ -158,6 +163,7 @@ export default class GameLevel extends Scene {
         this.materialsManager = new MaterialsManager(this);
         this.enemyManager = new EnemyManager(this);
         this.equipmentManager = new EquipmentManager(this);
+        this.supportManager = new SupportManager(this);
     }
 
     updateScene(deltaT: number) {
@@ -299,7 +305,8 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.SPAWN_AMMO) {
                 let position = event.data.get("position");
-                // TODO: create ammo that refills small amount of charge weapons
+                console.log("SPAWN AMMO")
+                this.supportManager.spawnAmmoPack(position);
             }
 
             if (event.type === InGame_Events.PLAYER_DIED) {
@@ -355,6 +362,9 @@ export default class GameLevel extends Scene {
                 if (Math.random() < 0.2) {
                     this.emitter.fireEvent(InGame_Events.SPAWN_AMMO, { position: ownerPosition });
                 }
+
+
+                
 
                 this.enemyManager.despawnEnemy(node);
             }
