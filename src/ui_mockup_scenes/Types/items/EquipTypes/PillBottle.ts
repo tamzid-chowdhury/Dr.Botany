@@ -29,7 +29,7 @@ export default class PillBottle extends Equipment {
 		for(let c of this.clip) {
 			c.container = this;
 			c.setGroup(PhysicsGroups.PROJECTILE);
-			c.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/2)));
+			c.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.sprite.size.x/2, this.sprite.size.y/4)));
 			c.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
 		}
 	}

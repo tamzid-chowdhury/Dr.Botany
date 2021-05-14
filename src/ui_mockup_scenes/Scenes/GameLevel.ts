@@ -131,10 +131,12 @@ export default class GameLevel extends Scene {
             InGame_Events.TOGGLE_PAUSE_TRANSITION,
             InGame_Events.OVERLAP_EQUIP,
             InGame_Events.NOT_OVERLAP_EQUIP,
+            InGame_Events.ENEMY_ATTACK_PLANT,
             UIEvents.CLICKED_QUIT,
             UIEvents.CLICKED_RESUME,
             UIEvents.TRANSITION_LEVEL,
             UIEvents.CLICKED_RESTART,
+            
         ]);
 
 
@@ -203,6 +205,7 @@ export default class GameLevel extends Scene {
                 this.pauseScreenLayer.layer.disable();
 
             }
+            
 
             if (event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
@@ -359,6 +362,10 @@ export default class GameLevel extends Scene {
             if (event.type === UIEvents.CLICKED_QUIT) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music" });
                 this.sceneManager.changeToScene(MainMenu, {});
+            }
+
+            if (event.type === InGame_Events.ENEMY_ATTACK_PLANT) {
+                // console.log("Enemy is hitting the plant");
             }
 
 

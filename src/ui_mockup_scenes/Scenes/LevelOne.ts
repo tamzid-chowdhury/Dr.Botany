@@ -27,10 +27,6 @@ export default class LevelOne extends GameLevel {
     time: number;
     enemyList: Array<AnimatedSprite> = [];
 
-    enemyNameList: Array<string> = ["orange_mushroom", "slime_wip"];
-    // This should be a variable to each level I guess? 
-    maxEnemyNumber: number;
-
 
     testLabel: AnimatedDialog;
 

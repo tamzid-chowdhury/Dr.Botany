@@ -18,7 +18,7 @@
 		{
 			"type": "Upper",
             "health": 40,
-            "scale": 0.8,
+            "scale": 1,
             "speed": 60,
 			"spriteKey": "wisp"
 		}

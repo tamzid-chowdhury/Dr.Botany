@@ -12,6 +12,7 @@ export default class Knockback extends EnemyState {
 		
 		if (this.parent.health > 0) {
 			(<AnimatedSprite>this.owner).animation.play("HIT", true);
+			
 		}
 		else {
 			this.finished(EnemyStates.DYING);

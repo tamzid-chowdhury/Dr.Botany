@@ -33,6 +33,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     direction: Vec2 = Vec2.ZERO;
     speed: number;
     player: GameNode;
+    plant: GameNode;
     attackRange: number;
     dropType: String; 
     controllerType: String = 'Enemy'; 
@@ -52,6 +53,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.owner = owner;
         this.health = options.health;
         this.player = options.player;
+        this.plant = options.plant;
         this.speed = options.speed;
         this.dropType = options.type; 
         this.options = options;
@@ -67,7 +69,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.addState(EnemyStates.DYING, dying)
 
         this.initialize(EnemyStates.IDLE);
-        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER, InGame_Events.ENEMY_HIT_WALL])
+        this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER])
+
+        // this.owner.tweens.add("hopOverWall")
 
     }
 
@@ -79,10 +83,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     handleEvent(event: GameEvent): void {
-        console.log(this.owner.active);
-        console.log(this.owner.onCeiling);
         
         if(this.owner.active) {
+            
             if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
                 if(this.pauseExecution) {
                     this.pauseExecution = false;
@@ -94,20 +97,17 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
                 }
 
             }
-            if(event.type === InGame_Events.ENEMY_HIT_WALL) {
-                console.log("enemy hit the wall");
-            }
         }
 
     }
 
     update(deltaT: number): void {
         super.update(deltaT);
+        
         if(!this.pauseExecution && this.owner.active) {
             if(this.knockBackGuard > 1) this.knockBackGuard--;
             if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
         }
-        
 	}
 
     doKnockBack(direction: Vec2): void {
@@ -117,8 +117,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         
     }
 
-    wake(player: GameNode): void {
+    wake(player: GameNode, plant:GameNode): void {
         this.player = player;
+        this.plant = plant;
         this.health = this.options.health;
         this.speed = this.options.speed;
         this.changeState(EnemyStates.WALK);
@@ -132,7 +133,11 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         return this.player.position;
     }
 
-    getOwnerPostion(): Vec2 {
+    getPlantPosition(): Vec2 {
+        return this.plant.position;
+    }
+
+    getOwnerPosition(): Vec2 {
         return this.owner.position;
     }
 

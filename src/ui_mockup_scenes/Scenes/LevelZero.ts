@@ -67,6 +67,7 @@ export default class LevelZero extends GameLevel {
                 this.collidables = <OrthogonalTilemap>obj;
             }
         }
+        // this.collidables.active = true;
 
         this.tilemapSize = this.collidables.size;
 
@@ -141,7 +142,7 @@ export default class LevelZero extends GameLevel {
         }
 
         if (Input.isKeyJustPressed("n")) {
-            this.enemyManager.spawnEnemy(this.player);
+            this.enemyManager.spawnEnemy(this.player, this.plant);
         }
 
         if (Input.isKeyJustPressed("m")) {
