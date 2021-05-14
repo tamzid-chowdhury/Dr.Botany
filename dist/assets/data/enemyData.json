@@ -4,7 +4,7 @@
 		{
 			"type": "Downer",
             "health": 50,
-            "scale": 1.5,
+            "scale": 1,
             "speed": 40,
 			"spriteKey": "green_slime"
 		},

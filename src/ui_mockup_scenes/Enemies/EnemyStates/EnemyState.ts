@@ -10,6 +10,7 @@ export default abstract class EnemyState extends State {
     constructor(parent: EnemyController, owner: GameNode){
 		super(parent);
 		this.owner = owner;
+
     }
 
     handleInput(event: GameEvent): void {}

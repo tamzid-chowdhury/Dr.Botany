@@ -4,6 +4,7 @@ import { InGame_Events } from "../../Utils/Enums";
 import { EnemyStates } from "../EnemyController";
 import EnemyState from "./EnemyState";
 import Idle from "./Idle"
+import * as Tweens from "../../Utils/Tweens"
 
 export default class Walk extends EnemyState {
 	playerSize: Vec2;
@@ -48,14 +49,8 @@ export default class Walk extends EnemyState {
 				this.parent.owner.invertX = false;
 			}
 			
-			
-			// let dirToPlayer = this.parent.getOwnerPostion().dirTo(this.parent.getPlayerPosition());
-			
-			// this.parent.velocity = dirToPlayer;
 			this.parent.velocity = dirToPlayer;
 
-			// if (Math.abs(ownerPosX - playerPosX) + 1000 < (this.playerSize.x / 4)) this.parent.velocity.x = -this.parent.velocity.x;
-			// if (Math.abs(ownerPosY - playerPosY) + 1000 < (this.playerSize.y / 4) + 6) this.parent.velocity.y = -this.parent.velocity.y;
 			if (Math.abs(ownerPosX - playerPosX) > 1000) { // when the enemy and player distance is far away enough
 				this.parent.velocity.x = -this.parent.velocity.x;
 			}
@@ -86,15 +81,31 @@ export default class Walk extends EnemyState {
 			if (this.parent.velocity.isZero()) {
 				// when it reaches the plant
 				this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);
+				// maybe change the state to attack depending on the enemy type
 			}
 		}
 
+		
+    
 		// if the coordinates are within its range, go to attack depending on its class
-		if ((this.owner.onCeiling || this.owner.onGround || this.owner.onWall) && this.parent.velocity.isZero()) {
-			// this.owner.disablePhysics();
-			// this.text.tweens.add("itemIncrement", Tweens.itemIncrement(this.textBackdrop.fontSize))
-			// something like this
-			console.log("on colliding")
+		if (this.owner.onCeiling) {
+			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "up", this.owner));
+			this.owner.tweens.play("enemyHopOver");
+			
+		}
+		else if(this.owner.onGround) {
+
+			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "down", this.owner));
+			this.owner.tweens.play("enemyHopOver");
+			
+		}
+		else if(this.owner.onWall && this.parent.direction.x === 1) {
+			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "right", this.owner));
+			this.owner.tweens.play("enemyHopOver");
+		}
+		else if(this.owner.onWall && this.parent.direction.x === -1) {
+			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "left", this.owner));
+			this.owner.tweens.play("enemyHopOver");
 		}
 
 
