@@ -8,6 +8,7 @@ import Idle from "./Idle"
 export default class Walk extends EnemyState {
 	playerSize: Vec2;
 	onEnter(): void {
+		this.parent.currentStateName = EnemyStates.WALK;
 		(<AnimatedSprite>this.owner).animation.play("WALK", true);
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
 	}
@@ -46,7 +47,7 @@ export default class Walk extends EnemyState {
 		this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
 		this.owner.move(this.parent.velocity.scaled(deltaT));
 
-
+		// console.log(this.owner.onCeiling, this.owner.onGround, this.owner.onWall)
 
 
 		// if the coordinates are within its range, go to attack depending on its class

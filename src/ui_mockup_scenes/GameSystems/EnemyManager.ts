@@ -55,11 +55,10 @@ export default class EnemyManager {
     despawnEnemy(node: GameNode): void {
         for(let i = 0; i < this.activePool.length; i ++) {
             let enemy = this.activePool[i];
-
             if(enemy.sprite.id === node.id) {
                 this.activePool.splice(i, 1)
 
-                enemy.sprite.position.set(-1000,-1000)
+                enemy.sprite.position.set(-2000,-2000)
                 enemy.sprite.active = false;
                 enemy.sprite.visible = false;
                 this.inactivePool.push(enemy);

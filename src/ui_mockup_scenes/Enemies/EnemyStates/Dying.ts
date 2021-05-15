@@ -9,10 +9,12 @@ import Idle from "./Idle"
 export default class Dying extends EnemyState {
     playerSize: Vec2;
     onEnter(): void {
-		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemy_die", loop: false, holdReference: true});
+		this.parent.currentStateName = EnemyStates.DYING;
+		
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemy_die", loop: false, holdReference: true});
 
         (<AnimatedSprite>this.owner).animation.play("DYING", false, InGame_Events.ENEMY_DEATH_ANIM_OVER);
-        this.playerSize = (<AnimatedSprite>this.parent.player).size;
+        this.owner.active = false;
     }
 
     update(deltaT: number): void {

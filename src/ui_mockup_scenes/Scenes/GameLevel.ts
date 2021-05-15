@@ -170,6 +170,9 @@ export default class GameLevel extends Scene {
                 this.materialsManager.resolveMaterials(this.player.position, deltaT);
     
             }
+
+
+
             if (Input.isKeyJustPressed("escape")) {
                 if(this.pauseScreenLayer.hidden) {
                     this.pauseScreenLayer.playEntryTweens();
@@ -209,15 +212,25 @@ export default class GameLevel extends Scene {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
                 let other = this.sceneGraph.getNode(event.data.get("other"));
                 if((<EnemyController>node._ai).controllerType === 'Enemy') {
-                    // make sure dropped weapons dont cause damage
+                    // makes sure dropped weapons dont cause damage
                     if((<Sprite>other).container.inInventory) { 
-                        let knockBackDir = (<PlayerController>this.player._ai).playerLookDirection;
+                        let player = (<PlayerController>this.player._ai);
+                        // WARNING this always deactivates the projectile when it hits
+                        // if we want porjectile piercing as a powerup, this has to be conditional
+                        // also bad hardcoding
+                        if((<Sprite>other).imageId === "pill") {
+
+                            other.active = false;
+                        }
+
+                        let weaponKnockBack = player.equipped.knockback
+                        let knockBackDir = player.playerLookDirection;
+                        knockBackDir = knockBackDir.scale(weaponKnockBack);
                         // let ms = 30;
                         // var currentTime = new Date().getTime();
                         // while (currentTime + ms >= new Date().getTime()) { /* I feel filthy  doing this*/}
                         // TODO: Non constant damage
-                        (<EnemyController>node._ai).damage(10);
-                        (<EnemyController>node._ai).doKnockBack(knockBackDir);
+                        (<EnemyController>node._ai).doDamage(knockBackDir, player.equipped.damage, weaponKnockBack);
                     }
                 }
                 
@@ -339,6 +352,8 @@ export default class GameLevel extends Scene {
             //     }
             // }
 
+
+
             if (event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
                 let node = this.sceneGraph.getNode(event.data.get("owner"));
                 let ownerPosition = (<EnemyController>node._ai).owner.position.clone();
@@ -391,6 +406,8 @@ export default class GameLevel extends Scene {
         this.upperDeposit.scale.set(1, 1);
         this.downerDeposit.scale.set(1, 1);
         (<AnimatedSprite>this.plant).animation.play("HAPPY")
+
+
         // This has to be touched
         // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
         // this.plant.colliderOffset.set(0,10);

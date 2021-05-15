@@ -1,7 +1,6 @@
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Scene from "../../../Wolfie2D/Scene/Scene";
 import EnemyController from "../../Enemies/EnemyController";
 import { InGame_Events } from "../../Utils/Enums";
 import { PhysicsGroups } from "../../Utils/PhysicsOptions";
@@ -31,6 +30,7 @@ export default class Enemy {
         this.sprite.setTrigger(PhysicsGroups.PROJECTILE, InGame_Events.PROJECTILE_HIT_ENEMY, null);
         this.sprite.visible = false;
         this.sprite.active = false;  
+        this.sprite.position.set(-2000,-2000)
     }
 
 

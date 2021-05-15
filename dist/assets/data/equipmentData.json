@@ -7,7 +7,8 @@
             "projectileSpriteKey": "swing",
             "iconSpriteKey": "shovel_icon",
             "spriteKey": "shovel",
-            "damage": 1,
+            "damage": 10,
+            "knockback": 1,
             "cooldown": 500,
 			"sfxKey": "swing",
 			"scale": 1,
@@ -21,7 +22,8 @@
             "projectileSpriteKey": "swing",
             "spriteKey": "trash_lid",
             "iconSpriteKey": "trash_lid_icon",
-            "damage": 1,
+            "damage": 15,
+            "knockback": 0.5,
             "cooldown": 600,
 			"sfxKey": "swing",
 			"scale": 1,
@@ -33,12 +35,13 @@
             "projectileSpriteKey": "pill",
             "iconSpriteKey": "pill_icon",
             "spriteKey": "pill_bottle",
-            "damage": 1,
-            "cooldown": 200,
+            "damage": 8,
+            "knockback": 0,
+            "cooldown": 230,
 			"sfxKey": "swing",
 			"scale": 1,
 			"charges": 50,
-			"projectileCopies": 20
+			"projectileCopies": 30
 		}
 	]
 }

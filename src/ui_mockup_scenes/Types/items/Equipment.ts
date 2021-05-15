@@ -10,7 +10,8 @@ export default class Equipment {
 	sfxKey: string;
 	sprite: Sprite;
 	projectileSprite: Sprite;
-	damage: number = 1;
+	damage: number;
+	knockback: number;
 	cooldown: number;
 	swingDir: number = 1;
 	charges: number;
@@ -22,6 +23,7 @@ export default class Equipment {
 		this.iconSpriteKey = data.iconSpriteKey;
 		this.projectileSpriteKey = data.projectileSpriteKey;
 		this.damage = data.damage;
+		this.knockback = data.knockback;
 		this.name = data.name;
 		this.cooldown = data.cooldown;
 		this.sfxKey = data.sfxKey;

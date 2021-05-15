@@ -339,7 +339,6 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			}
 
 
-
 			// Resolve the collision with the node, and move it
 			node.finishMove();
 		}
