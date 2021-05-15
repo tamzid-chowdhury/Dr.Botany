@@ -190,7 +190,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if (Input.isMousePressed() && !this.pauseExecution) {
             if (!this.coolDownTimer.isActive()) {
                 if (this.equipped.charges) {
-
+                    console.log("hereree")
                     // (<AnimatedSprite>this.equipped.projectileSprite).animation.play("ATTACK", false);
                     this.equipped.doAttack(this.playerLookDirection, deltaT);
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.equipped.sfxKey, loop: false, holdReference: true });
@@ -280,16 +280,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                         }
                     }
                     else {
-                        // This is where it plays tweens + animation for getting hit
-                        // probably tweens
                         let enemy = this.owner.getScene().getSceneGraph().getNode(event.data.get("other"));
                         this.hitFlashCooldown = Date.now();
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "player_hit", holdReference: true });
-                        // might be better with move, it goes thru collidable objs 
-
-                        // this.owner.tweens.add("knockBack", Tweens.knockBackPlayer(this.owner.position, (<EnemyController>enemy._ai).velocity));
-                        // this.owner.tweens.play("knockBack");
-                        //
+                       
                         this.knockBack = true;
                         this.knockBackVel = (<EnemyController>enemy._ai).velocity;
 
