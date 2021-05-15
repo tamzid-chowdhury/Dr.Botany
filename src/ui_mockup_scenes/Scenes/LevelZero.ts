@@ -31,11 +31,11 @@ export default class LevelZero extends GameLevel {
 
     testLabel: AnimatedDialog;
 
-    // TODO: move mood control into PlantController
-    overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
-    mood: string = "normal";
-    moodMin: number = -10;
-    moodMax: number = 10;
+    // // TODO: move mood control into PlantController
+    // overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
+    // mood: string = "normal";
+    // moodMin: number = -10;
+    // moodMax: number = 10;
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelZeroReceiver: Receiver = new Receiver();
 
@@ -89,9 +89,6 @@ export default class LevelZero extends GameLevel {
         this.supportManager.addHealthPacks(5); 
         this.supportManager.addAmmoPacks(5);
 
-        this.supportManager.spawnHealthPack(new Vec2(250,400)); //testing
-        this.supportManager.spawnAmmoPack(new Vec2(300,400)); //testing
-
     }
 
     updateScene(deltaT: number) {
@@ -110,7 +107,7 @@ export default class LevelZero extends GameLevel {
 
             this.resetAngryEffect();
 
-            this.mood = "normal";
+            // this.mood = "normal";
         }
         
         if (Input.isKeyJustPressed("t")) {
@@ -121,31 +118,31 @@ export default class LevelZero extends GameLevel {
         }
 
 
-        if (Input.isKeyJustPressed("o")) {
+        // if (Input.isKeyJustPressed("o")) {
 
-            this.overallMood -= 1;
-            console.log("Mood: -1, Current Mood stat: " + this.overallMood);
-            // this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: -1});
-            if (this.overallMood <= this.moodMin) {
-                this.overallMood = 0;
-                this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
-            }
-
-
-        }
-
-        if (Input.isKeyJustPressed("p")) {
-
-            this.overallMood += 1;
-            console.log("Mood: +1, Current Mood stat: " + this.overallMood);
-            // this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: 1});
-            if (this.overallMood >= this.moodMax) {
-                this.overallMood = 0;
-                this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
-            }
+        //     this.overallMood -= 1;
+        //     console.log("Mood: -1, Current Mood stat: " + this.overallMood);
+        //     // this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, {moodChange: -1});
+        //     if (this.overallMood <= this.moodMin) {
+        //         this.overallMood = 0;
+        //         this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+        //     }
 
 
-        }
+        // }
+
+        // if (Input.isKeyJustPressed("p")) {
+
+        //     this.overallMood += 1;
+        //     console.log("Mood: +1, Current Mood stat: " + this.overallMood);
+        //     // this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, {moodChange: 1});
+        //     if (this.overallMood >= this.moodMax) {
+        //         this.overallMood = 0;
+        //         this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
+        //     }
+
+
+        // }
 
         if (Input.isKeyJustPressed("n")) {
             this.enemyManager.spawnEnemy(this.player, this.plant);
@@ -164,7 +161,7 @@ export default class LevelZero extends GameLevel {
 
 
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                this.mood = "angry";
+                //this.mood = "angry";
                 if (this.moodBarTimer.isActive() === false) {
                     this.moodBarTimer.start();
                     this.increaseEnemyStrength();
@@ -174,28 +171,11 @@ export default class LevelZero extends GameLevel {
             }
 
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-                this.mood = "happy";
+                //this.mood = "happy";
                 if (this.moodBarTimer.isActive() === false) {
                     this.moodBarTimer.start();
                     console.log("Happy mood reached, have to implement faster enemies' speed behavior")
                     // this.increaseEnemySpeed(); // increase speed buggy 
-                }
-            }
-
-            if (event.type === InGame_Events.ADD_TO_MOOD) {
-                let type = event.data.get('type');
-                let count = event.data.get('count');
-                count *= type;
-                this.overallMood += count;
-                MathUtils.clamp(this.overallMood, this.moodMin, this.moodMax);
-                this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, { moodChange: count });
-                if (this.overallMood <= this.moodMin) {
-                    this.overallMood = 0;
-                    this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
-                }
-                if (this.overallMood >= this.moodMax) {
-                    this.overallMood = 0;
-                    this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
                 }
             }
 
@@ -219,17 +199,17 @@ export default class LevelZero extends GameLevel {
 
 
 
-        if(!this.pauseExecution) {
-            if (Date.now() - this.time > 3000) {
-                let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
-                let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
-                // console.log('spawn', randomInt)
-                this.enemyManager.spawnEnemy(this.player, this.plant, new Vec2(randomX, randomY));
+        // if(!this.pauseExecution) {
+        //     if (Date.now() - this.time > 3000) {
+        //         let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
+        //         let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
+        //         // console.log('spawn', randomInt)
+        //         this.enemyManager.spawnEnemy(this.player, this.plant, new Vec2(randomX, randomY));
                 
 
-                this.time = Date.now();
-            }
-        }
+        //         this.time = Date.now();
+        //     }
+        // }
    
 
     }
@@ -239,7 +219,7 @@ export default class LevelZero extends GameLevel {
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DIED,
-            InGame_Events.ADD_TO_MOOD,
+            InGame_Events.UPDATE_MOOD,
             InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART

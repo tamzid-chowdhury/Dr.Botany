@@ -1,11 +1,19 @@
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import PlayerController from "../Controllers/PlayerController";
 import EnemyController from "../Enemies/EnemyController";
-import { InGame_Events, PlantMoods } from "../Utils/Enums";
-export default class PlantManager {
+import { InGame_Events, PlantMoods, InGame_GUI_Events } from "../Utils/Enums";
+import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+import Emitter from "../../Wolfie2D/Events/Emitter";
+import Scene from "../../Wolfie2D/Scene/Scene";
+
+export default class PlantManager implements Updateable{
 	
 	receiver: Receiver = new Receiver();
 	moodLevel: number = 0; 						// mood goes from -50 -> 50, 100 total points 
+	minMoodLevel: number = -10; 
+	maxMoodLevel: number = 10; 
+
 	currentMood: string = PlantMoods.NEUTRAL; 	// plant starts each level neutral, although we may want to change this
 	
 	neutralEffect: MoodEffect;
@@ -13,6 +21,11 @@ export default class PlantManager {
 	upperTierTwoEffect: MoodEffect;
 	downerTierOneEffect: MoodEffect;
 	downerTierTwoEffect: MoodEffect;
+	
+
+	emitter: Emitter;
+	scene: Scene; 
+
 
 	/*
 		-50 -> -30		-30 -> -10	   -10 -> 10 	 10 -> 30		 30 -> 50				
@@ -25,8 +38,14 @@ export default class PlantManager {
 		It annoys me to think of uppers as negative and downers as positive, so Ill probably change the art of
 		the mood bar to have the upper range on the right and downer on the left
 	*/
-	constructor() {
+	constructor(scene: Scene) {
+		this.emitter = new Emitter();
+		this.scene = scene; 
 
+
+		this.receiver.subscribe([
+            InGame_Events.UPDATE_MOOD
+        ]);
 	}
 
 	updateMoodLevel(count: number, type: number): void {
@@ -40,10 +59,29 @@ export default class PlantManager {
 
 	}
 
-	subscribeToEvents(): void {
+
+	update(deltaT: number): void {
 		while(this.receiver.hasNextEvent()) {
 			let event = this.receiver.getNextEvent();
-			// if(event.type === InGame_Events.MOOD_CHANGED)
+
+			if (event.type === InGame_Events.UPDATE_MOOD) {
+                let type = event.data.get('type');
+                let count = event.data.get('count');
+                count *= type;
+                this.moodLevel += count;
+                MathUtils.clamp(this.moodLevel, this.minMoodLevel, this.maxMoodLevel);
+                this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, { moodChange: count });
+                if (this.moodLevel <= this.minMoodLevel) {
+                    this.moodLevel = 0;
+					this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, { moodChange: count });
+					console.log("ANGRY MOOD REACHED")
+                }
+                if (this.moodLevel >= this.maxMoodLevel) {
+					this.moodLevel = 0;
+					this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, { moodChange: count });
+					console.log("HAPPY MOOD REACHED")
+                }
+            }
 		}
 	}
 

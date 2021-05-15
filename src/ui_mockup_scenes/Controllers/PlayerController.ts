@@ -334,7 +334,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.canDepositUpper = false;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, { position: this.owner.position.clone() });
-                    this.emitter.fireEvent(InGame_Events.ADD_TO_MOOD, { type: 1, count: count });
+                    this.emitter.fireEvent(InGame_Events.UPDATE_MOOD, { type: 1, count: count });
                     this.upperCount = 0;
                 }
 
@@ -350,7 +350,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.canDepositDowner = false;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, { position: this.owner.position.clone() });
-                    this.emitter.fireEvent(InGame_Events.ADD_TO_MOOD, { type: -1, count: count });
+                    this.emitter.fireEvent(InGame_Events.UPDATE_MOOD, { type: -1, count: count });
                     this.downerCount = 0;
                 }
 

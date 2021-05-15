@@ -25,6 +25,7 @@ import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import EquipmentManager from "../GameSystems/EquipmentManager";
 import ProjectileController from "../Controllers/ProjectileController";
 import SupportManager from "../GameSystems/SupportManager"
+import PlantManager from "../GameSystems/MoodManager"
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -55,6 +56,7 @@ export default class GameLevel extends Scene {
     enemyManager: EnemyManager;
     equipmentManager: EquipmentManager;
     supportManager: SupportManager; 
+    plantManager: PlantManager;
 
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
@@ -170,11 +172,13 @@ export default class GameLevel extends Scene {
         this.enemyManager = new EnemyManager(this);
         this.equipmentManager = new EquipmentManager(this);
         this.supportManager = new SupportManager(this);
+        this.plantManager = new PlantManager(this);
     }
 
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.inGameUILayer.update(deltaT);
+        this.plantManager.update(deltaT);
         let mousePos = Input.getMousePosition();
         this.reticle.position = mousePos;
         this.cursor.position = mousePos;

@@ -129,8 +129,7 @@ export enum InGame_Events {
     OFF_DOWNER_DEPOSIT = "OffDownerDeposit",
     ON_PLANT = "OnPlant",
     OFF_PLANT = "OffPlant",
-    ADD_TO_MOOD = "AddToMood",
-    MOOD_CHANGED = "MoodChanged",
+	UPDATE_MOOD = "UpdateMood",
     ENEMY_DEATH_ANIM_OVER = "EnemyDeathAnimOver",
     DRAW_OVERLAP_TILE = "DrawOverlapTile",
     TOGGLE_PAUSE = "TOGGLE_PAUSE",
@@ -163,7 +162,9 @@ export enum InGame_GUI_Events {
     UPDATE_EQUIP_SLOT_OUTLINE = "UPDATE_EQUIP_SLOT_OUTLINE",
     UPDATE_EQUIP_SLOT_AMMO = "UPDATE_EQUIP_SLOT_AMMO",
     ADD_HEALTH = "ADD_HEALTH",
-    REFILL_AMMO = "REFILL_AMMO"
+	REFILL_AMMO = "REFILL_AMMO",
+	UPDATE_MOOD_BAR = "UPDATE_MOOD_BAR",
+	RESET_MOOD_BAR = "RESET_MOOD_BAR"
 }
 
 export enum CheatCodes {
