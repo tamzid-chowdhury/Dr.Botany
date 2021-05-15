@@ -25,7 +25,6 @@ export default class LevelZero extends GameLevel {
     tilemapSize: Vec2;
     lookDirection: Vec2;
     time: number;
-    enemyList: Array<AnimatedSprite> = [];
     // This should be a variable to each level I guess? 
     maxEnemyNumber: number;
 
@@ -218,32 +217,20 @@ export default class LevelZero extends GameLevel {
 
         // We just need to use enemyList correctly when destroyed, unshift the arrays 
 
-/*
+
 
         if(!this.pauseExecution) {
             if (Date.now() - this.time > 3000) {
-                let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
                 let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
                 let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
                 // console.log('spawn', randomInt)
-                if (this.enemyNameList[randomInt] === "orange_mushroom") {
-                    let randomScale = Math.random() * (2 - 1) + 1;
-                    this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
-                }
-                else if (this.enemyNameList[randomInt] === "green_slime") {
-                    let randomScale = Math.random() * (2 - 0.5) + 0.5;
-    
-                    this.addEnemy("green_slime", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
-                }
-                else if (this.enemyNameList[randomInt] === "wisp") {
-                    let randomScale = Math.random() * (2 - 0.5) + 0.5;
-                    this.addEnemy("wisp", new Vec2(randomX, randomY), { speed: 70 * (1 / randomScale), player: this.player, health: 40, type: "Upper" }, 1)
-    
-                }
+                this.enemyManager.spawnEnemy(this.player, this.plant, new Vec2(randomX, randomY));
+                
+
                 this.time = Date.now();
             }
         }
-*/    
+   
 
     }
 
@@ -262,12 +249,7 @@ export default class LevelZero extends GameLevel {
 
 
     // TODO: make it so that new created enemies have doubled speed, because when the timer is done, newly created enemies with normal speed gets slower than normal
-    protected increaseEnemySpeed(): void {
-        for (let enemy of this.enemyList) {
-            let enemyController = <EnemyController>enemy._ai;
-            enemyController.increaseSpeed();
-        }
-    }
+
 
     protected increaseEnemyStrength(): void {
         let playerController = <PlayerController>this.player._ai;
@@ -279,11 +261,6 @@ export default class LevelZero extends GameLevel {
         playerController.increaseDamageTaken(1);
     }
 
-    protected resetHappyEffect(): void {
-        for (let enemy of this.enemyList) {
-            let enemyController = <EnemyController>enemy._ai;
-            enemyController.decreaseSpeed();
-        }
-    }
+
 
 }
