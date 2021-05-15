@@ -50,11 +50,14 @@ export default class Equipment {
 
 	setActive(position: Vec2): void {
 		this.sprite.position.set(position.x, position.y);
-		this.projectileSprite.position.set(position.x, position.y);
         this.sprite.invertY = true;
         this.sprite.visible = true;
-		this.projectileSprite.visible = false;
-        this.projectileSprite.active = false;
+		if(this.projectileSprite) {
+			this.projectileSprite.visible = false;
+			this.projectileSprite.active = false;
+			this.projectileSprite.position.set(position.x, position.y);
+		}
+
 	}
 
 	updatePos(position: Vec2, playerLookDirection: Vec2): void {
