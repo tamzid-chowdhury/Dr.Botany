@@ -1,5 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import GameNode, { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { LabelTweenableProperties } from "../../Wolfie2D/Nodes/UIElements/Label";
 import { TweenData } from "../../Wolfie2D/Rendering/Animations/AnimationTypes"
@@ -675,6 +675,76 @@ export function knockBack(velocity: Vec2): Record<string,any> {
 	return tween
 }
 
+export function enemyHopOver(position: Vec2, dir: string, owner: GameNode ): Record<string, any> {
+	let directionX = 0;
+	let directionY = 0;
+	if(dir === "up") {
+		directionY = -45;
+	}
+	else if(dir === "down") {
+		directionY = 45;
+	}
+	else if(dir === "left") {
+		directionX = -45;
+	}
+	else if(dir === "right") {
+		directionX = 45;
+	}
+	
+	let tween = {
+		startDelay: 0,
+		duration: 1000,
+		onEnter: owner.disablePhysics(),
+		effects: [
+			{
+				property: TweenableProperties.posX,
+				start: position.x,
+				end: position.x + directionX,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property: TweenableProperties.posY,
+				start: position.y,
+				end: position.y + directionY,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property: TweenableProperties.scaleX,
+				start: 1,
+				end: 1.2,
+				ease: EaseFunctionType.OUT_SINE
+				
+			},
+			{
+				property: TweenableProperties.scaleY,
+				start: 1,
+				end: 1.2,
+				ease: EaseFunctionType.OUT_SINE
+				
+			},
+			{
+				property: TweenableProperties.scaleX,
+				start: 1.2,
+				end: 1,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property: TweenableProperties.scaleY,
+				start: 1.2,
+				end: 1,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			}
+			
+		],
+		onEnd: owner.enablePhysics()
+	}
+	;
+	return tween;
+}
 
 // export function HealthScaleDownSlideX(xScale: number, newXScale: number, xPos: number, newXPos: number) : Record<string,any> {
 // 	let tween = {

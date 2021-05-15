@@ -156,7 +156,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             if (Date.now() - this.hitFlashCooldown > 50) {
                 // this.owner.alpha = this.owner.alpha === 1 ? 0 : 1;
                 this.hitFlashCooldown = Date.now();
-                this.owner.animation.playIfNotAlready("HIT", true);
+                this.owner.animation.playIfNotAlready("HIT", false);
             }
         }
 
@@ -178,7 +178,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         if(Input.isMousePressed() && !this.pauseExecution) {
             if(!this.coolDownTimer.isActive()) {
+                this.owner.animation.play("SWING", false);
                 if(this.equipped.charges) {
+                    
+                    
                     this.equipped.doAttack(this.playerLookDirection, deltaT);
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipped.sfxKey, loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
@@ -262,7 +265,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 if(event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
                     if(this.damaged) {
-
+                        // console.log("Testing")
                         if (Date.now() - this.damageCooldown > 2000) {
                             this.damaged = false;
                         }

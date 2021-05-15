@@ -37,7 +37,7 @@ export default class EnemyManager {
         return new Enemy(sprite, data)
     }
 
-    spawnEnemy(player: GameNode): void {
+    spawnEnemy(player: GameNode, plant:GameNode): void {
         let enemy;
         if(this.inactivePool.length > 0) {
             enemy = this.inactivePool.pop();
@@ -49,7 +49,7 @@ export default class EnemyManager {
         enemy.sprite.position.set(300,300)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
-        (<EnemyController>enemy.sprite.ai).wake(player);
+        (<EnemyController>enemy.sprite.ai).wake(player, plant);
     }
 
     despawnEnemy(node: GameNode): void {

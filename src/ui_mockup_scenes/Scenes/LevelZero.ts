@@ -26,8 +26,6 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     time: number;
     enemyList: Array<AnimatedSprite> = [];
-
-    enemyNameList: Array<string> = ["orange_mushroom", "green_slime", "wisp"];
     // This should be a variable to each level I guess? 
     maxEnemyNumber: number;
 
@@ -69,6 +67,8 @@ export default class LevelZero extends GameLevel {
                 this.collidables = <OrthogonalTilemap>obj;
             }
         }
+        // this.collidables.active = true;
+
         this.tilemapSize = this.collidables.size;
 
         super.initPlayer(this.collidables.size);
@@ -142,7 +142,7 @@ export default class LevelZero extends GameLevel {
         }
 
         if (Input.isKeyJustPressed("n")) {
-            this.enemyManager.spawnEnemy(this.player);
+            this.enemyManager.spawnEnemy(this.player, this.plant);
         }
 
         if (Input.isKeyJustPressed("m")) {

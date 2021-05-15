@@ -18,7 +18,8 @@ export default class Enemy {
         let collisionShape = this.sprite.size;
         let aiOptions = {
             speed: data.speed, 
-            player: {}, 
+            player: {},
+            plant: {}, 
             health: data.health, 
             type: data.type
         }
