@@ -41,12 +41,12 @@ export default class Walk extends EnemyState {
 			let dirToPlayer = this.parent.getOwnerPosition().dirTo(this.parent.getPlayerPosition());
 			dirToPlayer.x = this.parent.direction.x;
 			
-			if(playerPosX + 30 <= ownerPosX) {
+			if(playerPosX + 50 <= ownerPosX) {
 				this.parent.direction.x = -1
 				this.parent.owner.invertX = true;
 			}
 		
-			else if(playerPosX - 30 >= ownerPosX) {
+			else if(playerPosX - 50 >= ownerPosX) {
 				this.parent.direction.x = 1
 				this.parent.owner.invertX = false;
 			}

@@ -38,7 +38,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     canDepositUpper: boolean = false;
     canDepositDowner: boolean = false;
     knockBack: boolean = false;
-    
+    knockBackVel: Vec2 = new Vec2(0, 0);
+
     viewport: Viewport;
     shadowOffset: Vec2 = new Vec2(0, 10);
     levelView: Viewport;
@@ -160,8 +161,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.hitFlashCooldown = Date.now();
             }
         }
-        
-        this.owner.move(this.velocity.scaled(deltaT));
+
+
+        if (this.knockBack) {
+            this.owner.move(this.knockBackVel.scaled(0.05, 0.05));
+        }
+        else {
+            this.owner.move(this.velocity.scaled(deltaT));
+        }
+        if (Date.now() - this.damageCooldown > 200) {
+            this.knockBack = false;
+        }
 
         if (rotateTo.x > this.owner.position.x) {
             this.owner.invertX = true;
@@ -277,12 +287,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                         this.hitFlashCooldown = Date.now();
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "player_hit", holdReference: true });
                         // might be better with move, it goes thru collidable objs 
-                                              
-                        this.owner.tweens.add("knockBack", Tweens.knockBackPlayer(this.owner.position, (<EnemyController>enemy._ai).velocity));
-                        this.owner.tweens.play("knockBack");
+
+                        // this.owner.tweens.add("knockBack", Tweens.knockBackPlayer(this.owner.position, (<EnemyController>enemy._ai).velocity));
+                        // this.owner.tweens.play("knockBack");
                         //
-                        
-                        
+                        this.knockBack = true;
+                        this.knockBackVel = (<EnemyController>enemy._ai).velocity;
+
+
 
                         this.hitTimer.start();
                         this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, { dir: this.playerLookDirection })
