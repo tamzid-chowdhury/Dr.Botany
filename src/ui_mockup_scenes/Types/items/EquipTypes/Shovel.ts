@@ -72,7 +72,7 @@ export default class Shovel extends Equipment {
 		this.projectileSprite.position.set(position.x, position.y);
 	}
 
-	finishAttack() {
+	finishAttack(): void {
 
 		this.swingDir *= -1;
 		this.projectileSprite.tweens.stopAll();

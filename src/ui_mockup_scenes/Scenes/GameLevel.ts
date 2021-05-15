@@ -43,7 +43,7 @@ export default class GameLevel extends Scene {
     cursor: Sprite;
     cursor2: Sprite; // clicked cursor 
     player: AnimatedSprite;
-    plant: Sprite;
+    plant: AnimatedSprite;
     upperDeposit: Sprite;
     downerDeposit: Sprite;
     shadow: Sprite;
@@ -101,6 +101,7 @@ export default class GameLevel extends Scene {
         this.load.audio("enemy_hit", "assets/sfx/enemy_hit.wav");
         this.load.audio("enemy_jump", "assets/sfx/enemy_jump.wav");
         this.load.audio("enemy_die", "assets/sfx/enemy_die.wav");
+        this.load.audio("player_hit", "assets/sfx/player_hit.wav");
         this.load.audio("material_get", "assets/sfx/material_get_sfx.wav");
         this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("player", "assets/player/dr_botany.json")
@@ -279,19 +280,6 @@ export default class GameLevel extends Scene {
                 this.screenWipe.tweens.play("levelTransition");
             }
 
-            if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
-                if ((<PlayerController>this.player._ai).damaged) {
-                    if (Date.now() - (<PlayerController>this.player._ai).damageCooldown > 2000) {
-                        (<PlayerController>this.player._ai).damaged = false;
-                    }
-                }
-                else {
-                    // This is where it plays tweens + animation for getting hit
-                    (<PlayerController>this.player._ai).damage(1);
-                    (<PlayerController>this.player._ai).damaged = true;
-                    (<PlayerController>this.player._ai).damageCooldown = Date.now();
-                }
-            }
 
             if (event.type === InGame_Events.SPAWN_UPPER) {
                 let position = event.data.get("position");
@@ -407,7 +395,7 @@ export default class GameLevel extends Scene {
         this.plant.scale.set(0.5, 0.5);
         this.upperDeposit.scale.set(1, 1);
         this.downerDeposit.scale.set(1, 1);
-        (<AnimatedSprite>this.plant).animation.play("HAPPY")
+        this.plant.animation.play("HAPPY", false);
         // This has to be touched
         // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
         // this.plant.colliderOffset.set(0,10);
@@ -430,7 +418,6 @@ export default class GameLevel extends Scene {
             equipmentManager: this.equipmentManager
         }
         this.player.addAI(PlayerController, playerOptions);
-        this.player.animation.play("IDLE");
 
 
     }

@@ -178,20 +178,18 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         if(Input.isMousePressed()) {
             if(!this.coolDownTimer.isActive()) {
-                this.owner.animation.play("SWING", false); //  it is here
                 if(this.equipped.charges) {
                     
-                    
+                    // (<AnimatedSprite>this.equipped.projectileSprite).animation.play("ATTACK", false);
                     this.equipped.doAttack(this.playerLookDirection, deltaT);
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.equipped.sfxKey, loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
                     if(this.equipped.type === WeaponTypes.AMMO) {
                         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, {spriteKey:this.equipped.iconSpriteKey, ammo: this.equipped.charges})
-
                     }
+                    
                     this.coolDownTimer.start();
                 }
-                this.owner.animation.playIfNotAlready("IDLE", true);
             }
         }
 
@@ -260,13 +258,16 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     }
                     else {
                         // This is where it plays tweens + animation for getting hit
+                        // probably tweens
                         this.hitFlashCooldown = Date.now();
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "player_hit", holdReference: true });
                         this.hitTimer.start();
                         this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, {dir: this.playerLookDirection})
                         this.damage(this.damageTaken);
                         this.damaged = true;
                         this.damageCooldown = Date.now();
                         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_HEALTHBAR, {damageTaken: this.damageTaken});
+                        
                     }
                     
                 }

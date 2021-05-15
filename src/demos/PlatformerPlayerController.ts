@@ -37,7 +37,7 @@ export default class PlayerController extends ControllerAI {
             velocity.y = -250*deltaT;
 
             // Loop our jump animation
-            this.owner.animation.play("JUMP", true);
+            // this.owner.animation.play("JUMP", true);
 
             // Play the jump sound
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.jumpSoundKey, loop: false});
@@ -48,9 +48,9 @@ export default class PlayerController extends ControllerAI {
         if(this.owner.onGround && !Input.isJustPressed("jump")){
             // If we're on the ground, but aren't jumping, show walk animation
             if(velocity.x === 0){
-                    this.owner.animation.playIfNotAlready("IDLE", true);
+                    // this.owner.animation.playIfNotAlready("IDLE", true);
             } else {
-                this.owner.animation.playIfNotAlready("WALK", true);
+                // this.owner.animation.playIfNotAlready("WALK", true);
             }
         }
 
