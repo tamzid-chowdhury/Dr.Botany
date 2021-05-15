@@ -23,6 +23,7 @@ import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import Receiver from "../../../Wolfie2D/Events/Receiver"
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import GrowthBar from "./GrowthBar";
+import ParallaxLayer from "../../../Wolfie2D/Scene/Layers/ParallaxLayer";
 
 export default class InGameUI implements Updateable {
     layer: Layer; 
@@ -89,7 +90,9 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.SHOW_GROWTH_BAR,
             InGame_GUI_Events.HIDE_GROWTH_BAR,
             InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE,
-            InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO
+            InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO,
+            InGame_GUI_Events.ADD_HEALTH,
+            InGame_GUI_Events.REFILL_AMMO
         ]);
 
     }
@@ -139,8 +142,27 @@ export default class InGameUI implements Updateable {
             }
 
             if(event.type === InGame_GUI_Events.UPDATE_HEALTHBAR){
-                this.healthBar.takeDamage();
+                let damageTaken = event.data.get("damageTaken");
+                this.healthBar.takeDamage(damageTaken);
             }
+
+
+            if(event.type === InGame_GUI_Events.ADD_HEALTH){
+                position = event.data.get("position");
+                this.healthBar.addHealth();
+                announceText = `+1 Health Added`
+                color = Palette.green();
+                announce = true;
+            }
+
+            if(event.type === InGame_GUI_Events.REFILL_AMMO){
+                position = event.data.get("position");
+                announceText = `Ammo Refilled`
+                color = Palette.green();
+                announce = true;
+            }
+            
+            
             if(event.type === InGame_GUI_Events.SHOW_INTERACT_LABEL){
                 position = event.data.get("position");
                 this.interactLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x, position.y-16), text:"E"});
@@ -237,7 +259,7 @@ export default class InGameUI implements Updateable {
                 setTimeout(() => {
                     announceLabel.destroy();
                     announceLabelBackdrop.destroy();
-                }, 500);
+                }, 800);
                 
             }
         }

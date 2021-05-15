@@ -84,7 +84,14 @@ export default class LevelZero extends GameLevel {
         this.subscribeToEvents();
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
-        
+
+        //we initialized supportmanager in gamelevel but it starts with 0 healthpacks and 0 ammopacks 
+        //we use addHealthPacks and addAmmoPacks to add how many we want for each level. in tutorial level will have 5 each
+        this.supportManager.addHealthPacks(5); 
+        this.supportManager.addAmmoPacks(5);
+
+        this.supportManager.spawnHealthPack(new Vec2(250,400)); //testing
+        this.supportManager.spawnAmmoPack(new Vec2(300,400)); //testing
 
     }
 
@@ -264,12 +271,12 @@ export default class LevelZero extends GameLevel {
 
     protected increaseEnemyStrength(): void {
         let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(10);
+        playerController.increaseDamageTaken(2);
     }
 
     protected resetAngryEffect(): void {
         let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(5);
+        playerController.increaseDamageTaken(1);
     }
 
     protected resetHappyEffect(): void {

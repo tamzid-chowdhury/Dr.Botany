@@ -89,6 +89,8 @@ export default class LevelOne extends GameLevel {
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
         this.addEnemy("orange_mushroom", new Vec2(500, 500), { speed: 20, player: this.player, health: 40, type: "Downer" }, 1.5);
+
+
     }
 
     updateScene(deltaT: number) {

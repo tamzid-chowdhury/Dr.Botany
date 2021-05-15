@@ -275,7 +275,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
                     if (this.damaged) {
-                        // console.log("Testing")
                         if (Date.now() - this.damageCooldown > 2000) {
                             this.damaged = false;
                         }
@@ -298,7 +297,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                         this.hitTimer.start();
                         this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, { dir: this.playerLookDirection })
-                        this.damage(this.damageTaken);
+                        this.damage(this.damageTaken); 
                         this.damaged = true;
                         this.damageCooldown = Date.now();
                         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_HEALTHBAR, { damageTaken: this.damageTaken });
@@ -353,6 +352,41 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.downerCount = 0;
                 }
 
+                if (event.type === InGame_Events.ADD_PLAYER_HEALTH){
+                    this.health += 1; 
+                }
+
+                if(event.type === InGame_Events.REFRESH_AMMO){
+                    if(this.equipped.name == "PillBottle"){
+                        this.equipped.charges = 50;
+                    }
+                    if(this.equipped.name == "TrashLid"){
+                        this.equipped.charges = 10;
+                    }
+                    if(this.equipped.name == "Shovel"){
+                        this.equipped.charges = 1;
+                    }
+
+                    if(this.stowed.name == "PillBottle"){
+                        this.stowed.charges = 50;
+                    }
+                    if(this.stowed.name == "TrashLid"){
+                        this.stowed.charges = 10;
+                    }
+                    if(this.stowed.name == "Shovel"){
+                        this.stowed.charges = 1;
+                    }
+                
+                    if (this.equipped.type === WeaponTypes.AMMO) {
+                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.equipped.iconSpriteKey, ammo: this.equipped.charges })
+        
+                    }
+                    if (this.stowed.type === WeaponTypes.AMMO) {
+                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.stowed.iconSpriteKey, ammo: this.stowed.charges })
+        
+                    }
+                }
+
             }
         }
     }
@@ -364,6 +398,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.emitter.fireEvent(InGame_Events.PLAYER_DIED);
         }
     }
+
+    
     destroy(): void {
         this.receiver.destroy();
     }
@@ -384,7 +420,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             InGame_Events.GAME_OVER,
             InGame_Events.TRASH_LID_APEX,
             InGame_Events.OVERLAP_EQUIP,
-            InGame_Events.NOT_OVERLAP_EQUIP
+            InGame_Events.NOT_OVERLAP_EQUIP,
+            InGame_Events.REFRESH_AMMO,
+            InGame_Events.ADD_PLAYER_HEALTH
 
         ]);
     }

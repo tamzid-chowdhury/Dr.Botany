@@ -28,6 +28,10 @@ export function red(): Color {
 	return new Color(255, 0, 0, 1);
 }
 
+export function green(): Color {
+	return new Color(0, 255, 0, 1);
+}
+
 export function tannish(): Color {
 	return new Color(246, 215, 179, 1);
 

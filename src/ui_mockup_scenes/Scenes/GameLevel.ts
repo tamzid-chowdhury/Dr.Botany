@@ -103,6 +103,8 @@ export default class GameLevel extends Scene {
         this.load.audio("enemy_die", "assets/sfx/enemy_die.wav");
         this.load.audio("player_hit", "assets/sfx/player_hit.wav");
         this.load.audio("material_get", "assets/sfx/material_get_sfx.wav");
+        this.load.audio("healthpack_get", "assets/sfx/healthpack.wav");
+        this.load.audio("ammopack_get", "assets/sfx/ammopack.wav");
         this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.spritesheet("plant", "assets/plant/plant.json")
@@ -128,6 +130,7 @@ export default class GameLevel extends Scene {
             InGame_Events.SPAWN_UPPER,
             InGame_Events.SPAWN_DOWNER,
             InGame_Events.SPAWN_AMMO,
+            InGame_Events.SPAWN_HEALTH, 
             InGame_Events.PLAYER_ATTACK_ENEMY,
             InGame_Events.PROJECTILE_HIT_ENEMY,
             InGame_Events.PLAYER_DIED,
@@ -178,6 +181,7 @@ export default class GameLevel extends Scene {
         if(!this.gameOver) {
             if(!this.pauseExecution) {
                 this.materialsManager.resolveMaterials(this.player.position, deltaT);
+                this.supportManager.resolveSupport(this.player.position)
     
             }
 
@@ -307,9 +311,14 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.SPAWN_AMMO) {
                 let position = event.data.get("position");
-                console.log("SPAWN AMMO")
                 this.supportManager.spawnAmmoPack(position);
             }
+
+            if (event.type === InGame_Events.SPAWN_HEALTH) {
+                let position = event.data.get("position");
+                this.supportManager.spawnHealthPack(position);
+            }
+
 
             if (event.type === InGame_Events.PLAYER_DIED) {
                 
@@ -363,9 +372,14 @@ export default class GameLevel extends Scene {
                         this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, { position: ownerPosition });
                     }
                 }
-                if (Math.random() < 0.2) {
+                
+                if (this.supportManager.hasHealthPacksToSpawn() && Math.random() < 0.1) {
+                    this.emitter.fireEvent(InGame_Events.SPAWN_HEALTH, { position: ownerPosition });
+                }
+                else if(this.supportManager.hasAmmoPacksToSpawn() && Math.random() < 0.1) {
                     this.emitter.fireEvent(InGame_Events.SPAWN_AMMO, { position: ownerPosition });
                 }
+
 
 
                 
