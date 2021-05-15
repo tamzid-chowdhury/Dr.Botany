@@ -27,7 +27,7 @@ export default class Platformer extends Scene {
 
         // Add the player in the starting position
         this.player = this.add.animatedSprite("player", "primary");
-        this.player.animation.play("IDLE");
+        // this.player.animation.play("IDLE");
         this.player.position.set(3*16, 18*16);
 
         // Add physics so the player can move

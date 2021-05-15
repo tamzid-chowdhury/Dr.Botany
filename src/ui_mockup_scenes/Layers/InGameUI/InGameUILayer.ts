@@ -23,6 +23,7 @@ import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import Receiver from "../../../Wolfie2D/Events/Receiver"
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import GrowthBar from "./GrowthBar";
+import ParallaxLayer from "../../../Wolfie2D/Scene/Layers/ParallaxLayer";
 
 export default class InGameUI implements Updateable {
     layer: Layer; 
@@ -35,8 +36,8 @@ export default class InGameUI implements Updateable {
     moodBar: MoodBar;
     // growthBar: GrowthBar;
     equipSlots: EquipSlots;
-    materialSlots: Array<MaterialSlot> = []; // [0] == upper  [1] == downer
-    materialSpriteIds: Array<string> = ["upper", "downer"];
+    materialSlots: Array<MaterialSlot> = []; // [0] == downer  [1] == upper
+    materialSpriteIds: Array<string> = ["downer", "upper"];
     receiver: Receiver;
     interactLabel: Label; 
     showingInteract: boolean;
@@ -79,7 +80,7 @@ export default class InGameUI implements Updateable {
         this.receiver.subscribe([
             InGame_GUI_Events.INCREMENT_UPPER_COUNT,
             InGame_GUI_Events.INCREMENT_DOWNER_COUNT,
-            InGame_Events.MOOD_CHANGED,
+            InGame_GUI_Events.UPDATE_MOOD_BAR,
             InGame_GUI_Events.CLEAR_UPPER_LABEL,
             InGame_GUI_Events.CLEAR_DOWNER_LABEL,
             InGame_GUI_Events.UPDATE_HEALTHBAR,
@@ -89,7 +90,10 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.SHOW_GROWTH_BAR,
             InGame_GUI_Events.HIDE_GROWTH_BAR,
             InGame_GUI_Events.UPDATE_EQUIP_SLOT_OUTLINE,
-            InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO
+            InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO,
+            InGame_GUI_Events.ADD_HEALTH,
+            InGame_GUI_Events.REFILL_AMMO,
+            InGame_GUI_Events.RESET_MOOD_BAR
         ]);
 
     }
@@ -105,10 +109,19 @@ export default class InGameUI implements Updateable {
             let position = new Vec2(0,0);
             let announceText = '';
             let color;
-            if(event.type === InGame_Events.MOOD_CHANGED){
-                let moodLevel = event.data.get('moodChange');
-                let newPos = (-10*moodLevel / (this.moodBar.sprite.size.x/16)) +  this.moodBar.indicator.position.x;
+            if(event.type === InGame_GUI_Events.UPDATE_MOOD_BAR){
+                let moodChange = event.data.get('moodChange');
+                let newPos = (10*moodChange / (this.moodBar.sprite.size.x/16)) +  this.moodBar.indicator.position.x;
                 newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
+                this.moodBar.indicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.indicator.position.x, newPos));   
+                this.moodBar.indicator.scale.x += 1;     
+                this.moodBar.indicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.indicator.scale));        
+                this.moodBar.indicator.tweens.play("slideX");        
+                this.moodBar.indicator.tweens.play("scale");        
+            }
+
+            if(event.type === InGame_GUI_Events.RESET_MOOD_BAR){
+                let newPos = this.moodBar.xOffset; 
                 this.moodBar.indicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.indicator.position.x, newPos));   
                 this.moodBar.indicator.scale.x += 1;     
                 this.moodBar.indicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.indicator.scale));        
@@ -139,8 +152,27 @@ export default class InGameUI implements Updateable {
             }
 
             if(event.type === InGame_GUI_Events.UPDATE_HEALTHBAR){
-                this.healthBar.takeDamage();
+                let damageTaken = event.data.get("damageTaken");
+                this.healthBar.takeDamage(damageTaken);
             }
+
+
+            if(event.type === InGame_GUI_Events.ADD_HEALTH){
+                position = event.data.get("position");
+                this.healthBar.addHealth();
+                announceText = `+1 Health Added`
+                color = Palette.greenish();
+                announce = true;
+            }
+
+            if(event.type === InGame_GUI_Events.REFILL_AMMO){
+                position = event.data.get("position");
+                announceText = `Ammo Refilled`
+                color = Palette.greenish();
+                announce = true;
+            }
+            
+            
             if(event.type === InGame_GUI_Events.SHOW_INTERACT_LABEL){
                 position = event.data.get("position");
                 this.interactLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x, position.y-16), text:"E"});
@@ -189,23 +221,23 @@ export default class InGameUI implements Updateable {
 
             if(event.type === InGame_GUI_Events.CLEAR_UPPER_LABEL){
                 position = event.data.get("position");
-                announceText = `-${this.materialSlots[0].count} uppers`
+                announceText = `${this.materialSlots[1].count} uppers dropped`
                 announce = true;
-                color = Palette.red()
-                this.materialSlots[0].clearCount()
+                color = Palette.yellowish()
+                this.materialSlots[1].clearCount()
             }
 
             if(event.type === InGame_GUI_Events.CLEAR_DOWNER_LABEL){
                 position = event.data.get("position");
-                announceText = `-${this.materialSlots[1].count} downers`
+                announceText = `${this.materialSlots[0].count} downers dropped`
                 announce = true;
-                color = Palette.red()
-                this.materialSlots[1].clearCount()
+                color = Palette.reddish()
+                this.materialSlots[0].clearCount()
 
             }
             if(event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT){
                 position = event.data.get("position");
-                this.materialSlots[0].updateCount()
+                this.materialSlots[1].updateCount()
                 announceText = '+1 Upper'
                 color = Palette.white()
                 announce = true;
@@ -214,7 +246,7 @@ export default class InGameUI implements Updateable {
 
             if(event.type === InGame_GUI_Events.INCREMENT_DOWNER_COUNT){
                 position = event.data.get("position");
-                this.materialSlots[1].updateCount()
+                this.materialSlots[0].updateCount()
                 announceText = '+1 Downer'
                 color = Palette.white()
                 announce = true;
@@ -237,7 +269,7 @@ export default class InGameUI implements Updateable {
                 setTimeout(() => {
                     announceLabel.destroy();
                     announceLabelBackdrop.destroy();
-                }, 500);
+                }, 600);
                 
             }
         }

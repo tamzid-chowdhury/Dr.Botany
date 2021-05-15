@@ -1,8 +1,8 @@
 {
     "name": "wisp",
     "spriteSheetImage": "wisp.png",
-    "spriteWidth": 32,
-    "spriteHeight": 32,
+    "spriteWidth": 28,
+    "spriteHeight": 28,
     "columns": 13,
     "rows": 1,
     "durationType": "time",

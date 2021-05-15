@@ -294,8 +294,8 @@ export default class Viewport {
     
     doScreenShake(dir: Vec2): void {
         this.shake = true;
-        this.trauma = 5;
-        this.shakeDuration = 5;
+        this.trauma += 4;
+        this.shakeDuration += 4;
         this.shakeDir = dir;
         this.shakeDir.normalize();
     }

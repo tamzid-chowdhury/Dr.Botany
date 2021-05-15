@@ -25,6 +25,7 @@ import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import EquipmentManager from "../GameSystems/EquipmentManager";
 import ProjectileController from "../Controllers/ProjectileController";
 import SupportManager from "../GameSystems/SupportManager"
+import PlantManager from "../GameSystems/MoodManager"
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -43,7 +44,7 @@ export default class GameLevel extends Scene {
     cursor: Sprite;
     cursor2: Sprite; // clicked cursor 
     player: AnimatedSprite;
-    plant: Sprite;
+    plant: AnimatedSprite;
     upperDeposit: Sprite;
     downerDeposit: Sprite;
     shadow: Sprite;
@@ -55,6 +56,7 @@ export default class GameLevel extends Scene {
     enemyManager: EnemyManager;
     equipmentManager: EquipmentManager;
     supportManager: SupportManager; 
+    plantManager: PlantManager;
 
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
@@ -99,8 +101,13 @@ export default class GameLevel extends Scene {
         this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
         this.load.audio("swing", "assets/sfx/swing_sfx.wav");
         this.load.audio("enemy_hit", "assets/sfx/enemy_hit.wav");
+        this.load.audio("enemy_jump", "assets/sfx/enemy_jump.wav");
         this.load.audio("enemy_die", "assets/sfx/enemy_die.wav");
+        this.load.audio("player_hit", "assets/sfx/player_hit.wav");
         this.load.audio("material_get", "assets/sfx/material_get_sfx.wav");
+        this.load.audio("healthpack_get", "assets/sfx/healthpack.wav");
+        this.load.audio("ammopack_get", "assets/sfx/ammopack.wav");
+        this.load.audio("deposit", "assets/sfx/deposit.wav");
         this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.spritesheet("plant", "assets/plant/plant.json")
@@ -111,6 +118,7 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
         this.load.spritesheet("green_slime", "assets/enemies/slime_wip.json")
         this.load.spritesheet("wisp", "assets/enemies/wisp.json")
+        this.load.spritesheet("wisp_projectile", "assets/enemies/wisp_projectile.json")
     }
 
     startScene(): void {
@@ -126,6 +134,7 @@ export default class GameLevel extends Scene {
             InGame_Events.SPAWN_UPPER,
             InGame_Events.SPAWN_DOWNER,
             InGame_Events.SPAWN_AMMO,
+            InGame_Events.SPAWN_HEALTH, 
             InGame_Events.PLAYER_ATTACK_ENEMY,
             InGame_Events.PROJECTILE_HIT_ENEMY,
             InGame_Events.PLAYER_DIED,
@@ -164,11 +173,13 @@ export default class GameLevel extends Scene {
         this.enemyManager = new EnemyManager(this);
         this.equipmentManager = new EquipmentManager(this);
         this.supportManager = new SupportManager(this);
+        this.plantManager = new PlantManager(this);
     }
 
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.inGameUILayer.update(deltaT);
+        this.plantManager.update(deltaT);
         let mousePos = Input.getMousePosition();
         this.reticle.position = mousePos;
         this.cursor.position = mousePos;
@@ -176,6 +187,7 @@ export default class GameLevel extends Scene {
         if(!this.gameOver) {
             if(!this.pauseExecution) {
                 this.materialsManager.resolveMaterials(this.player.position, deltaT);
+                this.supportManager.resolveSupport(this.player.position)
     
             }
 
@@ -291,19 +303,6 @@ export default class GameLevel extends Scene {
                 this.screenWipe.tweens.play("levelTransition");
             }
 
-            if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
-                if ((<PlayerController>this.player._ai).damaged) {
-                    if (Date.now() - (<PlayerController>this.player._ai).damageCooldown > 2000) {
-                        (<PlayerController>this.player._ai).damaged = false;
-                    }
-                }
-                else {
-                    // This is where it plays tweens + animation for getting hit
-                    (<PlayerController>this.player._ai).damage(1);
-                    (<PlayerController>this.player._ai).damaged = true;
-                    (<PlayerController>this.player._ai).damageCooldown = Date.now();
-                }
-            }
 
             if (event.type === InGame_Events.SPAWN_UPPER) {
                 let position = event.data.get("position");
@@ -318,9 +317,14 @@ export default class GameLevel extends Scene {
 
             if (event.type === InGame_Events.SPAWN_AMMO) {
                 let position = event.data.get("position");
-                console.log("SPAWN AMMO")
                 this.supportManager.spawnAmmoPack(position);
             }
+
+            if (event.type === InGame_Events.SPAWN_HEALTH) {
+                let position = event.data.get("position");
+                this.supportManager.spawnHealthPack(position);
+            }
+
 
             if (event.type === InGame_Events.PLAYER_DIED) {
                 
@@ -374,9 +378,14 @@ export default class GameLevel extends Scene {
                         this.emitter.fireEvent(InGame_Events.SPAWN_DOWNER, { position: ownerPosition });
                     }
                 }
-                if (Math.random() < 0.2) {
+                
+                if (this.supportManager.hasHealthPacksToSpawn() && Math.random() < 0.05) {
+                    this.emitter.fireEvent(InGame_Events.SPAWN_HEALTH, { position: ownerPosition });
+                }
+                else if(this.supportManager.hasAmmoPacksToSpawn() && Math.random() < 0.05) {
                     this.emitter.fireEvent(InGame_Events.SPAWN_AMMO, { position: ownerPosition });
                 }
+
 
 
                 
@@ -403,8 +412,8 @@ export default class GameLevel extends Scene {
         this.downerDeposit = this.add.sprite('downer_deposit', "tertiary");
         this.plant.position.set((mapSize.x / 2) - this.plant.size.x, (mapSize.x / 2) - 1.3*this.plant.size.y);
 
-        this.upperDeposit.position.set(this.plant.position.x - this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
-        this.downerDeposit.position.set(this.plant.position.x + this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
+        this.upperDeposit.position.set(this.plant.position.x + this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
+        this.downerDeposit.position.set(this.plant.position.x - this.plant.size.x, this.plant.position.y + this.plant.size.y/1.8);
 
         this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x/2, this.upperDeposit.size.y - this.upperDeposit.size.y/4)));
         this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x/2, this.downerDeposit.size.y - this.downerDeposit.size.y/4)));
@@ -446,7 +455,6 @@ export default class GameLevel extends Scene {
             equipmentManager: this.equipmentManager
         }
         this.player.addAI(PlayerController, playerOptions);
-        this.player.animation.play("IDLE");
 
 
     }

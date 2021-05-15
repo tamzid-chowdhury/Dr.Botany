@@ -2,6 +2,7 @@ import GameNode from '../../Wolfie2D/Nodes/GameNode';
 import Scene from '../../Wolfie2D/Scene/Scene';
 import EnemyController from '../Enemies/EnemyController';
 import Enemy from '../Types/enemies/Enemy';
+import Vec2 from '../../Wolfie2D/DataTypes/Vec2';
 
 export default class EnemyManager {
 	maxEnemies: number; 
@@ -11,6 +12,7 @@ export default class EnemyManager {
     // choice % number of types of enemies === selection. Round robin picking
     choice: number = 0;
     prototypes: Array<Record<string, any>> = [];
+    startingPosition: Vec2 = new Vec2(300,300)
 
 	constructor(scene: Scene, size: number = 3) {
 		this.scene = scene;
@@ -37,7 +39,7 @@ export default class EnemyManager {
         return new Enemy(sprite, data)
     }
 
-    spawnEnemy(player: GameNode, plant:GameNode): void {
+    spawnEnemy(player: GameNode, plant:GameNode, position: Vec2 = this.startingPosition): void {
         let enemy;
         if(this.inactivePool.length > 0) {
             enemy = this.inactivePool.pop();
@@ -46,7 +48,7 @@ export default class EnemyManager {
             enemy = this.createEnemy()
         }
         this.activePool.push(enemy);
-        enemy.sprite.position.set(300,300)
+        enemy.sprite.position.set(position.x,position.y)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
         (<EnemyController>enemy.sprite.ai).wake(player, plant);
@@ -65,5 +67,9 @@ export default class EnemyManager {
                 break;
             }
         }
+    }
+
+    getNumberOfActiveEnemies(): number {
+        return this.activePool.length; 
     }
 }

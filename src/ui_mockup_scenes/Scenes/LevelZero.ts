@@ -25,18 +25,17 @@ export default class LevelZero extends GameLevel {
     tilemapSize: Vec2;
     lookDirection: Vec2;
     time: number;
-    enemyList: Array<AnimatedSprite> = [];
     // This should be a variable to each level I guess? 
     maxEnemyNumber: number;
 
 
     testLabel: AnimatedDialog;
 
-    // TODO: move mood control into PlantController
-    overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
-    mood: string = "normal";
-    moodMin: number = -10;
-    moodMax: number = 10;
+    // // TODO: move mood control into PlantController
+    // overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
+    // mood: string = "normal";
+    // moodMin: number = -10;
+    // moodMax: number = 10;
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelZeroReceiver: Receiver = new Receiver();
 
@@ -84,7 +83,11 @@ export default class LevelZero extends GameLevel {
         this.subscribeToEvents();
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
-        
+
+        //we initialized supportmanager in gamelevel but it starts with 0 healthpacks and 0 ammopacks 
+        //we use addHealthPacks and addAmmoPacks to add how many we want for each level. in tutorial level will have 5 each
+        this.supportManager.addHealthPacks(5); 
+        this.supportManager.addAmmoPacks(5);
 
     }
 
@@ -104,7 +107,7 @@ export default class LevelZero extends GameLevel {
 
             this.resetAngryEffect();
 
-            this.mood = "normal";
+            // this.mood = "normal";
         }
         
         if (Input.isKeyJustPressed("t")) {
@@ -115,31 +118,31 @@ export default class LevelZero extends GameLevel {
         }
 
 
-        if (Input.isKeyJustPressed("o")) {
+        // if (Input.isKeyJustPressed("o")) {
 
-            this.overallMood -= 1;
-            console.log("Mood: -1, Current Mood stat: " + this.overallMood);
-            // this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: -1});
-            if (this.overallMood <= this.moodMin) {
-                this.overallMood = 0;
-                this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
-            }
-
-
-        }
-
-        if (Input.isKeyJustPressed("p")) {
-
-            this.overallMood += 1;
-            console.log("Mood: +1, Current Mood stat: " + this.overallMood);
-            // this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: 1});
-            if (this.overallMood >= this.moodMax) {
-                this.overallMood = 0;
-                this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
-            }
+        //     this.overallMood -= 1;
+        //     console.log("Mood: -1, Current Mood stat: " + this.overallMood);
+        //     // this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, {moodChange: -1});
+        //     if (this.overallMood <= this.moodMin) {
+        //         this.overallMood = 0;
+        //         this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
+        //     }
 
 
-        }
+        // }
+
+        // if (Input.isKeyJustPressed("p")) {
+
+        //     this.overallMood += 1;
+        //     console.log("Mood: +1, Current Mood stat: " + this.overallMood);
+        //     // this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, {moodChange: 1});
+        //     if (this.overallMood >= this.moodMax) {
+        //         this.overallMood = 0;
+        //         this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
+        //     }
+
+
+        // }
 
         if (Input.isKeyJustPressed("n")) {
             this.enemyManager.spawnEnemy(this.player, this.plant);
@@ -158,7 +161,7 @@ export default class LevelZero extends GameLevel {
 
 
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                this.mood = "angry";
+                //this.mood = "angry";
                 if (this.moodBarTimer.isActive() === false) {
                     this.moodBarTimer.start();
                     this.increaseEnemyStrength();
@@ -168,28 +171,11 @@ export default class LevelZero extends GameLevel {
             }
 
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-                this.mood = "happy";
+                //this.mood = "happy";
                 if (this.moodBarTimer.isActive() === false) {
                     this.moodBarTimer.start();
                     console.log("Happy mood reached, have to implement faster enemies' speed behavior")
                     // this.increaseEnemySpeed(); // increase speed buggy 
-                }
-            }
-
-            if (event.type === InGame_Events.ADD_TO_MOOD) {
-                let type = event.data.get('type');
-                let count = event.data.get('count');
-                count *= type;
-                this.overallMood += count;
-                MathUtils.clamp(this.overallMood, this.moodMin, this.moodMax);
-                this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, { moodChange: count });
-                if (this.overallMood <= this.moodMin) {
-                    this.overallMood = 0;
-                    this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
-                }
-                if (this.overallMood >= this.moodMax) {
-                    this.overallMood = 0;
-                    this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
                 }
             }
 
@@ -211,32 +197,20 @@ export default class LevelZero extends GameLevel {
 
         // We just need to use enemyList correctly when destroyed, unshift the arrays 
 
-/*
 
-        if(!this.pauseExecution) {
-            if (Date.now() - this.time > 3000) {
-                let randomInt = Math.floor(Math.random() * this.enemyNameList.length);
-                let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
-                let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
-                // console.log('spawn', randomInt)
-                if (this.enemyNameList[randomInt] === "orange_mushroom") {
-                    let randomScale = Math.random() * (2 - 1) + 1;
-                    this.addEnemy("orange_mushroom", new Vec2(randomX, randomY), { speed: 90 * (1 / randomScale), player: this.player, health: 50, type: "Upper" }, 1);
-                }
-                else if (this.enemyNameList[randomInt] === "green_slime") {
-                    let randomScale = Math.random() * (2 - 0.5) + 0.5;
-    
-                    this.addEnemy("green_slime", new Vec2(randomX, randomY), { speed: 80 * (1 / randomScale), player: this.player, health: 40, type: "Downer" }, 1.5)
-                }
-                else if (this.enemyNameList[randomInt] === "wisp") {
-                    let randomScale = Math.random() * (2 - 0.5) + 0.5;
-                    this.addEnemy("wisp", new Vec2(randomX, randomY), { speed: 70 * (1 / randomScale), player: this.player, health: 40, type: "Upper" }, 1)
-    
-                }
-                this.time = Date.now();
-            }
-        }
-*/    
+
+        // if(!this.pauseExecution) {
+        //     if (Date.now() - this.time > 3000) {
+        //         let randomX = Math.floor(Math.random() * (this.tilemapSize.x - 100) + 50);
+        //         let randomY = Math.floor(Math.random() * (this.tilemapSize.y - 100) + 50);
+        //         // console.log('spawn', randomInt)
+        //         this.enemyManager.spawnEnemy(this.player, this.plant, new Vec2(randomX, randomY));
+                
+
+        //         this.time = Date.now();
+        //     }
+        // }
+   
 
     }
 
@@ -245,7 +219,7 @@ export default class LevelZero extends GameLevel {
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DIED,
-            InGame_Events.ADD_TO_MOOD,
+            InGame_Events.UPDATE_MOOD,
             InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART
@@ -255,28 +229,18 @@ export default class LevelZero extends GameLevel {
 
 
     // TODO: make it so that new created enemies have doubled speed, because when the timer is done, newly created enemies with normal speed gets slower than normal
-    protected increaseEnemySpeed(): void {
-        for (let enemy of this.enemyList) {
-            let enemyController = <EnemyController>enemy._ai;
-            enemyController.increaseSpeed();
-        }
-    }
+
 
     protected increaseEnemyStrength(): void {
         let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(10);
+        playerController.increaseDamageTaken(2);
     }
 
     protected resetAngryEffect(): void {
         let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(5);
+        playerController.increaseDamageTaken(1);
     }
 
-    protected resetHappyEffect(): void {
-        for (let enemy of this.enemyList) {
-            let enemyController = <EnemyController>enemy._ai;
-            enemyController.decreaseSpeed();
-        }
-    }
+
 
 }

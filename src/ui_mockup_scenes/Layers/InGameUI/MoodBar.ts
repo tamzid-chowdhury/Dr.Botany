@@ -14,17 +14,19 @@ export default class Moodbar {
 	centerPos: Vec2;
     scene: Scene;
 	scale: Vec2 = new Vec2(0.5,0.5);
-    windowSize: Vec2 = new Vec2(window.innerWidth, window.innerHeight);
+	windowSize: Vec2 = new Vec2(window.innerWidth, window.innerHeight);
+	xOffset: number; 
+	yOffset: number; 
 
 	constructor(scene: Scene, centerPos: Vec2) {
 		this.centerPos = centerPos;
         this.scene = scene;
 		this.sprite = scene.add.sprite("moodbar", UILayers.INGAME_UI)
 		this.indicator = scene.add.sprite("moodbar_indicator", UILayers.INGAME_UI);
-        let xOffset =  this.centerPos.x;
-        let yOffset =  2*this.centerPos.y - 2*this.sprite.size.y ;
-        this.sprite.position.set(xOffset, yOffset)
-        this.indicator.position.set(xOffset, yOffset)
+        this.xOffset =  this.centerPos.x;
+        this.yOffset =  2*this.centerPos.y - 2*this.sprite.size.y ;
+        this.sprite.position.set(this.xOffset, this.yOffset)
+        this.indicator.position.set(this.xOffset, this.yOffset)
 
         this.sprite.scale = this.scale;
         this.indicator.scale = new Vec2(0.6,0.6);

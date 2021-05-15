@@ -89,6 +89,8 @@ export default class LevelOne extends GameLevel {
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
         this.addEnemy("orange_mushroom", new Vec2(500, 500), { speed: 20, player: this.player, health: 40, type: "Downer" }, 1.5);
+
+
     }
 
     updateScene(deltaT: number) {
@@ -118,31 +120,7 @@ export default class LevelOne extends GameLevel {
         }
 
 
-        if (Input.isKeyJustPressed("o")) {
-
-            this.overallMood -= 1;
-            console.log("Mood: -1, Current Mood stat: " + this.overallMood);
-            // this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: -1});
-            if (this.overallMood <= this.moodMin) {
-                this.overallMood = 0;
-                this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
-            }
-
-
-        }
-
-        if (Input.isKeyJustPressed("p")) {
-
-            this.overallMood += 1;
-            console.log("Mood: +1, Current Mood stat: " + this.overallMood);
-            // this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, {moodChange: 1});
-            if (this.overallMood >= this.moodMax) {
-                this.overallMood = 0;
-                this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
-            }
-
-
-        }
+ 
 
         if (Input.isKeyJustPressed("l")) {
             this.addEnemy("green_slime", new Vec2(this.tilemapSize.x/2, this.tilemapSize.y/2), { speed: 50 , player: this.player, health: 40, type: "Downer" }, 1.5)
@@ -192,13 +170,13 @@ export default class LevelOne extends GameLevel {
                 // this.levelZeroReceiver.unsubscribe(InGame_Events.HAPPY_MOOD_REACHED)
             }
 
-            if (event.type === InGame_Events.ADD_TO_MOOD) {
+            if (event.type === InGame_Events.UPDATE_MOOD) {
                 let type = event.data.get('type');
                 let count = event.data.get('count');
                 count *= type;
                 this.overallMood += count;
                 MathUtils.clamp(this.overallMood, this.moodMin, this.moodMax);
-                this.emitter.fireEvent(InGame_Events.MOOD_CHANGED, { moodChange: count });
+                this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, { moodChange: count });
                 if (this.overallMood <= this.moodMin) {
                     this.overallMood = 0;
                     this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
@@ -259,7 +237,7 @@ export default class LevelOne extends GameLevel {
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DIED,
-            InGame_Events.ADD_TO_MOOD,
+            InGame_Events.UPDATE_MOOD,
             InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART

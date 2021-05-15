@@ -17,7 +17,7 @@ export default class Damaged extends EnemyState {
 			
 		}
 		else {
-			// this.finished(EnemyStates.DYING);
+			this.finished(EnemyStates.DYING);
 
 		}
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;

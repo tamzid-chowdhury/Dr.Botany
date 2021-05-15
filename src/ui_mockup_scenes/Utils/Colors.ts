@@ -28,12 +28,29 @@ export function red(): Color {
 	return new Color(255, 0, 0, 1);
 }
 
+export function green(): Color {
+	return new Color(0, 255, 0, 1);
+}
+
 export function tannish(): Color {
 	return new Color(246, 215, 179, 1);
 
 }
 
+export function reddish(): Color {
+	return new Color(235, 86, 75, 1);
 
+}
+
+
+export function yellowish(): Color {
+	return new Color(255, 195, 63, 1);
+
+}
+
+export function greenish(): Color {
+	return new Color(143, 222, 93, 1);
+}
 
 
 

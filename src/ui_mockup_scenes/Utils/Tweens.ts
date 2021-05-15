@@ -675,6 +675,45 @@ export function knockBack(velocity: Vec2): Record<string,any> {
 	return tween
 }
 
+export function knockBackPlayer(position: Vec2, enemyVel : Vec2): Record<string,any> {
+	let dirX = 0;
+	let dirY = 0;
+
+	if(enemyVel.x > 0) {
+		dirX = 30;
+	}
+	else if(enemyVel.x < 0) {
+		dirX = -30;
+	}
+	if(enemyVel.y > 0) {
+		dirY = 30;
+	} 
+	else if(enemyVel.y < 0) {
+		dirY = -30;
+	}
+	let tween = {
+		startDelay: 0,
+		duration: 300,
+		effects: [
+			{
+				property:TweenableProperties.posX,
+				start: position.x,
+				end: position.x + dirX ,
+				ease: EaseFunctionType.OUT_IN_SINE,
+				resetOnComplete: true
+			},
+			{
+				property:TweenableProperties.posY,
+				start: position.y,
+				end: position.y + dirY ,
+				ease: EaseFunctionType.OUT_IN_SINE,
+				resetOnComplete: true
+			},
+		]
+	}
+	return tween
+}
+
 export function enemyHopOver(position: Vec2, dir: string, owner: GameNode ): Record<string, any> {
 	let directionX = 0;
 	let directionY = 0;
@@ -693,7 +732,7 @@ export function enemyHopOver(position: Vec2, dir: string, owner: GameNode ): Rec
 	
 	let tween = {
 		startDelay: 0,
-		duration: 1000,
+		duration: 800,
 		onEnter: owner.disablePhysics(),
 		effects: [
 			{
@@ -707,6 +746,13 @@ export function enemyHopOver(position: Vec2, dir: string, owner: GameNode ): Rec
 				property: TweenableProperties.posY,
 				start: position.y,
 				end: position.y + directionY,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property: TweenableProperties.rotation,
+				start: 0,
+				end: 2*Math.PI,
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
