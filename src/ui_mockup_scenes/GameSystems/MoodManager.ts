@@ -6,13 +6,14 @@ import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import Scene from "../../Wolfie2D/Scene/Scene";
+import Input from "../../Wolfie2D/Input/Input";
 
 export default class PlantManager implements Updateable{
 	
 	receiver: Receiver = new Receiver();
 	moodLevel: number = 0; 						// mood goes from -50 -> 50, 100 total points 
-	minMoodLevel: number = -10; 
-	maxMoodLevel: number = 10; 
+	minMoodLevel: number = -20; 
+	maxMoodLevel: number = 20; 
 
 	currentMood: string = PlantMoods.NEUTRAL; 	// plant starts each level neutral, although we may want to change this
 	
@@ -62,7 +63,7 @@ export default class PlantManager implements Updateable{
 			this.moodLevel = 0;
 			console.log("ANGRY MOOD REACHED")
 		}
-		
+
 		if (this.moodLevel >= this.maxMoodLevel) {
 			this.moodLevel = 0;
 			console.log("HAPPY MOOD REACHED")
@@ -83,6 +84,20 @@ export default class PlantManager implements Updateable{
 
             }
 		}
+
+		//angrymood cheat
+		if (Input.isKeyJustPressed("o")) { 
+			this.updateMoodLevel(10, -1)
+            console.log("Mood: -1, Current Mood stat: " + this.moodLevel);
+			
+        }
+
+		//happymood cheat
+        if (Input.isKeyJustPressed("p")) {
+			this.updateMoodLevel(10, 1)
+            console.log("Mood: +1, Current Mood stat: " + this.moodLevel);
+
+        }
 	}
 
 }
