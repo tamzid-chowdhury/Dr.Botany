@@ -30,7 +30,7 @@ export default class EquipmentManager {
 					break;
                 case "TrashLid":
 					sprite = this.scene.add.sprite(equip.spriteKey, "primary");
-					projSprite = this.scene.add.animatedSprite(equip.projectileSpriteKey, "primary");
+					// projSprite = this.scene.add.animatedSprite(equip.projectileSpriteKey, "primary");
                     temp = new TrashLid(equip, sprite, projSprite);
                     break;
                 case "PillBottle":
@@ -72,19 +72,25 @@ export default class EquipmentManager {
 		let equip;
 		if(typeof id === 'string') {
 			for(let p of this.prototypes) {
-				if(p.name === id) {
-					p.onPickup();
-					equip = p;
-					break;
+				if(p !== undefined) {
+					if(p.name === id) {
+						p.onPickup();
+						equip = p;
+						break;
+					}
 				}
+
 			}
 		}
 		else if(typeof id === 'number') {
 			for(let p of this.prototypes) {
-				if(p.sprite.id === id) {
-					p.onPickup();
-					equip = p;
-					break;
+				if(p !== undefined) {
+
+					if(p.sprite.id === id) {
+						p.onPickup();
+						equip = p;
+						break;
+					}
 				}
 			}
 		}

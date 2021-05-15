@@ -1,10 +1,13 @@
 import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
+import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Scene from "../../Wolfie2D/Scene/Scene";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Equipment from "../Types/items/Equipment";
 import { InGame_Events } from "../Utils/Enums";
@@ -20,11 +23,12 @@ export default class ProjectileController extends StateMachineAI {
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.owner.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.owner.size.x/2, this.owner.size.y/2)));
-        this.owner.active = false;
         this.owner.setGroup(PhysicsGroups.PROJECTILE);
-
         this.subscribeToEvents();
+        this.owner.active = false;
     }
+
+    hitEnemy(): void {}
 
     activate(options: Record<string, any>): void {}
 
@@ -148,13 +152,17 @@ class PillProjectile {
         this.sprite = sprite;
         this.liveTime = cooldown;
         this.dead = false;
-        // this.liveTimer = new Timer(3*this.liveTime, () => {
-        //     this.deactivate();
-        // });
+        this.liveTimer = new Timer(4*this.liveTime, () => {
+            this.deactivate();
+        });
 
     }
 
     update(deltaT: number) {
+        if(!this.sprite.active) {
+            this.liveTimer.pause();
+            this.deactivate();
+        }
         if(!this.dead) {
             this.sprite._velocity = this.sprite.getLastVelocity();
             this.sprite._velocity.normalize();
@@ -164,6 +172,8 @@ class PillProjectile {
         }
 
     }
+
+    
 
     activate(direction: Vec2, position: Vec2, rotation: number, deltaT: number) {
         this.drift = Math.random() < 0.5 ? 1 : -1;
@@ -180,9 +190,7 @@ class PillProjectile {
         this.sprite.visible = true;
         
         this.sprite.move(this.sprite._velocity.scaled(deltaT));
-        this.liveTimer = new Timer(4*this.liveTime, () => {
-            this.deactivate();
-        });
+        this.liveTimer.reset();
         this.liveTimer.start();
     }
 
@@ -190,6 +198,8 @@ class PillProjectile {
         this.sprite.visible = false;
         this.sprite.active = false;
         this.dead = true;
+        this.sprite.position.set(-1000, -1000);
+
     }
 
 
@@ -204,7 +214,8 @@ export class PillBottleController extends ProjectileController {
     powerCurve: number;
     inactivePills: Array<PillProjectile> = [];
     activePills: Array<PillProjectile> = [];
-
+    clipSize: number;
+    arrayCursor: number = 0;
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
 		this.cooldown = options.cooldown;
@@ -213,7 +224,9 @@ export class PillBottleController extends ProjectileController {
 		this.owner.setGroup(PhysicsGroups.PROJECTILE);
 		this.subscribeToEvents();
         let pillSprites = options.clip;
+        this.clipSize = options.clip.length;
         for(let p of pillSprites) {
+                        
             this.inactivePills.push(new PillProjectile(p, this.cooldown));
 
         }
@@ -230,29 +243,40 @@ export class PillBottleController extends ProjectileController {
 
 	activate(options: Record<string, any>): void {}
 
-	handleEvent(event: GameEvent): void {}
+	handleEvent(event: GameEvent): void {
+
+    }
 
 	update(deltaT: number): void {
-        for(let p of this.activePills) {
-            if(p.dead) {
-                this.recycle(p);
-            }
-            else {
+
+        // for(let p of this.activePills) {
+        //     if(p.dead) {
+        //         // this.recycle(p);
+        //     }
+        //     else {
+        //         p.update(deltaT)
+
+        //     }
+           
+        // }
+
+        for(let p of this.inactivePills) {
+            if(!p.dead) {
                 p.update(deltaT)
 
             }
-           
         }
-
-
 	}
 
     fire(direction: Vec2, deltaT: number) {
-        if(this.inactivePills.length > 0) {
-            let pill = this.inactivePills.pop();
-            this.activePills.push(pill);
-            pill.activate(direction.clone(), this.owner.position, this.owner.rotation, deltaT);
-        }
+        if(this.arrayCursor === this.clipSize-1) this.arrayCursor = 0;
+        this.inactivePills[this.arrayCursor].activate(direction.clone(), this.owner.position, this.owner.rotation, deltaT);
+        this.arrayCursor++;
+        // if(this.inactivePills.length > 0) {
+        //     let pill = this.inactivePills.pop();
+        //     this.activePills.push(pill);
+        //     pill.activate(direction.clone(), this.owner.position, this.owner.rotation, deltaT);
+        // }
     }
 
 
@@ -262,5 +286,6 @@ export class PillBottleController extends ProjectileController {
     }
 
 	subscribeToEvents(): void {
+
 	}
 }

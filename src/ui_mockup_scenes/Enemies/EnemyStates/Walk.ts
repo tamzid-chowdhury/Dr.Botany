@@ -11,7 +11,8 @@ export default class Walk extends EnemyState {
 	playerSize: Vec2;
 	plantSize: Vec2;
 	onEnter(): void {
-		(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
+		this.parent.currentStateName = EnemyStates.WALK;
+		(<AnimatedSprite>this.owner).animation.play("WALK", true);
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
 		this.plantSize = (<AnimatedSprite>this.parent.plant).size;
 	}
@@ -55,6 +56,7 @@ export default class Walk extends EnemyState {
 			if (Math.abs(ownerPosX - playerPosX) > 1000) { // when the enemy and player distance is far away enough
 				this.parent.velocity.x = -this.parent.velocity.x;
 			}
+
 
 
 			if (Math.abs(ownerPosY - playerPosY) > 1000) {

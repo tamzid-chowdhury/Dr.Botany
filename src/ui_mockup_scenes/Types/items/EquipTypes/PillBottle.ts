@@ -2,6 +2,7 @@ import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
+import Scene from "../../../../Wolfie2D/Scene/Scene";
 import ProjectileController, { PillBottleController } from "../../../Controllers/ProjectileController";
 import { InGame_Events } from "../../../Utils/Enums";
 import { PhysicsGroups } from "../../../Utils/PhysicsOptions";
@@ -9,7 +10,6 @@ import Equipment from "../Equipment";
 
 export default class PillBottle extends Equipment {
 	clip: Array<Sprite>;
-	projectileCopyCount: number = 20;
 	constructor(data: Record<string,any>, sprite: Sprite, clip: Array<Sprite>) {
 		super(data);
 		this.sprite = sprite;

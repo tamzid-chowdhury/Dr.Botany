@@ -82,7 +82,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
 
-
         this.hitTimer = new Timer(300, () => {
             this.owner.alpha = 1;
 
@@ -176,7 +175,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
 
-        if(Input.isMousePressed()) {
+        if(Input.isMousePressed() && !this.pauseExecution) {
             if(!this.coolDownTimer.isActive()) {
                 if(this.equipped.charges) {
                     
@@ -190,6 +189,19 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     
                     this.coolDownTimer.start();
                 }
+            }
+        }
+
+        if (Input.isKeyJustPressed("1")) {
+            this.equipped.charges = 1000;
+            this.stowed.charges = 1000;
+            if(this.equipped.type === WeaponTypes.AMMO) {
+                this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, {spriteKey:this.equipped.iconSpriteKey, ammo: this.equipped.charges})
+
+            }
+            if(this.stowed.type === WeaponTypes.AMMO) {
+                this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, {spriteKey:this.stowed.iconSpriteKey, ammo: this.stowed.charges})
+
             }
         }
 

@@ -11,9 +11,12 @@ import { InGame_Events } from "../Utils/Enums";
 import Dying from "./EnemyStates/Dying";
 import EnemyState from "./EnemyStates/EnemyState";
 import Idle from "./EnemyStates/Idle"
-import Knockback from "./EnemyStates/Knockback";
+import Damaged from "./EnemyStates/DAMAGED";
 import Walk from "./EnemyStates/Walk";
 import * as Tweens from "../Utils/Tweens";
+import Timer from "../../Wolfie2D/Timing/Timer";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
 
 
@@ -21,7 +24,7 @@ import { PhysicsGroups } from "../Utils/PhysicsOptions";
 export enum EnemyStates {
 	IDLE = "idle",
 	WALK = "walk",
-	KNOCKBACK = "knockback",
+	DAMAGED = "DAMAGED",
     ATTACKING = "attacking",
 	PREVIOUS = "previous",
     DYING = "dying"
@@ -44,7 +47,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     knockBackTimer: number = 0;
     pauseExecution: boolean = false;
     options:Record<string, any>;
-
+    invuln: boolean = false;
+    damageGuard: Timer;
+    currentStateName: string;
     damage(damage: number) : void {
         this.health -= damage;
     };
@@ -58,13 +63,12 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.dropType = options.type; 
         this.options = options;
 
-        // have to add some properties for each enemy   I don't know if idle is necessary...
         let idle = new Idle(this, owner);
 		this.addState(EnemyStates.IDLE, idle);
 		let walk = new Walk(this, owner);
 		this.addState(EnemyStates.WALK, walk);
-        let knockback = new Knockback(this, owner);
-		this.addState(EnemyStates.KNOCKBACK, knockback);
+        let knockback = new Damaged(this, owner);
+		this.addState(EnemyStates.DAMAGED, knockback);
         let dying = new Dying(this, owner);
         this.addState(EnemyStates.DYING, dying)
 
@@ -103,17 +107,29 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
     update(deltaT: number): void {
         super.update(deltaT);
-        
-        if(!this.pauseExecution && this.owner.active) {
+
+        if(!this.pauseExecution && this.currentStateName != EnemyStates.DYING) {
+            if(this.health <= 0) this.changeState(EnemyStates.DYING);
             if(this.knockBackGuard > 1) this.knockBackGuard--;
             if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);
         }
 	}
 
-    doKnockBack(direction: Vec2): void {
-        this.knockBackDir = direction.clone();
-        this.knockBackTimer = 50;
-        if(this.knockBackGuard <= 1) this.changeState(EnemyStates.KNOCKBACK);
+    doDamage(direction: Vec2, damage: number, knockback: number): void {
+        if(!this.invuln) {
+            this.damage(damage);
+            this.invuln = true;
+            this.damageGuard = new Timer(25, () => {
+                this.invuln = false;
+    
+            });
+            this.damageGuard.start();
+            this.knockBackDir = direction.clone();
+            this.knockBackTimer = 50;
+            if(this.knockBackGuard <= 1) this.changeState(EnemyStates.DAMAGED);
+        }
+
+
         
     }
 

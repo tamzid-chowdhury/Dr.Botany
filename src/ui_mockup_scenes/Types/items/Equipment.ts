@@ -11,7 +11,8 @@ export default class Equipment {
 	sfxKey: string;
 	sprite: Sprite;
 	projectileSprite: Sprite;
-	damage: number = 1;
+	damage: number;
+	knockback: number;
 	cooldown: number;
 	swingDir: number = 1;
 	charges: number;
@@ -23,6 +24,7 @@ export default class Equipment {
 		this.iconSpriteKey = data.iconSpriteKey;
 		this.projectileSpriteKey = data.projectileSpriteKey;
 		this.damage = data.damage;
+		this.knockback = data.knockback;
 		this.name = data.name;
 		this.cooldown = data.cooldown;
 		this.sfxKey = data.sfxKey;
@@ -49,11 +51,14 @@ export default class Equipment {
 
 	setActive(position: Vec2): void {
 		this.sprite.position.set(position.x, position.y);
-		this.projectileSprite.position.set(position.x, position.y);
         this.sprite.invertY = true;
         this.sprite.visible = true;
-		this.projectileSprite.visible = false;
-        this.projectileSprite.active = false;
+		if(this.projectileSprite) {
+			this.projectileSprite.visible = false;
+			this.projectileSprite.active = false;
+			this.projectileSprite.position.set(position.x, position.y);
+		}
+
 	}
 
 	updatePos(position: Vec2, playerLookDirection: Vec2): void {

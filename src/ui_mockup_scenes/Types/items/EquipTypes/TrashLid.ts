@@ -12,7 +12,7 @@ export default class TrashLid extends Equipment {
 	constructor(data: Record<string,any>, sprite: Sprite, projSprite: AnimatedSprite) {
 		super(data);
 		this.sprite = sprite;
-		this.projectileSprite = projSprite;
+		// this.projectileSprite = projSprite;
 		this.init(new Vec2(-1000,-1000))
 	}
 
@@ -24,7 +24,7 @@ export default class TrashLid extends Equipment {
         this.sprite.active = false;
         this.sprite.addAI(TrashLidController, {cooldown: this.cooldown-50, container: this});
 		this.sprite.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PROJECTILE_HIT_ENEMY, null);
-		this.projectileSprite.container = this;
+		// this.projectileSprite.container = this;
 		this.sprite.container = this;
 	}
 
