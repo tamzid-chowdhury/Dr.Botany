@@ -52,10 +52,21 @@ export default class PlantManager implements Updateable{
 		// NOTE: Type is either -1 or 1, so that the mood will shift in the upper/downer direction
 		count *= type;
 		this.moodLevel += count;
+		MathUtils.clamp(this.moodLevel, this.minMoodLevel, this.maxMoodLevel);
+		this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, { moodChange: count });
 		this.updateCurrentMood(); 
 	}
 
 	updateCurrentMood(): void {
+		if (this.moodLevel <= this.minMoodLevel) {
+			this.moodLevel = 0;
+			console.log("ANGRY MOOD REACHED")
+		}
+		
+		if (this.moodLevel >= this.maxMoodLevel) {
+			this.moodLevel = 0;
+			console.log("HAPPY MOOD REACHED")
+		}
 
 	}
 
@@ -67,20 +78,9 @@ export default class PlantManager implements Updateable{
 			if (event.type === InGame_Events.UPDATE_MOOD) {
                 let type = event.data.get('type');
                 let count = event.data.get('count');
-                count *= type;
-                this.moodLevel += count;
-                MathUtils.clamp(this.moodLevel, this.minMoodLevel, this.maxMoodLevel);
-                this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, { moodChange: count });
-                if (this.moodLevel <= this.minMoodLevel) {
-                    this.moodLevel = 0;
-					this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, { moodChange: count });
-					console.log("ANGRY MOOD REACHED")
-                }
-                if (this.moodLevel >= this.maxMoodLevel) {
-					this.moodLevel = 0;
-					this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, { moodChange: count });
-					console.log("HAPPY MOOD REACHED")
-                }
+				this.updateMoodLevel(count, type)
+                
+
             }
 		}
 	}
