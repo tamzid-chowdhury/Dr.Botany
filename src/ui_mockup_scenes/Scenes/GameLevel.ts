@@ -105,6 +105,7 @@ export default class GameLevel extends Scene {
         this.load.audio("material_get", "assets/sfx/material_get_sfx.wav");
         this.load.audio("healthpack_get", "assets/sfx/healthpack.wav");
         this.load.audio("ammopack_get", "assets/sfx/ammopack.wav");
+        this.load.audio("deposit", "assets/sfx/deposit.wav");
         this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.spritesheet("plant", "assets/plant/plant.json")
@@ -373,10 +374,10 @@ export default class GameLevel extends Scene {
                     }
                 }
                 
-                if (this.supportManager.hasHealthPacksToSpawn() && Math.random() < 0.1) {
+                if (this.supportManager.hasHealthPacksToSpawn() && Math.random() < 0.05) {
                     this.emitter.fireEvent(InGame_Events.SPAWN_HEALTH, { position: ownerPosition });
                 }
-                else if(this.supportManager.hasAmmoPacksToSpawn() && Math.random() < 0.1) {
+                else if(this.supportManager.hasAmmoPacksToSpawn() && Math.random() < 0.05) {
                     this.emitter.fireEvent(InGame_Events.SPAWN_AMMO, { position: ownerPosition });
                 }
 

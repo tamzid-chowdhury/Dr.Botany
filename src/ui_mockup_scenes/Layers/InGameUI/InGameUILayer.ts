@@ -214,7 +214,7 @@ export default class InGameUI implements Updateable {
                 announceText = `${this.materialSlots[0].count} uppers dropped`
                 announce = true;
                 color = new Color(255,255,0)
-                this.materialSlots[0].clearCount()
+                this.materialSlots[1].clearCount()
             }
 
             if(event.type === InGame_GUI_Events.CLEAR_DOWNER_LABEL){
@@ -222,7 +222,7 @@ export default class InGameUI implements Updateable {
                 announceText = `${this.materialSlots[1].count} downers dropped`
                 announce = true;
                 color = Palette.red()
-                this.materialSlots[1].clearCount()
+                this.materialSlots[0].clearCount()
 
             }
             if(event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT){
@@ -259,7 +259,7 @@ export default class InGameUI implements Updateable {
                 setTimeout(() => {
                     announceLabel.destroy();
                     announceLabelBackdrop.destroy();
-                }, 800);
+                }, 600);
                 
             }
         }
