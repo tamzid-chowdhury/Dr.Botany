@@ -12,7 +12,7 @@ export default class Walk extends EnemyState {
 	plantSize: Vec2;
 	onEnter(): void {
 		this.parent.currentStateName = EnemyStates.WALK;
-		(<AnimatedSprite>this.owner).animation.play("WALK", true);
+		(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
 		this.plantSize = (<AnimatedSprite>this.parent.plant).size;
 	}
@@ -65,10 +65,7 @@ export default class Walk extends EnemyState {
 			this.parent.velocity.normalize();
 			this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
 			this.owner.move(this.parent.velocity.scaled(deltaT));
-			if (this.parent.velocity.isZero()) {
-				// when it reaches the player
-				// Which I dont think Ill need
-			}
+			
 		}
 		else {  // moving to the plant
 			
