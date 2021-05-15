@@ -36,8 +36,8 @@ export default class InGameUI implements Updateable {
     moodBar: MoodBar;
     // growthBar: GrowthBar;
     equipSlots: EquipSlots;
-    materialSlots: Array<MaterialSlot> = []; // [0] == upper  [1] == downer
-    materialSpriteIds: Array<string> = ["upper", "downer"];
+    materialSlots: Array<MaterialSlot> = []; // [0] == downer  [1] == upper
+    materialSpriteIds: Array<string> = ["downer", "upper"];
     receiver: Receiver;
     interactLabel: Label; 
     showingInteract: boolean;
@@ -110,7 +110,7 @@ export default class InGameUI implements Updateable {
             let color;
             if(event.type === InGame_Events.MOOD_CHANGED){
                 let moodLevel = event.data.get('moodChange');
-                let newPos = (-10*moodLevel / (this.moodBar.sprite.size.x/16)) +  this.moodBar.indicator.position.x;
+                let newPos = (10*moodLevel / (this.moodBar.sprite.size.x/16)) +  this.moodBar.indicator.position.x;
                 newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
                 this.moodBar.indicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.indicator.position.x, newPos));   
                 this.moodBar.indicator.scale.x += 1;     
@@ -211,15 +211,15 @@ export default class InGameUI implements Updateable {
 
             if(event.type === InGame_GUI_Events.CLEAR_UPPER_LABEL){
                 position = event.data.get("position");
-                announceText = `-${this.materialSlots[0].count} uppers`
+                announceText = `${this.materialSlots[0].count} uppers dropped`
                 announce = true;
-                color = Palette.red()
+                color = new Color(255,255,0)
                 this.materialSlots[0].clearCount()
             }
 
             if(event.type === InGame_GUI_Events.CLEAR_DOWNER_LABEL){
                 position = event.data.get("position");
-                announceText = `-${this.materialSlots[1].count} downers`
+                announceText = `${this.materialSlots[1].count} downers dropped`
                 announce = true;
                 color = Palette.red()
                 this.materialSlots[1].clearCount()
