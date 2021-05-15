@@ -305,8 +305,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
 
                 if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
-                    let other = event.data.get('other');
-                    let box = this.owner.getScene().getSceneGraph().getNode(other);
                     let count = this.upperCount;
                     this.canDepositUpper = false;
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, {position: this.owner.position.clone()});
@@ -319,9 +317,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
 
                 if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
-                    let other = event.data.get('other');
-                    let box = this.owner.getScene().getSceneGraph().getNode(other);
-                    // this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
                     let count = this.downerCount;
                     this.canDepositDowner = false;
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, {position: this.owner.position.clone()});
