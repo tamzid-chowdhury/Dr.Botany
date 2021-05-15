@@ -161,14 +161,14 @@ export default class InGameUI implements Updateable {
                 position = event.data.get("position");
                 this.healthBar.addHealth();
                 announceText = `+1 Health Added`
-                color = Palette.green();
+                color = Palette.greenish();
                 announce = true;
             }
 
             if(event.type === InGame_GUI_Events.REFILL_AMMO){
                 position = event.data.get("position");
                 announceText = `Ammo Refilled`
-                color = Palette.green();
+                color = Palette.greenish();
                 announce = true;
             }
             
@@ -223,7 +223,7 @@ export default class InGameUI implements Updateable {
                 position = event.data.get("position");
                 announceText = `${this.materialSlots[1].count} uppers dropped`
                 announce = true;
-                color = new Color(255,255,0)
+                color = Palette.yellowish()
                 this.materialSlots[1].clearCount()
             }
 
@@ -231,7 +231,7 @@ export default class InGameUI implements Updateable {
                 position = event.data.get("position");
                 announceText = `${this.materialSlots[0].count} downers dropped`
                 announce = true;
-                color = Palette.red()
+                color = Palette.reddish()
                 this.materialSlots[0].clearCount()
 
             }

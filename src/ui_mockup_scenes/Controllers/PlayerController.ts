@@ -321,9 +321,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 }
 
-                if (event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
-                    let other = event.data.get('other');
-                    let box = this.owner.getScene().getSceneGraph().getNode(other);
+                if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
+
                     let count = this.upperCount;
                     this.canDepositUpper = false;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
@@ -336,10 +335,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
                 }
 
-                if (event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
-                    let other = event.data.get('other');
-                    let box = this.owner.getScene().getSceneGraph().getNode(other);
-                    // this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, {position: box.position.clone()});
+                if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
+
                     let count = this.downerCount;
                     this.canDepositDowner = false;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
@@ -354,33 +351,33 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 if(event.type === InGame_Events.REFRESH_AMMO){
                     if(this.equipped.name == "PillBottle"){
-                        this.equipped.charges = 50;
+                        this.equipped.charges += 50;
                     }
                     if(this.equipped.name == "TrashLid"){
-                        this.equipped.charges = 10;
+                        this.equipped.charges += 10;
                     }
                     if(this.equipped.name == "Shovel"){
                         this.equipped.charges = 1;
                     }
 
-                    if(this.stowed.name == "PillBottle"){
-                        this.stowed.charges = 50;
-                    }
-                    if(this.stowed.name == "TrashLid"){
-                        this.stowed.charges = 10;
-                    }
-                    if(this.stowed.name == "Shovel"){
-                        this.stowed.charges = 1;
-                    }
+                    // if(this.stowed.name == "PillBottle"){
+                    //     this.stowed.charges = 50;
+                    // }
+                    // if(this.stowed.name == "TrashLid"){
+                    //     this.stowed.charges = 10;
+                    // }
+                    // if(this.stowed.name == "Shovel"){
+                    //     this.stowed.charges = 1;
+                    // }
                 
                     if (this.equipped.type === WeaponTypes.AMMO) {
                         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.equipped.iconSpriteKey, ammo: this.equipped.charges })
         
                     }
-                    if (this.stowed.type === WeaponTypes.AMMO) {
-                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.stowed.iconSpriteKey, ammo: this.stowed.charges })
+                    // if (this.stowed.type === WeaponTypes.AMMO) {
+                    //     this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.stowed.iconSpriteKey, ammo: this.stowed.charges })
         
-                    }
+                    // }
                 }
 
             }

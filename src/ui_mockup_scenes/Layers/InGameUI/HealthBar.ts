@@ -58,7 +58,7 @@ export default class HealthBar {
         let shadow = this.scene.add.sprite("health_pip_shadow", UILayers.INGAME_UI);
         let icon = this.scene.add.sprite("health_pip", UILayers.INGAME_UI);
 
-        let xOffset =  (icon.size.x/2) + ((icon.size.x/2 + 4) * this.numHealthPips-1);
+        let xOffset =  (icon.size.x/2) + ((icon.size.x/2 + 4) * this.numHealthPips);
         let yOffset =  this.centerPos.y / 10;
         icon.position.set(xOffset, yOffset);
         shadow.position.set(xOffset+1, yOffset+0.5);

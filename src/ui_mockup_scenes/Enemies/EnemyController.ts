@@ -38,8 +38,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     player: GameNode;
     plant: GameNode;
     attackRange: number;
-    dropType: String; 
-    controllerType: String = 'Enemy'; 
+    dropType: string; 
+    attackType: string;
+    controllerType: string = 'Enemy'; 
     velocity: Vec2 = Vec2.ZERO;
     knockBackGuard: number = 1;
 
@@ -61,6 +62,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.plant = options.plant;
         this.speed = options.speed;
         this.dropType = options.type; 
+        this.attackType = options.attackType; 
         this.options = options;
 
         let idle = new Idle(this, owner);
@@ -75,7 +77,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.initialize(EnemyStates.IDLE);
         this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER])
 
-        // this.owner.tweens.add("hopOverWall")
 
     }
 
@@ -119,7 +120,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         if(!this.invuln) {
             this.damage(damage);
             this.invuln = true;
-            this.damageGuard = new Timer(25, () => {
+            this.damageGuard = new Timer(100, () => {
                 this.invuln = false;
     
             });

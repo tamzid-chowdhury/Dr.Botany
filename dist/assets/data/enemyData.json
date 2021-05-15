@@ -3,24 +3,28 @@
 	"enemies": [
 		{
 			"type": "Downer",
-            "health": 50,
+            "health": 20,
             "scale": 1,
-            "speed": 40,
-			"spriteKey": "green_slime"
+            "speed": 80,
+			"spriteKey": "green_slime",
+			"attackType": "ram"
 		},
 		{
 			"type": "Upper",
             "health": 30,
             "scale": 1,
-            "speed": 80,
-			"spriteKey": "orange_mushroom"
+            "speed": 60,
+			"spriteKey": "orange_mushroom",
+			"attackType": "ram"
 		},
 		{
 			"type": "Upper",
             "health": 40,
             "scale": 1,
-            "speed": 60,
-			"spriteKey": "wisp"
+            "speed": 50,
+			"spriteKey": "wisp",
+			"attackType": "projectile"
+			
 		}
 	]
 }

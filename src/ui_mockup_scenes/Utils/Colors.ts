@@ -37,7 +37,20 @@ export function tannish(): Color {
 
 }
 
+export function reddish(): Color {
+	return new Color(235, 86, 75, 1);
 
+}
+
+
+export function yellowish(): Color {
+	return new Color(255, 195, 63, 1);
+
+}
+
+export function greenish(): Color {
+	return new Color(143, 222, 93, 1);
+}
 
 
 

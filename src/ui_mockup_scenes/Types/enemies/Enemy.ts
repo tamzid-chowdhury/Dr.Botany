@@ -21,7 +21,8 @@ export default class Enemy {
             player: {},
             plant: {}, 
             health: data.health, 
-            type: data.type
+            type: data.type,
+            attackType: data.attackType
         }
         this.sprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(( (collisionShape.x / 2)) * data.scale, (collisionShape.y / 4) * data.scale) ));
         this.sprite.colliderOffset.set(0, (collisionShape.y / 4) * data.scale);

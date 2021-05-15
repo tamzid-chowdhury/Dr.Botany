@@ -732,7 +732,7 @@ export function enemyHopOver(position: Vec2, dir: string, owner: GameNode ): Rec
 	
 	let tween = {
 		startDelay: 0,
-		duration: 1000,
+		duration: 800,
 		onEnter: owner.disablePhysics(),
 		effects: [
 			{
@@ -746,6 +746,13 @@ export function enemyHopOver(position: Vec2, dir: string, owner: GameNode ): Rec
 				property: TweenableProperties.posY,
 				start: position.y,
 				end: position.y + directionY,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
+			{
+				property: TweenableProperties.rotation,
+				start: 0,
+				end: 2*Math.PI,
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},

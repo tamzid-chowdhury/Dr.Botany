@@ -6,84 +6,52 @@ import EnemyState from "./EnemyState";
 import Idle from "./Idle"
 import * as Tweens from "../../Utils/Tweens"
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import Timer from "../../../Wolfie2D/Timing/Timer";
 
 export default class Walk extends EnemyState {
 	playerSize: Vec2;
 	plantSize: Vec2;
+	distBuffer: number = 50; // bias the enemies a little more to attack the player
+	attacking: boolean = false;
+	attackTimer: Timer;
 	onEnter(): void {
 		this.parent.currentStateName = EnemyStates.WALK;
 		(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
 		this.plantSize = (<AnimatedSprite>this.parent.plant).size;
+		this.attackTimer = new Timer(400, () => {
+			this.attacking = false;
+		})
 	}
 
 	update(deltaT: number): void {
 		super.update(deltaT);
-		
+		let plantPos = this.parent.getPlantPosition();
+		let playerPos = this.parent.getPlayerPosition();
+		let ownerPos = this.parent.getOwnerPosition();
 
-		let ownerPosX = this.parent.getOwnerPosition().x;
-		let ownerPosY = this.parent.getOwnerPosition().y;
+		if(this.parent.attackType === "ram") {
+			if(this.attacking) {
+				this.handleRamAttack(deltaT);
 
-		let playerPosX = this.parent.getPlayerPosition().x;
-		let playerPosY = this.parent.getPlayerPosition().y;
-
-		let plantPosX = this.parent.getPlantPosition().x;
-		let plantPosY = this.parent.getPlantPosition().y;
-
-		let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
-		let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
-
-
-		if (distanceToPlant > distanceToPlayer) {   // moving to the player
-			
-			this.parent.direction.x = (this.parent.owner.invertX ? -1 : 1);
-			
-			let dirToPlayer = this.parent.getOwnerPosition().dirTo(this.parent.getPlayerPosition());
-			dirToPlayer.x = this.parent.direction.x;
-			
-			if(playerPosX + 50 <= ownerPosX) {
-				this.parent.direction.x = -1
-				this.parent.owner.invertX = true;
 			}
-		
-			else if(playerPosX - 50 >= ownerPosX) {
-				this.parent.direction.x = 1
-				this.parent.owner.invertX = false;
-			}
-			
-			this.parent.velocity = dirToPlayer;
+			else {
+				this.handleRamMove(plantPos, playerPos, ownerPos, deltaT);
 
-			if (Math.abs(ownerPosX - playerPosX) > 1000) { // when the enemy and player distance is far away enough
-				this.parent.velocity.x = -this.parent.velocity.x;
-			}
-
-
-
-			if (Math.abs(ownerPosY - playerPosY) > 1000) {
-				this.parent.velocity.y = -this.parent.velocity.y;
-			}
-			this.parent.velocity.normalize();
-			this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
-			this.owner.move(this.parent.velocity.scaled(deltaT));
-			
+			}	
 		}
-		else {  // moving to the plant
-			
-
-			let dirToPlayer = this.parent.getOwnerPosition().dirTo(this.parent.getPlantPosition());
-			this.parent.velocity = dirToPlayer;
-
-			if (Math.abs(ownerPosX - plantPosX) < (this.plantSize.x / 4) + 6) this.parent.velocity.x = 0;
-			if (Math.abs(ownerPosY - plantPosY) < (this.plantSize.y / 4) + 6) this.parent.velocity.y = 0;
-			this.parent.velocity.normalize();
-			this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
-			this.owner.move(this.parent.velocity.scaled(deltaT));
-			if (this.parent.velocity.isZero()) {
-				// when it reaches the plant
-				this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);
-				// maybe change the state to attack depending on the enemy type
+		else if(this.parent.attackType === "projectile") {
+			if(this.attacking) {
+				this.handleProjectileAttack(deltaT);
 			}
+			else {
+				this.handleProjectileMove(plantPos, playerPos, ownerPos, deltaT);
+
+			}	
 		}
+
+
+
 
 		
     
@@ -112,6 +80,154 @@ export default class Walk extends EnemyState {
 		}
 
 
+
+	}
+
+	handleRamMove(plantPos: Vec2, playerPos: Vec2, ownerPos: Vec2, deltaT: number): void {
+		let ownerPosX = ownerPos.x;
+		let ownerPosY = ownerPos.y;
+
+		let playerPosX = playerPos.x;
+		let playerPosY = playerPos.y;
+
+		let plantPosX = plantPos.x;
+		let plantPosY = plantPos.y;
+
+		let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
+		let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
+
+		if ((distanceToPlant + this.distBuffer) > distanceToPlayer) {   // moving to the player
+			
+			this.parent.direction.x = (this.parent.owner.invertX ? -1 : 1);
+			
+			let dirToPlayer = ownerPos.dirTo(playerPos);
+			dirToPlayer.x = this.parent.direction.x;
+			
+			if(playerPosX + 50 <= ownerPosX) {
+				this.parent.direction.x = -1
+				this.parent.owner.invertX = true;
+			}
+		
+			else if(playerPosX - 50 >= ownerPosX) {
+				this.parent.direction.x = 1
+				this.parent.owner.invertX = false;
+			}
+			
+			this.parent.velocity = dirToPlayer;
+
+			this.parent.velocity.normalize();
+			this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
+
+			// if (distanceToPlayer <= (this.playerSize.x ) ) this.parent.velocity.x += 4*dirToPlayer.x;
+			// if (distanceToPlayer <= (this.playerSize.y ) ) this.parent.velocity.y += 4*dirToPlayer.y;
+
+			this.owner.move(this.parent.velocity.scaled(deltaT));
+			
+		}
+		else {  // moving to the plant
+			
+
+			let dir = ownerPos.dirTo(plantPos);
+			this.parent.velocity = dir;
+
+			this.parent.velocity.normalize();
+			this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
+			if (distanceToPlant <= (this.plantSize.x /2) || distanceToPlant <= (this.plantSize.y /2) ){
+				this.parent.velocity.x += 5*dir.x;
+				this.parent.velocity.y += 5*dir.y;
+				this.attacking = true;
+				this.attackTimer.reset();				
+				this.attackTimer.start();				
+			} 
+
+			this.owner.move(this.parent.velocity.scaled(deltaT));
+			if (this.parent.velocity.isZero()) {
+				// when it reaches the plant
+				this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);
+				// maybe change the state to attack depending on the enemy type
+			}
+		}
+	}
+
+	handleRamAttack(deltaT: number): void {
+
+		this.owner.move(this.parent.velocity.scaled(deltaT));
+		this.parent.velocity.x *= 0.98;
+		this.parent.velocity.y *= 0.98;
+
+	}
+
+	handleProjectileAttack(deltaT: number): void {
+
+		this.owner.move(this.parent.velocity.scaled(deltaT));
+		this.parent.velocity.x *= 0.98;
+		this.parent.velocity.y *= 0.98;
+	}
+
+	handleProjectileMove(plantPos: Vec2, playerPos: Vec2, ownerPos: Vec2, deltaT: number): void {
+		let ownerPosX = ownerPos.x;
+		let ownerPosY = ownerPos.y;
+
+		let playerPosX = playerPos.x;
+		let playerPosY = playerPos.y;
+
+		let plantPosX = plantPos.x;
+		let plantPosY = plantPos.y;
+
+		let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
+		let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
+
+		if ((distanceToPlant + this.distBuffer) > distanceToPlayer) {   // moving to the player
+			
+			this.parent.direction.x = (this.parent.owner.invertX ? -1 : 1);
+			
+			let dirToPlayer = ownerPos.dirTo(playerPos);
+			dirToPlayer.x = this.parent.direction.x;
+			
+			if(playerPosX + 50 <= ownerPosX) {
+				this.parent.direction.x = -1
+				this.parent.owner.invertX = true;
+			}
+		
+			else if(playerPosX - 50 >= ownerPosX) {
+				this.parent.direction.x = 1
+				this.parent.owner.invertX = false;
+			}
+			
+			this.parent.velocity = dirToPlayer;
+
+			this.parent.velocity.normalize();
+			this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
+
+			// if (distanceToPlayer <= (this.playerSize.x ) ) this.parent.velocity.x += 4*dirToPlayer.x;
+			// if (distanceToPlayer <= (this.playerSize.y ) ) this.parent.velocity.y += 4*dirToPlayer.y;
+
+			this.owner.move(this.parent.velocity.scaled(deltaT));
+			
+		}
+		else {  // moving to the plant
+			
+
+			let dir = ownerPos.dirTo(plantPos);
+			this.parent.velocity = dir;
+
+			this.parent.velocity.normalize();
+			this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
+			if (distanceToPlant <= (this.plantSize.x /2) || distanceToPlant <= (this.plantSize.y /2) ){
+				this.parent.velocity.x += 5*dir.x;
+				this.parent.velocity.y += 5*dir.y;
+				this.attacking = true;
+				this.attackTimer.reset();				
+				this.attackTimer.start();				
+			} 
+
+			this.owner.move(this.parent.velocity.scaled(deltaT));
+			if (this.parent.velocity.isZero()) {
+				// when it reaches the plant
+				this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);
+				// maybe change the state to attack depending on the enemy type
+			}
+		}
 
 	}
 
