@@ -82,6 +82,7 @@ export default class GrowthManager implements Updateable{
 
             if (event.type === InGame_Events.ENEMY_ATTACK_PLANT) {
                 this.decreaseGrowthScore();
+                console.log("Plant healath: ", this.score);
             }
 
             

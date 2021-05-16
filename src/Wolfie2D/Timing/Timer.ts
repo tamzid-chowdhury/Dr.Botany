@@ -66,6 +66,22 @@ export default class Timer implements Updateable {
         this.timePast = 1;
     }
 
+    continue() {
+        this.state = TimerState.ACTIVE;
+    }
+
+    // halfTime() {
+    //     this.totalTime = this.totalTime/2;
+    // }
+    getTime(): number {
+        return this.totalTime;
+    }
+    setTime(time : number) {
+        if(this.state === TimerState.STOPPED) {
+            this.totalTime = time;
+        }
+    }
+
     /** Resets this timer. Sets the progress back to zero, and sets the number of runs back to zero */
     reset(){
         this.timeLeft = this.totalTime;

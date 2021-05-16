@@ -8,6 +8,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { UIEvents, UILayers, InGameUILayers, InGame_Events, Scenes } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import GameOverScreenLayer from "../Layers/GameOverScreenLayer";
+import LevelCompletionScreenLayer from "../Layers/LevelCompletionScreenLayer";
 import EnemyController from "../Enemies/EnemyController"
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
@@ -27,6 +28,11 @@ import ProjectileController from "../Controllers/ProjectileController";
 import SupportManager from "../GameSystems/SupportManager"
 import MoodManager from "../GameSystems/MoodManager"
 import GrowthManager from "../GameSystems/GrowthManager";
+import LevelZero from "./LevelZero";
+import {Physics} from "../Utils/PhysicsOptions"
+import Timer from "../../Wolfie2D/Timing/Timer";
+import Game from "../../Wolfie2D/Loop/Game";
+import Level_Fall_one from "./Level_Fall_One";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -40,6 +46,7 @@ export default class GameLevel extends Scene {
     inGameUILayer: InGameUILayer;
     pauseScreenLayer: PauseScreenLayer;
     gameOverScreenLayer:GameOverScreenLayer;
+    levelCompletionScreenLayer: LevelCompletionScreenLayer;
 
     reticle: Sprite;
     cursor: Sprite;
@@ -59,11 +66,16 @@ export default class GameLevel extends Scene {
     supportManager: SupportManager; 
     moodManager: MoodManager;
     growthManager: GrowthManager;
-
+    spawnerTimer : Timer;
+    ////
+    completionStatus : boolean = false;
+    finalWaveCleared: boolean = false;
+    ////
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
     swipeLayer: UILayer;
     pauseExecution: boolean = false;
+
     nextLevel: string;
     gameOver: boolean = false;
 
@@ -154,6 +166,7 @@ export default class GameLevel extends Scene {
             UIEvents.CLICKED_RESUME,
             UIEvents.TRANSITION_LEVEL,
             UIEvents.CLICKED_RESTART,
+            InGame_Events.LEVEL_END
             
         ]);
 
@@ -174,7 +187,7 @@ export default class GameLevel extends Scene {
         // TODO: Disable input until after screen wipe finished
         this.initReticle();
         this.materialsManager = new MaterialsManager(this);
-        this.enemyManager = new EnemyManager(this);
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize());
         this.equipmentManager = new EquipmentManager(this);
         this.supportManager = new SupportManager(this);
         this.moodManager = new MoodManager(this);
@@ -218,6 +231,13 @@ export default class GameLevel extends Scene {
             if (Input.isKeyJustPressed("k")) {
                 (<PlayerController>this.player._ai).damage(100);
             }
+        }
+
+        if(this.finalWaveCleared && this.levelCompletionScreenLayer.hidden && this.enemyManager.activePool.length === 0) {
+            this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+            this.levelCompletionScreenLayer.playEntryTweens();
+            this.reticle.visible = false;
+            this.cursor.visible = true;
         }
 
 
@@ -271,8 +291,17 @@ export default class GameLevel extends Scene {
                     case Scenes.MAIN_MENU:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
 
-                        this.sceneManager.changeToScene(MainMenu, {}) 
-
+                        this.sceneManager.changeToScene(MainMenu, {});
+                        break;
+                    case Scenes.LEVEL_ZERO:
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                        let sceneOptions = {
+                            physics: Physics
+                        }
+                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
+                        break;
+                    case Scenes.LEVEL_FALL_ONE:
+                        console.log("asdf")
                         break;
                     default:
                         // level1
@@ -306,7 +335,16 @@ export default class GameLevel extends Scene {
                 this.screenWipe.tweens.add("levelTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL));
                 this.screenWipe.tweens.play("levelTransition");
             }
-
+           
+            //////////////////////////////////////////////////////////////////////////////////
+            if (event.type === UIEvents.CLICKED_NEXT_LEVEL) {
+                this.screenWipe.imageOffset = new Vec2(0, 0);
+                this.screenWipe.scale = new Vec2(2,1)
+                this.screenWipe.position.set(2*this.screenWipe.size.x, this.screenWipe.size.y/2);
+                this.screenWipe.tweens.add("levelTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL));
+                this.screenWipe.tweens.play("levelTransition");
+            }
+            //////////////////////////////////////////////////////////////////////////////////
 
             if (event.type === InGame_Events.SPAWN_UPPER) {
                 let position = event.data.get("position");
@@ -350,25 +388,6 @@ export default class GameLevel extends Scene {
                 }
             }
 
-            // I Cant seem to get the dying animation to work properly, (I think its the same reason why swing animation doesnt work)
-
-            // if( event.type === InGame_Events.PLAYER_DEATH_ANIM_OVER) {
-                
-            //     this.gameOverScreenLayer.layer.setHidden(false);
-            //     if(this.gameOverScreenLayer.hidden) {
-            //         this.gameOverScreenLayer.playEntryTweens();
-    
-            //         this.reticle.visible = false;
-            //         this.cursor.visible = true;
-    
-            //     }
-            //     else {
-            //         this.gameOverScreenLayer.playExitTweens();
-            //         this.reticle.visible = true;
-            //         this.cursor.visible = false;
-            //     }
-            // }
-
 
 
             if (event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
@@ -397,11 +416,6 @@ export default class GameLevel extends Scene {
                 this.enemyManager.despawnEnemy(node);
             }
 
-            if (event.type === UIEvents.CLICKED_QUIT) {
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music" });
-                this.sceneManager.changeToScene(MainMenu, {});
-            }
-
             if (event.type === InGame_Events.GROWTH_STARTED) {
                 this.plant.tweens.add("treeScaleUp", Tweens.treeScaleUp(this.plant.scale, new Vec2(0.75,0.75)))
                 this.plant.tweens.play("treeScaleUp")
@@ -415,7 +429,9 @@ export default class GameLevel extends Scene {
                 this.plant.tweens.play("treeScaleUp")
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "plant_grow", loop: false, holdReference: true});
 
-
+                
+                this.completionStatus = true;
+                this.spawnerTimer.pause();
             }
 
 
@@ -477,7 +493,6 @@ export default class GameLevel extends Scene {
     }
 
 
-
     initGameUI(halfsize: Vec2): void {
         this.inGameUILayer = new InGameUILayer(this, halfsize, this.defaultFont, this.viewport);
 
@@ -490,6 +505,10 @@ export default class GameLevel extends Scene {
 
     initGameOverScreen(halfSize: Vec2) : void {
         this.gameOverScreenLayer = new GameOverScreenLayer(this, halfSize);
+    }
+
+    initLevelCompletionScreen(halfSize: Vec2) : void {
+        this.levelCompletionScreenLayer = new LevelCompletionScreenLayer(this, halfSize);
     }
 
     initViewport(mapSize: Vec2): void {
@@ -513,5 +532,20 @@ export default class GameLevel extends Scene {
         this.cursor2.scale = new Vec2(0.25, 0.25)
         this.cursor2.visible = false;
     }
+    initSpawnerTimer(time : number) {
+        this.spawnerTimer = new Timer(time, null, false);
+    }
+
+    finalWave(number : number) {
+        
+        for ( let i = 0; i < number; i++) {
+            this.enemyManager.spawnEnemy(this.player, this.player);
+        }
+    }
+    ///////////////////////////////////////////////////////
+    doubleSpawnTime() {
+        this.spawnerTimer.setTime(this.spawnerTimer.getTime()/2);
+    }
+    //////////////////////////////////////////////////////
 
 }

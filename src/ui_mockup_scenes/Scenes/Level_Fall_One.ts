@@ -11,9 +11,8 @@ import AnimatedDialog from "../Classes/AnimatedDialog";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GrowthManager from "../GameSystems/GrowthManager";
 import * as Tweens from "../Utils/Tweens";
-import Level_Fall_one from "./Level_Fall_One";
 
-export default class LevelZero extends GameLevel {
+export default class Level_Fall_One extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
@@ -38,9 +37,9 @@ export default class LevelZero extends GameLevel {
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
+        this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/level_fall_one.json");
 
-        this.load.audio("background_music", "assets/music/in_game_music.mp3")
+        this.load.audio("background_music", "assets/music/fall_music.mp3")
     }
 
     unloadScene(): void {
@@ -72,7 +71,6 @@ export default class LevelZero extends GameLevel {
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
         super.initGameOverScreen(this.viewport.getHalfSize());
-        super.initLevelCompletionScreen(this.viewport.getHalfSize());
         ///////////////////////////////// For each level
         super.initSpawnerTimer(3000);
         /////////////////////////////////
@@ -117,9 +115,9 @@ export default class LevelZero extends GameLevel {
             this.finalWave(10);
             this.finalWaveCleared = true;
         }
-        // if (this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
-        //     this.emitter.fireEvent(InGame_Events.LEVEL_COMPLETED);
-        // }
+        if (this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
+            this.emitter.fireEvent(InGame_Events.LEVEL_END);
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -207,19 +205,25 @@ export default class LevelZero extends GameLevel {
                     // this.increaseEnemySpeed(); // increase speed buggy 
                 }
             }
-            // if (event.type === InGame_Events.LEVEL_COMPLETED) {
-            //     console.log("Level completed")
-                
-            //     this.nextLevel = Scenes.LEVEL_FALL_ONE; // change this to the next level
+            if (event.type === InGame_Events.LEVEL_END) {
+
+                this.nextLevel = Scenes.LEVEL_FALL_ONE; // change this to the next level
+                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+                this.levelCompletionScreenLayer.layer.setHidden(false);
+
+                this.levelCompletionScreenLayer.playEntryTweens();
+
+                this.reticle.visible = false;
+                this.cursor.visible = true;
 
 
 
 
-            // }
+            }
 
             // We gotta check this with each levels
             if (event.type === UIEvents.CLICKED_RESTART) {
-                this.nextLevel = Scenes.LEVEL_ZERO;
+                this.nextLevel = Scenes.LEVEL_FALL_ONE;
                 this.screenWipe.imageOffset = new Vec2(0, 0);
                 this.screenWipe.scale = new Vec2(2, 1)
                 this.screenWipe.position.set(2 * this.screenWipe.size.x, this.screenWipe.size.y / 2);
@@ -242,7 +246,8 @@ export default class LevelZero extends GameLevel {
             InGame_Events.UPDATE_MOOD,
             InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
-            UIEvents.CLICKED_RESTART
+            UIEvents.CLICKED_RESTART,
+            InGame_Events.LEVEL_END
 
         ]);
     }

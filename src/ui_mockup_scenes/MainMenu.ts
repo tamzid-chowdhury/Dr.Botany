@@ -18,8 +18,8 @@ import { GameEventType } from "../Wolfie2D/Events/GameEventType";
 import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
 import * as Tweens from "./Utils/Tweens"
-import LevelOne from "./Scenes/LevelOne";
 import { Physics } from "./Utils/PhysicsOptions"
+import Level_Fall_one from "./Scenes/Level_Fall_One";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -245,10 +245,6 @@ export default class MainMenu extends Scene {
                 // this.setVisibleLayer(UILayers.SPRING_LEVELS);
                 // this.springLevelLayer.enbleButtons();
                 // this.levelSelectLayer.disableButtons();
-                let sceneOptions = {
-                    physics: Physics
-                }
-                this.sceneManager.changeToScene(LevelOne, {}, sceneOptions);
 
             }
 
@@ -265,6 +261,22 @@ export default class MainMenu extends Scene {
                 // this.setVisibleLayer(UILayers.FALL_LEVELS);
                 // this.fallLevelLayer.enbleButtons();
                 // this.levelSelectLayer.disableButtons();
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
+                
+
+                this.screenWipe = this.add.sprite("screen_wipe", UILayers.CURSOR);
+                this.screenWipe.imageOffset = new Vec2(0, 0);
+                this.screenWipe.scale = new Vec2(2,1)
+                this.screenWipe.position.set(2*this.screenWipe.size.x, this.screenWipe.size.y/2);
+                this.screenWipe.tweens.add("levelZeroTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL_FALL_ONE));
+                this.screenWipe.tweens.play("levelZeroTransition");
+            }
+            if (event.type === UIEvents.TRANSITION_LEVEL_FALL_ONE) {
+                let sceneOptions = {
+                    physics: Physics
+                }
+                this.sceneManager.changeToScene(Level_Fall_one, {}, sceneOptions);
+
             }
 
             if (event.type === UIEvents.CLICKED_WINTER) {

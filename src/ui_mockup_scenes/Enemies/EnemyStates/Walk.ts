@@ -57,24 +57,24 @@ export default class Walk extends EnemyState {
     
 		// if the coordinates are within its range, go to attack depending on its class
 		if (this.owner.onCeiling) {
-			this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
+			// this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "up", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 			
 		}
 		else if(this.owner.onGround) {
-			this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
+			// this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "down", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 			
 		}
 		else if(this.owner.onWall && this.parent.direction.x === 1) {
-			this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
+			// this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "right", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 		}
 		else if(this.owner.onWall && this.parent.direction.x === -1) {
-			this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
+			// this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "left", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 		}
@@ -95,7 +95,7 @@ export default class Walk extends EnemyState {
 
 		let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
 		let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
-
+		
 		if ((distanceToPlant + this.distBuffer) > distanceToPlayer) {   // moving to the player
 			
 			this.parent.direction.x = (this.parent.owner.invertX ? -1 : 1);

@@ -14,7 +14,10 @@ export default class EnemyManager {
     prototypes: Array<Record<string, any>> = [];
     startingPosition: Vec2 = new Vec2(300,300)
 
-	constructor(scene: Scene, size: number = 3) {
+    /////////
+    mapSize : Vec2;
+
+	constructor(scene: Scene, mapSize : Vec2, size: number = 3 ) {
 		this.scene = scene;
         this.maxEnemies = size;
         this.initPrototypes();
@@ -22,6 +25,9 @@ export default class EnemyManager {
             let enemy = this.createEnemy()
             this.inactivePool.push(enemy);
         }
+
+        ///////////
+        this.mapSize = mapSize;
 	}
 
     initPrototypes(): void {
@@ -48,7 +54,8 @@ export default class EnemyManager {
             enemy = this.createEnemy()
         }
         this.activePool.push(enemy);
-        enemy.sprite.position.set(position.x,position.y)
+        // enemy.sprite.position.set(position.x,position.y)
+        enemy.sprite.position.set(Math.random() * this.mapSize.x, Math.random() * this.mapSize.y)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
         (<EnemyController>enemy.sprite.ai).wake(player, plant);
