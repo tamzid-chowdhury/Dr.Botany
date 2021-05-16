@@ -17,6 +17,7 @@ export default class Dying extends EnemyState {
             (<ProjectileEnemy>this.parent.container).deactivateProjectiles()
 
         }
+        (<AnimatedSprite>this.owner).animation.stop();
         (<AnimatedSprite>this.owner).animation.play("DYING", false, InGame_Events.ENEMY_DEATH_ANIM_OVER);
         this.owner.active = false;
     }

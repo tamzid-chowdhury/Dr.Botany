@@ -35,7 +35,7 @@ export default class Walk extends EnemyState {
 		})
 
 		this.flingAttackTimer = new Timer(2000, () => {
-			(<AnimatedSprite>this.owner).animation.play("SQUISH");
+			(<AnimatedSprite>this.owner).animation.playIfNotAlready("SQUISH");
 			this.doFling = false;
 		})
 	}
@@ -178,7 +178,18 @@ export default class Walk extends EnemyState {
 	}
 
 	handleFlingMove(playerPos: Vec2, ownerPos: Vec2, deltaT: number): void {
+		let playerPosX = playerPos.x;
+		let ownerPosX = ownerPos.x;
 		let dir = ownerPos.dirTo(playerPos);
+		if(playerPosX + 15 <= ownerPosX) {
+			this.parent.direction.x = -1
+			// this.parent.owner.invertX = true;
+		}
+	
+		else if(playerPosX - 15 >= ownerPosX) {
+			this.parent.direction.x = 1
+			// this.parent.owner.invertX = false;
+		}
 
 		let rotation: Vec2 = playerPos.dirTo(this.owner.position);
         (<AnimatedSprite>this.owner).rotation = Vec2.UP.angleToCCW(rotation);
@@ -188,7 +199,7 @@ export default class Walk extends EnemyState {
 		if(!this.doFling) {
 			this.parent.velocity.x += 4*dir.x;
 			this.parent.velocity.y += 4*dir.y;
-			(<AnimatedSprite>this.owner).animation.play("UNSQUISH");
+			(<AnimatedSprite>this.owner).animation.playIfNotAlready("UNSQUISH");
 			
 			this.doFling = true;
 			this.flingAttackTimer.reset();				
