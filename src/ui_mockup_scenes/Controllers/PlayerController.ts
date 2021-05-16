@@ -54,7 +54,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     returnEquipment: boolean = false;
     gameOver: boolean = false;
     nearEquip: number = -1;
-
+    nearUpperDeposit: number = -1;
+    nearDownerDeposit: number = -1;
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -218,6 +219,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             }
         }
 
+        if (Input.isKeyJustPressed("y") ) {
+            this.upperCount += 1;
+            this.downerCount += 1;
+        }
+
+
         if (Input.isKeyJustPressed("q") && this.stowed.type != undefined) {
             this.switchEquipped()
             this.equipped.setActive(this.owner.position.clone());
@@ -241,6 +248,31 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             }
 
             this.initEquip();
+        }
+
+        if (Input.isKeyJustPressed("e") && (this.nearUpperDeposit > 0)) {
+            let count = this.upperCount;
+            this.canDepositUpper = false;
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
+            this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, { position: this.owner.position.clone() });
+            this.emitter.fireEvent(InGame_Events.UPDATE_MOOD, { type: 1, count: count });
+            this.emitter.fireEvent(InGame_Events.UPDATE_GROWTH, {count: count });
+            this.upperCount = 0;
+            this.nearUpperDeposit = -1
+
+            this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
+        }
+
+        if (Input.isKeyJustPressed("e") && (this.nearDownerDeposit > 0)) {
+            let count = this.downerCount;
+            this.canDepositDowner = false;
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
+            this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, { position: this.owner.position.clone() });
+            this.emitter.fireEvent(InGame_Events.UPDATE_MOOD, { type: -1, count: count });
+            this.emitter.fireEvent(InGame_Events.UPDATE_GROWTH, {count: count });
+            this.downerCount = 0;
+            this.nearDownerDeposit = -1
+            this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
         }
 
 
@@ -267,7 +299,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     let other = event.data.get('other');
                     this.nearEquip = other;
                     let equip = this.owner.getScene().getSceneGraph().getNode(other);
-                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: equip.position.clone() });
+                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: equip.position});
                 }
                 if (event.type === InGame_Events.NOT_OVERLAP_EQUIP) {
                     this.nearEquip = -1;
@@ -309,62 +341,42 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
                 if (event.type === InGame_GUI_Events.INCREMENT_UPPER_COUNT) {
                     this.upperCount++;
-                    this.canDepositUpper = true;
                 }
 
                 if (event.type === InGame_GUI_Events.INCREMENT_DOWNER_COUNT) {
                     this.downerCount++;
-                    this.canDepositDowner = true;
                 }
 
-                // if (event.type === InGame_Events.ON_PLANT) {
-                //     let other = event.data.get('other');
-                //     let plant = this.owner.getScene().getSceneGraph().getNode(other);
-                //     this.emitter.fireEvent(InGame_GUI_Events.SHOW_GROWTH_BAR, { position: plant.position.clone() });
-                // }
-
-                // if (event.type === InGame_Events.OFF_PLANT) {
-                //     this.emitter.fireEvent(InGame_GUI_Events.HIDE_GROWTH_BAR);
-
-                // }
-
-                // if(event.type === InGame_Events.ON_UPPER_DEPOSIT) {
-                //     this.emitter.fireEvent(InGame_GUI_Events.SHOW_GROWTH_BAR, { position: this.plant.position.clone() });
-                // }
-
-                // if(event.type === InGame_Events.ON_DOWNER_DEPOSIT) {
-                //     this.emitter.fireEvent(InGame_GUI_Events.SHOW_GROWTH_BAR, { position: this.plant.position.clone() });
-                // }
 
 
+                if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.upperCount > 0) {
+                    this.receiver.unsubscribe(InGame_Events.ON_UPPER_DEPOSIT);
+                    let other = event.data.get('other');
+                    this.nearUpperDeposit= other;
+                    let box = this.owner.getScene().getSceneGraph().getNode(other);
+                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: box.position});
 
-                if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
-
-                    let count = this.upperCount;
-                    this.canDepositUpper = false;
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
-                    this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, { position: this.owner.position.clone() });
-                    this.emitter.fireEvent(InGame_Events.UPDATE_MOOD, { type: 1, count: count });
-                    this.emitter.fireEvent(InGame_Events.UPDATE_GROWTH, {count: count });
-                    this.upperCount = 0;
                 }
 
-                if (event.type === InGame_Events.OFF_DOWNER_DEPOSIT || event.type === InGame_Events.OFF_UPPER_DEPOSIT) {
+                if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.downerCount > 0) {
+                    this.receiver.unsubscribe(InGame_Events.ON_DOWNER_DEPOSIT);
+                    let other = event.data.get('other');
+                    this.nearDownerDeposit= other;
+                    let box = this.owner.getScene().getSceneGraph().getNode(other);
+                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: box.position});
+
+                }
+
+                if (event.type === InGame_Events.OFF_DOWNER_DEPOSIT) {
                     this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
-                    this.emitter.fireEvent(InGame_GUI_Events.HIDE_GROWTH_BAR);
+                    this.receiver.subscribe(InGame_Events.ON_DOWNER_DEPOSIT);
+                }
+                if (event.type === InGame_Events.OFF_UPPER_DEPOSIT) {
+                    this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
+                    this.receiver.subscribe(InGame_Events.ON_UPPER_DEPOSIT);
                 }
 
-                if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
 
-                    let count = this.downerCount;
-                    this.canDepositDowner = false;
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
-                    this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, { position: this.owner.position.clone() });
-                    this.emitter.fireEvent(InGame_Events.UPDATE_MOOD, { type: -1, count: count });
-                    this.emitter.fireEvent(InGame_Events.UPDATE_GROWTH, {count: count });
-
-                    this.downerCount = 0;
-                }
 
                 if (event.type === InGame_Events.ADD_PLAYER_HEALTH){
                     this.health += 1; 
@@ -381,24 +393,13 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                         this.equipped.charges = 1;
                     }
 
-                    // if(this.stowed.name == "PillBottle"){
-                    //     this.stowed.charges = 50;
-                    // }
-                    // if(this.stowed.name == "TrashLid"){
-                    //     this.stowed.charges = 10;
-                    // }
-                    // if(this.stowed.name == "Shovel"){
-                    //     this.stowed.charges = 1;
-                    // }
+  
                 
                     if (this.equipped.type === WeaponTypes.AMMO) {
                         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.equipped.iconSpriteKey, ammo: this.equipped.charges })
         
                     }
-                    // if (this.stowed.type === WeaponTypes.AMMO) {
-                    //     this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.stowed.iconSpriteKey, ammo: this.stowed.charges })
-        
-                    // }
+
                 }
 
             }
