@@ -43,13 +43,6 @@ export default class LevelZero extends GameLevel {
         this.load.audio("background_music", "assets/music/in_game_music.mp3")
     }
 
-<<<<<<< HEAD
-    unloadScene(): void {
-        this.levelZeroReceiver.destroy();
-        this.receiver.destroy();
-    }
-=======
->>>>>>> 094e4dc7e9641f5bc86fcc75f31c96acd1c94b79
 
     startScene(): void {
         super.startScene()
