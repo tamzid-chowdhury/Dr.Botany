@@ -10,9 +10,9 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import AnimatedDialog from "../Classes/AnimatedDialog";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GrowthManager from "../GameSystems/GrowthManager";
-import * as Tweens from "../Utils/Tweens";
+import * as Tweens  from "../Utils/Tweens";
 
-export default class Level_Fall_One extends GameLevel {
+export default class Level_Fall_one extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
@@ -37,7 +37,7 @@ export default class Level_Fall_One extends GameLevel {
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/level_fall_one.json");
+        this.load.tilemap("level_fall_one", "assets/tilemaps/fallLevel/level_fall_one.json");
 
         this.load.audio("background_music", "assets/music/fall_music.mp3")
     }
@@ -49,10 +49,10 @@ export default class Level_Fall_One extends GameLevel {
     startScene(): void {
         super.startScene()
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
-
+        
         // this.moodBarTimer.start();
         this.time = Date.now();
-        let tilemapLayers = this.add.tilemap("level_zero");
+        let tilemapLayers = this.add.tilemap("level_fall_one");
         for (let layer of tilemapLayers) {
             let obj = layer.getItems()[0];
             if (obj.isCollidable) {
@@ -80,12 +80,12 @@ export default class Level_Fall_One extends GameLevel {
         this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
         this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
-
+        
 
 
         //we initialized supportmanager in gamelevel but it starts with 0 healthpacks and 0 ammopacks 
         //we use addHealthPacks and addAmmoPacks to add how many we want for each level. in tutorial level will have 5 each
-        this.supportManager.addHealthPacks(5);
+        this.supportManager.addHealthPacks(5); 
         this.supportManager.addAmmoPacks(5);
 
         this.growthManager = new GrowthManager(this);
@@ -98,30 +98,21 @@ export default class Level_Fall_One extends GameLevel {
         this.growthManager.update(deltaT);
         // Spawner System, we might need a spawnerManager.ts, this seems to work fine tho
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
+        if(this.pauseExecution && this.spawnerTimer.isActive()) {
             this.spawnerTimer.pause();
             console.log(this.spawnerTimer.toString());
         }
-        else if (!this.pauseExecution && this.spawnerTimer.isPaused() && !this.completionStatus) {
+        else if(!this.pauseExecution && this.spawnerTimer.isPaused()) {
             this.spawnerTimer.continue();
         }
-        if (this.spawnerTimer.isStopped() && this.maxEnemyNumber >= this.enemyManager.activePool.length && !this.pauseExecution) {
+        if(this.spawnerTimer.isStopped() && this.maxEnemyNumber >= this.enemyManager.activePool.length && !this.pauseExecution) {
             this.spawnerTimer.start();
             this.enemyManager.spawnEnemy(this.player, this.plant);
             // console.log("SPAWNED ENEMY, Current Active Enemies: ", this.enemyManager.activePool.length);
         }
-        if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
-            this.spawnerTimer.pause();
-            this.finalWave(10);
-            this.finalWaveCleared = true;
-        }
-        if (this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
-            this.emitter.fireEvent(InGame_Events.LEVEL_END);
-        }
-
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        if (!this.testLabel.finished && this.runTest) {
+        if(!this.testLabel.finished && this.runTest) {
             this.testLabel.incrementText();
         }
 
@@ -136,7 +127,7 @@ export default class Level_Fall_One extends GameLevel {
 
             // this.mood = "normal";
         }
-
+        
         if (Input.isKeyJustPressed("t")) {
             this.testLabel.start();
             this.runTest = true;
@@ -176,11 +167,11 @@ export default class Level_Fall_One extends GameLevel {
         }
 
         if (Input.isKeyJustPressed("m")) {
-            this.equipmentManager.spawnEquipment("TrashLid", new Vec2(300, 300))
+            this.equipmentManager.spawnEquipment("TrashLid", new Vec2(300,300))
         }
 
         if (Input.isKeyJustPressed("l")) {
-            this.equipmentManager.spawnEquipment("PillBottle", new Vec2(300, 400))
+            this.equipmentManager.spawnEquipment("PillBottle", new Vec2(300,400))
         }
 
         while (this.levelZeroReceiver.hasNextEvent()) {
@@ -205,36 +196,21 @@ export default class Level_Fall_One extends GameLevel {
                     // this.increaseEnemySpeed(); // increase speed buggy 
                 }
             }
-            if (event.type === InGame_Events.LEVEL_END) {
-
-                this.nextLevel = Scenes.LEVEL_FALL_ONE; // change this to the next level
-                this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
-                this.levelCompletionScreenLayer.layer.setHidden(false);
-
-                this.levelCompletionScreenLayer.playEntryTweens();
-
-                this.reticle.visible = false;
-                this.cursor.visible = true;
-
-
-
-
-            }
 
             // We gotta check this with each levels
             if (event.type === UIEvents.CLICKED_RESTART) {
-                this.nextLevel = Scenes.LEVEL_FALL_ONE;
+                this.nextLevel = Scenes.LEVEL_ZERO;
                 this.screenWipe.imageOffset = new Vec2(0, 0);
-                this.screenWipe.scale = new Vec2(2, 1)
-                this.screenWipe.position.set(2 * this.screenWipe.size.x, this.screenWipe.size.y / 2);
+                this.screenWipe.scale = new Vec2(2,1)
+                this.screenWipe.position.set(2*this.screenWipe.size.x, this.screenWipe.size.y/2);
                 this.screenWipe.tweens.add("levelTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL));
                 this.screenWipe.tweens.play("levelTransition");
             }
-
+            
 
 
         }
-
+   
 
     }
 
@@ -246,8 +222,7 @@ export default class Level_Fall_One extends GameLevel {
             InGame_Events.UPDATE_MOOD,
             InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
-            UIEvents.CLICKED_RESTART,
-            InGame_Events.LEVEL_END
+            UIEvents.CLICKED_RESTART
 
         ]);
     }

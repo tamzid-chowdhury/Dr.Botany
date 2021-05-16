@@ -302,6 +302,8 @@ export default class GameLevel extends Scene {
                         break;
                     case Scenes.LEVEL_FALL_ONE:
                         console.log("asdf")
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                        // this.sceneManager.changeToScene(Level_Fall_one, {}, sceneOptions);
                         break;
                     default:
                         // level1
