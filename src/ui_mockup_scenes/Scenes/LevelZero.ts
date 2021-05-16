@@ -228,11 +228,6 @@ export default class LevelZero extends GameLevel {
 
     protected subscribeToEvents() {
         this.levelZeroReceiver.subscribe([
-            InGame_Events.PLAYER_ENEMY_COLLISION,
-            InGame_Events.PLAYER_DIED,
-            InGame_Events.ENEMY_DIED,
-            InGame_Events.UPDATE_MOOD,
-            InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART,
             InGame_Events.LEVEL_COMPLETED
