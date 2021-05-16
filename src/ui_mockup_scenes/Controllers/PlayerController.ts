@@ -22,6 +22,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     owner: AnimatedSprite;
     equipment: Array<Equipment> = [];
     equipmentManager: EquipmentManager;
+    plant: AnimatedSprite; 
 
     direction: Vec2;
     speed: number;
@@ -60,6 +61,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.viewport = owner.getScene().getViewport();
         this.equipmentManager = options.equipmentManager;
+        this.plant = options.plant; 
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
@@ -310,16 +312,26 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.canDepositDowner = true;
                 }
 
-                if (event.type === InGame_Events.ON_PLANT) {
-                    let other = event.data.get('other');
-                    let plant = this.owner.getScene().getSceneGraph().getNode(other);
-                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_GROWTH_BAR, { position: plant.position.clone() });
-                }
+                // if (event.type === InGame_Events.ON_PLANT) {
+                //     let other = event.data.get('other');
+                //     let plant = this.owner.getScene().getSceneGraph().getNode(other);
+                //     this.emitter.fireEvent(InGame_GUI_Events.SHOW_GROWTH_BAR, { position: plant.position.clone() });
+                // }
 
-                if (event.type === InGame_Events.OFF_PLANT) {
-                    this.emitter.fireEvent(InGame_GUI_Events.HIDE_GROWTH_BAR);
+                // if (event.type === InGame_Events.OFF_PLANT) {
+                //     this.emitter.fireEvent(InGame_GUI_Events.HIDE_GROWTH_BAR);
 
-                }
+                // }
+
+                // if(event.type === InGame_Events.ON_UPPER_DEPOSIT) {
+                //     this.emitter.fireEvent(InGame_GUI_Events.SHOW_GROWTH_BAR, { position: this.plant.position.clone() });
+                // }
+
+                // if(event.type === InGame_Events.ON_DOWNER_DEPOSIT) {
+                //     this.emitter.fireEvent(InGame_GUI_Events.SHOW_GROWTH_BAR, { position: this.plant.position.clone() });
+                // }
+
+
 
                 if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.canDepositUpper) {
 
@@ -328,11 +340,13 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_UPPER_LABEL, { position: this.owner.position.clone() });
                     this.emitter.fireEvent(InGame_Events.UPDATE_MOOD, { type: 1, count: count });
+                    this.emitter.fireEvent(InGame_Events.UPDATE_GROWTH, {count: count });
                     this.upperCount = 0;
                 }
 
                 if (event.type === InGame_Events.OFF_DOWNER_DEPOSIT || event.type === InGame_Events.OFF_UPPER_DEPOSIT) {
                     this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
+                    this.emitter.fireEvent(InGame_GUI_Events.HIDE_GROWTH_BAR);
                 }
 
                 if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.canDepositDowner) {
@@ -342,6 +356,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deposit", loop: false, holdReference: true});
                     this.emitter.fireEvent(InGame_GUI_Events.CLEAR_DOWNER_LABEL, { position: this.owner.position.clone() });
                     this.emitter.fireEvent(InGame_Events.UPDATE_MOOD, { type: -1, count: count });
+                    this.emitter.fireEvent(InGame_Events.UPDATE_GROWTH, {count: count });
+
                     this.downerCount = 0;
                 }
 

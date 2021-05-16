@@ -147,7 +147,7 @@ export function slideLeft(startX: number, endX: number, duration: number = 500, 
 export function healthBarSlideX(xPos: number, newXPos: number) : Record<string,any> {
 	let tween = {
 		startDelay: 100,
-		duration: 300,
+		duration: 100,
 		effects: [
 			{
 				property: TweenableProperties.posX,
@@ -163,23 +163,23 @@ export function healthBarSlideX(xPos: number, newXPos: number) : Record<string,a
 	return tween
 }
 
-export function healthBarScaleDown(scaleX:number, newScaleX:number) : Record<string,any> {
+export function treeScaleUp(scale:Vec2, newScale:Vec2) : Record<string,any> {
 	let tween = {
 		startDelay: 100,
-		duration: 300,
+		duration: 500,
 		effects: [
 			{
 				property: TweenableProperties.scaleX,
-				start: scaleX,
-				end: newScaleX,
+				start: scale.x,
+				end: newScale.x,
 				ease: EaseFunctionType.OUT_SINE,
 			},
-			// {
-			// 	property: TweenableProperties.scaleY,
-			// 	start: scale.y,
-			// 	end: scale.y + 0.2,
-			// 	ease: EaseFunctionType.IN_SINE,
-			// },
+			{
+				property: TweenableProperties.scaleY,
+				start: scale.y,
+				end: newScale.y,
+				ease: EaseFunctionType.IN_SINE,
+			},
 
 		],
 	};

@@ -25,7 +25,8 @@ import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import EquipmentManager from "../GameSystems/EquipmentManager";
 import ProjectileController from "../Controllers/ProjectileController";
 import SupportManager from "../GameSystems/SupportManager"
-import PlantManager from "../GameSystems/MoodManager"
+import MoodManager from "../GameSystems/MoodManager"
+import GrowthManager from "../GameSystems/GrowthManager";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -56,7 +57,8 @@ export default class GameLevel extends Scene {
     enemyManager: EnemyManager;
     equipmentManager: EquipmentManager;
     supportManager: SupportManager; 
-    plantManager: PlantManager;
+    moodManager: MoodManager;
+    growthManager: GrowthManager;
 
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
@@ -73,7 +75,6 @@ export default class GameLevel extends Scene {
         this.load.image("growth_bar_outline", "assets/ui_art/generic_bar_outline.png");
         this.load.image("growth_bar_fill", "assets/ui_art/generic_bar_fill.png");
         
-        // this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
         this.load.image("moodbar_indicator", "assets/ui_art/mood_bar_indicator.png")
         this.load.image("health_pip", "assets/ui_art/leaf_icon.png");
@@ -108,6 +109,7 @@ export default class GameLevel extends Scene {
         this.load.audio("healthpack_get", "assets/sfx/healthpack.wav");
         this.load.audio("ammopack_get", "assets/sfx/ammopack.wav");
         this.load.audio("deposit", "assets/sfx/deposit.wav");
+        this.load.audio("plant_grow", "assets/sfx/plantgrow.wav");
         this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.spritesheet("plant", "assets/plant/plant.json")
@@ -146,6 +148,8 @@ export default class GameLevel extends Scene {
             InGame_Events.OVERLAP_EQUIP,
             InGame_Events.NOT_OVERLAP_EQUIP,
             InGame_Events.ENEMY_ATTACK_PLANT,
+            InGame_Events.GROWTH_STARTED,
+            InGame_Events.GROWTH_COMPLETED,
             UIEvents.CLICKED_QUIT,
             UIEvents.CLICKED_RESUME,
             UIEvents.TRANSITION_LEVEL,
@@ -173,13 +177,13 @@ export default class GameLevel extends Scene {
         this.enemyManager = new EnemyManager(this);
         this.equipmentManager = new EquipmentManager(this);
         this.supportManager = new SupportManager(this);
-        this.plantManager = new PlantManager(this);
+        this.moodManager = new MoodManager(this);
     }
 
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.inGameUILayer.update(deltaT);
-        this.plantManager.update(deltaT);
+        this.moodManager.update(deltaT);
         let mousePos = Input.getMousePosition();
         this.reticle.position = mousePos;
         this.cursor.position = mousePos;
@@ -398,8 +402,20 @@ export default class GameLevel extends Scene {
                 this.sceneManager.changeToScene(MainMenu, {});
             }
 
-            if (event.type === InGame_Events.ENEMY_ATTACK_PLANT) {
-                // console.log("Enemy is hitting the plant");
+            if (event.type === InGame_Events.GROWTH_STARTED) {
+                this.plant.tweens.add("treeScaleUp", Tweens.treeScaleUp(this.plant.scale, new Vec2(0.75,0.75)))
+                this.plant.tweens.play("treeScaleUp")
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "plant_grow", loop: false, holdReference: true});
+
+
+            }
+
+            if (event.type === InGame_Events.GROWTH_COMPLETED) {
+                this.plant.tweens.add("treeScaleUp", Tweens.treeScaleUp(this.plant.scale,new Vec2(1,1)))
+                this.plant.tweens.play("treeScaleUp")
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "plant_grow", loop: false, holdReference: true});
+
+
             }
 
 
@@ -424,7 +440,7 @@ export default class GameLevel extends Scene {
 
         this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
         this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_DOWNER_DEPOSIT);
-        // this.plant.setTrigger("player", InGame_Events.ON_PLANT, InGame_Events.OFF_PLANT);
+        this.plant.setTrigger("player", InGame_Events.ON_PLANT, InGame_Events.OFF_PLANT);
 
 
         this.plant.scale.set(0.5, 0.5);
@@ -452,7 +468,8 @@ export default class GameLevel extends Scene {
             mapSize: mapSize,
             speed: 125,
             defaults: this.equipmentPrototypes,
-            equipmentManager: this.equipmentManager
+            equipmentManager: this.equipmentManager,
+            plant: this.plant
         }
         this.player.addAI(PlayerController, playerOptions);
 

@@ -137,13 +137,14 @@ export default class Walk extends EnemyState {
 				this.parent.velocity.y += 5*dir.y;
 				this.attacking = true;
 				this.attackTimer.reset();				
-				this.attackTimer.start();				
+				this.attackTimer.start();
+				this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);				
 			} 
 
 			this.owner.move(this.parent.velocity.scaled(deltaT));
 			if (this.parent.velocity.isZero()) {
 				// when it reaches the plant
-				this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);
+				//this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);
 				// maybe change the state to attack depending on the enemy type
 			}
 		}
@@ -218,13 +219,14 @@ export default class Walk extends EnemyState {
 				this.parent.velocity.y += 5*dir.y;
 				this.attacking = true;
 				this.attackTimer.reset();				
-				this.attackTimer.start();				
+				this.attackTimer.start();
+				this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);				
 			} 
 
 			this.owner.move(this.parent.velocity.scaled(deltaT));
 			if (this.parent.velocity.isZero()) {
 				// when it reaches the plant
-				this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);
+				//this.emitter.fireEvent(InGame_Events.ENEMY_ATTACK_PLANT);
 				// maybe change the state to attack depending on the enemy type
 			}
 		}

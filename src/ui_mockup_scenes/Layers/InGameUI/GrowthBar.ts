@@ -7,30 +7,38 @@ import { UILayers, Fonts } from "../../Utils/Enums";
 import * as Palette from "../../Utils/Colors";
 
 export default class GrowthBar {
-	sprite: Sprite;
-	text: Label;
-	textBackdrop: Label;
-	centerPos: Vec2;
+    scene: Scene; 
+    centerPos: Vec2;
+    text: Label;
+    growthBarOutline: Sprite;
+    growthBarFill: Sprite;
 
 	constructor(scene: Scene, centerPos: Vec2) {
-		this.centerPos = centerPos;
-		this.sprite = scene.add.sprite("growthbar", UILayers.INGAME_UI)
-        let xOffset =  this.sprite.size.x / 5;
-        let yOffset =  this.centerPos.y / 5;
-        this.sprite.position.set(xOffset, yOffset)
+        this.centerPos = centerPos;
+        this.scene = scene; 
 
-        this.sprite.scale = new Vec2(0.5,0.5);
-        this.textBackdrop = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset+0.5, yOffset + 0.5), text:'Growth: 0 %'});
-        this.textBackdrop.size = this.sprite.size;
-        this.textBackdrop.font = Fonts.ROUND;
-        this.textBackdrop.textColor = Palette.black();
-        this.textBackdrop.fontSize = 24;
+        this.growthBarOutline = this.scene.add.sprite('growth_bar_outline', UILayers.INGAME_UI);
+        this.growthBarFill = this.scene.add.sprite('growth_bar_fill', UILayers.INGAME_UI);
 
-        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, yOffset), text:'Growth: 0 %'});
-        this.text.size = this.sprite.size;
+        let xOffset =  this.centerPos.x + 211;
+        let yOffset =  this.centerPos.y / 10;
+        
+
+        this.growthBarFill.position.set(xOffset + 60, yOffset);
+        this.growthBarOutline.position.set(xOffset,yOffset);
+
+        this.growthBarFill.scale = new Vec2(1,1.2);
+        this.growthBarOutline.scale = new Vec2(1,1.2)
+
+
+        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, yOffset), text:'Growth: 0%'});
+        this.text.size = this.growthBarFill.size;
         this.text.font = Fonts.ROUND;
-        this.text.textColor = Palette.white();
-        this.text.fontSize = 24;
+        this.text.textColor = Palette.black();
+        this.text.fontSize = 16;
+
+
+
 	}
 
 	updateText(): void {

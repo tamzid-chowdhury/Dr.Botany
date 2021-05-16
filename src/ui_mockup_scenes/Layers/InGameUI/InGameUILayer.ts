@@ -34,7 +34,7 @@ export default class InGameUI implements Updateable {
 
     healthBar: HealthBar;
     moodBar: MoodBar;
-    // growthBar: GrowthBar;
+    growthBar: GrowthBar;
     equipSlots: EquipSlots;
     materialSlots: Array<MaterialSlot> = []; // [0] == downer  [1] == upper
     materialSpriteIds: Array<string> = ["downer", "upper"];
@@ -43,11 +43,12 @@ export default class InGameUI implements Updateable {
     showingInteract: boolean;
 
 
-    // temporary for testing
-    growthBarOutline: Sprite;
-    growthBarFill: Sprite;
-    showingGrowth: boolean = false;
-    // 
+    // // temporary for testing
+    // growthBarOutline: Sprite;
+    // growthBarFill: Sprite;
+    // showingGrowth: boolean = false;
+    // // 
+
     constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
         this.font = font; 
@@ -57,6 +58,7 @@ export default class InGameUI implements Updateable {
 
         this.layer = scene.addUILayer(UILayers.INGAME_UI);
 
+        this.growthBar = new GrowthBar(scene, center);
         this.healthBar = new HealthBar(scene, center);
         this.moodBar = new MoodBar(scene, center)
         this.equipSlots = new EquipSlots(scene, center);
@@ -67,14 +69,14 @@ export default class InGameUI implements Updateable {
             xOffset += 32;
         }
 
-        this.growthBarFill = this.scene.add.sprite('growth_bar_fill', InGameUILayers.ANNOUNCEMENT_TEXT);
-        this.growthBarOutline = this.scene.add.sprite('growth_bar_outline', InGameUILayers.ANNOUNCEMENT_TEXT);
+        // this.growthBarFill = this.scene.add.sprite('growth_bar_fill', UILayers.INGAME_UI);
+        // this.growthBarOutline = this.scene.add.sprite('growth_bar_outline', UILayers.INGAME_UI);
 
-        this.growthBarFill.tweens.add('scaleIn', Tweens.scaleIn(new Vec2(0,0) , new Vec2(1,1),  0, 200));
-        this.growthBarFill.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1,1) , new Vec2(0,0),  0, 200));
+        // this.growthBarFill.tweens.add('scaleIn', Tweens.scaleIn(new Vec2(0,0) , new Vec2(1,1),  0, 200));
+        // this.growthBarFill.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1,1) , new Vec2(0,0),  0, 200));
 
-        this.growthBarOutline.tweens.add('scaleIn', Tweens.scaleIn(new Vec2(0,0) , new Vec2(1,1),  0, 200));
-        this.growthBarOutline.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1,1) , new Vec2(0,0),  0, 200));
+        // this.growthBarOutline.tweens.add('scaleIn', Tweens.scaleIn(new Vec2(0,0) , new Vec2(1,1),  0, 200));
+        // this.growthBarOutline.tweens.add('scaleOut', Tweens.scaleIn(new Vec2(1,1) , new Vec2(0,0),  0, 200));
 
         //subscribe to events
         this.receiver.subscribe([
@@ -93,7 +95,8 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO,
             InGame_GUI_Events.ADD_HEALTH,
             InGame_GUI_Events.REFILL_AMMO,
-            InGame_GUI_Events.RESET_MOOD_BAR
+            InGame_GUI_Events.RESET_MOOD_BAR,
+            InGame_GUI_Events.UPDATE_GROWTH_BAR
         ]);
 
     }
@@ -120,6 +123,16 @@ export default class InGameUI implements Updateable {
                 this.moodBar.indicator.tweens.play("scale");        
             }
 
+            if(event.type === InGame_GUI_Events.UPDATE_GROWTH_BAR){
+                let growthIncrease = event.data.get('growthIncrease');
+                let score = event.data.get('score');
+                let newPos = this.growthBar.growthBarFill.position.x - growthIncrease;
+                newPos = MathUtils.clamp(newPos, this.growthBar.centerPos.x + 211, this.growthBar.centerPos.x + 271)
+                this.growthBar.growthBarFill.tweens.add("slideX", Tweens.healthBarSlideX(this.growthBar.growthBarFill.position.x, newPos));          
+                this.growthBar.growthBarFill.tweens.play("slideX");     
+                this.growthBar.text.text = "Growth: " + score + "%"         
+            }
+
             if(event.type === InGame_GUI_Events.RESET_MOOD_BAR){
                 let newPos = this.moodBar.xOffset; 
                 this.moodBar.indicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.indicator.position.x, newPos));   
@@ -129,27 +142,27 @@ export default class InGameUI implements Updateable {
                 this.moodBar.indicator.tweens.play("scale");        
             }
 
-            if(event.type === InGame_GUI_Events.SHOW_GROWTH_BAR){
-                if(!this.showingGrowth) {
-                    this.showingGrowth = true;
-                    position = event.data.get("position");
-                    this.growthBarFill.position.set(position.x, position.y - 48);
-                    this.growthBarOutline.position.set(position.x, position.y - 48);
-                    // this.growthBarFill.tweens.add("fadeIn", Tweens.spriteFadeIn(200));
-                    // this.growthBarOutline.tweens.add("fadeIn", Tweens.spriteFadeIn(200));
-                    // this.growthBarFill.tweens.add("fadeOut", Tweens.spriteFadeOut(200));
-                    // this.growthBarOutline.tweens.add("fadeOut", Tweens.spriteFadeOut(200));
-                    this.growthBarFill.tweens.play("scaleIn");
-                    this.growthBarOutline.tweens.play("scaleIn");
-                }
+            // if(event.type === InGame_GUI_Events.SHOW_GROWTH_BAR){
+            //     if(!this.showingGrowth) {
+            //         this.showingGrowth = true;
+            //         position = event.data.get("position");
+            //         this.growthBarFill.position.set(300, 300);
+            //         this.growthBarOutline.position.set(300, 300);
+            //         // this.growthBarFill.tweens.add("fadeIn", Tweens.spriteFadeIn(200));
+            //         // this.growthBarOutline.tweens.add("fadeIn", Tweens.spriteFadeIn(200));
+            //         // this.growthBarFill.tweens.add("fadeOut", Tweens.spriteFadeOut(200));
+            //         // this.growthBarOutline.tweens.add("fadeOut", Tweens.spriteFadeOut(200));
+            //         this.growthBarFill.tweens.play("scaleIn");
+            //         this.growthBarOutline.tweens.play("scaleIn");
+            //     }
 
-            }
+            // }
 
-            if(event.type === InGame_GUI_Events.HIDE_GROWTH_BAR){
-                this.growthBarFill.tweens.play("scaleOut");
-                this.growthBarOutline.tweens.play("scaleOut");
-                this.showingGrowth = false;
-            }
+            // if(event.type === InGame_GUI_Events.HIDE_GROWTH_BAR){
+            //     this.growthBarFill.tweens.play("scaleOut");
+            //     this.growthBarOutline.tweens.play("scaleOut");
+            //     this.showingGrowth = false;
+            // }
 
             if(event.type === InGame_GUI_Events.UPDATE_HEALTHBAR){
                 let damageTaken = event.data.get("damageTaken");

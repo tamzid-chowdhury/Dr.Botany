@@ -98,10 +98,8 @@ export enum PauseButtonNames {
 
 export enum PlantMoods {
 	NEUTRAL = "Neutral",
-	SAD = "Sad",
 	ANGRY = "Angry",
 	HAPPY = "Happy",
-	EXCITED = "Excited"
 }
 
 export enum InGame_Events {
@@ -129,7 +127,7 @@ export enum InGame_Events {
     OFF_DOWNER_DEPOSIT = "OffDownerDeposit",
     ON_PLANT = "OnPlant",
     OFF_PLANT = "OffPlant",
-	UPDATE_MOOD = "UpdateMood",
+    UPDATE_MOOD = "UpdateMood",
     ENEMY_DEATH_ANIM_OVER = "EnemyDeathAnimOver",
     DRAW_OVERLAP_TILE = "DrawOverlapTile",
     TOGGLE_PAUSE = "TOGGLE_PAUSE",
@@ -144,7 +142,10 @@ export enum InGame_Events {
     NOT_OVERLAP_EQUIP = "NOT_OVERLAP_EQUIP",
     ENEMY_ATTACK_PLANT = "ENEMY_ATTACK_PLANT",
     ADD_PLAYER_HEALTH = "ADD_PLAYER_HEALTH",
-    REFRESH_AMMO = "REFRESH_AMMO"
+    REFRESH_AMMO = "REFRESH_AMMO",
+    UPDATE_GROWTH = "UPDATE_GROWTH",
+    GROWTH_COMPLETED = "GROWTH_COMPLETED",
+    GROWTH_STARTED = "GROWTH_STARTED"
 }
 
 
@@ -164,7 +165,8 @@ export enum InGame_GUI_Events {
     ADD_HEALTH = "ADD_HEALTH",
 	REFILL_AMMO = "REFILL_AMMO",
 	UPDATE_MOOD_BAR = "UPDATE_MOOD_BAR",
-	RESET_MOOD_BAR = "RESET_MOOD_BAR"
+	RESET_MOOD_BAR = "RESET_MOOD_BAR",
+	UPDATE_GROWTH_BAR = "UPDATE_GROWTH_BAR"
 }
 
 export enum CheatCodes {
