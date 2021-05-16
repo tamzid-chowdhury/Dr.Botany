@@ -251,9 +251,10 @@ export default class GameLevel extends Scene {
 
             }
             
-            if (event.type === InGame_Events.PLANT_HIT) {
-                console.log('plant hit')
-            }
+            // if (event.type === InGame_Events.PLANT_HIT) {
+            //     console.log('plant hit')
+                
+            // }
 
 
             
