@@ -86,12 +86,12 @@ export default class Walk extends EnemyState {
 			this.owner.tweens.play("enemyHopOver");
 			
 		}
-		else if(this.owner.onWall && this.parent.direction.x === 1) {
+		else if(this.owner.onWall && this.parent.direction.x > 0) {
 			// this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "right", this.owner));
 			this.owner.tweens.play("enemyHopOver");
 		}
-		else if(this.owner.onWall && this.parent.direction.x === -1) {
+		else if(this.owner.onWall && this.parent.direction.x < 0) {
 			// this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "enemy_jump", holdReference: true });
 			this.owner.tweens.add("enemyHopOver", Tweens.enemyHopOver(this.owner.position, "left", this.owner));
 			this.owner.tweens.play("enemyHopOver");

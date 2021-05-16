@@ -116,6 +116,7 @@ export default class LevelZero extends GameLevel {
             this.spawnerTimer.pause();
             this.finalWave(10);
             this.finalWaveCleared = true;
+            this.nextLevel = Scenes.LEVEL_FALL_ONE;
         }
         // if (this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
         //     this.emitter.fireEvent(InGame_Events.LEVEL_COMPLETED);
@@ -207,15 +208,6 @@ export default class LevelZero extends GameLevel {
                     // this.increaseEnemySpeed(); // increase speed buggy 
                 }
             }
-            // if (event.type === InGame_Events.LEVEL_COMPLETED) {
-            //     console.log("Level completed")
-                
-            //     this.nextLevel = Scenes.LEVEL_FALL_ONE; // change this to the next level
-
-
-
-
-            // }
 
             // We gotta check this with each levels
             if (event.type === UIEvents.CLICKED_RESTART) {
@@ -242,7 +234,8 @@ export default class LevelZero extends GameLevel {
             InGame_Events.UPDATE_MOOD,
             InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
-            UIEvents.CLICKED_RESTART
+            UIEvents.CLICKED_RESTART,
+            InGame_Events.LEVEL_COMPLETED
 
         ]);
     }
