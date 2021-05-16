@@ -192,7 +192,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if (Input.isMousePressed() && !this.pauseExecution) {
             if (!this.coolDownTimer.isActive()) {
                 if (this.equipped.charges) {
-                    console.log("hereree")
                     // (<AnimatedSprite>this.equipped.projectileSprite).animation.play("ATTACK", false);
                     this.equipped.doAttack(this.playerLookDirection, deltaT);
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.equipped.sfxKey, loop: false, holdReference: true });

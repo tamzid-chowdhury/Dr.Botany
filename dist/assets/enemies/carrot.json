@@ -1,0 +1,70 @@
+{
+    "name": "carrot",
+    "spriteSheetImage": "carrot.png",
+    "spriteWidth": 32,
+    "spriteHeight": 40,
+    "columns": 20,
+    "rows": 1,
+    "durationType": "time",
+    "animations": [
+        {
+            "name": "WALK",
+            "frames": [ 
+				{"index": 0, "duration": 100}
+			]
+        },
+        {
+            "name": "SQUISH",
+            "frames": [ 
+				{"index": 1, "duration": 16}, 
+				{"index": 2, "duration": 16}, 
+				{"index": 3, "duration": 16}, 
+				{"index": 4, "duration": 16}, 
+				{"index": 5, "duration": 16}
+			]
+        },
+		{
+            "name": "HOLD_SQUISH",
+            "frames": [ 
+				{"index": 6, "duration": 32} 
+			]
+        },
+		{
+            "name": "UNSQUISH",
+            "frames": [ 
+				{"index": 7, "duration": 16}, 
+				{"index": 8, "duration": 16}, 
+				{"index": 9, "duration": 16}, 
+				{"index": 10, "duration": 16}, 
+				{"index": 11, "duration": 16}
+			]
+        },
+		{
+            "name": "HIT",
+            "frames": [ 
+				{"index": 12, "duration": 6}, 
+				{"index": 13, "duration": 6}, 
+				{"index": 14, "duration": 6}, 
+				{"index": 15, "duration": 6}, 
+				{"index": 16, "duration": 6}, 
+				{"index": 17, "duration": 6}, 
+				{"index": 18, "duration": 6},
+				{"index": 19, "duration": 6}
+			]
+        },
+		{
+            "name": "DYING",
+            "frames": [ 
+				{"index": 12, "duration": 6}, 
+				{"index": 13, "duration": 6}, 
+				{"index": 14, "duration": 6}, 
+				{"index": 15, "duration": 6}, 
+				{"index": 16, "duration": 6}, 
+				{"index": 17, "duration": 6}, 
+				{"index": 18, "duration": 6},
+				{"index": 19, "duration": 6}
+			]
+        }
+
+    ]
+}

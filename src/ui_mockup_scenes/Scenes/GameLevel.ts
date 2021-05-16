@@ -132,6 +132,7 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
         this.load.spritesheet("green_slime", "assets/enemies/slime_wip.json")
         this.load.spritesheet("wisp", "assets/enemies/wisp.json")
+        this.load.spritesheet("carrot", "assets/enemies/carrot.json")
         this.load.spritesheet("wisp_projectile", "assets/enemies/wisp_projectile.json")
     }
 

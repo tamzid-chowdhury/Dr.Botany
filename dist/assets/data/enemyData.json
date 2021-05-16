@@ -1,5 +1,5 @@
 {
-	"count": 3,
+	"count": 4,
 	"enemies": [
 		{
 			"type": "Downer",
@@ -18,6 +18,14 @@
 			"attackType": "ram"
 		},
 		{
+			"type": "Downer",
+            "health": 30,
+            "scale": 1,
+            "speed": 60,
+			"spriteKey": "carrot",
+			"attackType": "fling"
+		},
+		{
 			"type": "Upper",
             "health": 40,
             "scale": 1,
@@ -25,7 +33,7 @@
 			"spriteKey": "wisp",
 			"attackType": "projectile",
 			"projectileSpriteKey": "wisp_projectile",
-			"clipSize": 20,
+			"clipSize": 10,
 			"cooldown": 2000
 			
 		}

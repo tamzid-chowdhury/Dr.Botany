@@ -17,7 +17,10 @@ export default class Walk extends EnemyState {
 	doFire: boolean = false;
 	ramAttackTimer: Timer;
 	projectileAttackTimer: Timer;
+	flingAttackTimer: Timer;
 	bob: number = 0;
+	flingRotation: number = 0;
+	doFling: boolean = false;
 	onEnter(): void {
 		this.parent.currentStateName = EnemyStates.WALK;
 		(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
@@ -29,6 +32,11 @@ export default class Walk extends EnemyState {
 
 		this.projectileAttackTimer = new Timer(2000, () => {
 			this.doFire = false;
+		})
+
+		this.flingAttackTimer = new Timer(2000, () => {
+			(<AnimatedSprite>this.owner).animation.play("SQUISH");
+			this.doFling = false;
 		})
 	}
 
@@ -51,6 +59,18 @@ export default class Walk extends EnemyState {
 		else if(this.parent.attackType === "projectile") {
 			// takes care of firing and movement
 			this.handleProjectileMove(playerPos, ownerPos, deltaT);
+		}
+
+		else if(this.parent.attackType === "fling") {
+			// takes care of firing and movement
+			if(this.doFling) {
+				this.handleFlingAttack(deltaT);
+
+			}
+			else {
+				this.handleFlingMove(playerPos, ownerPos, deltaT);
+
+			}	
 		}
 
 		// if the coordinates are within its range, go to attack depending on its class
@@ -146,6 +166,36 @@ export default class Walk extends EnemyState {
 		this.owner.move(this.parent.velocity.scaled(deltaT));
 		this.parent.velocity.x *= 0.97;
 		this.parent.velocity.y *= 0.97;
+
+	}
+
+	handleFlingAttack(deltaT: number): void {
+
+		this.owner.move(this.parent.velocity.scaled(deltaT));
+		this.parent.velocity.x *= 0.97;
+		this.parent.velocity.y *= 0.97;
+
+	}
+
+	handleFlingMove(playerPos: Vec2, ownerPos: Vec2, deltaT: number): void {
+		let dir = ownerPos.dirTo(playerPos);
+
+		let rotation: Vec2 = playerPos.dirTo(this.owner.position);
+        (<AnimatedSprite>this.owner).rotation = Vec2.UP.angleToCCW(rotation);
+		this.parent.velocity = dir;
+		this.parent.velocity.normalize();
+		this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
+		if(!this.doFling) {
+			this.parent.velocity.x += 4*dir.x;
+			this.parent.velocity.y += 4*dir.y;
+			(<AnimatedSprite>this.owner).animation.play("UNSQUISH");
+			
+			this.doFling = true;
+			this.flingAttackTimer.reset();				
+			this.flingAttackTimer.start();	
+		}
+
+		this.owner.move(this.parent.velocity.scaled(deltaT));
 
 	}
 
