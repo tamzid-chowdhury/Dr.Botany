@@ -16,7 +16,6 @@ export default class GrowthManager implements Updateable {
     growthComplete: boolean = false;
     firstGrowthReached: boolean = false;
     timer: Timer = new Timer(3000, () => {
-        this.receiver.subscribe(InGame_Events.PLANT_HIT);
 
     }, false);
 
@@ -93,7 +92,6 @@ export default class GrowthManager implements Updateable {
                     this.decreaseGrowthScore();
                     console.log("Plant health: ", this.score);
                     this.timer.start();
-                    this.receiver.unsubscribe(InGame_Events.PLANT_HIT);
 
                 }
             }

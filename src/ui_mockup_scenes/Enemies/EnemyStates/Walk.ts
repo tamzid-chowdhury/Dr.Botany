@@ -26,16 +26,15 @@ export default class Walk extends EnemyState {
 		(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
 		this.playerSize = (<AnimatedSprite>this.parent.player).size;
 		this.plantSize = (<AnimatedSprite>this.parent.plant).size;
-		this.ramAttackTimer = new Timer(400, () => {
+		this.ramAttackTimer = new Timer(700, () => {
 			this.doRam = false;
 		})
 
-		this.projectileAttackTimer = new Timer(2000, () => {
+		this.projectileAttackTimer = new Timer(2500, () => {
 			this.doFire = false;
 		})
 
-		this.flingAttackTimer = new Timer(2000, () => {
-			// (<AnimatedSprite>this.owner).animation.playIfNotAlready("SQUISH");
+		this.flingAttackTimer = new Timer(2500, () => {
 			this.doFling = false;
 		})
 	}
@@ -149,8 +148,8 @@ export default class Walk extends EnemyState {
 			this.parent.velocity.normalize();
 			this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
 			if (distanceToPlant <= (this.plantSize.x / 2) || distanceToPlant <= (this.plantSize.y / 2) ){
-				this.parent.velocity.x += 5*dir.x;
-				this.parent.velocity.y += 5*dir.y;
+				this.parent.velocity.x += 3*dir.x;
+				this.parent.velocity.y += 3*dir.y;
 				this.doRam = true;
 				this.ramAttackTimer.reset();				
 				this.ramAttackTimer.start();	
@@ -183,12 +182,10 @@ export default class Walk extends EnemyState {
 		let dir = ownerPos.dirTo(playerPos);
 		if(playerPosX + 15 <= ownerPosX) {
 			this.parent.direction.x = -1
-			// this.parent.owner.invertX = true;
 		}
 	
 		else if(playerPosX - 15 >= ownerPosX) {
 			this.parent.direction.x = 1
-			// this.parent.owner.invertX = false;
 		}
 
 		let rotation: Vec2 = playerPos.dirTo(this.owner.position);
@@ -199,8 +196,8 @@ export default class Walk extends EnemyState {
 		(<AnimatedSprite>this.owner).animation.playIfNotAlready("SQUISH");
 
 		if(!this.doFling) {
-			this.parent.velocity.x += 4*dir.x;
-			this.parent.velocity.y += 4*dir.y;
+			this.parent.velocity.x += 3.5*dir.x;
+			this.parent.velocity.y += 3.5*dir.y;
 			(<AnimatedSprite>this.owner).animation.playIfNotAlready("UNSQUISH");
 			
 			this.doFling = true;
@@ -214,10 +211,8 @@ export default class Walk extends EnemyState {
 
 	handleProjectileMove(playerPos: Vec2, ownerPos: Vec2, deltaT: number): void {
 		let ownerPosX = ownerPos.x;
-		let ownerPosY = ownerPos.y;
 
 		let playerPosX = playerPos.x;
-		let playerPosY = playerPos.y;
 
 
 
@@ -226,7 +221,6 @@ export default class Walk extends EnemyState {
 		this.parent.direction.x = (this.parent.owner.invertX ? -1 : 1);
 		
 		dir = ownerPos.dirTo(playerPos);
-		// dir.x = this.parent.direction.x;
 		
 		if(playerPosX + 15 <= ownerPosX) {
 			this.parent.direction.x = -1
@@ -246,10 +240,8 @@ export default class Walk extends EnemyState {
 
 		this.owner.move(this.parent.velocity.scaled(deltaT));
 		this.owner.position.y += 0.2* Math.sin(this.bob);
-		// this.parent.velocity.y += 5* Math.sin(this.bob);
 		this.bob += 0.09;
 			
-
 
 		if(!this.doFire && dir !== undefined) {
 			(<ProjectileEnemy>this.parent.container).fire(dir, deltaT);
@@ -263,7 +255,6 @@ export default class Walk extends EnemyState {
 	}
 
 	onExit(): Record<string, any> {
-		// (<AnimatedSprite>this.owner).animation.stop();
 		return {};
 	}
 }

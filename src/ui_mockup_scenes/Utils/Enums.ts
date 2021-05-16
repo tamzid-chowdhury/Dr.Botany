@@ -93,7 +93,7 @@ export enum ButtonNames {
 	START = "Start",
 	LEVEL_SELECT = "Level Select",
 	CONTROLS = "Controls",
-	OPTIONS = "Options",
+	OPTIONS = "Cheats",
 	HELP = "Help"
 }
 
@@ -115,7 +115,6 @@ export enum InGame_Events {
     EQUIPMENT_ENEMY_COLLISION = "EquipmentEnemyCollision",
     PLAYER_ATTACK_ENEMY = "PlayerAttackEnemy",
     PROJECTILE_HIT_ENEMY = "ProjectileHitEnemy",
-    // ENEMY_ATTACK_PLAYER = "EnemyAttackPlayer"     // Enemy attacks the player
     PLAYER_DIED = "PlayerDied",
     ENEMY_DIED = "EnemyDied",
     LEVEL_LOADED = "LevelLoaded",

@@ -233,14 +233,12 @@ export default class LevelZero extends GameLevel {
     }
 
     unloadScene(): void {
+        super.unloadScene();
         // TODO: pass managers, player controller to next level 
         this.levelZeroReceiver.destroy();
-        this.receiver.destroy();
-
     }
 
 
-    // TODO: make it so that new created enemies have doubled speed, because when the timer is done, newly created enemies with normal speed gets slower than normal
 
 
     protected increaseEnemyStrength(): void {
