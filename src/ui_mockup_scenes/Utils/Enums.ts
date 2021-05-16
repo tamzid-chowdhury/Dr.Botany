@@ -98,10 +98,8 @@ export enum PauseButtonNames {
 
 export enum PlantMoods {
 	NEUTRAL = "Neutral",
-	SAD = "Sad",
 	ANGRY = "Angry",
 	HAPPY = "Happy",
-	EXCITED = "Excited"
 }
 
 export enum InGame_Events {
