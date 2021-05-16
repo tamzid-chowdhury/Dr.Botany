@@ -85,7 +85,7 @@ export default class GrowthManager implements Updateable {
             if (event.type === InGame_Events.PLANT_HIT) {
                 if (this.timer.isStopped()) {
                     this.decreaseGrowthScore();
-                    console.log("Plant healath: ", this.score);
+                    console.log("Plant health: ", this.score);
                     this.timer.start();
                 }
             }

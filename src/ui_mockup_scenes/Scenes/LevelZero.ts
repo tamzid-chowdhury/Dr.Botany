@@ -45,6 +45,7 @@ export default class LevelZero extends GameLevel {
 
     unloadScene(): void {
         this.levelZeroReceiver.destroy();
+        this.receiver.destroy();
     }
 
     startScene(): void {
