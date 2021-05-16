@@ -15,9 +15,10 @@ import Damaged from "./EnemyStates/DAMAGED";
 import Walk from "./EnemyStates/Walk";
 import * as Tweens from "../Utils/Tweens";
 import Timer from "../../Wolfie2D/Timing/Timer";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
+import Enemy from "../Types/enemies/Enemy";
+import ProjectileEnemy from "../Types/enemies/ProjectileEnemy";
 
 
 
@@ -51,6 +52,10 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     invuln: boolean = false;
     damageGuard: Timer;
     currentStateName: string;
+
+
+    container: Enemy;
+
     damage(damage: number) : void {
         this.health -= damage;
     };
@@ -64,7 +69,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.dropType = options.type; 
         this.attackType = options.attackType; 
         this.options = options;
-
+        this.container = options.container;
         let idle = new Idle(this, owner);
 		this.addState(EnemyStates.IDLE, idle);
 		let walk = new Walk(this, owner);
@@ -110,6 +115,11 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         super.update(deltaT);
 
         if(!this.pauseExecution && this.currentStateName != EnemyStates.DYING) {
+            if(this.attackType === 'projectile') {
+                (<ProjectileEnemy>this.container).updateProjectiles(deltaT);
+                
+            }
+            
             if(this.health <= 0) this.changeState(EnemyStates.DYING);
             if(this.knockBackGuard > 1) this.knockBackGuard--;
             if(this.knockBackTimer < 0) this.changeState(EnemyStates.WALK);

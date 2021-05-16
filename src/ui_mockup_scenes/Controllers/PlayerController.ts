@@ -291,8 +291,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                         // this.owner.tweens.play("knockBack");
                         //
                         this.knockBack = true;
-                        this.knockBackVel = (<EnemyController>enemy._ai).velocity;
-
+                        // this.knockBackVel = enemy._velocity;
+                        if(enemy._ai) {
+                             // hit by the enemy
+                            this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.5);
+                        }
+                        else {
+                            // hit by projectile
+                        }
 
 
                         this.hitTimer.start();

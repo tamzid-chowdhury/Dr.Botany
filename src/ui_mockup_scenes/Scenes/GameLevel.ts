@@ -150,7 +150,7 @@ export default class GameLevel extends Scene {
             UIEvents.CLICKED_RESUME,
             UIEvents.TRANSITION_LEVEL,
             UIEvents.CLICKED_RESTART,
-            
+            InGame_Events.PLANT_HIT
         ]);
 
 
@@ -227,6 +227,12 @@ export default class GameLevel extends Scene {
 
             }
             
+            if (event.type === InGame_Events.PLANT_HIT) {
+                console.log('plant hit')
+            }
+
+
+            
 
             if (event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
@@ -266,9 +272,7 @@ export default class GameLevel extends Scene {
                 switch(this.nextLevel) {
                     case Scenes.MAIN_MENU:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-
                         this.sceneManager.changeToScene(MainMenu, {}) 
-
                         break;
                     default:
                         // level1
@@ -407,6 +411,8 @@ export default class GameLevel extends Scene {
     }
     // TODO: plant init function probably needs to be diff for each level unless the center is always consistent
     initPlant(mapSize: Vec2): void {
+				// set the trigger of the plant for enemies and enemy projectiles
+
         this.plant = this.add.animatedSprite('plant', "primary");
         this.upperDeposit = this.add.sprite('upper_deposit', "tertiary");
         this.downerDeposit = this.add.sprite('downer_deposit', "tertiary");
@@ -422,9 +428,10 @@ export default class GameLevel extends Scene {
         this.downerDeposit.setGroup(PhysicsGroups.DEPOSIT);
         this.plant.setGroup(PhysicsGroups.DEPOSIT);
 
-        this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
-        this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_DOWNER_DEPOSIT);
-        // this.plant.setTrigger("player", InGame_Events.ON_PLANT, InGame_Events.OFF_PLANT);
+        this.upperDeposit.setTrigger(PhysicsGroups.PLAYER, InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
+        this.downerDeposit.setTrigger(PhysicsGroups.PLAYER, InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_DOWNER_DEPOSIT);
+        this.plant.setTrigger(PhysicsGroups.ENEMY, InGame_Events.PLANT_HIT, null);
+        this.plant.setTrigger(PhysicsGroups.ENEMY_PROJECTILE, InGame_Events.PLANT_HIT, null);
 
 
         this.plant.scale.set(0.5, 0.5);

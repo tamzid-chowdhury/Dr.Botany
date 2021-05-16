@@ -139,7 +139,7 @@ export class TrashLidController extends ProjectileController {
 	}
 }
 
-class PillProjectile {
+export class PillProjectile {
     direction: Vec2;
 	power: number = 0;
     liveTime: number;
@@ -147,7 +147,8 @@ class PillProjectile {
     powerLoss: number = 10;
     sprite: Sprite;
     dead: boolean;
-    drift: number;
+    driftDir: number;
+    driftAmt: number;
     constructor(sprite: Sprite, cooldown: number) {
         this.sprite = sprite;
         this.liveTime = cooldown;
@@ -166,7 +167,7 @@ class PillProjectile {
         if(!this.dead) {
             this.sprite._velocity = this.sprite.getLastVelocity();
             this.sprite._velocity.normalize();
-            this.sprite._velocity.rotateCCW(this.drift * 0.01);
+            this.sprite._velocity.rotateCCW(this.driftDir * this.driftAmt);
             this.sprite._velocity.mult(new Vec2(this.power ,this.power ));
             this.sprite.move(this.sprite._velocity.scaled(deltaT));
         }
@@ -175,9 +176,10 @@ class PillProjectile {
 
     
 
-    activate(direction: Vec2, position: Vec2, rotation: number, deltaT: number) {
-        this.drift = Math.random() < 0.5 ? 1 : -1;
-        this.power = 900 ;
+    activate(direction: Vec2, position: Vec2, rotation: number, deltaT: number, power: number = 900, driftAmt: number = 0.01) {
+        this.driftDir = Math.random() < 0.5 ? 1 : -1;
+        this.driftAmt = driftAmt;
+        this.power = power ;
         this.direction = direction;
         this.dead = false;
         this.sprite.position.set(position.x, position.y);
@@ -199,7 +201,6 @@ class PillProjectile {
         this.sprite.active = false;
         this.dead = true;
         this.sprite.position.set(-1000, -1000);
-
     }
 
 

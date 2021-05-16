@@ -3,6 +3,7 @@ import Scene from '../../Wolfie2D/Scene/Scene';
 import EnemyController from '../Enemies/EnemyController';
 import Enemy from '../Types/enemies/Enemy';
 import Vec2 from '../../Wolfie2D/DataTypes/Vec2';
+import ProjectileEnemy from '../Types/enemies/ProjectileEnemy';
 
 export default class EnemyManager {
 	maxEnemies: number; 
@@ -36,7 +37,21 @@ export default class EnemyManager {
         let data = this.prototypes[this.choice % this.prototypes.length];
         this.choice++;
         let sprite = this.scene.add.animatedSprite(data.spriteKey, "primary");
-        return new Enemy(sprite, data)
+        let enemy;
+        if(data.attackType === "projectile") {
+            let clip = [];
+            for(let i = 0; i < data.clipSize; i ++) {
+                let charge = this.scene.add.animatedSprite(data.projectileSpriteKey, "primary");
+                charge.visible = false;
+                charge.active = false;
+                clip.push(charge)
+            }
+            enemy = new ProjectileEnemy(sprite, data, clip)
+        }
+        else {
+            enemy = new Enemy(sprite, data); 
+        }
+        return enemy
     }
 
     spawnEnemy(player: GameNode, plant:GameNode, position: Vec2 = this.startingPosition): void {

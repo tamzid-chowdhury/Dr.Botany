@@ -5,7 +5,7 @@
 			"type": "Downer",
             "health": 20,
             "scale": 1,
-            "speed": 80,
+            "speed": 70,
 			"spriteKey": "green_slime",
 			"attackType": "ram"
 		},
@@ -21,9 +21,12 @@
 			"type": "Upper",
             "health": 40,
             "scale": 1,
-            "speed": 50,
+            "speed": 30,
 			"spriteKey": "wisp",
-			"attackType": "projectile"
+			"attackType": "projectile",
+			"projectileSpriteKey": "wisp_projectile",
+			"clipSize": 20,
+			"cooldown": 2000
 			
 		}
 	]
