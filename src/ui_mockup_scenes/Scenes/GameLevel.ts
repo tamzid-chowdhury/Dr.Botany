@@ -26,6 +26,7 @@ import EquipmentManager from "../GameSystems/EquipmentManager";
 import ProjectileController from "../Controllers/ProjectileController";
 import SupportManager from "../GameSystems/SupportManager"
 import PlantManager from "../GameSystems/MoodManager"
+import GrowthManager from "../GameSystems/GrowthManager";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -57,6 +58,7 @@ export default class GameLevel extends Scene {
     equipmentManager: EquipmentManager;
     supportManager: SupportManager; 
     plantManager: PlantManager;
+    growthManager: GrowthManager;
 
     shouldMaterialMove: boolean = false;
     screenWipe: Sprite;    
@@ -73,7 +75,6 @@ export default class GameLevel extends Scene {
         this.load.image("growth_bar_outline", "assets/ui_art/generic_bar_outline.png");
         this.load.image("growth_bar_fill", "assets/ui_art/generic_bar_fill.png");
         
-        // this.load.image("growthbar", "assets/ui_art/growth_bar_wip.png")
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
         this.load.image("moodbar_indicator", "assets/ui_art/mood_bar_indicator.png")
         this.load.image("health_pip", "assets/ui_art/leaf_icon.png");
@@ -424,7 +425,7 @@ export default class GameLevel extends Scene {
 
         this.upperDeposit.setTrigger("player", InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
         this.downerDeposit.setTrigger("player", InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_DOWNER_DEPOSIT);
-        // this.plant.setTrigger("player", InGame_Events.ON_PLANT, InGame_Events.OFF_PLANT);
+        this.plant.setTrigger("player", InGame_Events.ON_PLANT, InGame_Events.OFF_PLANT);
 
 
         this.plant.scale.set(0.5, 0.5);
@@ -452,7 +453,8 @@ export default class GameLevel extends Scene {
             mapSize: mapSize,
             speed: 125,
             defaults: this.equipmentPrototypes,
-            equipmentManager: this.equipmentManager
+            equipmentManager: this.equipmentManager,
+            plant: this.plant
         }
         this.player.addAI(PlayerController, playerOptions);
 

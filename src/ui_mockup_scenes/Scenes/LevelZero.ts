@@ -18,6 +18,7 @@ import AnimatedDialog from "../Classes/AnimatedDialog";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import MainMenu from "../MainMenu";
 import { Physics, PhysicsGroups } from "../Utils/PhysicsOptions";
+import GrowthManager from "../GameSystems/GrowthManager";
 
 export default class LevelZero extends GameLevel {
 
@@ -70,8 +71,10 @@ export default class LevelZero extends GameLevel {
 
         this.tilemapSize = this.collidables.size;
 
-        super.initPlayer(this.collidables.size);
+
+        //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
         super.initPlant(this.collidables.size);
+        super.initPlayer(this.collidables.size);
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
@@ -89,10 +92,13 @@ export default class LevelZero extends GameLevel {
         this.supportManager.addHealthPacks(5); 
         this.supportManager.addAmmoPacks(5);
 
+        this.growthManager = new GrowthManager(this);
+
     }
 
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
+        this.growthManager.update(deltaT)
 
         if(!this.testLabel.finished && this.runTest) {
             this.testLabel.incrementText();
