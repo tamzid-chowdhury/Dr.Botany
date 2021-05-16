@@ -8,20 +8,18 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Input from "../../Wolfie2D/Input/Input";
 
-export default class PlantManager implements Updateable{
+export default class MoodManager implements Updateable{
 	
 	receiver: Receiver = new Receiver();
-	moodLevel: number = 0; 						// mood goes from -50 -> 50, 100 total points 
-	minMoodLevel: number = -20; 
-	maxMoodLevel: number = 20; 
+	moodLevel: number = 0; 						// mood goes from -10 -> 10, 20 total points 
+	minMoodLevel: number = -10; 
+	maxMoodLevel: number = 10; 
 
 	currentMood: string = PlantMoods.NEUTRAL; 	// plant starts each level neutral, although we may want to change this
 	
 	neutralEffect: MoodEffect;
-	upperTierOneEffect: MoodEffect;
-	upperTierTwoEffect: MoodEffect;
-	downerTierOneEffect: MoodEffect;
-	downerTierTwoEffect: MoodEffect;
+	angryEffect: MoodEffect;
+	happyEffect: MoodEffect;
 	
 
 	emitter: Emitter;
@@ -79,20 +77,18 @@ export default class PlantManager implements Updateable{
 			if (event.type === InGame_Events.UPDATE_MOOD) {
                 let type = event.data.get('type');
                 let count = event.data.get('count');
-				this.updateMoodLevel(count, type)
-                
-
+				this.updateMoodLevel(count, type);
             }
 		}
 
-		//angrymood cheat
+		//angry mood cheat
 		if (Input.isKeyJustPressed("o")) { 
 			this.updateMoodLevel(10, -1)
             console.log("Mood: -1, Current Mood stat: " + this.moodLevel);
 			
         }
 
-		//happymood cheat
+		//happy mood cheat
         if (Input.isKeyJustPressed("p")) {
 			this.updateMoodLevel(10, 1)
             console.log("Mood: +1, Current Mood stat: " + this.moodLevel);
@@ -119,5 +115,20 @@ abstract class MoodEffect {
 	abstract enemies: Array<EnemyController>;
 	abstract player: PlayerController;
 	abstract applyEffect: void;
+}
+
+export class AngryEffect extends MoodEffect {
+	enemies: EnemyController[];
+	player: PlayerController;
+	applyEffect: void;
+	
+}
+
+export class HappyEffect extends MoodEffect {
+
+	enemies: EnemyController[];
+	player: PlayerController;
+	applyEffect: void;
+	
 }
 

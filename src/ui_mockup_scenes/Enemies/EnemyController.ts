@@ -174,4 +174,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     decreaseSpeed(): void {
         this.speed = this.speed / 2;
     }
+    hasNoPlant() : boolean {
+        return (this.plant === null);
+    }
 }
