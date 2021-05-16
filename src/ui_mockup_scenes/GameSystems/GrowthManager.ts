@@ -12,6 +12,8 @@ export default class GrowthManager implements Updateable{
 	
 	receiver: Receiver = new Receiver();
     materialsToWin: number; 
+    growthComplete: boolean = false; 
+    firstGrowthReached: boolean = false; 
 
 
     scoreIncreasePerMaterial: number; 
@@ -23,7 +25,7 @@ export default class GrowthManager implements Updateable{
 	emitter: Emitter = new Emitter();
 	scene: Scene; 
 
-	constructor(scene: Scene, materialsToWin: number = 20) {
+	constructor(scene: Scene, materialsToWin: number = 10) {
         this.scene = scene; 
         this.materialsToWin = materialsToWin; 
 
@@ -43,7 +45,8 @@ export default class GrowthManager implements Updateable{
         this.score = MathUtils.clamp(this.score, 0, 100)
 
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_GROWTH_BAR, {growthIncrease: growthIncrease, score:this.score});
-        console.log("Score is now " + this.score)
+
+        this.checkGrowthComplete();
     }
     
     decreaseGrowthScore(): void {
@@ -52,7 +55,17 @@ export default class GrowthManager implements Updateable{
         this.score = MathUtils.clamp(this.score, 0, 100)
 
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_GROWTH_BAR, {growthIncrease: growthDecrease, score:this.score});
-        console.log("Score is now " + this.score)
+    }
+
+    checkGrowthComplete(): void {
+        if(this.score == 100){
+            this.growthComplete = true; 
+        }
+
+        if(!this.firstGrowthReached && this.score == 50){
+            this.firstGrowthReached = true; 
+            this.emitter.fireEvent(InGame_Events.GROWTH_STARTED);
+        }
     }
 
 
@@ -74,7 +87,19 @@ export default class GrowthManager implements Updateable{
             
 
         }
+
+        if(this.growthComplete){
+            this.receiver.unsubscribe(InGame_Events.UPDATE_GROWTH);
+            this.receiver.unsubscribe(InGame_Events.ENEMY_ATTACK_PLANT);
+            
+            this.emitter.fireEvent(InGame_Events.GROWTH_COMPLETED);
+
+            this.growthComplete = false; 
+        }
         
+        if (Input.isKeyJustPressed("x")) {
+            this.increaseGrowthScore(1);
+        }
 
 	}
 
