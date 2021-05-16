@@ -125,10 +125,12 @@ export default class InGameUI implements Updateable {
 
             if(event.type === InGame_GUI_Events.UPDATE_GROWTH_BAR){
                 let growthIncrease = event.data.get('growthIncrease');
+                let score = event.data.get('score');
                 let newPos = this.growthBar.growthBarFill.position.x - growthIncrease;
                 newPos = MathUtils.clamp(newPos, this.growthBar.centerPos.x + 211, this.growthBar.centerPos.x + 271)
                 this.growthBar.growthBarFill.tweens.add("slideX", Tweens.healthBarSlideX(this.growthBar.growthBarFill.position.x, newPos));          
-                this.growthBar.growthBarFill.tweens.play("slideX");              
+                this.growthBar.growthBarFill.tweens.play("slideX");     
+                this.growthBar.text.text = "Growth: " + score + "%"         
             }
 
             if(event.type === InGame_GUI_Events.RESET_MOOD_BAR){

@@ -147,7 +147,7 @@ export function slideLeft(startX: number, endX: number, duration: number = 500, 
 export function healthBarSlideX(xPos: number, newXPos: number) : Record<string,any> {
 	let tween = {
 		startDelay: 100,
-		duration: 300,
+		duration: 100,
 		effects: [
 			{
 				property: TweenableProperties.posX,

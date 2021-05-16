@@ -31,7 +31,7 @@ export default class GrowthBar {
         this.growthBarOutline.scale = new Vec2(1,1.2)
 
 
-        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, yOffset), text:'Growth'});
+        this.text = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.INGAME_UI, {position: new Vec2(xOffset, yOffset), text:'Growth: 0%'});
         this.text.size = this.growthBarFill.size;
         this.text.font = Fonts.ROUND;
         this.text.textColor = Palette.black();

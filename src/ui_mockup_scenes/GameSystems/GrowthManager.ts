@@ -12,27 +12,48 @@ export default class GrowthManager implements Updateable{
 	
 	receiver: Receiver = new Receiver();
     materialsToWin: number; 
-    scorePerMaterial: number; 						
+
+
+    scoreIncreasePerMaterial: number; 
+    growthIncreasePerMaterial: number; //determines how much the position changes for growth slider 
+
+    score: number = 0; 						
 
 
 	emitter: Emitter = new Emitter();
 	scene: Scene; 
 
-	constructor(scene: Scene, materialsToWin: number = 15) {
+	constructor(scene: Scene, materialsToWin: number = 20) {
         this.scene = scene; 
         this.materialsToWin = materialsToWin; 
-        this.scorePerMaterial = 60/materialsToWin; 
+
+        this.scoreIncreasePerMaterial = 100/materialsToWin; 
+        this.growthIncreasePerMaterial = 60/materialsToWin
 
         this.receiver.subscribe([
-            InGame_Events.UPDATE_GROWTH
+            InGame_Events.UPDATE_GROWTH,
+            InGame_Events.ENEMY_ATTACK_PLANT
         ]);
 
     }
     
-    updateGrowthScore(count: number): void {
-        let growthIncrease = count * this.scorePerMaterial; 
-		this.emitter.fireEvent(InGame_GUI_Events.UPDATE_GROWTH_BAR, {growthIncrease: growthIncrease});
-	}
+    increaseGrowthScore(count: number): void {
+        let growthIncrease = count * this.growthIncreasePerMaterial; 
+        this.score += count * this.scoreIncreasePerMaterial;
+        this.score = MathUtils.clamp(this.score, 0, 100)
+
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_GROWTH_BAR, {growthIncrease: growthIncrease, score:this.score});
+        console.log("Score is now " + this.score)
+    }
+    
+    decreaseGrowthScore(): void {
+        let growthDecrease = -.6; 
+        this.score += -1;
+        this.score = MathUtils.clamp(this.score, 0, 100)
+
+        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_GROWTH_BAR, {growthIncrease: growthDecrease, score:this.score});
+        console.log("Score is now " + this.score)
+    }
 
 
 	update(deltaT: number): void {
@@ -43,11 +64,17 @@ export default class GrowthManager implements Updateable{
             if (event.type === InGame_Events.UPDATE_GROWTH) {
                 console.log("UPDATING")
                 let count = event.data.get('count');
-				this.updateGrowthScore(count);
+				this.increaseGrowthScore(count);
             }
 
+            if (event.type === InGame_Events.ENEMY_ATTACK_PLANT) {
+                this.decreaseGrowthScore();
+            }
 
-		}
+            
+
+        }
+        
 
 	}
 

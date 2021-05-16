@@ -8,7 +8,7 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Input from "../../Wolfie2D/Input/Input";
 
-export default class PlantManager implements Updateable{
+export default class MoodManager implements Updateable{
 	
 	receiver: Receiver = new Receiver();
 	moodLevel: number = 0; 						// mood goes from -10 -> 10, 20 total points 

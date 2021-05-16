@@ -25,7 +25,7 @@ import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import EquipmentManager from "../GameSystems/EquipmentManager";
 import ProjectileController from "../Controllers/ProjectileController";
 import SupportManager from "../GameSystems/SupportManager"
-import PlantManager from "../GameSystems/MoodManager"
+import MoodManager from "../GameSystems/MoodManager"
 import GrowthManager from "../GameSystems/GrowthManager";
 
 export default class GameLevel extends Scene {
@@ -57,7 +57,7 @@ export default class GameLevel extends Scene {
     enemyManager: EnemyManager;
     equipmentManager: EquipmentManager;
     supportManager: SupportManager; 
-    plantManager: PlantManager;
+    moodManager: MoodManager;
     growthManager: GrowthManager;
 
     shouldMaterialMove: boolean = false;
@@ -174,13 +174,13 @@ export default class GameLevel extends Scene {
         this.enemyManager = new EnemyManager(this);
         this.equipmentManager = new EquipmentManager(this);
         this.supportManager = new SupportManager(this);
-        this.plantManager = new PlantManager(this);
+        this.moodManager = new MoodManager(this);
     }
 
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.inGameUILayer.update(deltaT);
-        this.plantManager.update(deltaT);
+        this.moodManager.update(deltaT);
         let mousePos = Input.getMousePosition();
         this.reticle.position = mousePos;
         this.cursor.position = mousePos;
@@ -400,7 +400,7 @@ export default class GameLevel extends Scene {
             }
 
             if (event.type === InGame_Events.ENEMY_ATTACK_PLANT) {
-                // console.log("Enemy is hitting the plant");
+                console.log("Enemy is hitting the plant");
             }
 
 
