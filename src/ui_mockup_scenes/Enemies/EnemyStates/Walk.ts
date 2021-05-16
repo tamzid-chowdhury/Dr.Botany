@@ -35,7 +35,7 @@ export default class Walk extends EnemyState {
 		})
 
 		this.flingAttackTimer = new Timer(2000, () => {
-			(<AnimatedSprite>this.owner).animation.playIfNotAlready("SQUISH");
+			// (<AnimatedSprite>this.owner).animation.playIfNotAlready("SQUISH");
 			this.doFling = false;
 		})
 	}
@@ -196,6 +196,8 @@ export default class Walk extends EnemyState {
 		this.parent.velocity = dir;
 		this.parent.velocity.normalize();
 		this.parent.velocity.mult(new Vec2(this.parent.speed, this.parent.speed));
+		(<AnimatedSprite>this.owner).animation.playIfNotAlready("SQUISH");
+
 		if(!this.doFling) {
 			this.parent.velocity.x += 4*dir.x;
 			this.parent.velocity.y += 4*dir.y;

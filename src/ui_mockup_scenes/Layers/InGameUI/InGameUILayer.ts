@@ -69,6 +69,10 @@ export default class InGameUI implements Updateable {
             xOffset += 32;
         }
 
+        this.interactLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(0,0), text:"E"});
+        this.interactLabel.font = Fonts.ABBADON_LIGHT;
+        this.interactLabel.textColor = Palette.white();
+
         // this.growthBarFill = this.scene.add.sprite('growth_bar_fill', UILayers.INGAME_UI);
         // this.growthBarOutline = this.scene.add.sprite('growth_bar_outline', UILayers.INGAME_UI);
 
@@ -188,9 +192,7 @@ export default class InGameUI implements Updateable {
             
             if(event.type === InGame_GUI_Events.SHOW_INTERACT_LABEL){
                 position = event.data.get("position");
-                this.interactLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x, position.y-16), text:"E"});
-                this.interactLabel.font = Fonts.ABBADON_LIGHT;
-                this.interactLabel.textColor = Palette.white();
+                this.interactLabel.position.set(position.x, position.y-16);
                 this.interactLabel.fontSize = 0;
                 this.interactLabel.scale = Vec2.ZERO;
                 this.interactLabel.tweens.add("scaleTextIn", Tweens.scaleInText(48, 0, 100));

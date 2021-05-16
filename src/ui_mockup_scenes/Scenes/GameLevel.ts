@@ -477,15 +477,6 @@ export default class GameLevel extends Scene {
         this.upperDeposit.scale.set(1, 1);
         this.downerDeposit.scale.set(1, 1);
         (<AnimatedSprite>this.plant).animation.play("HAPPY")
-
-
-        // This has to be touched
-        // this.plant.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
-        // this.plant.colliderOffset.set(0,10);
-        // play with this // maybe add a condition for each enemy
-
-        // this.plant.setGroup("ground");
-        // this.plant.setTrigger("player", InGame_Events.PLAYER_ENEMY_COLLISION, null);
     }
     unloadScene(): void {
         // TODO: pass managers, player controller to next level 
