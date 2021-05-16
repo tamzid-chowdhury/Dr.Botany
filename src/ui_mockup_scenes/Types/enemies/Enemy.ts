@@ -17,6 +17,7 @@ export default class Enemy {
         this.sprite.scale.set(data.scale, data.scale);
         let collisionShape = this.sprite.size;
         let aiOptions = {
+            container: this,
             speed: data.speed, 
             player: {},
             plant: {}, 

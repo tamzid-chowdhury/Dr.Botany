@@ -1,5 +1,5 @@
 export const Physics = {
-	groupNames: ["ground", "player", "enemies", "materials", "projectiles", "deposits"],
+	groupNames: ["ground", "player", "enemies", "materials", "projectiles", "deposits", "enemyProjectiles"],
 	collisions:
                             [
                                 /*
@@ -27,12 +27,13 @@ export const Physics = {
 
                                 // TODO: figure out if commented out matrix is correct or not for materials/equipment
                                 // NOTE: As of 5/11 enemies wont collide w/ each other 
-                                [0, 1, 1, 0, 0, 0],
-                                [1, 0, 0, 0, 0, 0],
-                                [1, 0, 0, 0, 0, 0],
-                                [0, 0, 0, 0, 0, 0],
-                                [0, 0, 0, 0, 0, 0],
-                                [0, 0, 0, 0, 0, 0]
+                                [0, 1, 1, 0, 0, 0, 0],
+                                [1, 0, 0, 0, 0, 0, 0],
+                                [1, 0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0, 0]
                             ]
 }
 
@@ -43,4 +44,5 @@ export enum PhysicsGroups {
     MATERIAL = "materials",
     GROUND = "ground",
     DEPOSIT = "deposits",
+    ENEMY_PROJECTILE = "enemyProjectiles"
 }

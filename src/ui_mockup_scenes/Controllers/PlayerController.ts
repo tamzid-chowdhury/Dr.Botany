@@ -288,8 +288,13 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "player_hit", holdReference: true });
                        
                         this.knockBack = true;
-                        this.knockBackVel = (<EnemyController>enemy._ai).velocity;
-
+                        if(enemy._ai) {
+                             // hit by the enemy
+                            this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.4);
+                        }
+                        else {
+                            // hit by projectile
+                        }
 
 
                         this.hitTimer.start();
