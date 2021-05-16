@@ -43,9 +43,6 @@ export default class LevelZero extends GameLevel {
         this.load.audio("background_music", "assets/music/in_game_music.mp3")
     }
 
-    unloadScene(): void {
-        this.levelZeroReceiver.destroy();
-    }
 
     startScene(): void {
         super.startScene()
@@ -238,6 +235,13 @@ export default class LevelZero extends GameLevel {
             InGame_Events.LEVEL_COMPLETED
 
         ]);
+    }
+
+    unloadScene(): void {
+        // TODO: pass managers, player controller to next level 
+        this.levelZeroReceiver.destroy();
+        this.receiver.destroy();
+
     }
 
 

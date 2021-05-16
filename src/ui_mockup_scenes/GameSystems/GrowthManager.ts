@@ -15,7 +15,10 @@ export default class GrowthManager implements Updateable {
     materialsToWin: number;
     growthComplete: boolean = false;
     firstGrowthReached: boolean = false;
-    timer: Timer = new Timer(3000, null, false);
+    timer: Timer = new Timer(3000, () => {
+        this.receiver.subscribe(InGame_Events.PLANT_HIT);
+
+    }, false);
 
 
     scoreIncreasePerMaterial: number;
@@ -36,10 +39,13 @@ export default class GrowthManager implements Updateable {
 
         this.receiver.subscribe([
             InGame_Events.UPDATE_GROWTH,
-            
             InGame_Events.PLANT_HIT
         ]);
 
+    }
+
+    destroy(): void{
+        this.receiver.destroy();
     }
 
     increaseGrowthScore(count: number): void {
@@ -86,8 +92,10 @@ export default class GrowthManager implements Updateable {
             if (event.type === InGame_Events.PLANT_HIT) {
                 if (this.timer.isStopped()) {
                     this.decreaseGrowthScore();
-                    console.log("Plant healath: ", this.score);
+                    console.log("Plant health: ", this.score);
                     this.timer.start();
+                    this.receiver.unsubscribe(InGame_Events.PLANT_HIT);
+
                 }
             }
 

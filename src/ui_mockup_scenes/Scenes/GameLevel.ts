@@ -137,6 +137,7 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
+        this.receiver.destroy()
         this.receiver.subscribe([
             GameEventType.MOUSE_DOWN,
             GameEventType.MOUSE_UP,
@@ -478,10 +479,14 @@ export default class GameLevel extends Scene {
         this.downerDeposit.scale.set(1, 1);
         (<AnimatedSprite>this.plant).animation.play("HAPPY")
     }
+
     unloadScene(): void {
-        // TODO: pass managers, player controller to next level 
-        this.receiver.destroy();
     }
+    // unloadScene(): void {
+    //     // TODO: pass managers, player controller to next level 
+    //     console.log('UNLOADINGGGGGGGGGGGGGGGGGGGGGGGGG')
+    //     this.receiver.destroy();
+    // }
 
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");

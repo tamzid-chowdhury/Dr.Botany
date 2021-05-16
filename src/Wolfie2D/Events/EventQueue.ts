@@ -97,7 +97,7 @@ export default class EventQueue {
     // Associate the receiver and the type
 	private addListener(receiver: Receiver, type: string): void {
 		if(this.receivers.has(type)){
-			this.receivers.get(type).push(receiver);
+            this.receivers.get(type).push(receiver);
 		} else {
 			this.receivers.add(type, [receiver]);
 		}
