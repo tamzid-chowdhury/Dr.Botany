@@ -42,11 +42,12 @@ export default class Receiver {
 	 */
 	receive(event: GameEvent): void {
 		try{
-		this.q.enqueue(event);
-		} catch(e){
-			console.warn("Receiver overflow for event " + event.toString());
-			throw e;
-		}
+			this.q.enqueue(event);
+			} catch(e){
+				console.warn("Receiver overflow for event " + event.toString());
+				throw e;
+			}
+
 	}
 
 	/**

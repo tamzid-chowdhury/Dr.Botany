@@ -59,7 +59,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-
         this.viewport = owner.getScene().getViewport();
         this.equipmentManager = options.equipmentManager;
         this.plant = options.plant; 
@@ -94,6 +93,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         });
 
         this.subscribeToEvents();
+
 
     }
     initEquip(): void {
@@ -349,22 +349,24 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
 
-                if(event.type === InGame_Events.ON_UPPER_DEPOSIT && this.upperCount > 0) {
+                if(event.type === InGame_Events.ON_UPPER_DEPOSIT){
                     this.receiver.unsubscribe(InGame_Events.ON_UPPER_DEPOSIT);
-                    let other = event.data.get('other');
-                    this.nearUpperDeposit= other;
-                    let box = this.owner.getScene().getSceneGraph().getNode(other);
-                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: box.position});
-
+                    if(this.upperCount > 0) {
+                        let other = event.data.get('other');
+                        this.nearUpperDeposit= other;
+                        let box = this.owner.getScene().getSceneGraph().getNode(other);
+                        this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: box.position});
+                    }
                 }
 
-                if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && this.downerCount > 0) {
+                if(event.type === InGame_Events.ON_DOWNER_DEPOSIT) {
                     this.receiver.unsubscribe(InGame_Events.ON_DOWNER_DEPOSIT);
-                    let other = event.data.get('other');
-                    this.nearDownerDeposit= other;
-                    let box = this.owner.getScene().getSceneGraph().getNode(other);
-                    this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: box.position});
-
+                    if(this.downerCount > 0) {
+                        let other = event.data.get('other');
+                        this.nearDownerDeposit = other;
+                        let box = this.owner.getScene().getSceneGraph().getNode(other);
+                        this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: box.position});
+                    }
                 }
 
                 if (event.type === InGame_Events.OFF_DOWNER_DEPOSIT) {
@@ -420,6 +422,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     }
 
     subscribeToEvents(): void {
+        this.receiver.destroy();
         this.receiver.subscribe([
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
