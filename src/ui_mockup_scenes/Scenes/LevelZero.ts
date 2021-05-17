@@ -31,7 +31,7 @@ export default class LevelZero extends GameLevel {
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
+        this.load.tilemap("level_zero", "assets/tilemaps/SpringLevel/tutorialLevel.json");
         this.load.object("tutorialScript", "assets/data/tutorialLevelScript.json")
         this.load.audio("background_music", "assets/music/in_game_music.mp3")
         this.load.audio("plant_voice_sfx", "assets/sfx/plant_voice_sfx.wav")
