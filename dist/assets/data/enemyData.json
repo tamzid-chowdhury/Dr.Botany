@@ -1,5 +1,5 @@
 {
-	"count": 6,
+	"count": 5,
 	"enemies": [
 		{
 			"type": "Downer",
@@ -38,20 +38,21 @@
 			
 		},
 		{
-			"type": "Downer",
-			"health": 30,
-			"scale" : 1,
-			"speed" : 80,
-			"spriteKey": "ghost",
-			"attackType": "ghost"
-		},
-		{
 			"type": "Upper",
 			"health": 40,
 			"scale" : 1,
 			"speed" : 30,
 			"spriteKey": "bomb",
 			"attackType": "bomb"
+		},
+		{
+			"type": "Downer",
+			"health": 30,
+			"scale" : 1,
+			"speed" : 80,
+			"spriteKey": "ghost",
+			"attackType": "ghost"
 		}
+
 	]
 }

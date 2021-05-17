@@ -17,6 +17,7 @@ import * as Tweens from "./Utils/Tweens"
 import { Physics } from "./Utils/PhysicsOptions"
 import Level_Winter_One from "./Scenes/Level_Winter_One";
 import Level_Fall_One from "./Scenes/Level_Fall_One";
+import Level_Spring_One from "./Scenes/Level_Spring_One";
 
 export default class MainMenu extends Scene {
     mainMenuLayer: MainMenuLayer;
@@ -212,7 +213,7 @@ export default class MainMenu extends Scene {
             }
             if (event.type === UIEvents.CLICKED_SPRING) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
-                this.nextLevel = Scenes.LEVEL_ZERO;
+                this.nextLevel = Scenes.LEVEL_SPRING_ONE;
                 this.screenWipe = this.add.sprite("screen_wipe", UILayers.CURSOR);
                 this.screenWipe.imageOffset = new Vec2(0, 0);
                 this.screenWipe.scale = new Vec2(2, 1)
@@ -254,6 +255,9 @@ export default class MainMenu extends Scene {
                 switch (this.nextLevel) {
                     case Scenes.LEVEL_ZERO:
                         this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
+                        break;
+                    case Scenes.LEVEL_SPRING_ONE:
+                        this.sceneManager.changeToScene(Level_Spring_One, {}, sceneOptions);
                         break;
                     
                     case Scenes.LEVEL_FALL_ONE:
