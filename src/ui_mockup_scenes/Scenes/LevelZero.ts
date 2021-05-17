@@ -30,7 +30,8 @@ export default class LevelZero extends GameLevel {
     // mood: string = "normal";
     // moodMin: number = -10;
     // moodMax: number = 10;
-    moodBarTimer: Timer = new Timer(6000, null, false);
+    moodEffectTimer: Timer = new Timer(10000, null, false);
+    moodEffect : boolean = false;
     levelZeroReceiver: Receiver = new Receiver();
 
     overdrawTiles: Array<Sprite> = [];
@@ -121,22 +122,16 @@ export default class LevelZero extends GameLevel {
         // }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        if (!this.testLabel.finished && this.runTest) {
-            this.testLabel.incrementText();
+        // Mood timer stuff
+        /////////////////////////////////////////////////////////////////////
+        if(this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
+            this.moodEffectTimer.reset();
+            this.moodEffect = false;
+            console.log("here");
+            this.moodManager.resetEffect(this.player, this.enemyManager.activePool , 1);
         }
-
-        if (this.moodBarTimer.isStopped() && this.moodBarTimer.hasRun()) {
-            this.moodBarTimer.reset();
-
-
-            // this.resetHappyEffect();
-
-
-            this.resetAngryEffect();
-
-            // this.mood = "normal";
-        }
+        /////////////////////////////////////////////////////////////////////
+       
 
         if (Input.isKeyJustPressed("t")) {
             this.testLabel.start();
@@ -144,33 +139,6 @@ export default class LevelZero extends GameLevel {
 
 
         }
-
-
-        // if (Input.isKeyJustPressed("o")) {
-
-        //     this.overallMood -= 1;
-        //     console.log("Mood: -1, Current Mood stat: " + this.overallMood);
-        //     // this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, {moodChange: -1});
-        //     if (this.overallMood <= this.moodMin) {
-        //         this.overallMood = 0;
-        //         this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
-        //     }
-
-
-        // }
-
-        // if (Input.isKeyJustPressed("p")) {
-
-        //     this.overallMood += 1;
-        //     console.log("Mood: +1, Current Mood stat: " + this.overallMood);
-        //     // this.emitter.fireEvent(InGame_GUI_Events.UPDATE_MOOD_BAR, {moodChange: 1});
-        //     if (this.overallMood >= this.moodMax) {
-        //         this.overallMood = 0;
-        //         this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
-        //     }
-
-
-        // }
 
         if (Input.isKeyJustPressed("n")) {
             this.enemyManager.spawnEnemy(this.player, this.plant);
@@ -189,22 +157,15 @@ export default class LevelZero extends GameLevel {
 
 
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                //this.mood = "angry";
-                if (this.moodBarTimer.isActive() === false) {
-                    this.moodBarTimer.start();
-                    this.increaseEnemyStrength();
-                }
-
-
+                this.moodEffect = true;
+                this.moodEffectTimer.start();
+                this.moodManager.applyEffect(this.player, this.enemyManager.activePool, 1);
             }
 
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-                //this.mood = "happy";
-                if (this.moodBarTimer.isActive() === false) {
-                    this.moodBarTimer.start();
-                    console.log("Happy mood reached, have to implement faster enemies' speed behavior")
-                    // this.increaseEnemySpeed(); // increase speed buggy 
-                }
+                this.moodEffect = true;
+                this.moodEffectTimer.start();
+                this.moodManager.applyEffect(this.player, this.enemyManager.activePool, 1);
             }
 
             // We gotta check this with each levels
@@ -226,9 +187,9 @@ export default class LevelZero extends GameLevel {
 
     protected subscribeToEvents() {
         this.levelZeroReceiver.subscribe([
-            InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART,
-            InGame_Events.LEVEL_COMPLETED
+            InGame_Events.ANGRY_MOOD_REACHED,
+            InGame_Events.HAPPY_MOOD_REACHED
 
         ]);
     }

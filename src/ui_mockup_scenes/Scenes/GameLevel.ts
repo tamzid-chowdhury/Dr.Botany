@@ -32,7 +32,7 @@ import LevelZero from "./LevelZero";
 import { Physics } from "../Utils/PhysicsOptions"
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Game from "../../Wolfie2D/Loop/Game";
-import Level_Fall_one from "./Level_Fall_One";
+import Level_Fall_One from "./Level_Fall_One";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -129,6 +129,7 @@ export default class GameLevel extends Scene {
 
         this.load.object("equipmentData", "assets/data/equipmentData.json");
         this.load.object("enemyData", "assets/data/enemyData.json");
+        this.load.object("effectData", "assets/data/moodEffectData.json");
         this.load.spritesheet("orange_mushroom", "assets/enemies/orange_mushroom.json")
         this.load.spritesheet("green_slime", "assets/enemies/slime_wip.json")
         this.load.spritesheet("wisp", "assets/enemies/wisp.json")
@@ -192,7 +193,10 @@ export default class GameLevel extends Scene {
         this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize());
         this.equipmentManager = new EquipmentManager(this);
         this.supportManager = new SupportManager(this);
-        this.moodManager = new MoodManager(this);
+
+
+        // MAKE THIS SOMEHOW DYNAMIC ////////
+        this.moodManager = new MoodManager(this, 10);
     }
 
     updateScene(deltaT: number) {
@@ -228,11 +232,12 @@ export default class GameLevel extends Scene {
                 }
                 this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
             }
-
-            // This is temporary for testing
-            if (Input.isKeyJustPressed("k")) {
-                (<PlayerController>this.player._ai).damage(100);
-            }
+        }
+        if(Input.isKeyJustPressed("y")) {
+            this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
+            this.levelCompletionScreenLayer.playEntryTweens();
+            this.reticle.visible = false;
+            this.cursor.visible = true;
         }
 
         if (this.finalWaveCleared && this.levelCompletionScreenLayer.hidden && this.enemyManager.activePool.length === 0) {
@@ -322,7 +327,7 @@ export default class GameLevel extends Scene {
                         break;
                     case Scenes.LEVEL_FALL_ONE:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-                        this.sceneManager.changeToScene(Level_Fall_one, {}, sceneOptions);
+                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
                     case Scenes.LEVEL_FALL_TWO:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });

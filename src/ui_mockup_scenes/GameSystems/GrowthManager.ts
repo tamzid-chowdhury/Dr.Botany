@@ -30,7 +30,7 @@ export default class GrowthManager implements Updateable {
     emitter: Emitter = new Emitter();
     scene: Scene;
 
-    constructor(scene: Scene, materialsToWin: number = 10) {
+    constructor(scene: Scene, materialsToWin: number = 50) {
         this.scene = scene;
         this.materialsToWin = materialsToWin;
 
@@ -91,7 +91,6 @@ export default class GrowthManager implements Updateable {
             if (event.type === InGame_Events.PLANT_HIT) {
                 if (this.timer.isStopped()) {
                     this.decreaseGrowthScore();
-                    console.log("Plant health: ", this.score);
                     this.timer.start();
                     // this.receiver.unsubscribe(InGame_Events.PLANT_HIT);
 

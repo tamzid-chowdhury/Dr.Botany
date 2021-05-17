@@ -1,0 +1,16 @@
+{
+    "count":2,
+    "effects" : [
+        {
+            "type": "Downer",
+            "name": "changeDamage",
+            "value": 2
+        },
+        {
+            "type": "Upper",
+            "name": "changeSpeed",
+            "value": 2
+        }
+        
+    ]
+}
