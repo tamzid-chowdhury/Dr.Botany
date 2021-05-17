@@ -25,7 +25,6 @@ export default class ScriptedSequence {
 		this.waitTimer = new Timer(2000, () => {
 			this.isRunning = true;
 			this.dialogBox.start(this.cursor);
-			console.log('starting')
 		})
 	}
 

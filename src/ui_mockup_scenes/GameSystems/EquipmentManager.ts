@@ -49,6 +49,7 @@ export default class EquipmentManager {
             }
             this.prototypes.push(temp);
 		}
+		console.log(this.prototypes)
 	}
 
 

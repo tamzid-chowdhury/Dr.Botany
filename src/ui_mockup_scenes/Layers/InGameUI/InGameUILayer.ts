@@ -112,7 +112,6 @@ export default class InGameUI implements Updateable {
             if(event.type === InGame_GUI_Events.UPDATE_MOOD_BAR){
                 let type = event.data.get('type');
                 let moodChange = event.data.get('moodChange');
-                console.log(type, moodChange)
                 if(type == 1){
                     let newPos = (40*moodChange / (this.moodBar.sprite.size.x/16)) +  this.moodBar.happyindicator.position.x;
                     newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)

@@ -59,25 +59,25 @@ export default class Walk extends EnemyState {
 			// takes care of firing and movement
 			this.handleProjectileMove(playerPos, ownerPos, deltaT);
 		}
-		else if (this.parent.attackType === "ghost") {
+		// else if (this.parent.attackType === "ghost") {
 			
-			if(this.parent.ghostingTimer.isStopped() && (<AnimatedSprite>this.owner).animation.isPlaying("WALK")) {
-				(<AnimatedSprite>this.owner).animation.playIfNotAlready("IDLE", true);
-				this.parent.normalTimer.reset();
-				this.parent.normalTimer.start();
-				this.parent.disableGhost();	
+		// 	if(this.parent.ghostingTimer.isStopped() && (<AnimatedSprite>this.owner).animation.isPlaying("WALK")) {
+		// 		(<AnimatedSprite>this.owner).animation.playIfNotAlready("IDLE", true);
+		// 		this.parent.normalTimer.reset();
+		// 		this.parent.normalTimer.start();
+		// 		this.parent.disableGhost();	
 
 				
-			}
-			if(this.parent.normalTimer.isStopped() && (<AnimatedSprite>this.owner).animation.isPlaying("IDLE")) {
-				(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
-				this.parent.ghostingTimer.reset();
-				this.parent.ghostingTimer.start();
-				this.parent.enableGhost();
+		// 	}
+		// 	if(this.parent.normalTimer.isStopped() && (<AnimatedSprite>this.owner).animation.isPlaying("IDLE")) {
+		// 		(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
+		// 		this.parent.ghostingTimer.reset();
+		// 		this.parent.ghostingTimer.start();
+		// 		this.parent.enableGhost();
 				
-			}
-			this.handleGhostMove(playerPos, ownerPos, deltaT);
-		}
+		// 	}
+		// 	this.handleGhostMove(playerPos, ownerPos, deltaT);
+		// }
 
 		else if(this.parent.attackType === "bomb") {
 			this.handleBombMove(plantPos, playerPos, ownerPos, deltaT);
@@ -132,9 +132,11 @@ export default class Walk extends EnemyState {
 
 		let plantPosX = plantPos.x;
 		let plantPosY = plantPos.y;
-
-		let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
-		let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
+		
+		let distanceToPlayer = ownerPos.distanceSqTo(playerPos);
+		let distanceToPlant = ownerPos.distanceSqTo(plantPos);
+		// let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
+		// let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
 
 		if ((distanceToPlant + this.distBuffer) > distanceToPlayer) {   // moving to the player
 
@@ -325,8 +327,11 @@ export default class Walk extends EnemyState {
 		let plantPosX = plantPos.x;
 		let plantPosY = plantPos.y;
 
-		let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
-		let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
+		// let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
+		// let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
+
+		let distanceToPlayer = ownerPos.distanceSqTo(playerPos);
+		let distanceToPlant = ownerPos.distanceSqTo(plantPos);
 
 		if ((distanceToPlant + this.distBuffer) > distanceToPlayer) {   // moving to the player
 

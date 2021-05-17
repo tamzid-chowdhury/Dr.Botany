@@ -13,7 +13,6 @@ import EnemyController from "../Enemies/EnemyController"
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import PlayerController from "../Controllers/PlayerController";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import MainMenu from "../MainMenu";
 import * as Tweens from "../Utils/Tweens";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import Equipment from "../Types/items/Equipment";
@@ -24,12 +23,7 @@ import EquipmentManager from "../GameSystems/EquipmentManager";
 import SupportManager from "../GameSystems/SupportManager"
 import MoodManager from "../GameSystems/MoodManager"
 import GrowthManager from "../GameSystems/GrowthManager";
-import LevelZero from "./LevelZero";
-import { Physics } from "../Utils/PhysicsOptions"
 import Timer from "../../Wolfie2D/Timing/Timer";
-import Level_Fall_one from "./Level_Fall_One";
-import Level_Winter_One from "./Level_Winter_One";
-import Level_Spring_One from "./Level_Spring_One";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -441,8 +435,66 @@ export default class GameLevel extends Scene {
 
     unloadScene(): void {
         this.player.ai.destroy();
+
         this.receiver.destroy();
         this.growthManager.destroy();
+
+        this.load.keepImage("reticle");
+        this.load.keepImage("growth_bar_outline");
+        this.load.keepImage("growth_bar_fill");
+
+        this.load.keepImage("moodbar")
+        this.load.keepImage("moodbar_indicator")
+        this.load.keepImage("angry_moodbar_indicator")
+        this.load.keepImage("happy_moodbar_indicator")
+        this.load.keepImage("health_pip");
+        this.load.keepImage("health_pip_shadow");
+        this.load.keepImage("shadow");
+
+        this.load.keepImage("shovel");
+        this.load.keepImage("shovel_outline");
+        this.load.keepImage("shovel_icon");
+        this.load.keepImage("shovel_icon_outline");
+        this.load.keepImage("pill_bottle");
+        this.load.keepImage("pill");
+        this.load.keepImage("pill_icon");
+        this.load.keepImage("pill_icon_outline");
+
+        this.load.keepImage("trash_lid");
+        this.load.keepImage("trash_lid_icon");
+        this.load.keepImage("trash_lid_icon_outline");
+
+        this.load.keepAudio("upper");
+        this.load.keepAudio("downer");
+        this.load.keepAudio("healthpack");
+        this.load.keepAudio("ammopack");
+        this.load.keepAudio("upper_deposit")
+        this.load.keepAudio("downer_deposit")
+        this.load.keepAudio("swing");
+        this.load.keepAudio("enemy_hit");
+        this.load.keepAudio("enemy_jump");
+        this.load.keepAudio("enemy_die");
+        this.load.keepAudio("player_hit");
+        this.load.keepAudio("material_get");
+        this.load.keepAudio("healthpack_get");
+        this.load.keepAudio("ammopack_get");
+        this.load.keepAudio("deposit");
+        this.load.keepAudio("plant_grow");
+        this.load.keepSpritesheet("swing")
+        this.load.keepSpritesheet("player")
+        this.load.keepSpritesheet("plant")
+
+
+        this.load.keepObject("equipmentData");
+        this.load.keepObject("enemyData");
+        this.load.keepObject("effectData");
+        this.load.keepSpritesheet("orange_mushroom")
+        this.load.keepSpritesheet("green_slime")
+        this.load.keepSpritesheet("wisp")
+        this.load.keepSpritesheet("carrot")
+        this.load.keepSpritesheet("ghost")
+        this.load.keepSpritesheet("bomb");
+        this.load.keepSpritesheet("wisp_projectile")
     }
 
     initPlayer(mapSize: Vec2): void {

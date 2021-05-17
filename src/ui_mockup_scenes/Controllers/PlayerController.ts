@@ -15,7 +15,6 @@ import { InGame_Events, InGame_GUI_Events, WeaponTypes } from "../Utils/Enums";
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import * as Tweens from "../Utils/Tweens"
 import BattlerAI from "./BattlerAI";
-import ProjectileController from "./ProjectileController";
 
 export default class PlayerController extends StateMachineAI implements BattlerAI {
     health: number;
@@ -56,7 +55,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     nearEquip: number = -1;
     nearUpperDeposit: number = -1;
     nearDownerDeposit: number = -1;
-
+    invulnerable: boolean = false;
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.viewport = owner.getScene().getViewport();
@@ -218,11 +217,18 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
             }
         }
-
-        if (Input.isKeyJustPressed("y") ) {
-            this.upperCount ++;
-            this.downerCount ++;
+        if (Input.isKeyJustPressed("2")) {
+           this.invulnerable = true;
         }
+
+        if (Input.isKeyJustPressed("3")) {
+            this.equipmentManager.spawnEquipment('TrashLid', this.owner.position.clone());
+
+         }
+
+         if (Input.isKeyJustPressed("4")) {
+            this.equipmentManager.spawnEquipment('PillBottle', this.owner.position.clone());
+         }
 
 
         if (Input.isKeyJustPressed("q") && this.stowed.type != undefined) {
@@ -309,38 +315,41 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
                 if (event.type === InGame_Events.PLAYER_ENEMY_COLLISION) {
-                    if (this.damaged) {
-                        if (Date.now() - this.damageCooldown > 2000) {
-                            this.damaged = false;
-                        }
-                    }
-                    else {
-                        let enemy = this.owner.getScene().getSceneGraph().getNode(event.data.get("other"));
-                        this.hitFlashCooldown = Date.now();
-                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "player_hit", holdReference: true });
-                       
-                        this.knockBack = true;
-                        if(enemy._ai) {
-                            if((<EnemyController>enemy._ai).dropType === 'ram') {
-                                this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.4);
-
-                            }
-                            else {
-                                this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.2);
-
+                    if(!this.invulnerable) {
+                        if (this.damaged) {
+                            if (Date.now() - this.damageCooldown > 2000) {
+                                this.damaged = false;
                             }
                         }
-
-
-
-                        this.hitTimer.start();
-                        this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, { dir: this.playerLookDirection })
-                        this.damage(this.damageTaken); 
-                        this.damaged = true;
-                        this.damageCooldown = Date.now();
-                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_HEALTHBAR, { damageTaken: this.damageTaken });
-
+                        else {
+                            let enemy = this.owner.getScene().getSceneGraph().getNode(event.data.get("other"));
+                            this.hitFlashCooldown = Date.now();
+                            this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "player_hit", holdReference: true });
+                           
+                            this.knockBack = true;
+                            if(enemy._ai) {
+                                if((<EnemyController>enemy._ai).dropType === 'ram') {
+                                    this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.4);
+    
+                                }
+                                else {
+                                    this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.1);
+    
+                                }
+                            }
+    
+    
+    
+                            this.hitTimer.start();
+                            this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, { dir: this.playerLookDirection })
+                            this.damage(this.damageTaken); 
+                            this.damaged = true;
+                            this.damageCooldown = Date.now();
+                            this.emitter.fireEvent(InGame_GUI_Events.UPDATE_HEALTHBAR, { damageTaken: this.damageTaken });
+    
+                        }
                     }
+                    
 
                 }
 

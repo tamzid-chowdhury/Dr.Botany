@@ -99,7 +99,7 @@ export default class Level_Winter_Two extends GameLevel {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
             this.spawnerTimer.pause();
-            console.log(this.spawnerTimer.toString());
+            // console.log(this.spawnerTimer.toString());
         }
         else if (!this.pauseExecution && this.spawnerTimer.isPaused() && !this.completionStatus) {
             this.spawnerTimer.continue();
@@ -193,7 +193,7 @@ export default class Level_Winter_Two extends GameLevel {
                 //this.mood = "happy";
                 if (this.moodBarTimer.isActive() === false) {
                     this.moodBarTimer.start();
-                    console.log("Happy mood reached, have to implement faster enemies' speed behavior")
+                    // console.log("Happy mood reached, have to implement faster enemies' speed behavior")
                     // this.increaseEnemySpeed(); // increase speed buggy 
                 }
             }

@@ -71,7 +71,7 @@ export default class EnemyManager {
         this.activePool.push(enemy);
         // enemy.sprite.position.set(position.x,position.y)
         let xOffset = Math.random() < 0.5 ? 0.8 : -0.2;
-        let yOffset = Math.random() < 0.5 ? -.8 : -0.2;
+        let yOffset = Math.random() < 0.5 ? 0.8 : -0.2;
         enemy.sprite.position.set(xOffset * this.mapSize.x, yOffset * this.mapSize.y)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;

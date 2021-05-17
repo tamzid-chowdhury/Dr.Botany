@@ -72,7 +72,7 @@ export default class SupportManager {
 
     spawnHealthPack(position: Vec2): void {
         let support = this.inactiveHealthPacks.pop();
-        console.log("health packs left to spawn:" + this.inactiveHealthPacks.length)
+        // console.log("health packs left to spawn:" + this.inactiveHealthPacks.length)
         if(support) {
             this.activeHealthPacks.push(support);
             support.sprite.position = position.clone();
@@ -83,7 +83,7 @@ export default class SupportManager {
 
     spawnAmmoPack(position: Vec2): void {
         let support = this.inactiveAmmoPacks.pop();
-        console.log("ammo packs left to spawn:" + this.inactiveAmmoPacks.length)
+        // console.log("ammo packs left to spawn:" + this.inactiveAmmoPacks.length)
         if(support) {
             this.activeAmmoPacks.push(support);
             support.sprite.position = position.clone();

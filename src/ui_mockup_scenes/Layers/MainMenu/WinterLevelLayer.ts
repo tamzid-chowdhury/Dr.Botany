@@ -69,7 +69,6 @@ export class WinterLevelLayer {
 			label.textColor.a = 0;
 			label.borderColor = Palette.transparent();
 			label.onClick = () => {
-                console.log('Clicked')
             }
 
 
@@ -116,7 +115,6 @@ export class WinterLevelLayer {
 			label.textColor.a = 0;
 			label.borderColor = Palette.transparent();
 			label.onClick = () => {
-                console.log('Clicked')
             }
 
 

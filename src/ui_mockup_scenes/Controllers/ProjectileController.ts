@@ -46,11 +46,11 @@ export default class ProjectileController extends StateMachineAI {
 
 
     destroy(): void {
-
+        this.receiver.destroy();
 	}
 
     subscribeToEvents(): void {
-      this.receiver.subscribe([InGame_Events.PROJECTILE_HIT_ENEMY])
+    //   this.receiver.subscribe([InGame_Events.PROJECTILE_HIT_ENEMY])
     }
 
 }
