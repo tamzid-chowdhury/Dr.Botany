@@ -90,6 +90,8 @@ export default class GameLevel extends Scene {
 
         this.load.image("moodbar", "assets/ui_art/mood_bar_wip.png")
         this.load.image("moodbar_indicator", "assets/ui_art/mood_bar_indicator.png")
+        this.load.image("angry_moodbar_indicator", "assets/ui_art/angry_mood_bar_indicator.png")
+        this.load.image("happy_moodbar_indicator", "assets/ui_art/happy_mood_bar_indicator.png")
         this.load.image("health_pip", "assets/ui_art/leaf_icon.png");
         this.load.image("health_pip_shadow", "assets/ui_art/leaf_icon_shadow.png");
         this.load.image("shadow", "assets/player/shadow_sprite.png");

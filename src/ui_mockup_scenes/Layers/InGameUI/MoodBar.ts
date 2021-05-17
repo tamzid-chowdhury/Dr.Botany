@@ -9,6 +9,8 @@ import * as Palette from "../../Utils/Colors";
 export default class Moodbar {
 	sprite: Sprite;
 	indicator: Sprite;
+	happyindicator: Sprite;
+	angryindicator: Sprite;
 	text: Label;
 	textBackdrop: Label;
 	centerPos: Vec2;
@@ -22,14 +24,20 @@ export default class Moodbar {
 		this.centerPos = centerPos;
         this.scene = scene;
 		this.sprite = scene.add.sprite("moodbar", UILayers.INGAME_UI)
+		this.happyindicator = scene.add.sprite("happy_moodbar_indicator", UILayers.INGAME_UI);
+		this.angryindicator = scene.add.sprite("angry_moodbar_indicator", UILayers.INGAME_UI);
 		this.indicator = scene.add.sprite("moodbar_indicator", UILayers.INGAME_UI);
         this.xOffset =  this.centerPos.x;
         this.yOffset =  2*this.centerPos.y - 2*this.sprite.size.y ;
         this.sprite.position.set(this.xOffset, this.yOffset)
-        this.indicator.position.set(this.xOffset, this.yOffset)
+		this.indicator.position.set(this.xOffset, this.yOffset)
+		this.happyindicator.position.set(this.xOffset, this.yOffset)
+		this.angryindicator.position.set(this.xOffset, this.yOffset)
 
         this.sprite.scale = this.scale;
-        this.indicator.scale = new Vec2(0.6,0.6);
+		this.indicator.scale = new Vec2(0.6,0.6);
+		this.happyindicator.scale = new Vec2(0.6,0.6);
+		this.angryindicator.scale = new Vec2(0.6,0.6);
 
 	}
 
