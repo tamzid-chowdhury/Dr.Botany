@@ -145,28 +145,20 @@ export default class GameLevel extends Scene {
             GameEventType.MOUSE_UP,
             GameEventType.KEY_DOWN,
             InGame_Events.LEVEL_LOADED,
-            InGame_Events.DOING_SWING,
-            InGame_Events.FINISHED_SWING,
-            InGame_Events.START_SWING,
             InGame_Events.DO_SCREENSHAKE,
             InGame_Events.SPAWN_UPPER,
             InGame_Events.SPAWN_DOWNER,
             InGame_Events.SPAWN_AMMO,
             InGame_Events.SPAWN_HEALTH,
-            InGame_Events.PLAYER_ATTACK_ENEMY,
             InGame_Events.PROJECTILE_HIT_ENEMY,
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DEATH_ANIM_OVER,
             InGame_Events.TOGGLE_PAUSE,
             InGame_Events.TOGGLE_PAUSE_TRANSITION,
-            InGame_Events.OVERLAP_EQUIP,
-            InGame_Events.NOT_OVERLAP_EQUIP,
-            InGame_Events.ENEMY_ATTACK_PLANT,
             InGame_Events.GROWTH_STARTED,
             InGame_Events.GROWTH_COMPLETED,
             UIEvents.CLICKED_QUIT,
             UIEvents.CLICKED_RESUME,
-            UIEvents.TRANSITION_LEVEL,
             UIEvents.CLICKED_RESTART,
             InGame_Events.LEVEL_END
         ]);
@@ -289,6 +281,7 @@ export default class GameLevel extends Scene {
 
             }
 
+<<<<<<< HEAD
             if (event.type === UIEvents.TRANSITION_LEVEL) {
                 let sceneOptions = {
                     physics: Physics
@@ -332,6 +325,9 @@ export default class GameLevel extends Scene {
                         break;
                 }
             }
+=======
+            
+>>>>>>> c0c010163ab954ed8b65cb4427ec72eb420d909c
 
             if (event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();

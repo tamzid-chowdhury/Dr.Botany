@@ -7,6 +7,9 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GrowthManager from "../GameSystems/GrowthManager";
 import * as Tweens  from "../Utils/Tweens";
+import { Physics } from "../Utils/PhysicsOptions";
+import Level_Winter_One from "./Level_Winter_One";
+import MainMenu from "../MainMenu";
 
 export default class Level_Fall_One extends GameLevel {
 
@@ -51,11 +54,16 @@ export default class Level_Fall_One extends GameLevel {
 
         //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
         super.initPlant(this.collidables.size);
-        super.initPlayer(this.collidables.size);
+        this.plant.animation.playIfNotAlready("EH", true);
+		super.initPlayer(this.collidables.size);
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
         super.initGameOverScreen(this.viewport.getHalfSize());
+<<<<<<< HEAD
+=======
+        super.initLevelCompletionScreen(this.viewport.getHalfSize());
+>>>>>>> c0c010163ab954ed8b65cb4427ec72eb420d909c
         super.initSpawnerTimer(3000);
         this.viewport.follow(this.player);
 
@@ -135,6 +143,24 @@ export default class Level_Fall_One extends GameLevel {
                 this.screenWipe.tweens.play("levelTransition");
             }
             
+            if (event.type === UIEvents.TRANSITION_LEVEL) {
+                let sceneOptions = {
+                    physics: Physics
+                }
+                switch (this.nextLevel) {
+                    case Scenes.MAIN_MENU:
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                        this.sceneManager.changeToScene(MainMenu, {});
+                        break;
+                    case this.currentLevel:
+                            this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                            this.sceneManager.changeToScene(Level_Fall_One, {}, sceneOptions);
+                        break;
+                    default:
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                        this.sceneManager.changeToScene(Level_Winter_One, {}, sceneOptions);
+                    }
+            }
 
 
         }
@@ -149,6 +175,7 @@ export default class Level_Fall_One extends GameLevel {
             InGame_Events.ENEMY_DIED,
             InGame_Events.UPDATE_MOOD,
             InGame_Events.TOGGLE_PAUSE,
+            UIEvents.TRANSITION_LEVEL,
             UIEvents.CLICKED_RESTART
 
         ]);

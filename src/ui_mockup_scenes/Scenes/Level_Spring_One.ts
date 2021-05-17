@@ -7,6 +7,9 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GrowthManager from "../GameSystems/GrowthManager";
 import * as Tweens  from "../Utils/Tweens";
+import { Physics } from "../Utils/PhysicsOptions";
+import Level_Fall_One from "./Level_Fall_One";
+import MainMenu from "../MainMenu";
 
 export default class Level_Spring_One extends GameLevel {
 
@@ -70,7 +73,7 @@ export default class Level_Spring_One extends GameLevel {
         this.supportManager.addHealthPacks(10); 
         this.supportManager.addAmmoPacks(10);
 
-        this.growthManager = new GrowthManager(this);
+        this.growthManager = new GrowthManager(this, 20);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_FALL_ONE;
 
@@ -143,7 +146,24 @@ export default class Level_Spring_One extends GameLevel {
                 this.screenWipe.tweens.play("levelTransition");
             }
             
-
+			if (event.type === UIEvents.TRANSITION_LEVEL) {
+                let sceneOptions = {
+                    physics: Physics
+                }
+                switch (this.nextLevel) {
+                    case Scenes.MAIN_MENU:
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                        this.sceneManager.changeToScene(MainMenu, {});
+                        break;
+                    case this.currentLevel:
+                            this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                            this.sceneManager.changeToScene(Level_Spring_One, {}, sceneOptions);
+                        break;
+                    default:
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                        this.sceneManager.changeToScene(Level_Fall_One, {}, sceneOptions);
+                    }
+            }
 
         }
    
@@ -157,7 +177,8 @@ export default class Level_Spring_One extends GameLevel {
             InGame_Events.ENEMY_DIED,
             InGame_Events.UPDATE_MOOD,
             InGame_Events.TOGGLE_PAUSE,
-            UIEvents.CLICKED_RESTART
+            UIEvents.CLICKED_RESTART,
+			UIEvents.TRANSITION_LEVEL
 
         ]);
     }

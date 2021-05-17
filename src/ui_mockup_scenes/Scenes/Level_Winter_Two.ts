@@ -11,6 +11,8 @@ import AnimatedDialog from "../Classes/AnimatedDialog";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GrowthManager from "../GameSystems/GrowthManager";
 import * as Tweens from "../Utils/Tweens";
+import { Physics } from "../Utils/PhysicsOptions";
+import MainMenu from "../MainMenu";
 
 export default class Level_Winter_Two extends GameLevel {
 
@@ -206,6 +208,24 @@ export default class Level_Winter_Two extends GameLevel {
                 this.screenWipe.tweens.play("levelTransition");
             }
 
+            if (event.type === UIEvents.TRANSITION_LEVEL) {
+                let sceneOptions = {
+                    physics: Physics
+                }
+                switch (this.nextLevel) {
+                    case Scenes.MAIN_MENU:
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                        this.sceneManager.changeToScene(MainMenu, {});
+                        break;
+                    case this.currentLevel:
+                            this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                            this.sceneManager.changeToScene(Level_Winter_Two, {}, sceneOptions);
+                        break;
+                    default:
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                        this.sceneManager.changeToScene(MainMenu, {});
+                    }
+            }
 
 
         }
@@ -217,8 +237,8 @@ export default class Level_Winter_Two extends GameLevel {
         this.levelZeroReceiver.subscribe([
             InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART,
-            InGame_Events.LEVEL_COMPLETED
-
+            InGame_Events.LEVEL_COMPLETED,
+            UIEvents.TRANSITION_LEVEL
         ]);
     }
 
