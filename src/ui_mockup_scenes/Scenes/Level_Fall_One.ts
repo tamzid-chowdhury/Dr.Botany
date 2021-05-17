@@ -128,7 +128,6 @@ export default class Level_Fall_One extends GameLevel {
                 this.plant.animation.play("HAPPY", true);
                 this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length), this.player.position);
                 
-
             }
             if (event.type === UIEvents.CLICKED_RESTART) {
                 this.nextLevel = this.currentLevel;
