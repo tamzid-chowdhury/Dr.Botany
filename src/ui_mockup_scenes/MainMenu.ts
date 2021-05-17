@@ -278,7 +278,7 @@ export default class MainMenu extends Scene {
 
                     case Scenes.LEVEL_FALL_ONE:
                         
-                        this.sceneManager.changeToScene(Level_Fall_one, {}, sceneOptions);
+                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
 
                     case Scenes.LEVEL_WINTER_ONE:

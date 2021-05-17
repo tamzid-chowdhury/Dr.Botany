@@ -12,7 +12,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GrowthManager from "../GameSystems/GrowthManager";
 import * as Tweens  from "../Utils/Tweens";
 
-export default class Level_Fall_one extends GameLevel {
+export default class Level_Fall_One extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;

@@ -75,10 +75,10 @@ export default class LevelCompletionScreenLayer extends GameLayer {
 			sprite.position = position;
 
 			let startScale = new Vec2(0,0);
-			let finalScale = new Vec2(1.0,0.8);
+			let finalScale = new Vec2(1.2,0.8);
 			let label = <Label>scene.add.uiElement(UIElementType.LABEL, UILayers.LEVEL_COMPLETION_SCREEN, { position: new Vec2(position.x, position.y), text: name.toLocaleUpperCase() });
 			label.textColor = textColor;
-			label.fontSize = 40;
+			label.fontSize = 36;
 			label.size.set((sprite.size.x * sprite.scale.x) - sprite.size.x/4, (sprite.size.y * sprite.scale.y) - sprite.size.y/4)
 			label.font = Fonts.ABBADON_LIGHT;
 			label.onClickEventId = eventId;
