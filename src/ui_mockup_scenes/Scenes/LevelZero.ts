@@ -2,9 +2,6 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { UIEvents,InGame_Events, Scenes } from "../Utils/Enums";
 import GameLevel from "./GameLevel";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import PlayerController from "../Controllers/PlayerController";
-import Input from "../../Wolfie2D/Input/Input";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
@@ -20,12 +17,13 @@ export default class LevelZero extends GameLevel {
     maxEnemyNumber: number = 10;
     levelHasStarted: boolean = false;
     introSequence: ScriptedSequence;
-    // Custom time for how much time the mood effects will take
+    currentLevel: string = Scenes.LEVEL_ZERO;
+    // Custom time
+
     moodEffectTimer: Timer = new Timer(10000, null, false);
+    moodBarTimer: Timer = new Timer(6000, null, false);
     levelZeroReceiver: Receiver = new Receiver();
 
-    overdrawTiles: Array<Sprite> = [];
-    runTest: boolean;
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
@@ -76,9 +74,8 @@ export default class LevelZero extends GameLevel {
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.growthManager.update(deltaT);
-        if (this.levelHasStarted) {
-            // SPAWNER SYSTEM
-            ////////////////////////////////////////////////////////////////////////////////////////////////
+        if(this.levelHasStarted) {
+
             if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
                 this.spawnerTimer.pause();
                 console.log(this.spawnerTimer.toString());
@@ -95,9 +92,9 @@ export default class LevelZero extends GameLevel {
                 // Change the number of final wave enemies for each level
                 this.finalWave(10);
                 this.finalWaveCleared = true;
-                this.nextLevel = Scenes.LEVEL_FALL_ONE;
+                this.nextLevel = Scenes.LEVEL_SPRING_ONE;
             }
-            ///////////////////////////////////////////////////////////////////////////////////////////
+
         }
         else if (!this.pauseExecution && !this.introSequence.hasStarted) {
             this.introSequence.begin();
@@ -115,32 +112,28 @@ export default class LevelZero extends GameLevel {
         else if (!this.pauseExecution && this.moodEffectTimer.isPaused()) {
             this.moodEffectTimer.continue();
         }
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Mood timer stuff
-        /////////////////////////////////////////////////////////////////////
-        if (this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
+
+        if(this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
+
             this.moodEffectTimer.reset();
             this.plant.animation.play("EH");
             this.moodManager.resetEffect(this);
         }
-        /////////////////////////////////////////////////////////////////////
+       
 
-        //////////////////////////////////////////////
-        // we probably wanna keep this here for each level position? 
-        if (Input.isKeyJustPressed("3")) {
-            this.equipmentManager.spawnEquipment("TrashLid", new Vec2(300, 300))
-        }
 
-        if (Input.isKeyJustPressed("4")) {
-            this.equipmentManager.spawnEquipment("PillBottle", new Vec2(300, 400))
-        }
-        ///////////////////////////////////////////////
+
         while (this.levelZeroReceiver.hasNextEvent()) {
             let event = this.levelZeroReceiver.getNextEvent();
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
                 this.plant.animation.play("ANGRY", true);
+<<<<<<< HEAD
                 this.moodManager.applyEffect(this, "downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length), this.player.position);
+=======
+                this.moodManager.applyEffect(this,"downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length), this.player.position);
+                
+>>>>>>> 20f20b32492aa2cb13313e9979d915bf7b44b400
             }
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
@@ -149,8 +142,8 @@ export default class LevelZero extends GameLevel {
                 
             }
             if (event.type === UIEvents.CLICKED_RESTART) {
-                // Change this to your level
-                this.nextLevel = Scenes.LEVEL_ZERO;
+                this.nextLevel = this.currentLevel;
+
                 this.screenWipe.imageOffset = new Vec2(0, 0);
                 this.screenWipe.scale = new Vec2(2, 1)
                 this.screenWipe.position.set(2 * this.screenWipe.size.x, this.screenWipe.size.y / 2);
@@ -158,10 +151,17 @@ export default class LevelZero extends GameLevel {
                 this.screenWipe.tweens.play("levelTransition");
             }
         }
+
+
     }
 
     protected subscribeToEvents() {
         this.levelZeroReceiver.subscribe([
+            InGame_Events.PLAYER_ENEMY_COLLISION,
+            InGame_Events.PLAYER_DIED,
+            InGame_Events.ENEMY_DIED,
+            InGame_Events.UPDATE_MOOD,
+            InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART
         ]);
     }
@@ -170,15 +170,5 @@ export default class LevelZero extends GameLevel {
         super.unloadScene();
         this.levelZeroReceiver.destroy();
         this.load.keepAudio("background_music");
-    }
-
-    protected increaseEnemyStrength(): void {
-        let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(2);
-    }
-
-    protected resetAngryEffect(): void {
-        let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(1);
     }
 }

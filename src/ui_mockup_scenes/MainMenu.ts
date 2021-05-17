@@ -16,6 +16,7 @@ import GameButton from "./Classes/GameButton";
 import * as Tweens from "./Utils/Tweens"
 import { Physics } from "./Utils/PhysicsOptions"
 import Level_Fall_one from "./Scenes/Level_Fall_One";
+import Level_Spring_One from "./Scenes/Level_Spring_One";
 import Level_Winter_One from "./Scenes/Level_Winter_One";
 import Level_Winter_Two from "./Scenes/Level_Winter_Two";
 import Level_Fall_One from "./Scenes/Level_Fall_One";
@@ -214,20 +215,7 @@ export default class MainMenu extends Scene {
             }
             if (event.type === UIEvents.CLICKED_SPRING) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
-
                 this.nextLevel = Scenes.LEVEL_ZERO;
-                this.screenWipe = this.add.sprite("screen_wipe", UILayers.CURSOR);
-                this.screenWipe.imageOffset = new Vec2(0, 0);
-                this.screenWipe.scale = new Vec2(2, 1)
-                this.screenWipe.position.set(2 * this.screenWipe.size.x, this.screenWipe.size.y / 2);
-                this.screenWipe.tweens.add("levelZeroTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL_MAIN));
-                this.screenWipe.tweens.play("levelZeroTransition");
-
-            }
-
-            if (event.type === UIEvents.CLICKED_SUMMER) {
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
-                this.nextLevel = Scenes.LEVEL_SUMMER_ONE;
                 this.screenWipe = this.add.sprite("screen_wipe", UILayers.CURSOR);
                 this.screenWipe.imageOffset = new Vec2(0, 0);
                 this.screenWipe.scale = new Vec2(2, 1)
@@ -271,12 +259,6 @@ export default class MainMenu extends Scene {
                         
                         this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
-                    case Scenes.LEVEL_SUMMER_ONE:
-                        // change LevelZero to your own * first one
-                        
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
-                        break;
-
                     case Scenes.LEVEL_FALL_ONE:
                         
                         this.sceneManager.changeToScene(Level_Fall_One, {}, sceneOptions);

@@ -20,6 +20,7 @@ export default class Level_Winter_One extends GameLevel {
     time: number;
     // This should be a variable to each level I guess? 
     maxEnemyNumber: number = 10;
+    currentLevel: string = Scenes.LEVEL_WINTER_ONE;
     
 
 
@@ -195,7 +196,7 @@ export default class Level_Winter_One extends GameLevel {
 
             // We gotta check this with each levels
             if (event.type === UIEvents.CLICKED_RESTART) {
-                this.nextLevel = Scenes.LEVEL_ZERO;
+                this.nextLevel = this.currentLevel;
                 this.screenWipe.imageOffset = new Vec2(0, 0);
                 this.screenWipe.scale = new Vec2(2, 1)
                 this.screenWipe.position.set(2 * this.screenWipe.size.x, this.screenWipe.size.y / 2);

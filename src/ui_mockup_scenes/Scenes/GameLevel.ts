@@ -18,22 +18,18 @@ import * as Tweens from "../Utils/Tweens";
 import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 import Equipment from "../Types/items/Equipment";
 import MaterialsManager from "../GameSystems/MaterialsManager";
-import Shovel from "../Types/items/EquipTypes/Shovel";
-import TrashLid from "../Types/items/EquipTypes/TrashLid";
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import EnemyManager from "../GameSystems/EnemyManager";
-import PillBottle from "../Types/items/EquipTypes/PillBottle";
 import EquipmentManager from "../GameSystems/EquipmentManager";
-import ProjectileController from "../Controllers/ProjectileController";
 import SupportManager from "../GameSystems/SupportManager"
 import MoodManager from "../GameSystems/MoodManager"
 import GrowthManager from "../GameSystems/GrowthManager";
 import LevelZero from "./LevelZero";
 import { Physics } from "../Utils/PhysicsOptions"
 import Timer from "../../Wolfie2D/Timing/Timer";
-import Game from "../../Wolfie2D/Loop/Game";
 import Level_Fall_one from "./Level_Fall_One";
 import Level_Winter_One from "./Level_Winter_One";
+import Level_Spring_One from "./Level_Spring_One";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -312,12 +308,7 @@ export default class GameLevel extends Scene {
 
                         this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
-                    case Scenes.LEVEL_SUMMER_ONE:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
-                        break;
-                    case Scenes.LEVEL_SUMMER_TWO:
+                    case Scenes.LEVEL_SPRING_ONE:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
 
                         this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
@@ -508,6 +499,10 @@ export default class GameLevel extends Scene {
         this.receiver.destroy();
         this.growthManager.destroy();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 20f20b32492aa2cb13313e9979d915bf7b44b400
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
         let playerOptions = {
