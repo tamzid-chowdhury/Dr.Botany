@@ -22,11 +22,7 @@ export default class LevelZero extends GameLevel {
 
     introSequence: ScriptedSequence;
 
-    // // TODO: move mood control into PlantController
-    // overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
-    // mood: string = "normal";
-    // moodMin: number = -10;
-    // moodMax: number = 10;
+    // Custom time
     moodEffectTimer: Timer = new Timer(10000, null, false);
     levelZeroReceiver: Receiver = new Receiver();
 

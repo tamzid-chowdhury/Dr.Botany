@@ -18,7 +18,7 @@ export default class EnemyManager {
     /////////
     mapSize : Vec2;
 
-	constructor(scene: Scene, mapSize : Vec2, size: number = 3 ) {
+	constructor(scene: Scene, mapSize : Vec2, size: number = 5 ) {
 		this.scene = scene;
         this.maxEnemies = size;
         this.initPrototypes();
@@ -75,7 +75,8 @@ export default class EnemyManager {
         enemy.sprite.position.set(xOffset * this.mapSize.x, yOffset * this.mapSize.y)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
-        (<EnemyController>enemy.sprite.ai).wake(player, plant);
+
+        (<EnemyController>enemy.sprite.ai).wake(player, plant, enemy.data.spriteKey);
     }
 
     despawnEnemy(node: GameNode): void {

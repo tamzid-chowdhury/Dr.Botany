@@ -1,5 +1,5 @@
 {
-	"count": 4,
+	"count": 5,
 	"enemies": [
 		{
 			"type": "Downer",
@@ -36,6 +36,14 @@
 			"clipSize": 10,
 			"cooldown": 2000
 			
+		},
+		{
+			"type": "Downer",
+			"health": 30,
+			"scale" : 1,
+			"speed" : 70,
+			"spriteKey": "ghost",
+			"attackType": "ram"
 		}
 	]
 }

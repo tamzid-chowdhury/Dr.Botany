@@ -278,6 +278,14 @@ export default class MoodManager implements Updateable {
 				console.log("Angry mood score : ", this.angryMood);
 			}
 		}
+		// Happy mood cheat code
+		if(Input.isKeyJustPressed('p')) {
+			this.updateMoodLevel(10, 1);
+		}
+		// Angry mood cheat code
+		if(Input.isKeyJustPressed('o')) {
+			this.updateMoodLevel(10, -1);
+		}
 	}
 
 }
