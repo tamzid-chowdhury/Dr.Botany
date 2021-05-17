@@ -67,6 +67,9 @@ export default class Level_Winter_Two extends GameLevel {
         this.growthManager = new GrowthManager(this, 25);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.MAIN_MENU;
+
+        this.equipmentManager.spawnEquipment("PillBottle", new Vec2(340, 570))
+        this.equipmentManager.spawnEquipment("TrashLid", new Vec2(380,570))
     }
 
     updateScene(deltaT: number) {

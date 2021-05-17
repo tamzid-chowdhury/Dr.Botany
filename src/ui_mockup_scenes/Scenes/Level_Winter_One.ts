@@ -11,6 +11,7 @@ import ScriptedSequence from "../Classes/ScriptedSequence";
 import { Physics } from "../Utils/PhysicsOptions";
 import Level_Winter_Two from "./Level_Winter_Two";
 import MainMenu from "../MainMenu";
+import PlayerController from "../Controllers/PlayerController";
 
 export default class Level_Winter_One extends GameLevel {
 
@@ -49,6 +50,9 @@ export default class Level_Winter_One extends GameLevel {
         super.initPlant(this.collidables.size);
         this.plant.animation.playIfNotAlready("EH", true);
         super.initPlayer(this.collidables.size);
+        (<PlayerController>this.player._ai).owner.position.set(730,900)
+        this.equipmentManager.spawnEquipment("PillBottle", new Vec2(900, 920))
+        this.equipmentManager.spawnEquipment("TrashLid", new Vec2(940,920))
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
