@@ -11,7 +11,7 @@ interface HealthPip {
 
 export default class HealthBar {
     centerPos: Vec2;
-    health: number = 5; 
+    health: number = 8; 
     healthPips: Array<HealthPip> = [];
     numHealthPips: number = 0; 
     xOffset: number = 0;

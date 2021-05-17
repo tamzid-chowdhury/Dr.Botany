@@ -65,7 +65,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.direction = Vec2.ZERO;
         this.speed = options.speed;
-        this.health = 5;
+        this.health = 8;
         this.levelView = this.owner.getScene().getViewport();
         this.viewHalfSize = this.levelView.getHalfSize();
 
@@ -320,12 +320,16 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                        
                         this.knockBack = true;
                         if(enemy._ai) {
-                             // hit by the enemy
-                            this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.4);
+                            if((<EnemyController>enemy._ai).dropType === 'ram') {
+                                this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.4);
+
+                            }
+                            else {
+                                this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.2);
+
+                            }
                         }
-                        else {
-                            // hit by projectile
-                        }
+
 
 
                         this.hitTimer.start();

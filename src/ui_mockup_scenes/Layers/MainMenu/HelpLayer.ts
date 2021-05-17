@@ -13,6 +13,17 @@ import GameLayer from "../../Classes/GameLayer";
 
 export class HelpLayer extends GameLayer {
 
+	helpText: Array<string> = 
+	[	
+		"In Dr. Botany you have two goals per level: stay alive and feed your plant.",
+		"Enemies will try to attack you and your plant.", "If you take enough damage it's game over.", 
+		"Your plant will never die, but it will lose growth if it takes damage.",
+		"Defend yourself, and feed the materials they drop to your plant.",
+		"Be warned though, your plant is tempermental;", "what you feed it could have consequences that both help and harm you."
+
+	]
+	lines: Array<Label> = [];
+
 	constructor(scene: Scene, position: Vec2, font: string) {
 		super();
 		this.scene = scene;
@@ -39,16 +50,34 @@ export class HelpLayer extends GameLayer {
 		const title = "Help"
 		this.titleLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.HELP, { position: new Vec2(center.x, center.y - this.sprite.position.y/1.8), text: title });
 		const textColor = Palette.black();
+		let lineOffset = this.sprite.position.y/4;
 
 		this.titleLabel.textColor = textColor;
 		this.titleLabel.fontSize = 48;
 		this.titleLabel.font = Fonts.ABBADON_BOLD;
 		this.titleLabel.tweens.add('scaleIn', Tweens.scaleInText(this.titleLabel.fontSize, 0, 300));
 		this.titleLabel.tweens.add('scaleOut', Tweens.scaleOutText(this.titleLabel.fontSize, 0, 300));
+
+		for(let entry of this.helpText) {
+			let line = <Label>this.scene.add.uiElement(UIElementType.LABEL, UILayers.HELP, { position: new Vec2(center.x, center.y - lineOffset), text: entry });
+			lineOffset -= 58;
+			line.textColor = textColor;
+			line.fontSize = 40;
+			line.font = this.font;
+			line.scale = new Vec2(0,0);
+			line.tweens.add('scaleIn', Tweens.scaleInText(line.fontSize, 0, 300))
+			line.tweens.add('scaleOut', Tweens.scaleOutText(line.fontSize, 0, 300))
+			this.lines.push(line);
+		}
+
+		lineOffset -= 30;
 		
 	}
 
 	playEntryTweens(): void {
+		for(let line of this.lines) {
+			line.tweens.play('scaleIn');
+		}
 		this.titleLabel.tweens.play('scaleIn');
 		this.sprite.tweens.play('scaleIn');
 		this.backButton.label.active = true;
@@ -56,6 +85,9 @@ export class HelpLayer extends GameLayer {
 	}
 
 	playExitTweens(): void {
+		for(let line of this.lines) {
+			line.tweens.play('scaleOut');
+		}
 		this.titleLabel.tweens.play('scaleOut');
 		this.sprite.tweens.play('scaleOut');
 		this.backButton.label.active = false;
