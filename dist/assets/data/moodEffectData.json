@@ -1,16 +1,44 @@
 {
-    "count":2,
-    "effects" : [
+    "upperEffects": [
         {
-            "type": "Downer",
-            "name": "changeDamage",
+            "name": "addSpeed",
+            "value": 10
+        },
+        {
+            "name": "addDamage",
+            "value": 5
+        },
+        {
+            "name": "multiplySpawnRate",
+            "value": 1.5
+        },
+        {
+            "name": "addAttackCooldown",
+            "value": -100
+        }
+    ],
+    "downerEffects" : [
+        {
+            "name": "addSpeed",
+            "value": -2
+        },
+        {
+            "name": "addDamage",
+            "value": -5
+        },
+        {
+            "name": "addDamage",
+            "value": -5
+        },
+        {
+            "name": "multiplyItemDropRate",
             "value": 2
         },
         {
-            "type": "Upper",
-            "name": "changeSpeed",
-            "value": 2
+            "name": "addAttackCooldown",
+            "value": 100
         }
+
         
     ]
 }
