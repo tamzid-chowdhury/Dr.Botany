@@ -7,21 +7,28 @@ import Input from "../../Wolfie2D/Input/Input";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import AnimatedDialog from "../Classes/AnimatedDialog";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GrowthManager from "../GameSystems/GrowthManager";
 import * as Tweens from "../Utils/Tweens";
-import ScriptedSequence from "../Classes/ScriptedSequence"
-export default class LevelZero extends GameLevel {
+
+export default class Level_Winter_Two extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
     lookDirection: Vec2;
+    time: number;
+    // This should be a variable to each level I guess? 
     maxEnemyNumber: number = 10;
-    levelHasStarted: boolean = false;
+    
 
+    testLabel: AnimatedDialog;
 
-    introSequence: ScriptedSequence;
-
+    // // TODO: move mood control into PlantController
+    // overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
+    // mood: string = "normal";
+    // moodMin: number = -10;
+    // moodMax: number = 10;
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelZeroReceiver: Receiver = new Receiver();
 
@@ -30,10 +37,9 @@ export default class LevelZero extends GameLevel {
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
-        this.load.object("tutorialScript", "assets/data/tutorialLevelScript.json")
-        this.load.audio("background_music", "assets/music/in_game_music.mp3")
-        this.load.audio("plant_voice_sfx", "assets/sfx/plant_voice_sfx.wav")
+        this.load.tilemap("level_winter_two", "assets/tilemaps/WinterLevels/WinterLevel2.json");
+
+        this.load.audio("background_music", "assets/music/fall_music.mp3")
     }
 
 
@@ -42,7 +48,8 @@ export default class LevelZero extends GameLevel {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
 
         // this.moodBarTimer.start();
-        let tilemapLayers = this.add.tilemap("level_zero");
+        this.time = Date.now();
+        let tilemapLayers = this.add.tilemap("level_winter_two");
         for (let layer of tilemapLayers) {
             let obj = layer.getItems()[0];
             if (obj.isCollidable) {
@@ -70,11 +77,7 @@ export default class LevelZero extends GameLevel {
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
         this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
-
-
-        let tutorialScript = this.load.getObject("tutorialScript");
-        this.introSequence = new ScriptedSequence(this, tutorialScript, new Vec2(this.plant.position.x, this.plant.position.y - 32));
-
+        this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
 
 
@@ -91,48 +94,36 @@ export default class LevelZero extends GameLevel {
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.growthManager.update(deltaT);
-
-        if(this.levelHasStarted) {
-            // Spawner System, we might need a spawnerManager.ts, this seems to work fine tho
-            ////////////////////////////////////////////////////////////////////////////////////////////////
-            if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
-                this.spawnerTimer.pause();
-                console.log(this.spawnerTimer.toString());
-            }
-            else if (!this.pauseExecution && this.spawnerTimer.isPaused() && !this.completionStatus) {
-                this.spawnerTimer.continue();
-            }
-            if (this.spawnerTimer.isStopped() && this.maxEnemyNumber >= this.enemyManager.activePool.length && !this.pauseExecution) {
-                this.spawnerTimer.start();
-                this.enemyManager.spawnEnemy(this.player, this.plant);
-                // console.log("SPAWNED ENEMY, Current Active Enemies: ", this.enemyManager.activePool.length);
-            }
-            if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
-                this.spawnerTimer.pause();
-                this.finalWave(10);
-                this.finalWaveCleared = true;
-                this.nextLevel = Scenes.LEVEL_FALL_ONE;
-            }
-            // if (this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
-            //     this.emitter.fireEvent(InGame_Events.LEVEL_COMPLETED);
-            // }
-
-            ///////////////////////////////////////////////////////////////////////////////////////////
-
+        // Spawner System, we might need a spawnerManager.ts, this seems to work fine tho
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
+            this.spawnerTimer.pause();
+            console.log(this.spawnerTimer.toString());
         }
-        else if(!this.pauseExecution && !this.introSequence.hasStarted) {
-            this.introSequence.begin();
+        else if (!this.pauseExecution && this.spawnerTimer.isPaused() && !this.completionStatus) {
+            this.spawnerTimer.continue();
         }
-        else if(!this.pauseExecution && this.introSequence.isRunning && !this.introSequence.hasFinished) {
-            this.introSequence.advance();
-        } 
-        else if(this.introSequence.hasFinished) {
-            this.levelHasStarted = true;
-            this.equipmentManager.spawnEquipment("PillBottle", new Vec2(this.plant.position.x, this.plant.position.y + 32))
-
+        if (this.spawnerTimer.isStopped() && this.maxEnemyNumber >= this.enemyManager.activePool.length && !this.pauseExecution) {
+            this.spawnerTimer.start();
+            this.enemyManager.spawnEnemy(this.player, this.plant);
+            // console.log("SPAWNED ENEMY, Current Active Enemies: ", this.enemyManager.activePool.length);
         }
+        if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
+            this.spawnerTimer.pause();
+            this.finalWave(10);
+            this.finalWaveCleared = true;
+            // THIS is completion of the level you declare
+            this.nextLevel = Scenes.LEVEL_FALL_ONE;
+        }
+        // if (this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
+        //     this.emitter.fireEvent(InGame_Events.LEVEL_COMPLETED);
+        // }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        if (!this.testLabel.finished && this.runTest) {
+            this.testLabel.incrementText();
+        }
 
         if (this.moodBarTimer.isStopped() && this.moodBarTimer.hasRun()) {
             this.moodBarTimer.reset();
@@ -146,7 +137,12 @@ export default class LevelZero extends GameLevel {
             // this.mood = "normal";
         }
 
+        if (Input.isKeyJustPressed("t")) {
+            this.testLabel.start();
+            this.runTest = true;
 
+
+        }
 
 
         // if (Input.isKeyJustPressed("o")) {

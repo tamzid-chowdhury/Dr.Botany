@@ -79,7 +79,6 @@ export default class GrowthManager implements Updateable {
 
 
     update(deltaT: number): void {
-
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
@@ -106,7 +105,7 @@ export default class GrowthManager implements Updateable {
         if (this.growthComplete) {
             this.receiver.unsubscribe(InGame_Events.UPDATE_GROWTH);
             this.receiver.unsubscribe(InGame_Events.PLANT_HIT);
-
+            this.receiver.destroy();
             this.emitter.fireEvent(InGame_Events.GROWTH_COMPLETED);
 
             this.growthComplete = false;
