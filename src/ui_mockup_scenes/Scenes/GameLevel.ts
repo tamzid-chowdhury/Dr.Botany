@@ -477,11 +477,6 @@ export default class GameLevel extends Scene {
         this.receiver.destroy();
         this.growthManager.destroy();
     }
-    // unloadScene(): void {
-    //     // TODO: pass managers, player controller to next level 
-    //     console.log('UNLOADINGGGGGGGGGGGGGGGGGGGGGGGGG')
-    //     this.receiver.destroy();
-    // }
 
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
