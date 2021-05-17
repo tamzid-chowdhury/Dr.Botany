@@ -194,7 +194,7 @@ export default class GameLevel extends Scene {
 
 
         // MAKE THIS SOMEHOW DYNAMIC ////////
-        this.moodManager = new MoodManager(this, 10);
+        this.moodManager = new MoodManager(this, 5);
     }
 
     updateScene(deltaT: number) {
@@ -231,7 +231,7 @@ export default class GameLevel extends Scene {
                 this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
             }
         }
-        if(Input.isKeyJustPressed("y")) {
+        if(Input.isKeyJustPressed("5")) {
             this.emitter.fireEvent(InGame_Events.TOGGLE_PAUSE);
             this.levelCompletionScreenLayer.playEntryTweens();
             this.reticle.visible = false;
@@ -438,12 +438,6 @@ export default class GameLevel extends Scene {
                 else if (this.supportManager.hasAmmoPacksToSpawn() && Math.random() < 0.05) {
                     this.emitter.fireEvent(InGame_Events.SPAWN_AMMO, { position: ownerPosition });
                 }
-
-
-
-
-
-
                 this.enemyManager.despawnEnemy(node);
             }
 
@@ -506,7 +500,6 @@ export default class GameLevel extends Scene {
         this.growthManager.destroy();
     }
 
-
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
         let playerOptions = {
@@ -517,36 +510,25 @@ export default class GameLevel extends Scene {
             plant: this.plant
         }
         this.player.addAI(PlayerController, playerOptions);
-
-
     }
-
-
     initGameUI(halfsize: Vec2): void {
         this.inGameUILayer = new InGameUILayer(this, halfsize, this.defaultFont, this.viewport);
-
     }
-
     initPauseMenu(halfsize: Vec2): void {
         this.pauseScreenLayer = new PauseScreenLayer(this, halfsize);
-
     }
-
     initGameOverScreen(halfSize: Vec2): void {
         this.gameOverScreenLayer = new GameOverScreenLayer(this, halfSize);
     }
-
     initLevelCompletionScreen(halfSize: Vec2): void {
         this.levelCompletionScreenLayer = new LevelCompletionScreenLayer(this, halfSize);
     }
-
     initViewport(mapSize: Vec2): void {
         let origin = this.viewport.getOrigin();
         this.viewport.setBounds(origin.x + 8, origin.y + 8, mapSize.x - 8, mapSize.y + 8);
         this.viewport.setSize(480, 270); // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
         this.viewport.setFocus(new Vec2(this.player.position.x, this.player.position.y));
     }
-
     initReticle(): void {
         this.cursorLayer = this.addUILayer(UILayers.CURSOR);
         this.cursorLayer.setDepth(900);
@@ -564,17 +546,10 @@ export default class GameLevel extends Scene {
     initSpawnerTimer(time: number) {
         this.spawnerTimer = new Timer(time, null, false);
     }
-
     finalWave(number: number) {
 
         for (let i = 0; i < number; i++) {
             this.enemyManager.spawnEnemy(this.player, this.player);
         }
     }
-    ///////////////////////////////////////////////////////
-    doubleSpawnTime() {
-        this.spawnerTimer.setTime(this.spawnerTimer.getTime() / 2);
-    }
-    //////////////////////////////////////////////////////
-
 }
