@@ -15,6 +15,7 @@ import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
 import * as Tweens from "./Utils/Tweens"
 import { Physics } from "./Utils/PhysicsOptions"
+import Level_Fall_one from "./Scenes/Level_Fall_One";
 
 
 export default class MainMenu extends Scene {
@@ -122,6 +123,8 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe(GameEventType.MOUSE_DOWN);
         this.receiver.subscribe(GameEventType.MOUSE_UP);
         this.receiver.subscribe(UIEvents.CLICKED_TOGGLE);
+        this.receiver.subscribe(UIEvents.TRANSITION_LEVEL_MAIN);
+
 
     }
 
@@ -222,7 +225,6 @@ export default class MainMenu extends Scene {
 
             if (event.type === UIEvents.CLICKED_SUMMER) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
-
                 this.nextLevel = Scenes.LEVEL_SUMMER_ONE;
                 this.screenWipe = this.add.sprite("screen_wipe", UILayers.CURSOR);
                 this.screenWipe.imageOffset = new Vec2(0, 0);
@@ -259,29 +261,35 @@ export default class MainMenu extends Scene {
 
             }
             if (event.type === UIEvents.TRANSITION_LEVEL_MAIN) {
+                let sceneOptions = {
+                    physics: Physics
+                }
                 switch (this.nextLevel) {
                     case Scenes.LEVEL_ZERO:
-                        this.sceneManager.changeToScene(LevelZero, {}, Physics);
+                        
+                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
                     case Scenes.LEVEL_SUMMER_ONE:
-                        console.log("clicked summer ")
+                        // change LevelZero to your own * first one
+                        
+                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
 
                     case Scenes.LEVEL_FALL_ONE:
-                        console.log("clicked fall")
+                        
+                        this.sceneManager.changeToScene(Level_Fall_one, {}, sceneOptions);
                         break;
 
                     case Scenes.LEVEL_WINTER_ONE:
-                        console.log("clicked winter")
+                        // change LevelZero to your own * first one
+                        
+                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
 
                     default:
                         break;
                 }
-                let sceneOptions = {
-                    physics: Physics
-                }
-                this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
+
             }
 
             if (event.type === UIEvents.CLICKED_CONTROLS) {

@@ -21,7 +21,7 @@ export default class LevelZero extends GameLevel {
     time: number;
     // This should be a variable to each level I guess? 
     maxEnemyNumber: number = 10;
-
+    
 
     testLabel: AnimatedDialog;
 
@@ -113,6 +113,7 @@ export default class LevelZero extends GameLevel {
             this.spawnerTimer.pause();
             this.finalWave(10);
             this.finalWaveCleared = true;
+            // THIS is completion of the level you declare
             this.nextLevel = Scenes.LEVEL_FALL_ONE;
         }
         // if (this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
