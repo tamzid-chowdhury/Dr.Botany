@@ -15,10 +15,7 @@ import LevelZero from "./Scenes/LevelZero";
 import GameButton from "./Classes/GameButton";
 import * as Tweens from "./Utils/Tweens"
 import { Physics } from "./Utils/PhysicsOptions"
-import Level_Fall_one from "./Scenes/Level_Fall_One";
-import Level_Spring_One from "./Scenes/Level_Spring_One";
 import Level_Winter_One from "./Scenes/Level_Winter_One";
-import Level_Winter_Two from "./Scenes/Level_Winter_Two";
 import Level_Fall_One from "./Scenes/Level_Fall_One";
 
 export default class MainMenu extends Scene {
@@ -256,9 +253,9 @@ export default class MainMenu extends Scene {
                 }
                 switch (this.nextLevel) {
                     case Scenes.LEVEL_ZERO:
-                        
                         this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
+                    
                     case Scenes.LEVEL_FALL_ONE:
                         
                         this.sceneManager.changeToScene(Level_Fall_One, {}, sceneOptions);

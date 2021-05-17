@@ -127,7 +127,7 @@ export default class Level_Fall_One extends GameLevel {
 
             // We gotta check this with each levels
             if (event.type === UIEvents.CLICKED_RESTART) {
-                this.nextLevel = this.currentLevel;
+                super.nextLevel = this.currentLevel;
                 this.screenWipe.imageOffset = new Vec2(0, 0);
                 this.screenWipe.scale = new Vec2(2,1)
                 this.screenWipe.position.set(2*this.screenWipe.size.x, this.screenWipe.size.y/2);

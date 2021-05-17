@@ -36,7 +36,6 @@ export default class Level_Spring_One extends GameLevel {
         super.startScene()
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
-        this.time = Date.now();
         let tilemapLayers = this.add.tilemap("level_spring_one");
         for (let layer of tilemapLayers) {
             let obj = layer.getItems()[0];
@@ -50,11 +49,13 @@ export default class Level_Spring_One extends GameLevel {
 
         //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
         super.initPlant(this.collidables.size);
-        super.initPlayer(this.collidables.size);
+        this.plant.animation.playIfNotAlready("EH", true);
+		super.initPlayer(this.collidables.size);
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
         super.initGameOverScreen(this.viewport.getHalfSize());
+        super.initLevelCompletionScreen(this.viewport.getHalfSize());
         super.initSpawnerTimer(3000);
         this.viewport.follow(this.player);
 
@@ -71,23 +72,31 @@ export default class Level_Spring_One extends GameLevel {
 
         this.growthManager = new GrowthManager(this);
         this.spawnerTimer.start();
+        this.nextLevel = Scenes.LEVEL_FALL_ONE;
 
     }
 
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.growthManager.update(deltaT);
-        if(this.pauseExecution && this.spawnerTimer.isActive()) {
-            this.spawnerTimer.pause();
-            console.log(this.spawnerTimer.toString());
-        }
-        else if(!this.pauseExecution && this.spawnerTimer.isPaused()) {
-            this.spawnerTimer.continue();
-        }
-        if(this.spawnerTimer.isStopped() && this.maxEnemyNumber >= this.enemyManager.activePool.length && !this.pauseExecution) {
-            this.spawnerTimer.start();
-            this.enemyManager.spawnEnemy(this.player, this.plant);
-        }
+		if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
+			this.spawnerTimer.pause();
+			console.log(this.spawnerTimer.toString());
+		}
+		else if (!this.pauseExecution && this.spawnerTimer.isPaused() && !this.completionStatus) {
+			this.spawnerTimer.continue();
+		}
+		if (this.spawnerTimer.isStopped() && this.maxEnemyNumber >= this.enemyManager.activePool.length && !this.pauseExecution) {
+			this.spawnerTimer.start();
+			this.enemyManager.spawnEnemy(this.player, this.plant);
+		}
+		if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
+			this.spawnerTimer.pause();
+			// Change the number of final wave enemies for each level
+			this.finalWave(10);
+			this.finalWaveCleared = true;
+
+		}
 
 
 		else if(this.pauseExecution && this.moodEffectTimer.isActive()) {
