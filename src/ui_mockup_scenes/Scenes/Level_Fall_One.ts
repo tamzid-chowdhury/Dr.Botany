@@ -26,7 +26,7 @@ export default class Level_Fall_One extends GameLevel {
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_fall_one", "assets/tilemaps/FallLevel/level_fall_one.json");
+        this.load.tilemap("level_fall_one", "assets/tilemaps/FallLevel/level_fall_one_1.json");
         this.load.audio("background_music", "assets/music/fall_music.mp3")
     }
 
@@ -60,10 +60,7 @@ export default class Level_Fall_One extends GameLevel {
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
         super.initGameOverScreen(this.viewport.getHalfSize());
-<<<<<<< HEAD
-=======
         super.initLevelCompletionScreen(this.viewport.getHalfSize());
->>>>>>> c0c010163ab954ed8b65cb4427ec72eb420d909c
         super.initSpawnerTimer(3000);
         this.viewport.follow(this.player);
 

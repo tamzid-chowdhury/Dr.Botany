@@ -281,53 +281,7 @@ export default class GameLevel extends Scene {
 
             }
 
-<<<<<<< HEAD
-            if (event.type === UIEvents.TRANSITION_LEVEL) {
-                let sceneOptions = {
-                    physics: Physics
-                }
-                switch (this.nextLevel) {
-                    case Scenes.MAIN_MENU:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-
-                        this.sceneManager.changeToScene(MainMenu, {});
-                        break;
-                    case Scenes.LEVEL_ZERO:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
-                        break;
-                    case Scenes.LEVEL_SPRING_ONE:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
-                        break;
-                    case Scenes.LEVEL_FALL_ONE:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
-                        break;
-                    case Scenes.LEVEL_FALL_TWO:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
-                        break;
-                    case Scenes.LEVEL_WINTER_ONE:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
-                        break;
-                    case Scenes.LEVEL_WINTER_TWO:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
-                        break;
-
-                    default:
-                        // level1
-                        break;
-                }
-            }
-=======
             
->>>>>>> c0c010163ab954ed8b65cb4427ec72eb420d909c
 
             if (event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();
