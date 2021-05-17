@@ -287,6 +287,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 if (event.type === InGame_Events.GAME_OVER) {
                     this.gameOver = true;
                     this.owner.disablePhysics();
+                    this.equipped.disable();
                 }
 
                 if (event.type === InGame_Events.TOGGLE_PAUSE) {
@@ -401,10 +402,25 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                         this.equipped.charges = 1;
                     }
 
+                    if(this.stowed.name == "PillBottle"){
+                        this.stowed.charges += 50;
+                    }
+                    if(this.stowed.name == "TrashLid"){
+                        this.stowed.charges += 10;
+                    }
+                    if(this.stowed.name == "Shovel"){
+                        this.stowed.charges = 1;
+                    }
+
   
                 
                     if (this.equipped.type === WeaponTypes.AMMO) {
                         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.equipped.iconSpriteKey, ammo: this.equipped.charges })
+        
+                    }
+
+                    if (this.stowed.type === WeaponTypes.AMMO) {
+                        this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.stowed.iconSpriteKey, ammo: this.stowed.charges })
         
                     }
 

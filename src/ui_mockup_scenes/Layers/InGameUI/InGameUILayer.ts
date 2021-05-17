@@ -117,14 +117,29 @@ export default class InGameUI implements Updateable {
             let announceText = '';
             let color;
             if(event.type === InGame_GUI_Events.UPDATE_MOOD_BAR){
+                let type = event.data.get('type');
                 let moodChange = event.data.get('moodChange');
-                let newPos = (10*moodChange / (this.moodBar.sprite.size.x/16)) +  this.moodBar.indicator.position.x;
-                newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
-                this.moodBar.indicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.indicator.position.x, newPos));   
-                this.moodBar.indicator.scale.x += 1;     
-                this.moodBar.indicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.indicator.scale));        
-                this.moodBar.indicator.tweens.play("slideX");        
-                this.moodBar.indicator.tweens.play("scale");        
+                console.log(type, moodChange)
+                if(type == 1){
+                    let newPos = (10*moodChange / (this.moodBar.sprite.size.x/16)) +  this.moodBar.happyindicator.position.x;
+                    newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
+                    this.moodBar.happyindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
+                    // this.moodBar.happyindicator.scale.x += 1;     
+                    // this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    this.moodBar.happyindicator.tweens.play("slideX");        
+                    // this.moodBar.happyindicator.tweens.play("scale"); 
+                }
+
+                if(type == -1){
+                    let newPos = (10*(-1*moodChange) / (this.moodBar.sprite.size.x/16)) +  this.moodBar.angryindicator.position.x;
+                    newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
+                    this.moodBar.angryindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.angryindicator.position.x, newPos));   
+                    // this.moodBar.angryindicator.scale.x += 1;     
+                    // this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.angryindicator.scale));        
+                    this.moodBar.angryindicator.tweens.play("slideX");        
+                    // this.moodBar.angryindicator.tweens.play("scale"); 
+                }
+      
             }
 
             if(event.type === InGame_GUI_Events.UPDATE_GROWTH_BAR){
@@ -138,12 +153,25 @@ export default class InGameUI implements Updateable {
             }
 
             if(event.type === InGame_GUI_Events.RESET_MOOD_BAR){
+                let type = event.data.get('type');
                 let newPos = this.moodBar.xOffset; 
-                this.moodBar.indicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.indicator.position.x, newPos));   
-                this.moodBar.indicator.scale.x += 1;     
-                this.moodBar.indicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.indicator.scale));        
-                this.moodBar.indicator.tweens.play("slideX");        
-                this.moodBar.indicator.tweens.play("scale");        
+
+                if(type == 1){
+                    this.moodBar.happyindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
+                    // this.moodBar.happyindicator.scale.x += 1;     
+                    // this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    this.moodBar.happyindicator.tweens.play("slideX");        
+                    // this.moodBar.happyindicator.tweens.play("scale");   
+                }
+                
+                if(type == -1){
+                    this.moodBar.angryindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
+                    // this.moodBar.angryindicator.scale.x += 1;     
+                    // this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    this.moodBar.angryindicator.tweens.play("slideX");        
+                    // this.moodBar.angryindicator.tweens.play("scale");   
+                }
+    
             }
 
             // if(event.type === InGame_GUI_Events.SHOW_GROWTH_BAR){

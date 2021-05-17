@@ -1,44 +1,47 @@
 {
     "upperEffects": [
         {
-            "name": "addSpeed",
+
+            "name": "SpeedUP_Player",
+            "value": 35
+        },
+        {
+            "name": "SpeedUP_Enemies",
+            "value": 20
+        },
+        {
+            "name": "addDamage_Player",
             "value": 10
         },
         {
-            "name": "addDamage",
-            "value": 5
-        },
-        {
             "name": "multiplySpawnRate",
-            "value": 1.5
-        },
-        {
-            "name": "addAttackCooldown",
-            "value": -100
-        }
-    ],
-    "downerEffects" : [
-        {
-            "name": "addSpeed",
-            "value": -2
-        },
-        {
-            "name": "addDamage",
-            "value": -5
-        },
-        {
-            "name": "addDamage",
-            "value": -5
-        },
-        {
-            "name": "multiplyItemDropRate",
             "value": 2
         },
         {
             "name": "addAttackCooldown",
-            "value": 100
+            "value": 200
         }
-
-        
+    ],
+    "downerEffects" : [
+        {
+            "name": "SpeedDown_Player",
+            "value": -35
+        },
+        {
+            "name": "SpeedDown_Enemies",
+            "value": -20
+        },
+        {
+            "name": "multiplyGrowth",
+            "value": 3
+        },
+        {
+            "name": "addDamage_Enemies",
+            "value": 2
+        },
+        {
+            "name": "reduceAttackCooldown",
+            "value": -100
+        }
     ]
 }

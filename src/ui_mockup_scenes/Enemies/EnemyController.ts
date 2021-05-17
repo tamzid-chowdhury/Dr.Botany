@@ -52,6 +52,10 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     invuln: boolean = false;
     damageGuard: Timer;
     currentStateName: string;
+    
+    ghostType: boolean;
+    ghostingTimer: Timer = new Timer(10000, null, false); // timer that follows
+	normalTimer: Timer = new Timer(3000, null, false); // timer that ghosts
 
 
     container: Enemy;
@@ -78,7 +82,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 		this.addState(EnemyStates.DAMAGED, knockback);
         let dying = new Dying(this, owner);
         this.addState(EnemyStates.DYING, dying)
-
+        
         this.initialize(EnemyStates.IDLE);
         this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER])
 
@@ -93,8 +97,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     handleEvent(event: GameEvent): void {
-        
-        if(this.owner.active) {
+        if(this.owner.active && this.attackType !== "ghost") {
             
             if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
                 if(this.pauseExecution) {
@@ -103,12 +106,44 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
                 }
                 else {
                     this.pauseExecution = true;
+
+                   
                     this.changeState(EnemyStates.IDLE);
                 }
 
             }
         }
+        else if(this.attackType === "ghost") {
+            if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
+                if(this.pauseExecution) {
+                    this.pauseExecution = false;
+                    ///////
+                    if(this.ghostingTimer.isPaused()) {
+                        this.ghostingTimer.continue();
+                    }
+                    if(this.normalTimer.isPaused()) {
+                        this.normalTimer.continue();
+                    }
 
+                    ///////
+                    this.changeState(EnemyStates.WALK);
+                }
+                else {
+                    this.pauseExecution = true;
+
+                    ///////
+                    if(this.ghostingTimer.isActive()) {
+                        this.ghostingTimer.pause();
+                    }
+                    if(this.normalTimer.isActive()) {
+                        this.normalTimer.pause();
+                    }
+                    ///////
+                    this.changeState(EnemyStates.IDLE);
+                }
+
+            }
+        }
     }
 
     update(deltaT: number): void {
@@ -144,11 +179,12 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         
     }
 
-    wake(player: GameNode, plant:GameNode): void {
+    wake(player: GameNode, plant:GameNode, spriteKey:string): void {
         this.player = player;
         this.plant = plant;
         this.health = this.options.health;
         this.speed = this.options.speed;
+        console.log(spriteKey);
         this.changeState(EnemyStates.WALK);
     } 
 
@@ -167,14 +203,14 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     getOwnerPosition(): Vec2 {
         return this.owner.position;
     }
-
-    increaseSpeed(): void {
-        this.speed = this.speed * 2;
-    }
-    decreaseSpeed(): void {
-        this.speed = this.speed / 2;
-    }
     hasNoPlant() : boolean {
         return (this.plant === null);
+    }
+
+    disableGhost() : void {
+        this.owner.disablePhysics()
+    }
+    enableGhost() : void {
+        this.owner.enablePhysics();
     }
 }
