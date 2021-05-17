@@ -140,22 +140,13 @@ export default class LevelZero extends GameLevel {
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
                 this.plant.animation.play("ANGRY", true);
-<<<<<<< HEAD
-                this.moodManager.applyEffect(this, "downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length));
-=======
-                this.moodManager.applyEffect(this,"downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length), this.player.position);
-                
->>>>>>> 9d0d7a656dec9fb57a885552f29b29c7a71f0492
+                this.moodManager.applyEffect(this, "downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length), this.player.position);
             }
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
                 this.plant.animation.play("HAPPY", true);
-<<<<<<< HEAD
-                this.moodManager.applyEffect(this, "upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length));
-=======
                 this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length), this.player.position);
                 
->>>>>>> 9d0d7a656dec9fb57a885552f29b29c7a71f0492
             }
             if (event.type === UIEvents.CLICKED_RESTART) {
                 // Change this to your level

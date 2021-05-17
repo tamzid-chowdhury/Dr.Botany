@@ -91,7 +91,7 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.CLEAR_DOWNER_LABEL,
             InGame_GUI_Events.UPDATE_HEALTHBAR,
             InGame_GUI_Events.SHOW_INTERACT_LABEL,
-            InGame_GUI_Events. HIDE_INTERACT_LABEL,
+            InGame_GUI_Events.HIDE_INTERACT_LABEL,
             InGame_GUI_Events.UPDATE_EQUIP_SLOT,
             InGame_GUI_Events.SHOW_GROWTH_BAR,
             InGame_GUI_Events.HIDE_GROWTH_BAR,
