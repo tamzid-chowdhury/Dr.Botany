@@ -124,19 +124,10 @@ export default class Level_Fall_One extends GameLevel {
                 
             }
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-<<<<<<< HEAD
                 this.moodEffectTimer.start();
                 this.plant.animation.play("HAPPY", true);
                 this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length), this.player.position);
                 
-=======
-                //this.mood = "happy";
-                if (this.moodBarTimer.isActive() === false) {
-                    this.moodBarTimer.start();
-                    // console.log("Happy mood reached, have to implement faster enemies' speed behavior")
-                    // this.increaseEnemySpeed(); // increase speed buggy 
-                }
->>>>>>> 912d7a8a5de4a7732992340a76fc0710fff55b7f
             }
             if (event.type === UIEvents.CLICKED_RESTART) {
                 this.nextLevel = this.currentLevel;
