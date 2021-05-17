@@ -19,7 +19,6 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import { PhysicsGroups } from "../Utils/PhysicsOptions";
 import Enemy from "../Types/enemies/Enemy";
 import ProjectileEnemy from "../Types/enemies/ProjectileEnemy";
-import Ghostwalk from "./EnemyStates/ghostWalk";
 
 
 
@@ -29,8 +28,7 @@ export enum EnemyStates {
 	DAMAGED = "DAMAGED",
     ATTACKING = "attacking",
 	PREVIOUS = "previous",
-    DYING = "dying",
-    GHOSTWALK = "ghostwalk"
+    DYING = "dying"
 }
 
 export default class EnemyController extends StateMachineAI implements BattlerAI {
@@ -56,6 +54,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     currentStateName: string;
     
     ghostType: boolean;
+    ghostingTimer: Timer = new Timer(10000, null, false); // timer that follows
+	normalTimer: Timer = new Timer(3000, null, false); // timer that ghosts
 
 
     container: Enemy;
@@ -81,16 +81,9 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         let knockback = new Damaged(this, owner);
 		this.addState(EnemyStates.DAMAGED, knockback);
         let dying = new Dying(this, owner);
-        this.addState(EnemyStates.DYING, dying);
+        this.addState(EnemyStates.DYING, dying)
         
-        if(owner.imageId === "ghost") {
-            let ghostwalk = new Ghostwalk(this, owner);
-            this.addState(EnemyStates.GHOSTWALK, ghostwalk);
-            this.initialize(EnemyStates.GHOSTWALK);
-        }
-        else {
-            this.initialize(EnemyStates.IDLE);
-        }
+        this.initialize(EnemyStates.IDLE);
         this.receiver.subscribe([InGame_Events.ENEMY_DEATH_ANIM_OVER, InGame_Events.TOGGLE_PAUSE, InGame_Events.GAME_OVER])
 
 
@@ -104,8 +97,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 	}
 
     handleEvent(event: GameEvent): void {
-        
-        if(this.owner.active) {
+        if(this.owner.active && this.attackType !== "ghost") {
             
             if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
                 if(this.pauseExecution) {
@@ -114,12 +106,44 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
                 }
                 else {
                     this.pauseExecution = true;
+
+                   
                     this.changeState(EnemyStates.IDLE);
                 }
 
             }
         }
+        else if(this.attackType === "ghost") {
+            if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
+                if(this.pauseExecution) {
+                    this.pauseExecution = false;
+                    ///////
+                    if(this.ghostingTimer.isPaused()) {
+                        this.ghostingTimer.continue();
+                    }
+                    if(this.normalTimer.isPaused()) {
+                        this.normalTimer.continue();
+                    }
 
+                    ///////
+                    this.changeState(EnemyStates.WALK);
+                }
+                else {
+                    this.pauseExecution = true;
+
+                    ///////
+                    if(this.ghostingTimer.isActive()) {
+                        this.ghostingTimer.pause();
+                    }
+                    if(this.normalTimer.isActive()) {
+                        this.normalTimer.pause();
+                    }
+                    ///////
+                    this.changeState(EnemyStates.IDLE);
+                }
+
+            }
+        }
     }
 
     update(deltaT: number): void {
@@ -161,13 +185,7 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.health = this.options.health;
         this.speed = this.options.speed;
         console.log(spriteKey);
-        if(spriteKey === "ghost") {
-            this.changeState(EnemyStates.GHOSTWALK);
-        }
-        else {
-            this.changeState(EnemyStates.WALK);
-        }
-        
+        this.changeState(EnemyStates.WALK);
     } 
 
     sleep(): void {
@@ -187,5 +205,12 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     }
     hasNoPlant() : boolean {
         return (this.plant === null);
+    }
+
+    disableGhost() : void {
+        this.owner.disablePhysics()
+    }
+    enableGhost() : void {
+        this.owner.enablePhysics();
     }
 }
