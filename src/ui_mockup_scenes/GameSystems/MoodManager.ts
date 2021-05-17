@@ -218,7 +218,6 @@ export default class MoodManager implements Updateable {
 
 	updateMoodLevel(count: number, type: number): void {
 		// NOTE: Type is either -1 or 1, so that the mood will shift in the upper/downer direction
-		console.log(this.moodEffect)
 		if (type === 1 && !this.moodEffect) {
 			//upper update
 			this.happyMood += count;
