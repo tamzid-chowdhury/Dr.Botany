@@ -499,10 +499,6 @@ export default class GameLevel extends Scene {
         this.receiver.destroy();
         this.growthManager.destroy();
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 20f20b32492aa2cb13313e9979d915bf7b44b400
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
         let playerOptions = {

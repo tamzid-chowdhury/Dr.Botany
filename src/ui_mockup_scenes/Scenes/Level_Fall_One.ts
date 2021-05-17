@@ -8,7 +8,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GrowthManager from "../GameSystems/GrowthManager";
 import * as Tweens  from "../Utils/Tweens";
 
-export default class Level_Spring_One extends GameLevel {
+export default class Level_Fall_One extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
@@ -18,13 +18,13 @@ export default class Level_Spring_One extends GameLevel {
     moodEffectTimer: Timer = new Timer(30000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelReceiver: Receiver = new Receiver();
-    currentLevel: string = Scenes.LEVEL_SPRING_ONE;
+    currentLevel: string = Scenes.LEVEL_FALL_ONE;
 
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_spring_one", "assets/tilemaps/SpringLevel/springLevel.json");
-        this.load.audio("background_music", "assets/music/in_game_music.mp3")
+        this.load.tilemap("level_fall_one", "assets/tilemaps/FallLevel/level_fall_one.json");
+        this.load.audio("background_music", "assets/music/fall_music.mp3")
     }
 
 	unloadScene(): void {
@@ -37,7 +37,7 @@ export default class Level_Spring_One extends GameLevel {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
         this.time = Date.now();
-        let tilemapLayers = this.add.tilemap("level_spring_one");
+        let tilemapLayers = this.add.tilemap("level_fall_one");
         for (let layer of tilemapLayers) {
             let obj = layer.getItems()[0];
             if (obj.isCollidable) {
@@ -66,8 +66,8 @@ export default class Level_Spring_One extends GameLevel {
 
         //we initialized supportmanager in gamelevel but it starts with 0 healthpacks and 0 ammopacks 
         //we use addHealthPacks and addAmmoPacks to add how many we want for each level. in tutorial level will have 5 each
-        this.supportManager.addHealthPacks(10); 
-        this.supportManager.addAmmoPacks(10);
+        this.supportManager.addHealthPacks(20); 
+        this.supportManager.addAmmoPacks(20);
 
         this.growthManager = new GrowthManager(this);
         this.spawnerTimer.start();
