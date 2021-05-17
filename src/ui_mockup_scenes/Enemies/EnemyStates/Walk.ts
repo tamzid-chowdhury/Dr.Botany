@@ -132,9 +132,11 @@ export default class Walk extends EnemyState {
 
 		let plantPosX = plantPos.x;
 		let plantPosY = plantPos.y;
-
-		let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
-		let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
+		
+		let distanceToPlayer = ownerPos.distanceSqTo(playerPos);
+		let distanceToPlant = ownerPos.distanceSqTo(plantPos);
+		// let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
+		// let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
 
 		if ((distanceToPlant + this.distBuffer) > distanceToPlayer) {   // moving to the player
 
@@ -325,8 +327,11 @@ export default class Walk extends EnemyState {
 		let plantPosX = plantPos.x;
 		let plantPosY = plantPos.y;
 
-		let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
-		let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
+		// let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
+		// let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
+
+		let distanceToPlayer = ownerPos.distanceSqTo(playerPos);
+		let distanceToPlant = ownerPos.distanceSqTo(plantPos);
 
 		if ((distanceToPlant + this.distBuffer) > distanceToPlayer) {   // moving to the player
 

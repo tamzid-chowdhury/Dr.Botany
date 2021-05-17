@@ -113,37 +113,37 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
 
             }
         }
-        else if(this.attackType === "ghost") {
-            if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
-                if(this.pauseExecution) {
-                    this.pauseExecution = false;
-                    ///////
-                    if(this.ghostingTimer.isPaused()) {
-                        this.ghostingTimer.continue();
-                    }
-                    if(this.normalTimer.isPaused()) {
-                        this.normalTimer.continue();
-                    }
+        // else if(this.attackType === "ghost") {
+        //     if(event.type === InGame_Events.TOGGLE_PAUSE || event.type === InGame_Events.GAME_OVER) {
+        //         if(this.pauseExecution) {
+        //             this.pauseExecution = false;
+        //             ///////
+        //             if(this.ghostingTimer.isPaused()) {
+        //                 this.ghostingTimer.continue();
+        //             }
+        //             if(this.normalTimer.isPaused()) {
+        //                 this.normalTimer.continue();
+        //             }
 
-                    ///////
-                    this.changeState(EnemyStates.WALK);
-                }
-                else {
-                    this.pauseExecution = true;
+        //             ///////
+        //             this.changeState(EnemyStates.WALK);
+        //         }
+        //         else {
+        //             this.pauseExecution = true;
 
-                    ///////
-                    if(this.ghostingTimer.isActive()) {
-                        this.ghostingTimer.pause();
-                    }
-                    if(this.normalTimer.isActive()) {
-                        this.normalTimer.pause();
-                    }
-                    ///////
-                    this.changeState(EnemyStates.IDLE);
-                }
+        //             ///////
+        //             if(this.ghostingTimer.isActive()) {
+        //                 this.ghostingTimer.pause();
+        //             }
+        //             if(this.normalTimer.isActive()) {
+        //                 this.normalTimer.pause();
+        //             }
+        //             ///////
+        //             this.changeState(EnemyStates.IDLE);
+        //         }
 
-            }
-        }
+        //     }
+        // }
     }
 
     update(deltaT: number): void {
@@ -184,7 +184,6 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         this.plant = plant;
         this.health = this.options.health;
         this.speed = this.options.speed;
-        console.log(spriteKey);
         this.changeState(EnemyStates.WALK);
     } 
 
@@ -207,10 +206,10 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
         return (this.plant === null);
     }
 
-    disableGhost() : void {
-        this.owner.disablePhysics()
-    }
-    enableGhost() : void {
-        this.owner.enablePhysics();
-    }
+    // disableGhost() : void {
+    //     this.owner.disablePhysics()
+    // }
+    // enableGhost() : void {
+    //     this.owner.enablePhysics();
+    // }
 }

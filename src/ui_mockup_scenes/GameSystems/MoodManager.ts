@@ -60,11 +60,11 @@ export default class MoodManager implements Updateable {
 	}
 
 	applyEffect(scene: GameLevel, upperOrDowner: string, effectChoice: number, playerPosition: Vec2): void {
-		console.log("applying effects")
+		// console.log("applying effects")
 		this.moodEffect = true;
 		if (upperOrDowner === "upper") {
 			let dataName = this.prototypesHappy[effectChoice].name;
-			console.log("Upper Effect : ", dataName);
+			// console.log("Upper Effect : ", dataName);
 			let value = this.prototypesHappy[effectChoice].value;
 			switch (dataName) {
 				case "SpeedUP_Player":
@@ -107,7 +107,7 @@ export default class MoodManager implements Updateable {
 		if (upperOrDowner === "downer") {
 			let dataName = this.prototypesAngry[effectChoice].name;
 			let value = this.prototypesAngry[effectChoice].value;
-			console.log("Downer Effect : ", dataName);
+			// console.log("Downer Effect : ", dataName);
 			switch (dataName) {
 				case "SpeedDown_Player":
 					this.currentMoodEffect = "Player Speed Down";
@@ -146,7 +146,7 @@ export default class MoodManager implements Updateable {
 	}
 
 	resetEffect(scene: GameLevel, playerPosition: Vec2): void {
-		console.log("resetting effects")
+		// console.log("resetting effects")
 		this.moodEffect = false;
 		switch (this.currentMoodEffect) {
 			// UPPER EFFECT RESET
@@ -168,9 +168,9 @@ export default class MoodManager implements Updateable {
 				break;
 			case "addDamage_Player":
 				this.currentMoodEffect = "No Effect";
-				console.log((<PlayerController>scene.player.ai).equipped.damage);
+				// console.log((<PlayerController>scene.player.ai).equipped.damage);
 				(<PlayerController>scene.player.ai).equipped.damage = this.originalValue;
-				console.log((<PlayerController>scene.player.ai).equipped.damage);
+				// console.log((<PlayerController>scene.player.ai).equipped.damage);
 				break;
 			case "multiplySpawnRate":
 				this.currentMoodEffect = "No Effect";
@@ -277,8 +277,8 @@ export default class MoodManager implements Updateable {
 				let type = event.data.get('type');
 				let count = event.data.get('count');
 				this.updateMoodLevel(count, type);
-				console.log("Happy mood score : ", this.happyMood);
-				console.log("Angry mood score : ", this.angryMood);
+				// console.log("Happy mood score : ", this.happyMood);
+				// console.log("Angry mood score : ", this.angryMood);
 			}
 		}
 		// Happy mood cheat code

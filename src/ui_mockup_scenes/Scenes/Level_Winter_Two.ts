@@ -77,7 +77,7 @@ export default class Level_Winter_Two extends GameLevel {
         this.growthManager.update(deltaT);
         if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
             this.spawnerTimer.pause();
-            console.log(this.spawnerTimer.toString());
+            // console.log(this.spawnerTimer.toString());
         }
         else if (!this.pauseExecution && this.spawnerTimer.isPaused() && !this.completionStatus) {
             this.spawnerTimer.continue();
@@ -121,6 +121,7 @@ export default class Level_Winter_Two extends GameLevel {
                 
             }
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
+
                 this.moodEffectTimer.start();
                 this.plant.animation.play("HAPPY", true);
                 this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length), this.player.position);

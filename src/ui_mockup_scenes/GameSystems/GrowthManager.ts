@@ -17,7 +17,6 @@ export default class GrowthManager implements Updateable {
     growthComplete: boolean = false;
     firstGrowthReached: boolean = false;
     timer: Timer = new Timer(3000, () => {
-        // this.receiver.subscribe(InGame_Events.PLANT_HIT);
 
     }, false);
 
@@ -65,7 +64,6 @@ export default class GrowthManager implements Updateable {
         if (number) {
             this.score += -number;
             growthDecrease = -.6 * this.score
-            console.log(number);
         }
         else {
             growthDecrease = -.6;
@@ -93,14 +91,12 @@ export default class GrowthManager implements Updateable {
             let event = this.receiver.getNextEvent();
 
             if (event.type === InGame_Events.UPDATE_GROWTH) {
-                console.log("UPDATING")
                 let count = event.data.get('count');
                 this.increaseGrowthScore(count);
             }
 
             if (event.type === InGame_Events.PLANT_HIT) {
                 if (this.timer.isStopped()) {
-                    // this.receiver.unsubscribe(InGame_Events.PLANT_HIT);
                     let owner = this.scene.getSceneGraph().getNode(event.data.get('node'))
                     if ((<EnemyController>owner.ai).attackType === "bomb") {
                         this.decreaseGrowthScore(20);
@@ -121,8 +117,6 @@ export default class GrowthManager implements Updateable {
         }
 
         if (this.growthComplete) {
-            this.receiver.unsubscribe(InGame_Events.UPDATE_GROWTH);
-            this.receiver.unsubscribe(InGame_Events.PLANT_HIT);
             this.receiver.destroy();
             this.emitter.fireEvent(InGame_Events.GROWTH_COMPLETED);
 
@@ -131,7 +125,6 @@ export default class GrowthManager implements Updateable {
 
         if (Input.isKeyJustPressed("x")) {
             this.increaseGrowthScore(1);
-            console.log(this.score)
         }
 
     }

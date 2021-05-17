@@ -16,13 +16,13 @@ export default class Level_Spring_One extends GameLevel {
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
     lookDirection: Vec2;
-    time: number;
     maxEnemyNumber: number = 10;
     moodEffectTimer: Timer = new Timer(10000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelReceiver: Receiver = new Receiver();
     currentLevel: string = Scenes.LEVEL_SPRING_ONE;
-
+	pillBottleTimer: Timer;
+	trashLidTimer: Timer;
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
@@ -59,7 +59,7 @@ export default class Level_Spring_One extends GameLevel {
         super.initPauseMenu(this.viewport.getHalfSize());
         super.initGameOverScreen(this.viewport.getHalfSize());
         super.initLevelCompletionScreen(this.viewport.getHalfSize());
-        super.initSpawnerTimer(3000);
+        super.initSpawnerTimer(4000);
         this.viewport.follow(this.player);
 
         this.levelReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
@@ -73,10 +73,17 @@ export default class Level_Spring_One extends GameLevel {
         this.supportManager.addHealthPacks(10); 
         this.supportManager.addAmmoPacks(10);
 
-        this.growthManager = new GrowthManager(this, 20);
+        this.growthManager = new GrowthManager(this, 18);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_FALL_ONE;
-
+		this.trashLidTimer = new Timer(30000, () => {
+			this.equipmentManager.spawnEquipment('TrashLid', new Vec2(this.plant.position.x, this.plant.position.y + 32))
+			this.pillBottleTimer.start();
+		})
+		this.pillBottleTimer =  new Timer(50000, () => {
+			this.equipmentManager.spawnEquipment('PillBottle', new Vec2(this.plant.position.x + 32, this.plant.position.y + 32))
+		})
+		this.trashLidTimer.start();
     }
 
     updateScene(deltaT: number) {
@@ -84,7 +91,7 @@ export default class Level_Spring_One extends GameLevel {
         this.growthManager.update(deltaT);
 		if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
 			this.spawnerTimer.pause();
-			console.log(this.spawnerTimer.toString());
+			// console.log(this.spawnerTimer.toString());
 		}
 		else if (!this.pauseExecution && this.spawnerTimer.isPaused() && !this.completionStatus) {
 			this.spawnerTimer.continue();
@@ -96,7 +103,7 @@ export default class Level_Spring_One extends GameLevel {
 		if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
 			this.spawnerTimer.pause();
 			// Change the number of final wave enemies for each level
-			this.finalWave(10);
+			this.finalWave(6);
 			this.finalWaveCleared = true;
 
 		}

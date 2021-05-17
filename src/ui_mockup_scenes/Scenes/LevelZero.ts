@@ -21,7 +21,6 @@ export default class LevelZero extends GameLevel {
     levelHasStarted: boolean = false;
     introSequence: ScriptedSequence;
     currentLevel: string = Scenes.LEVEL_ZERO;
-    // Custom time
 
     moodEffectTimer: Timer = new Timer(10000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
@@ -47,7 +46,6 @@ export default class LevelZero extends GameLevel {
             }
         }
         this.tilemapSize = this.collidables.size;
-        //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
         super.initPlant(this.collidables.size);
         this.plant.animation.playIfNotAlready("EH", true);
         super.initPlayer(this.collidables.size);
@@ -56,19 +54,16 @@ export default class LevelZero extends GameLevel {
         super.initPauseMenu(this.viewport.getHalfSize());
         super.initGameOverScreen(this.viewport.getHalfSize());
         super.initLevelCompletionScreen(this.viewport.getHalfSize());
-        super.initSpawnerTimer(3000);
+        super.initSpawnerTimer(4000);
         this.viewport.follow(this.player);
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
         this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
         let tutorialScript = this.load.getObject("tutorialScript");
         this.introSequence = new ScriptedSequence(this, tutorialScript, new Vec2(this.plant.position.x, this.plant.position.y - 32));
-        // CUSTOM NUMBER OF HEALTHPACK , AMMOPACK
         this.supportManager.addHealthPacks(10);
         this.supportManager.addAmmoPacks(10);
-        //////////////////////////////////////////////////////////
-        // new GrowthManager(this, materialsToWin : number) : default set to 50 (2% per items)
-        this.growthManager = new GrowthManager(this, 20);
+        this.growthManager = new GrowthManager(this, 18);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_SPRING_ONE;
     }
@@ -80,19 +75,20 @@ export default class LevelZero extends GameLevel {
 
             if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
                 this.spawnerTimer.pause();
-                console.log(this.spawnerTimer.toString());
+                // console.log(this.spawnerTimer.toString());
             }
             else if (!this.pauseExecution && this.spawnerTimer.isPaused() && !this.completionStatus) {
                 this.spawnerTimer.continue();
             }
             if (this.spawnerTimer.isStopped() && this.maxEnemyNumber >= this.enemyManager.activePool.length && !this.pauseExecution) {
+                this.spawnerTimer.reset();
                 this.spawnerTimer.start();
                 this.enemyManager.spawnEnemy(this.player, this.plant);
             }
             if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
                 this.spawnerTimer.pause();
                 // Change the number of final wave enemies for each level
-                this.finalWave(10);
+                this.finalWave(5);
                 this.finalWaveCleared = true;
 
             }

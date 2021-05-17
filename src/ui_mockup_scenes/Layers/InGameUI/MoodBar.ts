@@ -43,7 +43,6 @@ export default class Moodbar {
 
     updatePos(width: number, height: number): void {
         // let zoom = document.body.clientWidth + "px x " + document.body.clientHeight + "px";
-        // console.log()
     }
 
 	updateText(): void {
