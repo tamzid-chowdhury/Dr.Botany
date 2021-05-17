@@ -189,8 +189,27 @@ export function treeScaleUp(scale:Vec2, newScale:Vec2) : Record<string,any> {
 
 export function indicatorSlideX(xPos: number, newXPos: number) : Record<string,any> {
 	let tween = {
-		startDelay: 400,
-		duration: 300,
+		startDelay: 100,
+		duration: 200,
+		effects: [
+			{
+				property: TweenableProperties.posX,
+				start: xPos,
+				end: newXPos,
+				ease: EaseFunctionType.OUT_SINE,
+			},
+
+
+		],
+
+	};
+	return tween
+}
+
+export function slowIndicatorSlideX(xPos: number, newXPos: number) : Record<string,any> {
+	let tween = {
+		startDelay: 100,
+		duration: 800,
 		effects: [
 			{
 				property: TweenableProperties.posX,
