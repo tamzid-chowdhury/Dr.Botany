@@ -10,9 +10,11 @@ import * as Tweens from "../Utils/Tweens";
 import ScriptedSequence from "../Classes/ScriptedSequence";
 import { Physics } from "../Utils/PhysicsOptions";
 import MainMenu from "../MainMenu";
-import Level_Fall_Two from "./Level_Fall_Two";
+import PlayerController from "../Controllers/PlayerController";
+import Level_Winter_One from "./Level_Winter_One";
+import Level_Fall_One from "./Level_Fall_One";
 
-export default class Level_Fall_One extends GameLevel {
+export default class Level_Fall_Two extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
@@ -28,7 +30,7 @@ export default class Level_Fall_One extends GameLevel {
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_fall_one", "assets/tilemaps/FallLevel/level_fall_one_1.json");
+        this.load.tilemap("level_fall_two", "assets/tilemaps/FallLevel/level_fall_one_2.json");
 
         this.load.audio("background_music", "assets/music/fall_music.mp3")
     }
@@ -37,7 +39,7 @@ export default class Level_Fall_One extends GameLevel {
     startScene(): void {
         super.startScene()
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
-        let tilemapLayers = this.add.tilemap("level_fall_one");
+        let tilemapLayers = this.add.tilemap("level_fall_two");
         for (let layer of tilemapLayers) {
             let obj = layer.getItems()[0];
             if (obj.isCollidable) {
@@ -46,10 +48,10 @@ export default class Level_Fall_One extends GameLevel {
         }
         this.tilemapSize = this.collidables.size;
         //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
-        super.initPlant(new Vec2(1200, 1000));
-        console.log(this.plant.position);
+        super.initPlant(this.collidables.size);
         this.plant.animation.playIfNotAlready("EH", true);
-        super.initPlayer(this.collidables.size);
+        super.initPlayer(new Vec2(20, 200));
+        (<PlayerController>this.player._ai).owner.position.set(730,900)
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
         super.initPauseMenu(this.viewport.getHalfSize());
@@ -72,7 +74,7 @@ export default class Level_Fall_One extends GameLevel {
 
         this.equipmentManager.spawnEquipment("PillBottle", new Vec2(340, 570))
         this.equipmentManager.spawnEquipment("TrashLid", new Vec2(380,570))
-        this.nextLevel = Scenes.LEVEL_FALL_TWO;
+        this.nextLevel = Scenes.LEVEL_WINTER_ONE;
     }
 
     updateScene(deltaT: number) {
@@ -154,7 +156,7 @@ export default class Level_Fall_One extends GameLevel {
                         break;
                     default:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-                        this.sceneManager.changeToScene(Level_Fall_Two, {}, sceneOptions);
+                        this.sceneManager.changeToScene(Level_Winter_One, {}, sceneOptions);
                     }
             }
 
