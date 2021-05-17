@@ -55,7 +55,7 @@ export default class EquipmentManager {
 
 	spawnEquipment(name: string, position: Vec2): void {
 		for(let p of this.prototypes) {
-			if(p.name === name) {
+			if(p.name === name && !p.inInventory) {
 				p.onDrop(position);
 			}
 		}

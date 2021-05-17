@@ -22,7 +22,6 @@ export default class Level_Winter_Two extends GameLevel {
     maxEnemyNumber: number = 10;
     
 
-    testLabel: AnimatedDialog;
 
     // // TODO: move mood control into PlantController
     // overallMood: number = 0; // -10 to 10 maybe? probably have to play with this
@@ -77,7 +76,6 @@ export default class Level_Winter_Two extends GameLevel {
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
         this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
-        this.testLabel = new AnimatedDialog("I am a test string", this.player.position.clone(), this);
 
 
 
@@ -121,9 +119,6 @@ export default class Level_Winter_Two extends GameLevel {
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        if (!this.testLabel.finished && this.runTest) {
-            this.testLabel.incrementText();
-        }
 
         if (this.moodBarTimer.isStopped() && this.moodBarTimer.hasRun()) {
             this.moodBarTimer.reset();
@@ -137,12 +132,6 @@ export default class Level_Winter_Two extends GameLevel {
             // this.mood = "normal";
         }
 
-        if (Input.isKeyJustPressed("t")) {
-            this.testLabel.start();
-            this.runTest = true;
-
-
-        }
 
 
         // if (Input.isKeyJustPressed("o")) {

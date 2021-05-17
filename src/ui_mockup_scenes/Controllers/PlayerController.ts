@@ -220,8 +220,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
 
         if (Input.isKeyJustPressed("y") ) {
-            this.upperCount += 1;
-            this.downerCount += 1;
+            this.upperCount ++;
+            this.downerCount ++;
         }
 
 
@@ -353,18 +353,18 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
 
-                if(event.type === InGame_Events.ON_UPPER_DEPOSIT){
-                    this.receiver.unsubscribe(InGame_Events.ON_UPPER_DEPOSIT);
+                if(event.type === InGame_Events.ON_UPPER_DEPOSIT && (this.nearUpperDeposit < 0)){
+                    // this.receiver.unsubscribe(InGame_Events.ON_UPPER_DEPOSIT);
                     if(this.upperCount > 0) {
                         let other = event.data.get('other');
-                        this.nearUpperDeposit= other;
+                        this.nearUpperDeposit = other;
                         let box = this.owner.getScene().getSceneGraph().getNode(other);
                         this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: box.position});
                     }
                 }
 
-                if(event.type === InGame_Events.ON_DOWNER_DEPOSIT) {
-                    this.receiver.unsubscribe(InGame_Events.ON_DOWNER_DEPOSIT);
+                if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && (this.nearDownerDeposit < 0)) {
+                    // this.receiver.unsubscribe(InGame_Events.ON_DOWNER_DEPOSIT);
                     if(this.downerCount > 0) {
                         let other = event.data.get('other');
                         this.nearDownerDeposit = other;
@@ -373,13 +373,15 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     }
                 }
 
-                if (event.type === InGame_Events.OFF_DOWNER_DEPOSIT) {
+                if (event.type === InGame_Events.OFF_DOWNER_DEPOSIT || event.type === InGame_Events.OFF_UPPER_DEPOSIT) {
+                    this.nearUpperDeposit = -1
+                    this.nearDownerDeposit = -1
                     this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
-                    this.receiver.subscribe(InGame_Events.ON_DOWNER_DEPOSIT);
+                    // this.receiver.subscribe(InGame_Events.ON_DOWNER_DEPOSIT);
                 }
-                if (event.type === InGame_Events.OFF_UPPER_DEPOSIT) {
-                    this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
-                    this.receiver.subscribe(InGame_Events.ON_UPPER_DEPOSIT);
+                if (0) {
+                    // this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
+                    // this.receiver.subscribe(InGame_Events.ON_UPPER_DEPOSIT);
                 }
 
 
@@ -426,7 +428,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     }
 
     subscribeToEvents(): void {
-        this.receiver.destroy();
         this.receiver.subscribe([
             InGame_Events.PLAYER_ENEMY_COLLISION,
             InGame_Events.PLAYER_DIED,
