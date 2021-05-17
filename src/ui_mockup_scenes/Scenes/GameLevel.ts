@@ -33,6 +33,7 @@ import { Physics } from "../Utils/PhysicsOptions"
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Game from "../../Wolfie2D/Loop/Game";
 import Level_Fall_one from "./Level_Fall_One";
+import Level_Winter_One from "./Level_Winter_One";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -320,10 +321,10 @@ export default class GameLevel extends Scene {
 
                         this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
-                    case Scenes.LEVEL_FALL_ONE:
-                        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-                        this.sceneManager.changeToScene(Level_Fall_one, {}, sceneOptions);
-                        break;
+                    // case Scenes.LEVEL_FALL_ONE:
+                    //     this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
+                    //     this.sceneManager.changeToScene(Level_Fall_one, {}, sceneOptions);
+                    //     break;
                     case Scenes.LEVEL_FALL_TWO:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
 
