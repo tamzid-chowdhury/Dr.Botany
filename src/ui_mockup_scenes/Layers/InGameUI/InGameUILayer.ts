@@ -124,20 +124,20 @@ export default class InGameUI implements Updateable {
                     let newPos = (10*moodChange / (this.moodBar.sprite.size.x/16)) +  this.moodBar.happyindicator.position.x;
                     newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
                     this.moodBar.happyindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
-                    this.moodBar.happyindicator.scale.x += 1;     
-                    this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    // this.moodBar.happyindicator.scale.x += 1;     
+                    // this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
                     this.moodBar.happyindicator.tweens.play("slideX");        
-                    this.moodBar.happyindicator.tweens.play("scale"); 
+                    // this.moodBar.happyindicator.tweens.play("scale"); 
                 }
 
                 if(type == -1){
                     let newPos = (10*(-1*moodChange) / (this.moodBar.sprite.size.x/16)) +  this.moodBar.angryindicator.position.x;
                     newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
                     this.moodBar.angryindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.angryindicator.position.x, newPos));   
-                    this.moodBar.angryindicator.scale.x += 1;     
-                    this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.angryindicator.scale));        
+                    // this.moodBar.angryindicator.scale.x += 1;     
+                    // this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.angryindicator.scale));        
                     this.moodBar.angryindicator.tweens.play("slideX");        
-                    this.moodBar.angryindicator.tweens.play("scale"); 
+                    // this.moodBar.angryindicator.tweens.play("scale"); 
                 }
       
             }
@@ -158,18 +158,18 @@ export default class InGameUI implements Updateable {
 
                 if(type == 1){
                     this.moodBar.happyindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
-                    this.moodBar.happyindicator.scale.x += 1;     
-                    this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    // this.moodBar.happyindicator.scale.x += 1;     
+                    // this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
                     this.moodBar.happyindicator.tweens.play("slideX");        
-                    this.moodBar.happyindicator.tweens.play("scale");   
+                    // this.moodBar.happyindicator.tweens.play("scale");   
                 }
                 
                 if(type == -1){
                     this.moodBar.angryindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
-                    this.moodBar.angryindicator.scale.x += 1;     
-                    this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    // this.moodBar.angryindicator.scale.x += 1;     
+                    // this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
                     this.moodBar.angryindicator.tweens.play("slideX");        
-                    this.moodBar.angryindicator.tweens.play("scale");   
+                    // this.moodBar.angryindicator.tweens.play("scale");   
                 }
     
             }
