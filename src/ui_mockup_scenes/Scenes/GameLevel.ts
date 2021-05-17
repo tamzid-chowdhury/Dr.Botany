@@ -32,12 +32,8 @@ import LevelZero from "./LevelZero";
 import { Physics } from "../Utils/PhysicsOptions"
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Game from "../../Wolfie2D/Loop/Game";
-<<<<<<< HEAD
-import Level_Fall_One from "./Level_Fall_One";
-=======
 import Level_Fall_one from "./Level_Fall_One";
 import Level_Winter_One from "./Level_Winter_One";
->>>>>>> 2ba00a375a0b2428028ce7ffff4c45f2c5e1fd0a
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';

@@ -92,6 +92,10 @@ export default class Timer implements Updateable {
         this.state = TimerState.PAUSED;
     }
 
+    stop(): void {
+        this.state = TimerState.STOPPED;
+    }
+
     update(deltaT: number){
         if(this.state === TimerState.ACTIVE){
             this.timeLeft -= deltaT*1000;

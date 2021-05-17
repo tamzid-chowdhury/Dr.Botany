@@ -62,6 +62,7 @@ export default class LevelZero extends GameLevel {
 
         //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
         super.initPlant(this.collidables.size);
+        this.plant.animation.playIfNotAlready("EH", true);
         super.initPlayer(this.collidables.size);
         super.initViewport(this.collidables.size);
         super.initGameUI(this.viewport.getHalfSize());
@@ -143,9 +144,9 @@ export default class LevelZero extends GameLevel {
         /////////////////////////////////////////////////////////////////////
         if(this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
             this.moodEffectTimer.reset();
+            this.plant.animation.play("EH");
             this.moodEffect = false;
-            console.log("here");
-            this.moodManager.resetEffect(this.player, this.enemyManager.activePool , 1);
+            this.moodManager.resetEffect(this);
         }
         /////////////////////////////////////////////////////////////////////
        
@@ -173,13 +174,17 @@ export default class LevelZero extends GameLevel {
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
                 this.moodEffect = true;
                 this.moodEffectTimer.start();
-                this.moodManager.applyEffect(this.player, this.enemyManager.activePool, 1);
+                this.plant.animation.play("ANGRY", true);
+                this.moodManager.applyEffect(this,"downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length));
+                
             }
 
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
                 this.moodEffect = true;
                 this.moodEffectTimer.start();
-                this.moodManager.applyEffect(this.player, this.enemyManager.activePool, 1);
+                this.plant.animation.play("HAPPY", true);
+                this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length));
+                
             }
 
             // We gotta check this with each levels
@@ -202,10 +207,7 @@ export default class LevelZero extends GameLevel {
 
     protected subscribeToEvents() {
         this.levelZeroReceiver.subscribe([
-            UIEvents.CLICKED_RESTART,
-            InGame_Events.ANGRY_MOOD_REACHED,
-            InGame_Events.HAPPY_MOOD_REACHED
-
+            UIEvents.CLICKED_RESTART
         ]);
     }
 
