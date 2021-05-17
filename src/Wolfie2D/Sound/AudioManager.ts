@@ -18,6 +18,7 @@ export default class AudioManager {
     private currentSounds: Map<AudioBufferSourceNode>;
 
     private audioCtx: AudioContext;
+    private filter: BiquadFilterNode;
 
     private gainNodes: Array<GainNode>;
 
@@ -56,6 +57,7 @@ export default class AudioManager {
         try {
             window.AudioContext = window.AudioContext;// || window.webkitAudioContext; 
             this.audioCtx = new AudioContext(); 
+            this.filter = this.audioCtx.createBiquadFilter();
             console.log('Web Audio API successfully loaded');
         } catch(e) {
             console.warn('Web Audio API is not supported in this browser'); 
@@ -206,6 +208,14 @@ export default class AudioManager {
                 } else if(event.data.has("channel")){
                     channel = event.data.get("channel");
                 }
+                // if(soundKey === 'plant_voice_sfx') {
+                //     let sfxChannel = this.getChannelGainNode(AudioChannelType.SFX);
+                //     this.filter.connect(sfxChannel);
+                //     this.filter.type = "lowshelf";
+                //     this.filter.frequency.setValueAtTime(5000, this.audioCtx.currentTime);
+                //     this.filter.gain.setValueAtTime(25, this.audioCtx.currentTime);
+                //     this.filter.detune.value = 10;
+                // }
 
                 this.playSound(soundKey, loop, holdReference, channel, event.data);
             }

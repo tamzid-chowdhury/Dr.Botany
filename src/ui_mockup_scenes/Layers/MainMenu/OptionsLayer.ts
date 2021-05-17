@@ -19,7 +19,7 @@ export class OptionsLayer extends GameLayer {
 	[
 		"Num Key 1 - Extra Ammo", "Num Key 2 - Infinite Life", 
 		"Num Key 3 - Spawn TrashLid" , "Num Key 4 - Spawn PillBottle",
-		"Num Key 5 - Skip Level"
+		"Num Key 5 - Skip To Next Level"
 	]
 	lines: Array<Label> = [];
 	center: Vec2;

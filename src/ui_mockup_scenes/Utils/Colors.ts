@@ -42,7 +42,6 @@ export function reddish(): Color {
 
 }
 
-
 export function yellowish(): Color {
 	return new Color(255, 195, 63, 1);
 
@@ -50,6 +49,13 @@ export function yellowish(): Color {
 
 export function greenish(): Color {
 	return new Color(143, 222, 93, 1);
+}
+export function grayish(): Color {
+	return new Color(180, 180, 180, 0.8);
+}
+
+export function offwhite(): Color {
+	return new Color(246, 230, 205, 1);
 }
 
 
