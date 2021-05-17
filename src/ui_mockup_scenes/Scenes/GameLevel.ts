@@ -305,7 +305,7 @@ export default class GameLevel extends Scene {
                         break;
                     case Scenes.LEVEL_SPRING_ONE:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-                        this.sceneManager.changeToScene(Level_Spring_One, {}, sceneOptions);
+                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
                     case Scenes.LEVEL_FALL_ONE:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });

@@ -37,14 +37,7 @@
 			"cooldown": 2000
 			
 		},
-		{
-			"type": "Downer",
-			"health": 30,
-			"scale" : 1,
-			"speed" : 80,
-			"spriteKey": "ghost",
-			"attackType": "ghost"
-		},
+		
 		{
 			"type": "Upper",
 			"health": 40,

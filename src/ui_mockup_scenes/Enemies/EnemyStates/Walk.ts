@@ -59,25 +59,25 @@ export default class Walk extends EnemyState {
 			// takes care of firing and movement
 			this.handleProjectileMove(playerPos, ownerPos, deltaT);
 		}
-		else if (this.parent.attackType === "ghost") {
+		// else if (this.parent.attackType === "ghost") {
 			
-			if(this.parent.ghostingTimer.isStopped() && (<AnimatedSprite>this.owner).animation.isPlaying("WALK")) {
-				(<AnimatedSprite>this.owner).animation.playIfNotAlready("IDLE", true);
-				this.parent.normalTimer.reset();
-				this.parent.normalTimer.start();
-				this.parent.disableGhost();	
+		// 	if(this.parent.ghostingTimer.isStopped() && (<AnimatedSprite>this.owner).animation.isPlaying("WALK")) {
+		// 		(<AnimatedSprite>this.owner).animation.playIfNotAlready("IDLE", true);
+		// 		this.parent.normalTimer.reset();
+		// 		this.parent.normalTimer.start();
+		// 		this.parent.disableGhost();	
 
 				
-			}
-			if(this.parent.normalTimer.isStopped() && (<AnimatedSprite>this.owner).animation.isPlaying("IDLE")) {
-				(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
-				this.parent.ghostingTimer.reset();
-				this.parent.ghostingTimer.start();
-				this.parent.enableGhost();
+		// 	}
+		// 	if(this.parent.normalTimer.isStopped() && (<AnimatedSprite>this.owner).animation.isPlaying("IDLE")) {
+		// 		(<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
+		// 		this.parent.ghostingTimer.reset();
+		// 		this.parent.ghostingTimer.start();
+		// 		this.parent.enableGhost();
 				
-			}
-			this.handleGhostMove(playerPos, ownerPos, deltaT);
-		}
+		// 	}
+		// 	this.handleGhostMove(playerPos, ownerPos, deltaT);
+		// }
 
 		else if(this.parent.attackType === "bomb") {
 			this.handleBombMove(plantPos, playerPos, ownerPos, deltaT);
