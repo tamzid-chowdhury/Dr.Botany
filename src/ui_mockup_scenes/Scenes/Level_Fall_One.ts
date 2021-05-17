@@ -101,7 +101,7 @@ export default class Level_Fall_One extends GameLevel {
         if(this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
             this.moodEffectTimer.reset();
             this.plant.animation.play("EH");
-            this.moodManager.resetEffect(this);
+            this.moodManager.resetEffect(this, this.player.position);
         }
 
 
