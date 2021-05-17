@@ -277,10 +277,6 @@ export default class GameLevel extends Scene {
                         let weaponKnockBack = player.equipped.knockback
                         let knockBackDir = player.playerLookDirection;
                         knockBackDir = knockBackDir.scale(weaponKnockBack);
-                        // let ms = 30;
-                        // var currentTime = new Date().getTime();
-                        // while (currentTime + ms >= new Date().getTime()) { /* I feel filthy  doing this*/}
-                        // TODO: Non constant damage
                         (<EnemyController>node._ai).doDamage(knockBackDir, player.equipped.damage, weaponKnockBack);
                     }
                 }
@@ -305,13 +301,11 @@ export default class GameLevel extends Scene {
                         break;
                     case Scenes.LEVEL_ZERO:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-
                         this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
                         break;
                     case Scenes.LEVEL_SPRING_ONE:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
-
-                        this.sceneManager.changeToScene(LevelZero, {}, sceneOptions);
+                        this.sceneManager.changeToScene(Level_Spring_One, {}, sceneOptions);
                         break;
                     case Scenes.LEVEL_FALL_ONE:
                         this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "background_music", holdReference: true });
@@ -462,6 +456,7 @@ export default class GameLevel extends Scene {
 
         }
     }
+
     // TODO: plant init function probably needs to be diff for each level unless the center is always consistent
     initPlant(mapSize: Vec2): void {
         // set the trigger of the plant for enemies and enemy projectiles

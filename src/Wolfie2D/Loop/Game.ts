@@ -67,7 +67,6 @@ export default class Game {
 
         // Create an instance of a game loop
         this.loop = new FixedUpdateGameLoop();
-        console.log(this.loop)
 
         // Get the game canvas and give it a background color
         this.GAME_CANVAS = <HTMLCanvasElement>document.getElementById("game-canvas");

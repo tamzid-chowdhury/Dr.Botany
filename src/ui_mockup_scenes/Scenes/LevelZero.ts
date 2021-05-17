@@ -53,9 +53,7 @@ export default class LevelZero extends GameLevel {
         super.initPauseMenu(this.viewport.getHalfSize());
         super.initGameOverScreen(this.viewport.getHalfSize());
         super.initLevelCompletionScreen(this.viewport.getHalfSize());
-        ///////////////////////////////// For each level this is how many seconds it will spawn enemy
         super.initSpawnerTimer(3000);
-        /////////////////////////////////
         this.viewport.follow(this.player);
         this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
         this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
@@ -69,6 +67,7 @@ export default class LevelZero extends GameLevel {
         // new GrowthManager(this, materialsToWin : number) : default set to 50 (2% per items)
         this.growthManager = new GrowthManager(this);
         this.spawnerTimer.start();
+        this.nextLevel = Scenes.LEVEL_SPRING_ONE;
     }
 
     updateScene(deltaT: number) {
@@ -92,7 +91,7 @@ export default class LevelZero extends GameLevel {
                 // Change the number of final wave enemies for each level
                 this.finalWave(10);
                 this.finalWaveCleared = true;
-                this.nextLevel = Scenes.LEVEL_SPRING_ONE;
+
             }
 
         }
