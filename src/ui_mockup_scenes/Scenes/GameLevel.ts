@@ -156,8 +156,6 @@ export default class GameLevel extends Scene {
             InGame_Events.PROJECTILE_HIT_ENEMY,
             InGame_Events.PLAYER_DIED,
             InGame_Events.ENEMY_DEATH_ANIM_OVER,
-            InGame_Events.ON_UPPER_DEPOSIT,
-            InGame_Events.ON_DOWNER_DEPOSIT,
             InGame_Events.TOGGLE_PAUSE,
             InGame_Events.TOGGLE_PAUSE_TRANSITION,
             InGame_Events.OVERLAP_EQUIP,
@@ -513,6 +511,10 @@ export default class GameLevel extends Scene {
     }
 
     unloadScene(): void {
+        console.log('unloadingfgggggggggggggggggggggggggggggggggggggggggggggggggg')
+        this.player.ai.destroy();
+        this.receiver.destroy();
+        this.growthManager.destroy();
     }
     // unloadScene(): void {
     //     // TODO: pass managers, player controller to next level 

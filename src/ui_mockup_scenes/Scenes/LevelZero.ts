@@ -80,8 +80,8 @@ export default class LevelZero extends GameLevel {
 
         //we initialized supportmanager in gamelevel but it starts with 0 healthpacks and 0 ammopacks 
         //we use addHealthPacks and addAmmoPacks to add how many we want for each level. in tutorial level will have 5 each
-        this.supportManager.addHealthPacks(5);
-        this.supportManager.addAmmoPacks(5);
+        this.supportManager.addHealthPacks(10);
+        this.supportManager.addAmmoPacks(10);
 
         this.growthManager = new GrowthManager(this);
         this.spawnerTimer.start();
