@@ -9,8 +9,6 @@ export enum UIEvents {
 	TRANSITION_SCREEN = 'TRANSITION_SCREEN',
 	SHOW_MAIN_MENU_FINISHED = 'SHOW_MAIN_MENU_FINISHED',
 	FIRST_RENDER = 'FIRST_RENDER',
-	TRANSITION_LEVEL_ZERO = 'TRANSITION_LEVEL_ZERO',
-	TRANSITION_LEVEL_FALL_ONE = "TRANSITION_LEVEL_FALL_ONE",
 	TRANSITION_LEVEL = 'TRANSITION_LEVEL',
 	CLICKED_RESUME = 'CLICKED_RESUME',
 	CLICKED_START = 'CLICKED_START',
@@ -26,6 +24,7 @@ export enum UIEvents {
 	CLICKED_BACK_LEVEL = 'CLICKED_BACK_LEVEL',
 	CLICKED_TOGGLE = 'CLICKED_TOGGLE',
 	CLICKED_NEXT_LEVEL = 'CLICKED_NEXT_LEVEL',
+	TRANSITION_LEVEL_MAIN = 'TRANSITION_LEVEL_MAIN',
 
 
 	
@@ -93,7 +92,7 @@ export enum ButtonNames {
 	START = "Start",
 	LEVEL_SELECT = "Level Select",
 	CONTROLS = "Controls",
-	OPTIONS = "Options",
+	OPTIONS = "Cheats",
 	HELP = "Help"
 }
 
@@ -115,7 +114,6 @@ export enum InGame_Events {
     EQUIPMENT_ENEMY_COLLISION = "EquipmentEnemyCollision",
     PLAYER_ATTACK_ENEMY = "PlayerAttackEnemy",
     PROJECTILE_HIT_ENEMY = "ProjectileHitEnemy",
-    // ENEMY_ATTACK_PLAYER = "EnemyAttackPlayer"     // Enemy attacks the player
     PLAYER_DIED = "PlayerDied",
     ENEMY_DIED = "EnemyDied",
     LEVEL_LOADED = "LevelLoaded",

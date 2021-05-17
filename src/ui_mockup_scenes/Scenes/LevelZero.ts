@@ -225,11 +225,6 @@ export default class LevelZero extends GameLevel {
 
     protected subscribeToEvents() {
         this.levelZeroReceiver.subscribe([
-            InGame_Events.PLAYER_ENEMY_COLLISION,
-            InGame_Events.PLAYER_DIED,
-            InGame_Events.ENEMY_DIED,
-            InGame_Events.UPDATE_MOOD,
-            InGame_Events.DRAW_OVERLAP_TILE,
             InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART,
             InGame_Events.LEVEL_COMPLETED
@@ -238,14 +233,12 @@ export default class LevelZero extends GameLevel {
     }
 
     unloadScene(): void {
+        super.unloadScene();
         // TODO: pass managers, player controller to next level 
         this.levelZeroReceiver.destroy();
-        this.receiver.destroy();
-
     }
 
 
-    // TODO: make it so that new created enemies have doubled speed, because when the timer is done, newly created enemies with normal speed gets slower than normal
 
 
     protected increaseEnemyStrength(): void {

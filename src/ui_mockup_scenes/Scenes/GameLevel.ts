@@ -252,14 +252,7 @@ export default class GameLevel extends Scene {
                 this.pauseScreenLayer.layer.disable();
 
             }
-            
-            // if (event.type === InGame_Events.PLANT_HIT) {
-            //     console.log('plant hit')
-                
-            // }
-
-
-            
+              
 
             if (event.type === InGame_Events.PROJECTILE_HIT_ENEMY) {
                 let node = this.sceneGraph.getNode(event.data.get("node"));
@@ -481,12 +474,9 @@ export default class GameLevel extends Scene {
     }
 
     unloadScene(): void {
+        this.receiver.destroy();
+        this.growthManager.destroy();
     }
-    // unloadScene(): void {
-    //     // TODO: pass managers, player controller to next level 
-    //     console.log('UNLOADINGGGGGGGGGGGGGGGGGGGGGGGGG')
-    //     this.receiver.destroy();
-    // }
 
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
