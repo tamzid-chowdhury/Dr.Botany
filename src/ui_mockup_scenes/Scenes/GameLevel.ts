@@ -198,7 +198,7 @@ export default class GameLevel extends Scene {
 
 
         // MAKE THIS SOMEHOW DYNAMIC ////////
-        this.moodManager = new MoodManager(this, 10);
+        this.moodManager = new MoodManager(this, 5);
     }
 
     updateScene(deltaT: number) {

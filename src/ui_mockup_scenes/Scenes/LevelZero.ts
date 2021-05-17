@@ -174,14 +174,14 @@ export default class LevelZero extends GameLevel {
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
                 this.plant.animation.play("ANGRY", true);
-                this.moodManager.applyEffect(this,"downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length));
+                this.moodManager.applyEffect(this,"downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length), this.player.position);
                 
             }
 
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
                 this.plant.animation.play("HAPPY", true);
-                this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length));
+                this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length), this.player.position);
                 
             }
 

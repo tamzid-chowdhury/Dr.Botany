@@ -11,6 +11,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Enemy from "../Types/enemies/Enemy";
 import GameLevel from "../Scenes/GameLevel";
+import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 
 export default class MoodManager implements Updateable {
 
@@ -58,7 +59,7 @@ export default class MoodManager implements Updateable {
 		}
 	}
 
-	applyEffect(scene: GameLevel, upperOrDowner: string, effectChoice: number): void {
+	applyEffect(scene: GameLevel, upperOrDowner: string, effectChoice: number, playerPosition: Vec2): void {
 		console.log("applying effects")
 		this.moodEffect = true;
 		if (upperOrDowner === "upper") {
@@ -101,6 +102,7 @@ export default class MoodManager implements Updateable {
 					(<PlayerController>scene.player.ai).coolDownTimer.start();
 					break;
 			}
+			this.emitter.fireEvent(InGame_GUI_Events.ANNOUNCE_MOOD_EFFECT, { type:1, moodEffect: this.currentMoodEffect, position: playerPosition})
 		}
 		if (upperOrDowner === "downer") {
 			let dataName = this.prototypesAngry[effectChoice].name;
@@ -139,6 +141,7 @@ export default class MoodManager implements Updateable {
 
 				default: break;
 			}
+			this.emitter.fireEvent(InGame_GUI_Events.ANNOUNCE_MOOD_EFFECT, { type:-1, moodEffect: this.currentMoodEffect, position: playerPosition})
 		}
 	}
 
@@ -280,11 +283,11 @@ export default class MoodManager implements Updateable {
 		}
 		// Happy mood cheat code
 		if(Input.isKeyJustPressed('p')) {
-			this.updateMoodLevel(10, 1);
+			this.updateMoodLevel(1, 1);
 		}
 		// Angry mood cheat code
 		if(Input.isKeyJustPressed('o')) {
-			this.updateMoodLevel(10, -1);
+			this.updateMoodLevel(1, -1);
 		}
 	}
 
