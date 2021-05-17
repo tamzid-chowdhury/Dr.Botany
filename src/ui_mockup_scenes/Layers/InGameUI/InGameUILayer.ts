@@ -100,7 +100,8 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.ADD_HEALTH,
             InGame_GUI_Events.REFILL_AMMO,
             InGame_GUI_Events.RESET_MOOD_BAR,
-            InGame_GUI_Events.UPDATE_GROWTH_BAR
+            InGame_GUI_Events.UPDATE_GROWTH_BAR,
+            InGame_GUI_Events.ANNOUNCE_MOOD_EFFECT
         ]);
 
     }
@@ -113,6 +114,7 @@ export default class InGameUI implements Updateable {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
             let announce = false;
+            let longAnnounce = false; 
             let position = new Vec2(0,0);
             let announceText = '';
             let color;
@@ -124,20 +126,20 @@ export default class InGameUI implements Updateable {
                     let newPos = (10*moodChange / (this.moodBar.sprite.size.x/16)) +  this.moodBar.happyindicator.position.x;
                     newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
                     this.moodBar.happyindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
-                    this.moodBar.happyindicator.scale.x += 1;     
-                    this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    // this.moodBar.happyindicator.scale.x += 1;     
+                    // this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
                     this.moodBar.happyindicator.tweens.play("slideX");        
-                    this.moodBar.happyindicator.tweens.play("scale"); 
+                    // this.moodBar.happyindicator.tweens.play("scale"); 
                 }
 
                 if(type == -1){
                     let newPos = (10*(-1*moodChange) / (this.moodBar.sprite.size.x/16)) +  this.moodBar.angryindicator.position.x;
                     newPos = MathUtils.clamp(newPos, this.moodBar.centerPos.x - this.moodBar.sprite.size.x / 2, this.moodBar.centerPos.x + this.moodBar.sprite.size.x / 2)
                     this.moodBar.angryindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.angryindicator.position.x, newPos));   
-                    this.moodBar.angryindicator.scale.x += 1;     
-                    this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.angryindicator.scale));        
+                    // this.moodBar.angryindicator.scale.x += 1;     
+                    // this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.angryindicator.scale));        
                     this.moodBar.angryindicator.tweens.play("slideX");        
-                    this.moodBar.angryindicator.tweens.play("scale"); 
+                    // this.moodBar.angryindicator.tweens.play("scale"); 
                 }
       
             }
@@ -158,18 +160,18 @@ export default class InGameUI implements Updateable {
 
                 if(type == 1){
                     this.moodBar.happyindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
-                    this.moodBar.happyindicator.scale.x += 1;     
-                    this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    // this.moodBar.happyindicator.scale.x += 1;     
+                    // this.moodBar.happyindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
                     this.moodBar.happyindicator.tweens.play("slideX");        
-                    this.moodBar.happyindicator.tweens.play("scale");   
+                    // this.moodBar.happyindicator.tweens.play("scale");   
                 }
                 
                 if(type == -1){
                     this.moodBar.angryindicator.tweens.add("slideX", Tweens.indicatorSlideX(this.moodBar.happyindicator.position.x, newPos));   
-                    this.moodBar.angryindicator.scale.x += 1;     
-                    this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
+                    // this.moodBar.angryindicator.scale.x += 1;     
+                    // this.moodBar.angryindicator.tweens.add("scale", Tweens.indicatorScaleUpDown(this.moodBar.happyindicator.scale));        
                     this.moodBar.angryindicator.tweens.play("slideX");        
-                    this.moodBar.angryindicator.tweens.play("scale");   
+                    // this.moodBar.angryindicator.tweens.play("scale");   
                 }
     
             }
@@ -294,6 +296,26 @@ export default class InGameUI implements Updateable {
                 color = Palette.white()
                 announce = true;
             }
+
+            if(event.type === InGame_GUI_Events.ANNOUNCE_MOOD_EFFECT){
+                let type = event.data.get("type");
+                let moodEffect = event.data.get("moodEffect")
+                position = event.data.get("position");
+                
+                if(type = 1){
+                    announceText = 'Happy Mood Effect Reached: ' + moodEffect
+                    color = Palette.yellowish()
+                    longAnnounce = true;
+                }
+
+                if(type = -1){
+                    announceText = 'Angry Mood Effect Reached: ' + moodEffect
+                    color = Palette.red()
+                    longAnnounce = true;
+                }
+
+            }
+
             if(announce) {
                 let announceLabelBackdrop = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_BACKDROP, {position: new Vec2(position.x + 0.5, position.y + 0.5), text:announceText});
                 announceLabelBackdrop.font = Fonts.ROUND;
@@ -314,6 +336,28 @@ export default class InGameUI implements Updateable {
                     announceLabelBackdrop.destroy();
                 }, 600);
                 
+            }
+
+            if(longAnnounce) {
+                let announceLabelBackdrop = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_BACKDROP, {position: new Vec2(position.x + 0.5, position.y + 0.5), text:announceText});
+                announceLabelBackdrop.font = Fonts.ROUND;
+                announceLabelBackdrop.textColor = Palette.black();
+                announceLabelBackdrop.fontSize = 34;
+                announceLabelBackdrop.tweens.add("announce", Tweens.announce(position.x -32, 32.5))
+                
+
+                let announceLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x , position.y), text:announceText});
+                announceLabel.font = Fonts.ROUND;
+                announceLabel.textColor = color;
+                announceLabel.fontSize = 34;
+                announceLabel.tweens.add("announce", Tweens.announce(position.x - 32, 32));
+                announceLabelBackdrop.tweens.play("announce");
+                announceLabel.tweens.play("announce");
+                setTimeout(() => {
+                    announceLabel.destroy();
+                    announceLabelBackdrop.destroy();
+                }, 1200);
+
             }
         }
     }

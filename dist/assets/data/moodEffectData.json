@@ -1,6 +1,7 @@
 {
     "upperEffects": [
         {
+
             "name": "SpeedUP_Player",
             "value": 35
         },

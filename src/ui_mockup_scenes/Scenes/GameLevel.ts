@@ -198,7 +198,7 @@ export default class GameLevel extends Scene {
 
 
         // MAKE THIS SOMEHOW DYNAMIC ////////
-        this.moodManager = new MoodManager(this, 10);
+        this.moodManager = new MoodManager(this, 5);
     }
 
     updateScene(deltaT: number) {
@@ -504,11 +504,15 @@ export default class GameLevel extends Scene {
     }
 
     unloadScene(): void {
-        console.log('unloadingfgggggggggggggggggggggggggggggggggggggggggggggggggg')
         this.player.ai.destroy();
         this.receiver.destroy();
         this.growthManager.destroy();
     }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 9d0d7a656dec9fb57a885552f29b29c7a71f0492
     initPlayer(mapSize: Vec2): void {
         this.player = this.add.animatedSprite("player", "primary");
         let playerOptions = {

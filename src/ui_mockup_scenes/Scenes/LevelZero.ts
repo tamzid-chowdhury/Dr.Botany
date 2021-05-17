@@ -29,7 +29,7 @@ export default class LevelZero extends GameLevel {
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level_zero", "assets/tilemaps/tutorialLevel/tutorialLevel.json");
+        this.load.tilemap("level_zero", "assets/tilemaps/SpringLevel/tutorialLevel.json");
         this.load.object("tutorialScript", "assets/data/tutorialLevelScript.json")
         this.load.audio("background_music", "assets/music/in_game_music.mp3")
         this.load.audio("plant_voice_sfx", "assets/sfx/plant_voice_sfx.wav")
@@ -140,12 +140,22 @@ export default class LevelZero extends GameLevel {
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
                 this.plant.animation.play("ANGRY", true);
+<<<<<<< HEAD
                 this.moodManager.applyEffect(this, "downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length));
+=======
+                this.moodManager.applyEffect(this,"downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length), this.player.position);
+                
+>>>>>>> 9d0d7a656dec9fb57a885552f29b29c7a71f0492
             }
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
                 this.plant.animation.play("HAPPY", true);
+<<<<<<< HEAD
                 this.moodManager.applyEffect(this, "upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length));
+=======
+                this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length), this.player.position);
+                
+>>>>>>> 9d0d7a656dec9fb57a885552f29b29c7a71f0492
             }
             if (event.type === UIEvents.CLICKED_RESTART) {
                 // Change this to your level
