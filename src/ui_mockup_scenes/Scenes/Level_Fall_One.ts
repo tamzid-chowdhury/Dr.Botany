@@ -46,6 +46,7 @@ export default class Level_Fall_One extends GameLevel {
         }
 
         this.tilemapSize = this.collidables.size;
+        this.nextLevel = Scenes.LEVEL_WINTER_ONE;
 
 
         //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
