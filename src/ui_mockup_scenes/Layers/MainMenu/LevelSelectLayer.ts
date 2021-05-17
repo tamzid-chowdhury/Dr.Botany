@@ -38,8 +38,8 @@ export class LevelSelectLayer extends GameLayer{
 		this.sprite.tweens.add('scaleOut', Tweens.scaleIn(finalScale , startScale,  0, 300));
 		this.sprite.position.y += this.sprite.size.y/3;
 
-		this.levelSpriteNames.push({name: 'spring', position: new Vec2(center.x - (3*this.sprite.size.x * this.sprite.scale.x), center.y - (this.sprite.size.y * this.sprite.scale.y)), eventId: UIEvents.CLICKED_SPRING});
-		this.levelSpriteNames.push({name: 'summer', position: new Vec2(center.x + (3*this.sprite.size.x * this.sprite.scale.x), center.y - (this.sprite.size.y * this.sprite.scale.y)), eventId: UIEvents.CLICKED_SUMMER});
+		this.levelSpriteNames.push({name: 'spring', position: new Vec2(center.x , center.y - (this.sprite.size.y * this.sprite.scale.y)), eventId: UIEvents.CLICKED_SPRING});
+		// this.levelSpriteNames.push({name: 'summer', position: new Vec2(center.x + (3*this.sprite.size.x * this.sprite.scale.x), center.y - (this.sprite.size.y * this.sprite.scale.y)), eventId: UIEvents.CLICKED_SUMMER});
 		this.levelSpriteNames.push({name: 'autumn', position: new Vec2(center.x - (3*this.sprite.size.x * this.sprite.scale.x), center.y + (3*this.sprite.size.y * this.sprite.scale.y)), eventId: UIEvents.CLICKED_FALL});
 		this.levelSpriteNames.push({name: 'winter', position: new Vec2(center.x + (3*this.sprite.size.x * this.sprite.scale.x), center.y + (3*this.sprite.size.y * this.sprite.scale.y)), eventId: UIEvents.CLICKED_WINTER});
 

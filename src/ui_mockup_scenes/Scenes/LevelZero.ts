@@ -18,16 +18,13 @@ export default class LevelZero extends GameLevel {
     lookDirection: Vec2;
     maxEnemyNumber: number = 10;
     levelHasStarted: boolean = false;
-
-
     introSequence: ScriptedSequence;
-
+    currentLevel: string = Scenes.LEVEL_ZERO;
     // Custom time
     moodEffectTimer: Timer = new Timer(10000, null, false);
+    moodBarTimer: Timer = new Timer(6000, null, false);
     levelZeroReceiver: Receiver = new Receiver();
 
-    overdrawTiles: Array<Sprite> = [];
-    runTest: boolean;
     pauseExecution: boolean = false;
     loadScene(): void {
         super.loadScene();
@@ -95,8 +92,6 @@ export default class LevelZero extends GameLevel {
         this.growthManager.update(deltaT);
 
         if(this.levelHasStarted) {
-            // Spawner System, we might need a spawnerManager.ts, this seems to work fine tho
-            ////////////////////////////////////////////////////////////////////////////////////////////////
             if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
                 this.spawnerTimer.pause();
                 console.log(this.spawnerTimer.toString());
@@ -107,19 +102,13 @@ export default class LevelZero extends GameLevel {
             if (this.spawnerTimer.isStopped() && this.maxEnemyNumber >= this.enemyManager.activePool.length && !this.pauseExecution) {
                 this.spawnerTimer.start();
                 this.enemyManager.spawnEnemy(this.player, this.plant);
-                // console.log("SPAWNED ENEMY, Current Active Enemies: ", this.enemyManager.activePool.length);
             }
             if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
                 this.spawnerTimer.pause();
                 this.finalWave(10);
                 this.finalWaveCleared = true;
-                this.nextLevel = Scenes.LEVEL_FALL_ONE;
+                this.nextLevel = Scenes.LEVEL_SPRING_ONE;
             }
-            // if (this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
-            //     this.emitter.fireEvent(InGame_Events.LEVEL_COMPLETED);
-            // }
-
-            ///////////////////////////////////////////////////////////////////////////////////////////
 
         }
         else if(!this.pauseExecution && !this.introSequence.hasStarted) {
@@ -140,32 +129,13 @@ export default class LevelZero extends GameLevel {
             this.moodEffectTimer.continue();
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Mood timer stuff
-        /////////////////////////////////////////////////////////////////////
         if(this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
             this.moodEffectTimer.reset();
             this.plant.animation.play("EH");
             this.moodManager.resetEffect(this);
         }
-        /////////////////////////////////////////////////////////////////////
        
 
-
-
-        
-
-        if (Input.isKeyJustPressed("n")) {
-            this.enemyManager.spawnEnemy(this.player, this.plant);
-        }
-
-        if (Input.isKeyJustPressed("m")) {
-            this.equipmentManager.spawnEquipment("TrashLid", new Vec2(300, 300))
-        }
-
-        if (Input.isKeyJustPressed("l")) {
-            this.equipmentManager.spawnEquipment("PillBottle", new Vec2(300, 400))
-        }
 
         while (this.levelZeroReceiver.hasNextEvent()) {
             let event = this.levelZeroReceiver.getNextEvent();
@@ -187,7 +157,7 @@ export default class LevelZero extends GameLevel {
 
             // We gotta check this with each levels
             if (event.type === UIEvents.CLICKED_RESTART) {
-                this.nextLevel = Scenes.LEVEL_ZERO;
+                this.nextLevel = this.currentLevel;
                 this.screenWipe.imageOffset = new Vec2(0, 0);
                 this.screenWipe.scale = new Vec2(2, 1)
                 this.screenWipe.position.set(2 * this.screenWipe.size.x, this.screenWipe.size.y / 2);
@@ -201,33 +171,22 @@ export default class LevelZero extends GameLevel {
         }
 
 
-    
 
     protected subscribeToEvents() {
         this.levelZeroReceiver.subscribe([
+            InGame_Events.PLAYER_ENEMY_COLLISION,
+            InGame_Events.PLAYER_DIED,
+            InGame_Events.ENEMY_DIED,
+            InGame_Events.UPDATE_MOOD,
+            InGame_Events.TOGGLE_PAUSE,
             UIEvents.CLICKED_RESTART
         ]);
     }
 
     unloadScene(): void {
         super.unloadScene();
-        // TODO: pass managers, player controller to next level 
         this.levelZeroReceiver.destroy();
     }
-
-
-
-
-    protected increaseEnemyStrength(): void {
-        let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(2);
-    }
-
-    protected resetAngryEffect(): void {
-        let playerController = <PlayerController>this.player._ai;
-        playerController.increaseDamageTaken(1);
-    }
-
 
 
 }
