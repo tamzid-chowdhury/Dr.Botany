@@ -116,7 +116,7 @@ export default class LevelZero extends GameLevel {
 
             this.moodEffectTimer.reset();
             this.plant.animation.play("EH");
-            this.moodManager.resetEffect(this);
+            this.moodManager.resetEffect(this, this.player.position);
         }
        
 

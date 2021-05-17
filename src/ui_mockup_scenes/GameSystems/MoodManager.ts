@@ -145,7 +145,7 @@ export default class MoodManager implements Updateable {
 		}
 	}
 
-	resetEffect(scene: GameLevel): void {
+	resetEffect(scene: GameLevel, playerPosition: Vec2): void {
 		console.log("resetting effects")
 		this.moodEffect = false;
 		switch (this.currentMoodEffect) {
@@ -217,6 +217,7 @@ export default class MoodManager implements Updateable {
 				break;
 			default: break;
 		}
+		this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, {playerPosition: playerPosition})
 	}
 
 	updateMoodLevel(count: number, type: number): void {
@@ -247,7 +248,7 @@ export default class MoodManager implements Updateable {
 			this.happyMood = 0;
 			this.currentMood = PlantMoods.ANGRY;
 			this.emitter.fireEvent(InGame_Events.ANGRY_MOOD_REACHED);
-			this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, { type: -1})
+			// this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, { type: -1})
 			// this.receiver.unsubscribe(InGame_Events.UPDATE_MOOD);
 			// console.log("ANGRY MOOD REACHED")
 			// GUI counter (timer)
@@ -259,7 +260,7 @@ export default class MoodManager implements Updateable {
 			this.angryMood = 0;
 			this.currentMood = PlantMoods.HAPPY;
 			this.emitter.fireEvent(InGame_Events.HAPPY_MOOD_REACHED);
-			this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, { type: 1})
+			// this.emitter.fireEvent(InGame_GUI_Events.RESET_MOOD_BAR, { type: 1})
 			// this.receiver.unsubscribe(InGame_Events.UPDATE_MOOD);
 			// console.log("HAPPY MOOD REACHED")
 			// GUI counter (timer)
