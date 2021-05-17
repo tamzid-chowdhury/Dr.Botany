@@ -32,7 +32,7 @@ export default class Damaged extends EnemyState {
 		this.parent.knockBackTimer -= 3;
 		if (this.parent.knockBackTimer <= 0 && this.parent.health > 0) {
 			this.parent.knockBackGuard = 20;
-
+			
 			this.finished(EnemyStates.WALK);
 		} 
 		super.update(deltaT);

@@ -8,6 +8,7 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Input from "../../Wolfie2D/Input/Input";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import PlantManager from "./PlantManager";
 
 export default class GrowthManager implements Updateable {
 
@@ -44,7 +45,7 @@ export default class GrowthManager implements Updateable {
 
     }
 
-    destroy(): void{
+    destroy(): void {
         this.receiver.destroy();
     }
 
@@ -58,9 +59,18 @@ export default class GrowthManager implements Updateable {
         this.checkGrowthComplete();
     }
 
-    decreaseGrowthScore(): void {
-        let growthDecrease = -.6;
-        this.score += -1;
+    decreaseGrowthScore(number: number): void {
+        let growthDecrease;
+        // this part is weird
+        if (number) {
+            this.score += -number;
+            growthDecrease = -.6 * this.score
+            console.log(number);
+        }
+        else {
+            growthDecrease = -.6;
+            this.score += -1;
+        }
         this.score = MathUtils.clamp(this.score, 0, 100)
 
         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_GROWTH_BAR, { growthIncrease: growthDecrease, score: this.score });
@@ -90,11 +100,20 @@ export default class GrowthManager implements Updateable {
 
             if (event.type === InGame_Events.PLANT_HIT) {
                 if (this.timer.isStopped()) {
-                    this.decreaseGrowthScore();
-                    this.timer.start();
                     // this.receiver.unsubscribe(InGame_Events.PLANT_HIT);
+                    let owner = this.scene.getSceneGraph().getNode(event.data.get('node'))
+                    if ((<EnemyController>owner.ai).attackType === "bomb") {
+                        this.decreaseGrowthScore(20);
+                    }
+                    else {
+                        this.decreaseGrowthScore(0);
+                    }
+                    this.timer.start();
 
                 }
+
+
+
             }
 
 
@@ -112,6 +131,7 @@ export default class GrowthManager implements Updateable {
 
         if (Input.isKeyJustPressed("x")) {
             this.increaseGrowthScore(1);
+            console.log(this.score)
         }
 
     }

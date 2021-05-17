@@ -287,6 +287,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 if (event.type === InGame_Events.GAME_OVER) {
                     this.gameOver = true;
                     this.owner.disablePhysics();
+                    this.equipped.disable();
                 }
 
                 if (event.type === InGame_Events.TOGGLE_PAUSE) {

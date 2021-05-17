@@ -138,6 +138,7 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("wisp", "assets/enemies/wisp.json")
         this.load.spritesheet("carrot", "assets/enemies/carrot.json")
         this.load.spritesheet("ghost", "assets/enemies/ghost.json")
+        this.load.spritesheet("bomb", "assets/enemies/bomb.json");
         this.load.spritesheet("wisp_projectile", "assets/enemies/wisp_projectile.json")
     }
 
@@ -171,7 +172,6 @@ export default class GameLevel extends Scene {
             UIEvents.CLICKED_RESUME,
             UIEvents.TRANSITION_LEVEL,
             UIEvents.CLICKED_RESTART,
-            InGame_Events.PLANT_HIT,
             InGame_Events.LEVEL_END
         ]);
 
@@ -259,11 +259,6 @@ export default class GameLevel extends Scene {
                 this.pauseScreenLayer.layer.disable();
 
             }
-
-            // if (event.type === InGame_Events.PLANT_HIT) {
-            //     console.log('plant hit')
-
-            // }
 
 
 
@@ -435,7 +430,7 @@ export default class GameLevel extends Scene {
 
 
             if (event.type === InGame_Events.ENEMY_DEATH_ANIM_OVER) {
-                let node = this.sceneGraph.getNode(event.data.get("owner"));
+                let node = this.sceneGraph.getNode(event.data.get("owner")); // enemy 
                 let ownerPosition = (<EnemyController>node._ai).owner.position.clone();
                 if (Math.random() < 0.9) {
                     if ((<EnemyController>node._ai).dropType == "Upper") {
@@ -452,6 +447,7 @@ export default class GameLevel extends Scene {
                 else if (this.supportManager.hasAmmoPacksToSpawn() && Math.random() < 0.05) {
                     this.emitter.fireEvent(InGame_Events.SPAWN_AMMO, { position: ownerPosition });
                 }
+
 
 
 

@@ -18,7 +18,7 @@ export default class EnemyManager {
     /////////
     mapSize : Vec2;
 
-	constructor(scene: Scene, mapSize : Vec2, size: number = 5 ) {
+	constructor(scene: Scene, mapSize : Vec2, size: number = 6 ) {
 		this.scene = scene;
         this.maxEnemies = size;
         this.initPrototypes();

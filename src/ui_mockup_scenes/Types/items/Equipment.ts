@@ -71,4 +71,7 @@ export default class Equipment {
 	doAttack(direction: Vec2, deltaT: number) {}
 
 	finishAttack(): void {}
+	disable():void {
+		this.sprite.disablePhysics();
+	}
 }
