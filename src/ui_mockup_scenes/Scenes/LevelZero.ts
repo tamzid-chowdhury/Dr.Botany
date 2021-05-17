@@ -28,7 +28,6 @@ export default class LevelZero extends GameLevel {
     // moodMin: number = -10;
     // moodMax: number = 10;
     moodEffectTimer: Timer = new Timer(10000, null, false);
-    moodEffect : boolean = false;
     levelZeroReceiver: Receiver = new Receiver();
 
     overdrawTiles: Array<Sprite> = [];
@@ -138,6 +137,12 @@ export default class LevelZero extends GameLevel {
             this.equipmentManager.spawnEquipment("PillBottle", new Vec2(this.plant.position.x, this.plant.position.y + 32))
 
         }
+        else if(this.pauseExecution && this.moodEffectTimer.isActive()) {
+            this.moodEffectTimer.pause();
+        }
+        else if(!this.pauseExecution && this.moodEffectTimer.isPaused()) {
+            this.moodEffectTimer.continue();
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Mood timer stuff
@@ -145,7 +150,6 @@ export default class LevelZero extends GameLevel {
         if(this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
             this.moodEffectTimer.reset();
             this.plant.animation.play("EH");
-            this.moodEffect = false;
             this.moodManager.resetEffect(this);
         }
         /////////////////////////////////////////////////////////////////////
@@ -172,7 +176,6 @@ export default class LevelZero extends GameLevel {
 
 
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
-                this.moodEffect = true;
                 this.moodEffectTimer.start();
                 this.plant.animation.play("ANGRY", true);
                 this.moodManager.applyEffect(this,"downer", Math.floor(Math.random() * this.moodManager.prototypesAngry.length));
@@ -180,7 +183,6 @@ export default class LevelZero extends GameLevel {
             }
 
             if (event.type === InGame_Events.HAPPY_MOOD_REACHED) {
-                this.moodEffect = true;
                 this.moodEffectTimer.start();
                 this.plant.animation.play("HAPPY", true);
                 this.moodManager.applyEffect(this,"upper", Math.floor(Math.random() * this.moodManager.prototypesHappy.length));
