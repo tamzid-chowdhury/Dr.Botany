@@ -36,6 +36,7 @@ export default class Game {
     // Game canvas and its width and height
     readonly GAME_CANVAS: HTMLCanvasElement;
     readonly DEBUG_CANVAS: HTMLCanvasElement;
+    readonly STATIC_CANVAS: HTMLCanvasElement;
 	readonly WIDTH: number;
     readonly HEIGHT: number;
     private viewport: Viewport;
@@ -70,6 +71,7 @@ export default class Game {
 
         // Get the game canvas and give it a background color
         this.GAME_CANVAS = <HTMLCanvasElement>document.getElementById("game-canvas");
+        this.STATIC_CANVAS = <HTMLCanvasElement>document.getElementById("static-canvas");
         this.DEBUG_CANVAS = <HTMLCanvasElement>document.getElementById("debug-canvas");
     
         // Give the canvas a size and get the rendering context
@@ -83,7 +85,7 @@ export default class Game {
             this.renderingManager = new CanvasRenderer();
         }
         this.initializeGameWindow();
-        this.ctx = this.renderingManager.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
+        this.ctx = this.renderingManager.initializeCanvas(this.GAME_CANVAS, this.STATIC_CANVAS, this.WIDTH, this.HEIGHT);
         this.clearColor = new Color(this.gameOptions.clearColor.r, this.gameOptions.clearColor.g, this.gameOptions.clearColor.b);
 
         // Initialize debugging and stats

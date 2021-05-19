@@ -23,7 +23,7 @@ import MainMenu from "./ui_mockup_scenes/MainMenu";
     // Set up options for our game
     let options = {
         canvasSize: {x: width, y: height},          // The size of the game
-        clearColor: {r: 0.9607, g: 0.9333, b: 0.9137},   // The color the game clears to
+        clearColor: {r: 0, g: 0, b: 0, a: 0},   // The color the game clears to
         inputs: [
             {name: "forward", keys: ["w"]},
             {name: "backward", keys: ["s"]},
@@ -39,11 +39,6 @@ import MainMenu from "./ui_mockup_scenes/MainMenu";
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
 
-    // let equipmentTemplateRegistry = new EquipmentTemplateRegistry();
-    // RegistryManager.addCustomRegistry("equipmentTemplates", equipmentTemplateRegistry);
-    
-    // let equipTypeRegistry = new EquipTypeRegistry();
-    // RegistryManager.addCustomRegistry("equipmentTypes", equipTypeRegistry);
 
     const game = new Game(options);
     let audio = game.getAudioManager();

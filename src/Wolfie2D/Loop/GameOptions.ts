@@ -9,7 +9,7 @@ export default class GameOptions {
     zoomLevel: number;
 
     /** The color to clear the canvas to each frame */
-    clearColor: {r: number, g: number, b: number}
+    clearColor: {r: number, g: number, b: number, a: number}
 
     /* A list of input bindings */
     inputs: Array<{name: string, keys: Array<string>}>;
@@ -33,7 +33,7 @@ export default class GameOptions {
 
         gOpt.canvasSize = options.canvasSize ? options.canvasSize : {x: 800, y: 600};
         gOpt.zoomLevel = options.zoomLevel ? options.zoomLevel : 1;
-        gOpt.clearColor = options.clearColor ? options.clearColor : {r: 255, g: 255, b: 255};
+        gOpt.clearColor = options.clearColor ? options.clearColor : {r: 255, g: 255, b: 255, a: 255};
         gOpt.inputs = options.inputs ? options.inputs : [];
         gOpt.showDebug = !!options.showDebug;
         gOpt.showStats = !!options.showStats;

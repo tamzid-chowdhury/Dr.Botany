@@ -28,15 +28,16 @@ import Debug from "../Debug/Debug";
  */
 export default class CanvasRenderer extends RenderingManager {
     protected ctx: CanvasRenderingContext2D;
+    protected staticCtx: CanvasRenderingContext2D;
     protected graphicRenderer: GraphicRenderer;
     protected tilemapRenderer: TilemapRenderer;
     protected uiElementRenderer: UIElementRenderer;
 
     protected origin: Vec2;
     protected zoom: number;
-
+    wait: number = 0;
     protected worldSize: Vec2;
-
+    protected preRenderDone: boolean;
     constructor(){
         super();
     }
@@ -47,16 +48,20 @@ export default class CanvasRenderer extends RenderingManager {
         this.graphicRenderer.setScene(scene);
         this.tilemapRenderer.setScene(scene);
         this.uiElementRenderer.setScene(scene);
+        this.preRenderDone = false;
     }
 
     // @override
-    initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
+    initializeCanvas(canvas: HTMLCanvasElement, staticCanvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
         canvas.width = width;
         canvas.height = height;
+        staticCanvas.width = width;
+        staticCanvas.height = height;
 
         this.worldSize = new Vec2(width, height);
 
         this.ctx = canvas.getContext("2d");
+        this.staticCtx = staticCanvas.getContext("2d");
 
         this.graphicRenderer = new GraphicRenderer(this.ctx);
         this.tilemapRenderer = new TilemapRenderer(this.ctx);
@@ -64,13 +69,30 @@ export default class CanvasRenderer extends RenderingManager {
 
         // For crisp pixel art
         this.ctx.imageSmoothingEnabled = false;
+        this.staticCtx.imageSmoothingEnabled = false;
 
         return this.ctx;
     }
 
+    preRender(tilemaps: Tilemap[]): void{
+        for(let t of tilemaps) {
+            this.renderTilemap(t);
+        }
+    }
+
+
+
     // @override
     render(visibleSet: CanvasNode[], tilemaps: Tilemap[], uiLayers: Map<UILayer>): void {
+
+        // for(let t of tilemaps) {
+        //     this.renderTilemap(t);
+        // }
+
+
+
         // Sort by depth, then by visible set by y-value
+
         visibleSet.sort((a, b) => {
             if(a.getLayer().getDepth() === b.getLayer().getDepth()){
                 return (a.boundary.bottom) - (b.boundary.bottom);
@@ -78,6 +100,10 @@ export default class CanvasRenderer extends RenderingManager {
                 return a.getLayer().getDepth() - b.getLayer().getDepth();
             }
         });
+
+        // for(let v of visibleSet) {
+        //     this.renderNode(v);
+        // }
 
         let tilemapIndex = 0;
         let tilemapLength = tilemaps.length;
@@ -234,6 +260,7 @@ export default class CanvasRenderer extends RenderingManager {
         }
     }
 
+
     // @override
     protected renderUIElement(uiElement: UIElement): void {
         if(uiElement instanceof Label){
@@ -248,7 +275,8 @@ export default class CanvasRenderer extends RenderingManager {
     }
 
     clear(clearColor: Color): void {
-        this.ctx.clearRect(0, 0, this.worldSize.x, this.worldSize.y);
+        // this.ctx.clearRect(0, 0, this.worldSize.x, this.worldSize.y);
+        // this.staticCtx.clearRect(0, 0, this.worldSize.x, this.worldSize.y);
         this.ctx.fillStyle = clearColor.toString();
         this.ctx.fillRect(0, 0, this.worldSize.x, this.worldSize.y);
     }

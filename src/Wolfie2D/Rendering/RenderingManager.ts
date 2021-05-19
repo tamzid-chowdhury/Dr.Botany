@@ -39,7 +39,7 @@ export default abstract class RenderingManager {
      * @param height The desired height of the canvas
      * @returns The rendering context of the canvas
      */
-    abstract initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): any;
+    abstract initializeCanvas(canvas: HTMLCanvasElement, staticCanvas: HTMLCanvasElement, width: number, height: number): any;
 
     /**
      * Renders the visible set of CanvasNodes and visible portions of tilemaps, as well as any UIElement in UILayers

@@ -13,6 +13,7 @@ export default class OrthogonalTilemap extends Tilemap {
     /** The number of rows in the tilemap */
     protected numRows: number;
 
+
     // @override
     protected parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void {
         // The size of the tilemap in local space

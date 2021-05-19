@@ -31,7 +31,7 @@ export default class WebGLRenderer extends RenderingManager {
 	protected gl: WebGLRenderingContext;
 	protected textCtx: CanvasRenderingContext2D;
 
-	initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): WebGLRenderingContext {
+	initializeCanvas(canvas: HTMLCanvasElement, staticCanvas: HTMLCanvasElement, width: number, height: number): WebGLRenderingContext {
 		canvas.width = width;
         canvas.height = height;
 

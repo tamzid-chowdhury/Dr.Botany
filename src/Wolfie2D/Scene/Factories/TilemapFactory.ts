@@ -71,13 +71,13 @@ export default class TilemapFactory {
                 collectionTiles.push(...tileset.tiles);
             }
         }
+        let depth = 0;
 
         // Loop over the layers of the tilemap and create tiledlayers or object layers
         for(let layer of tilemapData.layers){
 
             let sceneLayer;
             let isParallaxLayer = false;
-            let depth = 0;
             
             if(layer.properties){
                 for(let prop of layer.properties){
@@ -225,6 +225,7 @@ export default class TilemapFactory {
 
             // Update the return value
             sceneLayers.push(sceneLayer);
+            depth++
         }
 
         return sceneLayers;

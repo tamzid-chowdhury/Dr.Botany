@@ -11,11 +11,12 @@ export default class TilemapRenderer {
     protected resourceManager: ResourceManager;
     protected scene: Scene;
     protected ctx: CanvasRenderingContext2D;
-
     constructor(ctx: CanvasRenderingContext2D){
         this.resourceManager = ResourceManager.getInstance();
         this.ctx = ctx;
     }
+
+
 
     /**
      * Sets the scene of this TilemapRenderer
@@ -24,6 +25,7 @@ export default class TilemapRenderer {
     setScene(scene: Scene): void {
         this.scene = scene;
     }
+
 
     /**
      * Renders an orthogonal tilemap
@@ -36,7 +38,9 @@ export default class TilemapRenderer {
         let origin = this.scene.getViewTranslation(tilemap);
         let size = this.scene.getViewport().getHalfSize();
         let zoom = this.scene.getViewScale();
-        let bottomRight = origin.clone().add(size.scaled(2*zoom));
+        let bottomRight = origin.clone().add(size.scaled(2));
+        // let bottomRight = origin.clone().add(size.scaled(zoom/2));
+        // let bottomRight = origin.clone().add(size.scaled(zoom));
 
         if(tilemap.visible){
             let minColRow = tilemap.getColRowAt(origin);
@@ -60,7 +64,9 @@ export default class TilemapRenderer {
                     }
                 }
             }
+
         }
+
 
         this.ctx.globalAlpha = previousAlpha;
     }
