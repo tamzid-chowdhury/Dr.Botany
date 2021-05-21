@@ -165,11 +165,6 @@ export default class Level_Fall_One extends GameLevel {
 
     protected subscribeToEvents() {
         this.levelZeroReceiver.subscribe([
-            InGame_Events.PLAYER_ENEMY_COLLISION,
-            InGame_Events.PLAYER_DIED,
-            InGame_Events.ENEMY_DIED,
-            InGame_Events.UPDATE_MOOD,
-            InGame_Events.TOGGLE_PAUSE,
             UIEvents.TRANSITION_LEVEL,
             UIEvents.CLICKED_RESTART
         ]);

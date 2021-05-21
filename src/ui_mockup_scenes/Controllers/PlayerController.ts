@@ -50,12 +50,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     damageTaken: number = 1;
     hitFlashCooldown: number;
     pauseExecution: boolean = false;
-    returnEquipment: boolean = false;
     gameOver: boolean = false;
     nearEquip: number = -1;
     nearUpperDeposit: number = -1;
     nearDownerDeposit: number = -1;
     invulnerable: boolean = false;
+
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.viewport = owner.getScene().getViewport();
@@ -132,7 +132,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     activate(options: Record<string, any>): void { }
 
-    handleEvent(event: GameEvent): void { }
+    handleEvent(event: GameEvent): void { 
+
+    }
 
     resolvePlayerInput(deltaT: number): void {
         let rotateTo = Input.getGlobalMousePosition();
@@ -166,7 +168,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
         if (this.knockBack) {
-            this.owner.move(this.knockBackVel.scaled(0.05, 0.05));
+            this.owner.move(this.knockBackVel.scaled(0.05 * deltaT, 0.05 * deltaT));
         }
         else {
             this.owner.move(this.velocity.scaled(deltaT));
@@ -183,8 +185,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
 
         this.playerLookDirection = this.equipped.sprite.position.dirTo(rotateTo);
-        this.equipped.updatePos(this.owner.position.clone(), this.playerLookDirection);
-        this.stowed.updatePos(this.owner.position.clone(), this.playerLookDirection);
+        this.equipped.updatePos(this.owner.position, this.playerLookDirection);
+        this.stowed.updatePos(this.owner.position, this.playerLookDirection);
         this.equipped.setRot(-Vec2.UP.angleToCCW(this.playerLookDirection))
 
 
@@ -192,7 +194,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if (Input.isMousePressed() && !this.pauseExecution) {
             if (!this.coolDownTimer.isActive()) {
                 if (this.equipped.charges) {
-                    // (<AnimatedSprite>this.equipped.projectileSprite).animation.play("ATTACK", false);
                     this.equipped.doAttack(this.playerLookDirection, deltaT);
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.equipped.sfxKey, loop: false, holdReference: true });
                     this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, { dir: this.playerLookDirection })
@@ -297,7 +298,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
 
                 if (event.type === InGame_Events.TOGGLE_PAUSE) {
-
                     if (this.pauseExecution) this.pauseExecution = false;
                     else this.pauseExecution = true;
                 }
@@ -308,6 +308,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     let equip = this.owner.getScene().getSceneGraph().getNode(other);
                     this.emitter.fireEvent(InGame_GUI_Events.SHOW_INTERACT_LABEL, { position: equip.position});
                 }
+
                 if (event.type === InGame_Events.NOT_OVERLAP_EQUIP) {
                     this.nearEquip = -1;
                     this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
@@ -327,16 +328,16 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                             this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "player_hit", holdReference: true });
                            
                             this.knockBack = true;
-                            if(enemy._ai) {
-                                if((<EnemyController>enemy._ai).dropType === 'ram') {
-                                    this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.4);
+                            // if(enemy._ai) {
+                            //     if((<EnemyController>enemy._ai).dropType === 'ram') {
+                            //         this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.4);
     
-                                }
-                                else {
-                                    this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.1);
+                            //     }
+                            //     else {
+                            //         this.knockBackVel = (<EnemyController>enemy._ai).velocity.scale(0.1);
     
-                                }
-                            }
+                            //     }
+                            // }
     
     
     
@@ -361,10 +362,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.downerCount++;
                 }
 
-
-
                 if(event.type === InGame_Events.ON_UPPER_DEPOSIT && (this.nearUpperDeposit < 0)){
-                    // this.receiver.unsubscribe(InGame_Events.ON_UPPER_DEPOSIT);
                     if(this.upperCount > 0) {
                         let other = event.data.get('other');
                         this.nearUpperDeposit = other;
@@ -374,7 +372,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
 
                 if(event.type === InGame_Events.ON_DOWNER_DEPOSIT && (this.nearDownerDeposit < 0)) {
-                    // this.receiver.unsubscribe(InGame_Events.ON_DOWNER_DEPOSIT);
                     if(this.downerCount > 0) {
                         let other = event.data.get('other');
                         this.nearDownerDeposit = other;
@@ -387,14 +384,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.nearUpperDeposit = -1
                     this.nearDownerDeposit = -1
                     this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
-                    // this.receiver.subscribe(InGame_Events.ON_DOWNER_DEPOSIT);
                 }
-                if (0) {
-                    // this.emitter.fireEvent(InGame_GUI_Events.HIDE_INTERACT_LABEL);
-                    // this.receiver.subscribe(InGame_Events.ON_UPPER_DEPOSIT);
-                }
-
-
 
                 if (event.type === InGame_Events.ADD_PLAYER_HEALTH){
                     this.health += 1; 
@@ -441,7 +431,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     damage(damage: number): void {
         this.health -= damage;
-
         if (this.health <= 0) {
             this.emitter.fireEvent(InGame_Events.PLAYER_DIED);
         }
@@ -460,13 +449,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             InGame_GUI_Events.INCREMENT_DOWNER_COUNT,
             InGame_Events.ON_UPPER_DEPOSIT,
             InGame_Events.ON_DOWNER_DEPOSIT,
-            InGame_Events.ON_PLANT,
             InGame_Events.OFF_UPPER_DEPOSIT,
             InGame_Events.OFF_DOWNER_DEPOSIT,
-            InGame_Events.OFF_PLANT,
             InGame_Events.TOGGLE_PAUSE,
             InGame_Events.GAME_OVER,
-            InGame_Events.TRASH_LID_APEX,
             InGame_Events.OVERLAP_EQUIP,
             InGame_Events.NOT_OVERLAP_EQUIP,
             InGame_Events.REFRESH_AMMO,
@@ -475,7 +461,4 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         ]);
     }
 
-    increaseDamageTaken(newDamageTaken: number): void {
-        this.damageTaken = newDamageTaken
-    }
 }

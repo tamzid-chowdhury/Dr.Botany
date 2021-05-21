@@ -15,7 +15,6 @@ export default class EnemyManager {
     prototypes: Array<Record<string, any>> = [];
     startingPosition: Vec2 = new Vec2(300,300)
 
-    /////////
     mapSize : Vec2;
 
 	constructor(scene: Scene, mapSize : Vec2, size: number = 5 ) {
@@ -27,7 +26,6 @@ export default class EnemyManager {
             this.inactivePool.push(enemy);
         }
 
-        ///////////
         this.mapSize = mapSize;
 	}
 
@@ -69,13 +67,17 @@ export default class EnemyManager {
             enemy = this.createEnemy()
         }
         this.activePool.push(enemy);
-        // enemy.sprite.position.set(position.x,position.y)
-        let xOffset = Math.random() < 0.5 ? 0.8 : -0.2;
-        let yOffset = Math.random() < 0.5 ? 0.8 : -0.2;
-        enemy.sprite.position.set(xOffset * this.mapSize.x, yOffset * this.mapSize.y)
+        let side = Math.random() < 0.5 ? -1:1;
+        let yPos = Math.random() * (this.mapSize.y ) + (64*side); // 32 is to add a little up/down to potential spawn points
+        let xPos = (yPos > 0 && yPos < this.mapSize.y) ? -48 : Math.random() * this.mapSize.x / 2;
+        xPos += Math.random() < 0.5 ? 0 : this.mapSize.x / 2;
+        enemy.sprite.position.set(xPos, yPos)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
+        yPos = Math.floor(yPos);
+        xPos = Math.floor(xPos);
 
+        console.log('spawning at :', xPos, yPos);
         (<EnemyController>enemy.sprite.ai).wake(player, plant, enemy.data.spriteKey);
     }
 

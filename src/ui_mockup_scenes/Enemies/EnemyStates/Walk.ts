@@ -125,18 +125,12 @@ export default class Walk extends EnemyState {
 
 	handleRamMove(plantPos: Vec2, playerPos: Vec2, ownerPos: Vec2, deltaT: number): void {
 		let ownerPosX = ownerPos.x;
-		let ownerPosY = ownerPos.y;
 
 		let playerPosX = playerPos.x;
-		let playerPosY = playerPos.y;
 
-		let plantPosX = plantPos.x;
-		let plantPosY = plantPos.y;
 		
 		let distanceToPlayer = ownerPos.distanceSqTo(playerPos);
 		let distanceToPlant = ownerPos.distanceSqTo(plantPos);
-		// let distanceToPlayer = Math.sqrt(Math.pow(ownerPosX - playerPosX, 2) + Math.pow(ownerPosY - playerPosY, 2));
-		// let distanceToPlant = Math.sqrt(Math.pow(ownerPosX - plantPosX, 2) + Math.pow(ownerPosY - plantPosY, 2));
 
 		if ((distanceToPlant + this.distBuffer) > distanceToPlayer) {   // moving to the player
 
@@ -238,9 +232,6 @@ export default class Walk extends EnemyState {
 		let ownerPosX = ownerPos.x;
 
 		let playerPosX = playerPos.x;
-
-
-
 		let dir;
 
 		this.parent.direction.x = (this.parent.owner.invertX ? -1 : 1);

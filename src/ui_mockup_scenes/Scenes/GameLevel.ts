@@ -135,9 +135,6 @@ export default class GameLevel extends Scene {
     startScene(): void {
         this.receiver.destroy()
         this.receiver.subscribe([
-            GameEventType.MOUSE_DOWN,
-            GameEventType.MOUSE_UP,
-            GameEventType.KEY_DOWN,
             InGame_Events.LEVEL_LOADED,
             InGame_Events.DO_SCREENSHAKE,
             InGame_Events.SPAWN_UPPER,
@@ -153,8 +150,6 @@ export default class GameLevel extends Scene {
             InGame_Events.GROWTH_COMPLETED,
             UIEvents.CLICKED_QUIT,
             UIEvents.CLICKED_RESUME,
-            UIEvents.CLICKED_RESTART,
-            InGame_Events.LEVEL_END
         ]);
 
 
@@ -256,7 +251,6 @@ export default class GameLevel extends Scene {
                         // if we want porjectile piercing as a powerup, this has to be conditional
                         // also bad hardcoding
                         if ((<Sprite>other).imageId === "pill") {
-
                             other.active = false;
                         }
 
@@ -274,8 +268,6 @@ export default class GameLevel extends Scene {
                 this.viewport.doScreenShake(dir);
 
             }
-
-            
 
             if (event.type === InGame_Events.LEVEL_LOADED) {
                 this.screenCenter = this.viewport.getHalfSize();
@@ -304,7 +296,6 @@ export default class GameLevel extends Scene {
                 this.screenWipe.tweens.play("levelTransition");
             }
 
-            //////////////////////////////////////////////////////////////////////////////////
             if (event.type === UIEvents.CLICKED_NEXT_LEVEL) {
                 this.screenWipe.imageOffset = new Vec2(0, 0);
                 this.screenWipe.scale = new Vec2(2, 1)
@@ -312,7 +303,6 @@ export default class GameLevel extends Scene {
                 this.screenWipe.tweens.add("levelTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL));
                 this.screenWipe.tweens.play("levelTransition");
             }
-            //////////////////////////////////////////////////////////////////////////////////
 
             if (event.type === InGame_Events.SPAWN_UPPER) {
                 let position = event.data.get("position");
@@ -521,6 +511,7 @@ export default class GameLevel extends Scene {
     }
     initViewport(mapSize: Vec2): void {
         let origin = this.viewport.getOrigin();
+        this.viewport.setSmoothingFactor(1);
         this.viewport.setBounds(origin.x + 8, origin.y + 8, mapSize.x - 8, mapSize.y + 8);
         this.viewport.setSize(480, 270); // NOTE: Viewport can only see 1/4 of full 1920x1080p canvas
         this.viewport.setFocus(new Vec2(this.player.position.x, this.player.position.y));

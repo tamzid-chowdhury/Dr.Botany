@@ -179,11 +179,7 @@ export default class Level_Spring_One extends GameLevel {
 
     protected subscribeToEvents() {
         this.levelReceiver.subscribe([
-            InGame_Events.PLAYER_ENEMY_COLLISION,
-            InGame_Events.PLAYER_DIED,
-            InGame_Events.ENEMY_DIED,
-            InGame_Events.UPDATE_MOOD,
-            InGame_Events.TOGGLE_PAUSE,
+   
             UIEvents.CLICKED_RESTART,
 			UIEvents.TRANSITION_LEVEL
 

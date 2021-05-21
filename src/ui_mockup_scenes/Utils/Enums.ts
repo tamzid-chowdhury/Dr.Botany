@@ -25,9 +25,6 @@ export enum UIEvents {
 	CLICKED_TOGGLE = 'CLICKED_TOGGLE',
 	CLICKED_NEXT_LEVEL = 'CLICKED_NEXT_LEVEL',
 	TRANSITION_LEVEL_MAIN = 'TRANSITION_LEVEL_MAIN',
-
-
-	
 	CLICKED_RESTART="CLICKED_RESTART",
 	CLICKED_MAIN_MENU="CLICKED_MAIN_MENU"
 }
@@ -117,7 +114,6 @@ export enum InGame_Events {
     ENEMY_DIED = "EnemyDied",
     LEVEL_LOADED = "LevelLoaded",
     LEVEL_START = "LevelStart",
-    LEVEL_END = "LevelEnd",
     DOING_SWING = "DoingSwing",
     FINISHED_SWING = "FinishedSwing",
     START_SWING = "StartSwing",

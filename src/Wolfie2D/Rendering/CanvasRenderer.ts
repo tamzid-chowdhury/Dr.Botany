@@ -37,7 +37,6 @@ export default class CanvasRenderer extends RenderingManager {
     protected zoom: number;
     wait: number = 0;
     protected worldSize: Vec2;
-    protected preRenderDone: boolean;
     constructor(){
         super();
     }
@@ -48,20 +47,19 @@ export default class CanvasRenderer extends RenderingManager {
         this.graphicRenderer.setScene(scene);
         this.tilemapRenderer.setScene(scene);
         this.uiElementRenderer.setScene(scene);
-        this.preRenderDone = false;
     }
 
     // @override
     initializeCanvas(canvas: HTMLCanvasElement, staticCanvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
         canvas.width = width;
         canvas.height = height;
-        staticCanvas.width = width;
-        staticCanvas.height = height;
+        // staticCanvas.width = width;
+        // staticCanvas.height = height;
 
         this.worldSize = new Vec2(width, height);
 
         this.ctx = canvas.getContext("2d");
-        this.staticCtx = staticCanvas.getContext("2d");
+        // this.staticCtx = staticCanvas.getContext("2d");
 
         this.graphicRenderer = new GraphicRenderer(this.ctx);
         this.tilemapRenderer = new TilemapRenderer(this.ctx);
@@ -69,16 +67,12 @@ export default class CanvasRenderer extends RenderingManager {
 
         // For crisp pixel art
         this.ctx.imageSmoothingEnabled = false;
-        this.staticCtx.imageSmoothingEnabled = false;
+        // this.staticCtx.imageSmoothingEnabled = false;
 
         return this.ctx;
     }
 
-    preRender(tilemaps: Tilemap[]): void{
-        for(let t of tilemaps) {
-            this.renderTilemap(t);
-        }
-    }
+
 
 
 
@@ -276,8 +270,8 @@ export default class CanvasRenderer extends RenderingManager {
 
     clear(clearColor: Color): void {
         // this.ctx.clearRect(0, 0, this.worldSize.x, this.worldSize.y);
-        // this.staticCtx.clearRect(0, 0, this.worldSize.x, this.worldSize.y);
         this.ctx.fillStyle = clearColor.toString();
         this.ctx.fillRect(0, 0, this.worldSize.x, this.worldSize.y);
+
     }
 }
