@@ -24,6 +24,7 @@ import SupportManager from "../GameSystems/SupportManager"
 import MoodManager from "../GameSystems/MoodManager"
 import GrowthManager from "../GameSystems/GrowthManager";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 
 export default class GameLevel extends Scene {
     defaultFont: string = 'Round';
@@ -103,8 +104,10 @@ export default class GameLevel extends Scene {
         this.load.image("downer", "assets/items/bad_vibe.png");
         this.load.image("healthpack", "assets/items/healthpack.png");
         this.load.image("ammopack", "assets/items/ammopack.png");
-        this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
-        this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
+        this.load.image("upper_deposit", "assets/misc/upper_deposit_sign.png")
+        // this.load.image("upper_deposit", "assets/misc/upper_deposit_v2.png")
+        this.load.image("downer_deposit", "assets/misc/downer_deposit_sign.png")
+        // this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
         this.load.audio("swing", "assets/sfx/swing_sfx.wav");
         this.load.audio("enemy_hit", "assets/sfx/enemy_hit.wav");
         this.load.audio("enemy_jump", "assets/sfx/enemy_jump.wav");
@@ -169,7 +172,7 @@ export default class GameLevel extends Scene {
         // TODO: Disable input until after screen wipe finished
         this.initReticle();
         this.materialsManager = new MaterialsManager(this);
-        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize());
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), 5);
         this.equipmentManager = new EquipmentManager(this);
         this.supportManager = new SupportManager(this);
 
@@ -374,6 +377,7 @@ export default class GameLevel extends Scene {
                 this.plant.tweens.play("treeScaleUp")
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "plant_grow", loop: false, holdReference: true });
 
+                this.plant.collisionShape = new AABB(Vec2.ZERO, new Vec2((this.plant.size.x / 2) * 0.75, (this.plant.size.y / 2) * 0.75 ))
 
             }
 
@@ -382,6 +386,7 @@ export default class GameLevel extends Scene {
                 this.plant.tweens.play("treeScaleUp")
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "plant_grow", loop: false, holdReference: true });
 
+                this.plant.collisionShape = new AABB(Vec2.ZERO, new Vec2((this.plant.size.x / 2) * 1, (this.plant.size.y / 2) * 1 ))
 
                 this.completionStatus = true;
                 this.spawnerTimer.pause();
@@ -396,19 +401,26 @@ export default class GameLevel extends Scene {
         // set the trigger of the plant for enemies and enemy projectiles
 
         this.plant = this.add.animatedSprite('plant', "primary");
-        this.upperDeposit = this.add.sprite('upper_deposit', "tertiary");
-        this.downerDeposit = this.add.sprite('downer_deposit', "tertiary");
+        this.plant.scale.set(0.5, 0.5);
+        this.upperDeposit = this.add.sprite('upper_deposit', "primary");
+        this.downerDeposit = this.add.sprite('downer_deposit', "primary");
         this.plant.position.set((mapSize.x / 2) - this.plant.size.x, (mapSize.x / 2) - 1.3 * this.plant.size.y);
 
         this.upperDeposit.position.set(this.plant.position.x + this.plant.size.x, this.plant.position.y + this.plant.size.y / 1.8);
         this.downerDeposit.position.set(this.plant.position.x - this.plant.size.x, this.plant.position.y + this.plant.size.y / 1.8);
 
-        this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x / 2, this.upperDeposit.size.y - this.upperDeposit.size.y / 4)));
-        this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x / 2, this.downerDeposit.size.y - this.downerDeposit.size.y / 4)));
-        this.plant.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.plant.size.x / 2, this.plant.size.y / 2)));
+        this.upperDeposit.addPhysics(new Circle(Vec2.ZERO, (this.upperDeposit.size.x / 2) - 2));
+        // this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x / 2,  (this.upperDeposit.size.y / 4)+8)));
+        this.upperDeposit.colliderOffset.set(0, 10);
+
+        this.downerDeposit.addPhysics(new Circle(Vec2.ZERO, (this.downerDeposit.size.x / 2) - 2));
+        // this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x / 2, this.downerDeposit.size.y - this.downerDeposit.size.y / 4)));
+        this.downerDeposit.colliderOffset.set(0, 10);
+        
+        this.plant.addPhysics(new AABB(Vec2.ZERO, new Vec2((this.plant.size.x / 2) * this.plant.scale.x, (this.plant.size.y / 2) * this.plant.scale.y )));
         this.upperDeposit.setGroup(PhysicsGroups.DEPOSIT);
         this.downerDeposit.setGroup(PhysicsGroups.DEPOSIT);
-        this.plant.setGroup(PhysicsGroups.DEPOSIT);
+        this.plant.setGroup(PhysicsGroups.PLANT);
 
         this.upperDeposit.setTrigger(PhysicsGroups.PLAYER, InGame_Events.ON_UPPER_DEPOSIT, InGame_Events.OFF_UPPER_DEPOSIT);
         this.downerDeposit.setTrigger(PhysicsGroups.PLAYER, InGame_Events.ON_DOWNER_DEPOSIT, InGame_Events.OFF_DOWNER_DEPOSIT);
@@ -417,7 +429,6 @@ export default class GameLevel extends Scene {
 
 
 
-        this.plant.scale.set(0.5, 0.5);
         this.upperDeposit.scale.set(1, 1);
         this.downerDeposit.scale.set(1, 1);
         (<AnimatedSprite>this.plant).animation.play("HAPPY")
@@ -425,9 +436,10 @@ export default class GameLevel extends Scene {
 
     unloadScene(): void {
         this.player.ai.destroy();
-
-        this.receiver.destroy();
+        this.inGameUILayer.destroy();
         this.growthManager.destroy();
+        this.moodManager.destroy();
+        this.receiver.destroy();
 
         this.load.keepImage("reticle");
         this.load.keepImage("growth_bar_outline");

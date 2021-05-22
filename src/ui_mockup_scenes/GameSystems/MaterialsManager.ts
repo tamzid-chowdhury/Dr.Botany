@@ -17,17 +17,15 @@ export default class MaterialsManager {
 
 
     maxMaterials: number;
-    scene: Scene;
     emitter: Emitter;
 
 
     constructor(scene: Scene, size: number = 48) { 
-        this.scene = scene;
         this.emitter = new Emitter();
         this.maxMaterials = size;
         for(let i = 0; i < this.maxMaterials; i ++) {
             if(i % 2 === 0) {
-                let upper = this.scene.add.sprite("upper", 'primary');
+                let upper = scene.add.sprite("upper", 'primary');
                 upper.scale.set(0.6, 0.6);
                 let material = new Material(upper, "upper", 'upper', []);
                 material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));
@@ -37,7 +35,7 @@ export default class MaterialsManager {
                 this.inactiveUppers.push(material);
             }
             else {
-                let downer = this.scene.add.sprite("downer", 'primary');
+                let downer = scene.add.sprite("downer", 'primary');
                 downer.scale.set(0.6, 0.6);
                 let material = new Material(downer, "downer", 'downer', []);
                 material.sprite.addPhysics(new AABB(Vec2.ZERO), new Vec2(7, 2));

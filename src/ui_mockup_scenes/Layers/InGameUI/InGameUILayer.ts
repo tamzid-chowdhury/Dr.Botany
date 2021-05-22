@@ -34,12 +34,6 @@ export default class InGameUI implements Updateable {
     showingInteract: boolean;
 
 
-    // // temporary for testing
-    // growthBarOutline: Sprite;
-    // growthBarFill: Sprite;
-    // showingGrowth: boolean = false;
-    // // 
-
     constructor(scene: Scene, center: Vec2, font: string, viewport: Viewport){
         this.scene = scene; 
         this.font = font; 
@@ -354,5 +348,7 @@ export default class InGameUI implements Updateable {
             }
         }
     }
- 
+    destroy(): void {
+        this.receiver.destroy();
+    }
 }

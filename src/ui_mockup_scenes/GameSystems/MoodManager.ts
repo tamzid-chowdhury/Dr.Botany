@@ -291,4 +291,8 @@ export default class MoodManager implements Updateable {
 		}
 	}
 
+	destroy(): void {
+		this.receiver.destroy()
+	}
+
 }

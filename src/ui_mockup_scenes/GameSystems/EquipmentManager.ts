@@ -62,7 +62,12 @@ export default class EquipmentManager {
 		}
 	}
 
-	
+	// destroy(): void {
+	// 	for(let p of this.prototypes) {
+
+	// 	}
+		
+	// }
 
 	dropEquipped(): void {
 		return;

@@ -132,7 +132,8 @@ export class TrashLidController extends ProjectileController {
     }
 
 	destroy(): void {
-
+        super.destroy();
+        console.log('destroying trashlid')
     }
 
 	subscribeToEvents(): void {
@@ -283,6 +284,8 @@ export class PillBottleController extends ProjectileController {
 
 
 	destroy(): void {
+        super.destroy();
+        console.log('destroying pills')
 
     }
 

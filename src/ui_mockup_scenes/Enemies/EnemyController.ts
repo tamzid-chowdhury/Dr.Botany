@@ -90,6 +90,8 @@ export default class EnemyController extends StateMachineAI implements BattlerAI
     }
 
     destroy(): void {
+        console.log('destroying enemy controller')
+        this.receiver.destroy();
     }
 
     changeState(stateName: string): void {

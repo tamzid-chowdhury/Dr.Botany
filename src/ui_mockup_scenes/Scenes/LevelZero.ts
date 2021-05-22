@@ -17,14 +17,14 @@ export default class LevelZero extends GameLevel {
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
     lookDirection: Vec2;
-    maxEnemyNumber: number = 10;
+    maxEnemyNumber: number = 7;
     levelHasStarted: boolean = false;
     introSequence: ScriptedSequence;
     currentLevel: string = Scenes.LEVEL_ZERO;
 
     moodEffectTimer: Timer = new Timer(10000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
-    levelZeroReceiver: Receiver = new Receiver();
+    levelReceiver: Receiver = new Receiver();
 
     pauseExecution: boolean = false;
     loadScene(): void {
@@ -56,14 +56,14 @@ export default class LevelZero extends GameLevel {
         super.initGameOverScreen(this.viewport.getHalfSize());
         super.initLevelCompletionScreen(this.viewport.getHalfSize());
         super.initSpawnerTimer(4000);
-        this.viewport.follow(this.player);
-        this.levelZeroReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
-        this.levelZeroReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
+        // this.viewport.follow(this.player);
+        this.levelReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
+        this.levelReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
         let tutorialScript = this.load.getObject("tutorialScript");
         this.introSequence = new ScriptedSequence(this, tutorialScript, new Vec2(this.plant.position.x, this.plant.position.y - 32));
-        this.supportManager.addHealthPacks(10);
-        this.supportManager.addAmmoPacks(10);
+        this.supportManager.addHealthPacks(5);
+        this.supportManager.addAmmoPacks(30);
         this.growthManager = new GrowthManager(this, 18);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_SPRING_ONE;
@@ -94,36 +94,42 @@ export default class LevelZero extends GameLevel {
 
             }
 
+            if (this.pauseExecution && this.moodEffectTimer.isActive()) {
+                this.moodEffectTimer.pause();
+            }
+            else if (!this.pauseExecution && this.moodEffectTimer.isPaused()) {
+                this.moodEffectTimer.continue();
+            }
+    
+            if(this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
+    
+                this.moodEffectTimer.reset();
+                this.plant.animation.play("EH");
+                this.moodManager.resetEffect(this, this.player.position);
+            }
+
         }
         else if (!this.pauseExecution && !this.introSequence.hasStarted) {
             this.introSequence.begin();
+            // this.viewport.setFocus(this.plant.position)
+            this.viewport.follow(this.plant)
         }
         else if (!this.pauseExecution && this.introSequence.isRunning && !this.introSequence.hasFinished) {
             this.introSequence.advance();
         }
         else if (this.introSequence.hasFinished) {
+            this.viewport.follow(this.player)
+         
             this.levelHasStarted = true;
             this.equipmentManager.spawnEquipment("PillBottle", new Vec2(this.plant.position.x, this.plant.position.y + 32))
         }
-        else if (this.pauseExecution && this.moodEffectTimer.isActive()) {
-            this.moodEffectTimer.pause();
-        }
-        else if (!this.pauseExecution && this.moodEffectTimer.isPaused()) {
-            this.moodEffectTimer.continue();
-        }
 
-        if(this.moodEffectTimer.isStopped() && this.moodEffectTimer.hasRun()) {
-
-            this.moodEffectTimer.reset();
-            this.plant.animation.play("EH");
-            this.moodManager.resetEffect(this, this.player.position);
-        }
        
 
 
 
-        while (this.levelZeroReceiver.hasNextEvent()) {
-            let event = this.levelZeroReceiver.getNextEvent();
+        while (this.levelReceiver.hasNextEvent()) {
+            let event = this.levelReceiver.getNextEvent();
             if (event.type === InGame_Events.ANGRY_MOOD_REACHED) {
                 this.moodEffectTimer.start();
                 this.plant.animation.play("ANGRY", true);
@@ -171,7 +177,7 @@ export default class LevelZero extends GameLevel {
     }
 
     protected subscribeToEvents() {
-        this.levelZeroReceiver.subscribe([
+        this.levelReceiver.subscribe([
             UIEvents.TRANSITION_LEVEL,
             UIEvents.CLICKED_RESTART
         ]);
@@ -179,7 +185,7 @@ export default class LevelZero extends GameLevel {
 
     unloadScene(): void {
         super.unloadScene();
-        this.levelZeroReceiver.destroy();
+        this.levelReceiver.destroy();
         this.load.keepAudio("background_music");
     }
 }

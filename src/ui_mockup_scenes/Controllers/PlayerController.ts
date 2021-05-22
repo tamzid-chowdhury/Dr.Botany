@@ -438,6 +438,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     
     destroy(): void {
+        console.log('destroying player ai')
         this.receiver.destroy();
     }
 

@@ -68,9 +68,9 @@ export default class EnemyManager {
         }
         this.activePool.push(enemy);
         let side = Math.random() < 0.5 ? -1:1;
-        let yPos = Math.random() * (this.mapSize.y ) + (64*side); // 32 is to add a little up/down to potential spawn points
-        let xPos = (yPos > 0 && yPos < this.mapSize.y) ? -48 : Math.random() * this.mapSize.x / 2;
-        xPos += Math.random() < 0.5 ? 0 : this.mapSize.x / 2;
+        let yPos = Math.random() * (this.mapSize.y ) + (64*side); // 64 is to add a little up/down to potential spawn points
+        let xPos = (yPos > 0 && yPos < this.mapSize.y) ? -48 : Math.random() * this.mapSize.x;
+        xPos += Math.random() < 0.5 ? -32 : 32;
         enemy.sprite.position.set(xPos, yPos)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
