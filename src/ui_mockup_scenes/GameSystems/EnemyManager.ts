@@ -14,7 +14,7 @@ export default class EnemyManager {
     choice: number = 0;
     prototypes: Array<Record<string, any>> = [];
     startingPosition: Vec2 = new Vec2(300,300)
-
+    spawnPositions: Array<Vec2> = [];
     mapSize : Vec2;
 
 	constructor(scene: Scene, mapSize : Vec2, size: number = 5 ) {
@@ -27,6 +27,12 @@ export default class EnemyManager {
         }
 
         this.mapSize = mapSize;
+        this.spawnPositions.push(
+            new Vec2(mapSize.x/2, -64),
+            new Vec2(mapSize.x/2, mapSize.y + 64), 
+            new Vec2(-64, mapSize.y/2 ), 
+            new Vec2(mapSize.x + 64, mapSize.y/2 )
+        );
 	}
 
     initPrototypes(): void {
@@ -67,17 +73,18 @@ export default class EnemyManager {
             enemy = this.createEnemy()
         }
         this.activePool.push(enemy);
-        let side = Math.random() < 0.5 ? -1:1;
-        let yPos = Math.random() * (this.mapSize.y ) + (64*side); // 64 is to add a little up/down to potential spawn points
-        let xPos = (yPos > 0 && yPos < this.mapSize.y) ? -48 : Math.random() * this.mapSize.x;
-        xPos += Math.random() < 0.5 ? -32 : 32;
-        enemy.sprite.position.set(xPos, yPos)
+        let choiceIndex = Math.floor(Math.random() * this.spawnPositions.length);
+
+        // let side = Math.random() < 0.5 ? -1:1;
+        // let yPos = Math.random() * (this.mapSize.y ) + (64*side); // 64 is to add a little up/down to potential spawn points
+        // let xPos = (yPos > 0 && yPos < this.mapSize.y) ? -48 : Math.random() * this.mapSize.x;
+        // xPos += Math.random() < 0.5 ? -32 : 32;
+        let spawnPos = this.spawnPositions[choiceIndex];
+        enemy.sprite.position.set(spawnPos.x, spawnPos.y)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;
-        yPos = Math.floor(yPos);
-        xPos = Math.floor(xPos);
 
-        console.log('spawning at :', xPos, yPos);
+        console.log('spawning at :', spawnPos.x, spawnPos.y);
         (<EnemyController>enemy.sprite.ai).wake(player, plant, enemy.data.spriteKey);
     }
 

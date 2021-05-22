@@ -246,6 +246,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.emitter.fireEvent(InGame_Events.NOT_OVERLAP_EQUIP);
             let pickup = this.equipmentManager.pickupEquipped(this.nearEquip);
             if (this.stowed.type !== undefined) {
+                this.equipped.inInventory = false;
                 this.equipmentManager.spawnEquipment(this.equipped.name, this.owner.position.clone());
                 this.equipped = pickup;
             }
@@ -303,6 +304,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
 
                 if (event.type === InGame_Events.OVERLAP_EQUIP && (this.nearEquip < 0)) {
+                    console.log('overlap')
                     let other = event.data.get('other');
                     this.nearEquip = other;
                     let equip = this.owner.getScene().getSceneGraph().getNode(other);
