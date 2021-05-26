@@ -109,6 +109,8 @@ export default class GameLevel extends Scene {
         this.load.image("downer_deposit", "assets/misc/downer_deposit_sign.png")
         // this.load.image("downer_deposit", "assets/misc/downer_deposit_v2.png")
         this.load.audio("swing", "assets/sfx/swing_sfx.wav");
+        this.load.audio("trashlid_sfx", "assets/sfx/trashlid_sfx.wav");
+        this.load.audio("pillbottle_sfx", "assets/sfx/pillbottle_sfx.wav");
         this.load.audio("enemy_hit", "assets/sfx/enemy_hit.wav");
         this.load.audio("enemy_jump", "assets/sfx/enemy_jump.wav");
         this.load.audio("enemy_die", "assets/sfx/enemy_die.wav");
@@ -118,6 +120,10 @@ export default class GameLevel extends Scene {
         this.load.audio("ammopack_get", "assets/sfx/ammopack.wav");
         this.load.audio("deposit", "assets/sfx/deposit.wav");
         this.load.audio("plant_grow", "assets/sfx/plantgrow.wav");
+
+        this.load.audio("deposit_sfx", "assets/sfx/deposit_sfx.wav");
+        this.load.audio("plant_grow_sfx", "assets/sfx/plant_grow_sfx.wav");
+
         this.load.spritesheet("swing", "assets/weapons/swing_sprite.json")
         this.load.spritesheet("player", "assets/player/dr_botany.json")
         this.load.spritesheet("plant", "assets/plant/plant.json")
@@ -375,7 +381,7 @@ export default class GameLevel extends Scene {
             if (event.type === InGame_Events.GROWTH_STARTED) {
                 this.plant.tweens.add("treeScaleUp", Tweens.treeScaleUp(this.plant.scale, new Vec2(0.75, 0.75)))
                 this.plant.tweens.play("treeScaleUp")
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "plant_grow", loop: false, holdReference: true });
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "plant_grow_sfx", loop: false, holdReference: true });
 
                 this.plant.collisionShape = new AABB(Vec2.ZERO, new Vec2((this.plant.size.x / 2) * 0.75, (this.plant.size.y / 2) * 0.75 ))
 
@@ -384,11 +390,11 @@ export default class GameLevel extends Scene {
             if (event.type === InGame_Events.GROWTH_COMPLETED) {
                 this.plant.tweens.add("treeScaleUp", Tweens.treeScaleUp(this.plant.scale, new Vec2(1, 1)))
                 this.plant.tweens.play("treeScaleUp")
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "plant_grow", loop: false, holdReference: true });
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "plant_grow_sfx", loop: false, holdReference: true });
 
                 this.plant.collisionShape = new AABB(Vec2.ZERO, new Vec2((this.plant.size.x / 2) * 1, (this.plant.size.y / 2) * 1 ))
 
-                // this.completionStatus = true;
+                this.completionStatus = true;
                 this.spawnerTimer.pause();
             }
 
@@ -410,11 +416,9 @@ export default class GameLevel extends Scene {
         this.downerDeposit.position.set(this.plant.position.x - this.plant.size.x, this.plant.position.y + this.plant.size.y / 1.8);
 
         this.upperDeposit.addPhysics(new Circle(Vec2.ZERO, (this.upperDeposit.size.x / 2) - 2));
-        // this.upperDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.upperDeposit.size.x / 2,  (this.upperDeposit.size.y / 4)+8)));
         this.upperDeposit.colliderOffset.set(0, 10);
 
         this.downerDeposit.addPhysics(new Circle(Vec2.ZERO, (this.downerDeposit.size.x / 2) - 2));
-        // this.downerDeposit.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.downerDeposit.size.x / 2, this.downerDeposit.size.y - this.downerDeposit.size.y / 4)));
         this.downerDeposit.colliderOffset.set(0, 10);
         
         this.plant.addPhysics(new AABB(Vec2.ZERO, new Vec2((this.plant.size.x / 2) * this.plant.scale.x, (this.plant.size.y / 2) * this.plant.scale.y )));
@@ -482,6 +486,16 @@ export default class GameLevel extends Scene {
         this.load.keepAudio("ammopack_get");
         this.load.keepAudio("deposit");
         this.load.keepAudio("plant_grow");
+
+        this.load.keepAudio("trashlid_sfx");
+        this.load.keepAudio("pillbottle_sfx");
+
+        this.load.keepAudio("deposit_sfx");
+        this.load.keepAudio("plant_grow_sfx");
+
+
+
+
         this.load.keepSpritesheet("swing")
         this.load.keepSpritesheet("player")
         this.load.keepSpritesheet("plant")
