@@ -50,7 +50,7 @@ export default class EnemyManager {
 
     initPrototypes(): void {
         let enemyData = this.scene.load.getObject("enemyData");
-        for(let i = 0; i < enemyData.count; i++){
+        for(let i = 0; i < enemyData.count; i++) {
             let data = enemyData.enemies[i];
             this.prototypes.push(data)
         }

@@ -77,7 +77,7 @@ export default class Level_Winter_One extends GameLevel {
         this.supportManager.addHealthPacks(10); 
         this.supportManager.addAmmoPacks(10);
 
-        this.growthManager = new GrowthManager(this, 18);
+        this.growthManager = new GrowthManager(this, 20);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_WINTER_TWO;
 		this.trashLidTimer = new Timer(30000, () => {

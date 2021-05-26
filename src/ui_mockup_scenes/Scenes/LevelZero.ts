@@ -67,7 +67,7 @@ export default class LevelZero extends GameLevel {
         this.introSequence = new ScriptedSequence(this, tutorialScript, new Vec2(this.plant.position.x, this.plant.position.y - 32));
         this.supportManager.addHealthPacks(5);
         this.supportManager.addAmmoPacks(30);
-        this.growthManager = new GrowthManager(this, 18);
+        this.growthManager = new GrowthManager(this, 2);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_SPRING_ONE;
     }
@@ -92,7 +92,7 @@ export default class LevelZero extends GameLevel {
             if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
                 this.spawnerTimer.pause();
                 // Change the number of final wave enemies for each level
-                this.finalWave(5);
+                this.finalWave(2);
                 this.finalWaveCleared = true;
 
             }
