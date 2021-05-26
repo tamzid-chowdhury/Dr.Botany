@@ -42,7 +42,6 @@ export default class LevelZero extends GameLevel {
     startScene(): void {
         super.startScene();
         // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
-        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5,5,0,0,0], this.maxEnemyNumber);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         let tilemapLayers = this.add.tilemap("level_zero");
         for (let layer of tilemapLayers) {
@@ -52,6 +51,7 @@ export default class LevelZero extends GameLevel {
             }
         }
         this.tilemapSize = this.collidables.size;
+        this.enemyManager = new EnemyManager(this, this.tilemapSize, [5,5,0,0,0], this.maxEnemyNumber);
         super.initPlant(this.collidables.size);
         this.plant.animation.playIfNotAlready("EH", true);
         super.initPlayer(this.collidables.size);

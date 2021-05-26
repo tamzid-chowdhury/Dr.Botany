@@ -39,8 +39,7 @@ export default class Level_Winter_One extends GameLevel {
 
     startScene(): void {
         super.startScene();
-        // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
-        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5,5,0,10,3]);
+
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
         let tilemapLayers = this.add.tilemap("level_winter_one");  // this change
@@ -52,7 +51,8 @@ export default class Level_Winter_One extends GameLevel {
         }
 
         this.tilemapSize = this.collidables.size;
-
+        // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
+        this.enemyManager = new EnemyManager(this,  this.tilemapSize, [5,5,0,10,3]);
 
         //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
         super.initPlant(this.collidables.size);

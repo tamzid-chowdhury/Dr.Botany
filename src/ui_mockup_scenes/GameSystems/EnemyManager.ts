@@ -39,10 +39,10 @@ export default class EnemyManager {
         }
         this.mapSize = mapSize;
         this.spawnPositions.push(
-            new Vec2(mapSize.x / 2, -64),
-            new Vec2(mapSize.x / 2, mapSize.y + 64),
-            new Vec2(-64, mapSize.y / 2),
-            new Vec2(mapSize.x + 64, mapSize.y / 2)
+            new Vec2(mapSize.x /2, -64),
+            new Vec2(mapSize.x /2, mapSize.y + 64),
+            new Vec2(-64, mapSize.y /2),
+            new Vec2(mapSize.x + 64, mapSize.y /2)
         );
 
         console.log(this.inactivePool);
@@ -81,7 +81,8 @@ export default class EnemyManager {
     spawnEnemy(player: GameNode, plant: GameNode, position: Vec2 = this.startingPosition): void { // default value
         let enemy;
         if (this.inactivePool.length > 0) {
-            enemy = this.inactivePool.pop();
+            // enemy = this.inactivePool.pop();
+            enemy = this.inactivePool.shift()
         }
         else {
             enemy = this.createEnemy()
@@ -89,11 +90,9 @@ export default class EnemyManager {
         this.activePool.push(enemy);
         let choiceIndex = Math.floor(Math.random() * this.spawnPositions.length);
 
-        // let side = Math.random() < 0.5 ? -1:1;
-        // let yPos = Math.random() * (this.mapSize.y ) + (64*side); // 64 is to add a little up/down to potential spawn points
-        // let xPos = (yPos > 0 && yPos < this.mapSize.y) ? -48 : Math.random() * this.mapSize.x;
-        // xPos += Math.random() < 0.5 ? -32 : 32;
         let spawnPos = this.spawnPositions[choiceIndex];
+        spawnPos.x += Math.floor(Math.random() * (32 - (-32) + 1) + (-32))
+        spawnPos.y += Math.floor(Math.random() * (32 - (-32) + 1) + (-32));
         enemy.sprite.position.set(spawnPos.x, spawnPos.y)
         enemy.sprite.active = true;
         enemy.sprite.visible = true;

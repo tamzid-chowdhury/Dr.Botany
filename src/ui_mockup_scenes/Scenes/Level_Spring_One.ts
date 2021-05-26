@@ -18,7 +18,7 @@ export default class Level_Spring_One extends GameLevel {
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
     lookDirection: Vec2;
-    maxEnemyNumber: number = 15;
+    maxEnemyNumber: number = 22;
     moodEffectTimer: Timer = new Timer(10000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelReceiver: Receiver = new Receiver();
@@ -42,8 +42,7 @@ export default class Level_Spring_One extends GameLevel {
 
     startScene(): void {
         super.startScene()
-        // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
-        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5, 5, 5, 0 ,0]);
+        
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
       
         
@@ -56,7 +55,8 @@ export default class Level_Spring_One extends GameLevel {
         }
 
         this.tilemapSize = this.collidables.size;
-
+        // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
+        this.enemyManager = new EnemyManager(this, this.tilemapSize, [10, 5, 5, 2 ,0]);
 
         //INITIALIZE PLANT BEFORE PLAYER WHEN MAKING YOUR LEVELS 
         super.initPlant(this.collidables.size);
