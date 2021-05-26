@@ -11,6 +11,7 @@ import { Physics } from "../Utils/PhysicsOptions";
 import Level_Fall_One from "./Level_Fall_One";
 import MainMenu from "../MainMenu";
 import EnemyManager from "../GameSystems/EnemyManager";
+import ScriptedSequence from "../Classes/ScriptedSequence";
 
 export default class Level_Spring_One extends GameLevel {
 
@@ -22,6 +23,7 @@ export default class Level_Spring_One extends GameLevel {
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelReceiver: Receiver = new Receiver();
     currentLevel: string = Scenes.LEVEL_SPRING_ONE;
+    introSequence: ScriptedSequence;
 	pillBottleTimer: Timer;
 	trashLidTimer: Timer;
     pauseExecution: boolean = false;
@@ -29,6 +31,8 @@ export default class Level_Spring_One extends GameLevel {
         super.loadScene();
         this.load.tilemap("level_spring_one", "assets/tilemaps/SpringLevel/springLevel.json");
         this.load.audio("background_music", "assets/music/in_game_music.mp3")
+        this.load.object("springLevelScript", "assets/data/springLevelScript.json")
+        this.load.audio("plant_voice_sfx", "assets/sfx/plant_voice_sfx.wav")
     }
 
 	unloadScene(): void {
@@ -41,6 +45,7 @@ export default class Level_Spring_One extends GameLevel {
         // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
         this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5, 5, 5, 0 ,0]);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
+      
         
         let tilemapLayers = this.add.tilemap("level_spring_one");
         for (let layer of tilemapLayers) {
@@ -64,7 +69,8 @@ export default class Level_Spring_One extends GameLevel {
         super.initLevelCompletionScreen(this.viewport.getHalfSize());
         super.initSpawnerTimer(4000);
         this.viewport.follow(this.player);
-
+        let script = this.load.getObject("springLevelScript");
+        this.introSequence = new ScriptedSequence(this, script, new Vec2(this.plant.position.x, this.plant.position.y - 32));
         this.levelReceiver.subscribe(InGame_Events.ANGRY_MOOD_REACHED);
         this.levelReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
@@ -126,6 +132,13 @@ export default class Level_Spring_One extends GameLevel {
             this.moodManager.resetEffect(this, this.player.position);
         }
 
+
+        else if (!this.pauseExecution && !this.introSequence.hasStarted) {
+            this.introSequence.begin();
+        }
+        else if (!this.pauseExecution && this.introSequence.isRunning && !this.introSequence.hasFinished) {
+            this.introSequence.advance();
+        }
 
 
         while (this.levelReceiver.hasNextEvent()) {

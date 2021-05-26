@@ -12,7 +12,6 @@ import { Physics } from "../Utils/PhysicsOptions";
 import Level_Spring_One from "./Level_Spring_One";
 import MainMenu from "../MainMenu";
 import EnemyManager from "../GameSystems/EnemyManager";
-import Input from "../../Wolfie2D/Input/Input";
 
 export default class LevelZero extends GameLevel {
 
