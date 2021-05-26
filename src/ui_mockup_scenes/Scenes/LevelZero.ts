@@ -64,7 +64,7 @@ export default class LevelZero extends GameLevel {
         this.introSequence = new ScriptedSequence(this, tutorialScript, new Vec2(this.plant.position.x, this.plant.position.y - 32));
         this.supportManager.addHealthPacks(5);
         this.supportManager.addAmmoPacks(30);
-        this.growthManager = new GrowthManager(this, 18);
+        this.growthManager = new GrowthManager(this, 20);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_SPRING_ONE;
     }
