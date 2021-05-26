@@ -80,9 +80,9 @@ export default class LevelZero extends GameLevel {
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.growthManager.update(deltaT);
-        if(Input.isKeyJustPressed('0')) {
-            this.introSequence.hasFinished = true;
-        }
+        // if(Input.isKeyJustPressed('0')) {
+        //     this.introSequence.hasFinished = true;
+        // }
         if(this.levelHasStarted) {
 
             if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
