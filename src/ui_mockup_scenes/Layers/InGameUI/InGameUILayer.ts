@@ -86,7 +86,8 @@ export default class InGameUI implements Updateable {
             InGame_GUI_Events.REFILL_AMMO,
             InGame_GUI_Events.RESET_MOOD_BAR,
             InGame_GUI_Events.UPDATE_GROWTH_BAR,
-            InGame_GUI_Events.ANNOUNCE_MOOD_EFFECT
+            InGame_GUI_Events.ANNOUNCE_MOOD_EFFECT,
+            InGame_GUI_Events.ANNOUNCE_FINAL_WAVE
         ]);
 
     }
@@ -303,6 +304,17 @@ export default class InGameUI implements Updateable {
 
             }
 
+            let largeFontSize = 34;
+
+            if(event.type === InGame_GUI_Events.ANNOUNCE_FINAL_WAVE){
+                position = event.data.get("position");
+                announceText = 'Final Wave'
+                color = Palette.white()
+                longAnnounce = true;
+                largeFontSize = 48;
+
+            }
+
             if(announce) {
                 let announceLabelBackdrop = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_BACKDROP, {position: new Vec2(position.x + 0.5, position.y + 0.5), text:announceText});
                 announceLabelBackdrop.font = Fonts.ROUND;
@@ -329,14 +341,14 @@ export default class InGameUI implements Updateable {
                 let announceLabelBackdrop = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_BACKDROP, {position: new Vec2(position.x + 0.5, position.y + 0.5), text:announceText});
                 announceLabelBackdrop.font = Fonts.ROUND;
                 announceLabelBackdrop.textColor = Palette.black();
-                announceLabelBackdrop.fontSize = 34;
+                announceLabelBackdrop.fontSize = largeFontSize;
                 announceLabelBackdrop.tweens.add("announce", Tweens.announce(position.x -32, 32.5))
                 
 
                 let announceLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, InGameUILayers.ANNOUNCEMENT_TEXT, {position: new Vec2(position.x , position.y), text:announceText});
                 announceLabel.font = Fonts.ROUND;
                 announceLabel.textColor = color;
-                announceLabel.fontSize = 34;
+                announceLabel.fontSize = largeFontSize;
                 announceLabel.tweens.add("announce", Tweens.announce(position.x - 32, 32));
                 announceLabelBackdrop.tweens.play("announce");
                 announceLabel.tweens.play("announce");

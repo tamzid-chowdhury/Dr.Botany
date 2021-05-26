@@ -768,13 +768,13 @@ export function enemyHopOver(position: Vec2, dir: string, owner: GameNode ): Rec
 				ease: EaseFunctionType.OUT_SINE,
 				resetOnComplete: true
 			},
-			// {
-			// 	property: TweenableProperties.rotation,
-			// 	start: 0,
-			// 	end: 2*Math.PI,
-			// 	ease: EaseFunctionType.OUT_SINE,
-			// 	resetOnComplete: true
-			// },
+			{
+				property: TweenableProperties.rotation,
+				start: 0,
+				end: 2*Math.PI,
+				ease: EaseFunctionType.OUT_SINE,
+				resetOnComplete: true
+			},
 			{
 				property: TweenableProperties.scaleX,
 				start: 1,

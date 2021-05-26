@@ -64,12 +64,12 @@ export default class MainMenu extends Scene {
     }
 
     unloadScene(): void {
-        this.load.keepAudio("button");
         this.load.keepImage("screen_wipe");
         this.load.keepImage("ui_rect");
         this.load.keepImage("temp_cursor");
         this.load.keepImage("cursor_clicked");
         this.load.keepImage("temp_button");
+        this.load.keepAudio("button");
     }
 
     setDetectDocumentClick(toggle: boolean): void {
@@ -155,19 +155,6 @@ export default class MainMenu extends Scene {
 
         }
 
-        if(Input.isKeyJustPressed('e')) {
-            this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: true });
-            this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
-
-
-            this.screenWipe = this.add.sprite("screen_wipe", UILayers.CURSOR);
-            this.screenWipe.imageOffset = new Vec2(0, 0);
-            this.screenWipe.scale = new Vec2(2, 1)
-            this.screenWipe.position.set(2 * this.screenWipe.size.x, this.screenWipe.size.y / 2);
-            this.nextLevel = Scenes.LEVEL_ZERO;
-            this.screenWipe.tweens.add("levelZeroTransition", Tweens.slideLeft(this.screenWipe.position.x, 0, 500, UIEvents.TRANSITION_LEVEL_MAIN));
-            this.screenWipe.tweens.play("levelZeroTransition");
-        }
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
 
@@ -207,7 +194,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_START) {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: true });
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: false });
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "temp_music" });
 
 
@@ -220,7 +207,7 @@ export default class MainMenu extends Scene {
                 this.screenWipe.tweens.play("levelZeroTransition");
             }
             if (event.type === UIEvents.CLICKED_LEVEL_SELECT) {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: true });
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: false });
                 this.levelSelectLayer.playEntryTweens();
                 this.setVisibleLayer(UILayers.LEVEL_SELECT);
             }
@@ -291,19 +278,19 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.CLICKED_CONTROLS) {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: true });
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: false });
                 this.controlsLayer.playEntryTweens();
                 this.setVisibleLayer(UILayers.CONTROLS);
             }
 
             if (event.type === UIEvents.CLICKED_OPTIONS) {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: true });
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: false });
                 this.optionsLayer.playEntryTweens();
                 this.setVisibleLayer(UILayers.OPTIONS);
             }
 
             if (event.type === UIEvents.CLICKED_HELP) {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: true });
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: false });
                 this.helpLayer.playEntryTweens();
                 this.setVisibleLayer(UILayers.HELP);
             }
@@ -323,7 +310,7 @@ export default class MainMenu extends Scene {
             }
 
             if (event.type === UIEvents.TRANSITION_SCREEN) {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: true });
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "button", loop: false, holdReference: false });
                 switch (this.currentLayer) {
                     case (UILayers.CONTROLS):
                         this.controlsLayer.playExitTweens()

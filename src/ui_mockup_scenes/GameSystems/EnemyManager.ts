@@ -18,9 +18,9 @@ export default class EnemyManager {
     mapSize: Vec2;
     selection: Array<number>;
     // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
-    constructor(scene: Scene, mapSize: Vec2, selection: Array<number>) {
+    constructor(scene: Scene, mapSize: Vec2, selection: Array<number>, maxEnemies: number = 5) {
         this.scene = scene;
-
+        this.maxEnemies = maxEnemies
         this.selection = selection;
         this.initPrototypes();
 

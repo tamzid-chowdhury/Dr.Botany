@@ -12,6 +12,7 @@ import { Physics } from "../Utils/PhysicsOptions";
 import Level_Spring_One from "./Level_Spring_One";
 import MainMenu from "../MainMenu";
 import EnemyManager from "../GameSystems/EnemyManager";
+import Input from "../../Wolfie2D/Input/Input";
 
 export default class LevelZero extends GameLevel {
 
@@ -21,8 +22,9 @@ export default class LevelZero extends GameLevel {
     maxEnemyNumber: number = 10;
     levelHasStarted: boolean = false;
     introSequence: ScriptedSequence;
+    outroSequence: ScriptedSequence;
     currentLevel: string = Scenes.LEVEL_ZERO;
-
+    finalWaveStarted: boolean = false;
     moodEffectTimer: Timer = new Timer(10000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelReceiver: Receiver = new Receiver();
@@ -33,6 +35,7 @@ export default class LevelZero extends GameLevel {
         this.load.tilemap("level_zero", "assets/tilemaps/SpringLevel/tutorialLevel.json");
         this.load.image("tutorialLevel", "assets/tilemaps/SpringLevel/tutorialLevel.png");
         this.load.object("tutorialScript", "assets/data/tutorialLevelScript.json")
+        this.load.object("tutorialScriptEnd", "assets/data/tutorialEndScript.json")
         this.load.audio("background_music", "assets/music/in_game_music.mp3")
         this.load.audio("plant_voice_sfx", "assets/sfx/plant_voice_sfx.wav")
     }
@@ -40,7 +43,7 @@ export default class LevelZero extends GameLevel {
     startScene(): void {
         super.startScene();
         // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
-        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5,5,0,0,0]);
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5,5,0,0,0], this.maxEnemyNumber);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         let tilemapLayers = this.add.tilemap("level_zero");
         for (let layer of tilemapLayers) {
@@ -64,7 +67,9 @@ export default class LevelZero extends GameLevel {
         this.levelReceiver.subscribe(InGame_Events.HAPPY_MOOD_REACHED);
         this.subscribeToEvents();
         let tutorialScript = this.load.getObject("tutorialScript");
+        let tutorialScriptEnd = this.load.getObject("tutorialScriptEnd");
         this.introSequence = new ScriptedSequence(this, tutorialScript, new Vec2(this.plant.position.x, this.plant.position.y - 32));
+        this.outroSequence = new ScriptedSequence(this, tutorialScriptEnd, new Vec2(this.plant.position.x, this.plant.position.y - 32));
         this.supportManager.addHealthPacks(5);
         this.supportManager.addAmmoPacks(30);
         this.growthManager = new GrowthManager(this, 2);
@@ -75,6 +80,9 @@ export default class LevelZero extends GameLevel {
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
         this.growthManager.update(deltaT);
+        if(Input.isKeyJustPressed('0')) {
+            this.introSequence.hasFinished = true;
+        }
         if(this.levelHasStarted) {
 
             if (this.pauseExecution && this.spawnerTimer.isActive() && !this.completionStatus) {
@@ -89,11 +97,13 @@ export default class LevelZero extends GameLevel {
                 this.spawnerTimer.start();
                 this.enemyManager.spawnEnemy(this.player, this.plant);
             }
-            if (this.completionStatus && !this.finalWaveCleared && this.enemyManager.activePool.length === 0) {
+            if (this.completionStatus && !this.finalWaveCleared && !this.finalWaveStarted && this.enemyManager.activePool.length === 0) {
                 this.spawnerTimer.pause();
                 // Change the number of final wave enemies for each level
                 this.finalWave(2);
-                this.finalWaveCleared = true;
+                this.finalWaveStarted = true;
+                // this.levelHasStarted = false;
+                // this.finalWaveCleared = true;
 
             }
 
@@ -122,13 +132,23 @@ export default class LevelZero extends GameLevel {
         }
         else if (this.introSequence.hasFinished) {
             this.viewport.follow(this.player)
-         
             this.levelHasStarted = true;
             this.equipmentManager.spawnEquipment("PillBottle", new Vec2(this.plant.position.x, this.plant.position.y + 32))
         }
 
        
+        if(this.finalWaveStarted && this.enemyManager.activePool.length === 0 && !this.outroSequence.hasStarted) {
+            this.viewport.follow(this.plant)
+            this.outroSequence.begin();
 
+        }
+        else if (!this.pauseExecution && this.outroSequence.isRunning && !this.outroSequence.hasFinished) {
+            this.outroSequence.advance();
+        }
+        else if (!this.pauseExecution && this.outroSequence.hasFinished) {
+            // this.finalWaveCleared = true;
+            this.emitter.fireEvent(UIEvents.TRANSITION_LEVEL)
+        }
 
 
         while (this.levelReceiver.hasNextEvent()) {

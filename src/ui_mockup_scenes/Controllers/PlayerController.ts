@@ -195,7 +195,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             if (!this.coolDownTimer.isActive()) {
                 if (this.equipped.charges) {
                     this.equipped.doAttack(this.playerLookDirection, deltaT);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.equipped.sfxKey, loop: false, holdReference: true });
+                    this.emitter.fireEvent(GameEventType.PLAY_SFX, { key: this.equipped.sfxKey, loop: false, holdReference: true });
                     this.emitter.fireEvent(InGame_Events.DO_SCREENSHAKE, { dir: this.playerLookDirection })
                     if (this.equipped.type === WeaponTypes.AMMO) {
                         this.emitter.fireEvent(InGame_GUI_Events.UPDATE_EQUIP_SLOT_AMMO, { spriteKey: this.equipped.iconSpriteKey, ammo: this.equipped.charges })

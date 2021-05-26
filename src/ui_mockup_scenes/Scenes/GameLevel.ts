@@ -5,7 +5,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import InGameUILayer from "../Layers/InGameUI/InGameUILayer"
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import { UIEvents, UILayers, InGameUILayers, InGame_Events, Scenes } from "../Utils/Enums";
+import { UIEvents, UILayers, InGameUILayers, InGame_Events, Scenes, InGame_GUI_Events } from "../Utils/Enums";
 import PauseScreenLayer from "../Layers/PauseScreenLayer";
 import GameOverScreenLayer from "../Layers/GameOverScreenLayer";
 import LevelCompletionScreenLayer from "../Layers/LevelCompletionScreenLayer";
@@ -396,6 +396,9 @@ export default class GameLevel extends Scene {
 
                 this.completionStatus = true;
                 this.spawnerTimer.pause();
+                let position = this.viewport.getView();
+                this.emitter.fireEvent(InGame_GUI_Events.ANNOUNCE_FINAL_WAVE, { position: new Vec2(position.center.x, position.top+32)});
+
             }
 
 
@@ -560,8 +563,10 @@ export default class GameLevel extends Scene {
         this.spawnerTimer = new Timer(time, null, false);
     }
     finalWave(number: number) {
+        let remaining = this.enemyManager.inactivePool.length;
+        console.log('final wave', remaining)
 
-        for (let i = 0; i < number; i++) {
+        for (let i = 0; i < remaining; i++) {
             this.enemyManager.spawnEnemy(this.player, this.player);
         }
     }

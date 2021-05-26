@@ -18,7 +18,7 @@ export default class Level_Winter_One extends GameLevel {
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
     lookDirection: Vec2;
-    maxEnemyNumber: number = 15;
+    maxEnemyNumber: number = 23;
     moodEffectTimer: Timer = new Timer(10000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelReceiver: Receiver = new Receiver();
@@ -40,7 +40,7 @@ export default class Level_Winter_One extends GameLevel {
     startScene(): void {
         super.startScene();
         // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
-        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [0,0,0,10,5]);
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5,5,0,10,3]);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
         let tilemapLayers = this.add.tilemap("level_winter_one");  // this change
@@ -77,7 +77,7 @@ export default class Level_Winter_One extends GameLevel {
         this.supportManager.addHealthPacks(10); 
         this.supportManager.addAmmoPacks(10);
 
-        this.growthManager = new GrowthManager(this, 20);
+        this.growthManager = new GrowthManager(this, 16);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_WINTER_TWO;
 		this.trashLidTimer = new Timer(30000, () => {

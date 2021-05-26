@@ -18,7 +18,7 @@ export default class Level_Fall_One extends GameLevel {
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
     lookDirection: Vec2;
-    maxEnemyNumber: number = 13;
+    maxEnemyNumber: number = 17;
     moodEffectTimer: Timer = new Timer(10000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelReceiver: Receiver = new Receiver();
@@ -40,7 +40,7 @@ export default class Level_Fall_One extends GameLevel {
     startScene(): void {
         super.startScene();
         // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
-        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [0,5,5,0,3]);
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [0,5,5,4,3]);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
         let tilemapLayers = this.add.tilemap("level_fall_one");  // this change
@@ -77,7 +77,7 @@ export default class Level_Fall_One extends GameLevel {
         this.supportManager.addHealthPacks(10); 
         this.supportManager.addAmmoPacks(10);
 
-        this.growthManager = new GrowthManager(this, 20);
+        this.growthManager = new GrowthManager(this, 12);
         this.spawnerTimer.start();
         this.nextLevel = Scenes.LEVEL_FALL_TWO;
 		this.trashLidTimer = new Timer(30000, () => {

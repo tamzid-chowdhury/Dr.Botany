@@ -12,7 +12,7 @@ export default class Dying extends EnemyState {
     onEnter(): void {
 		this.parent.currentStateName = EnemyStates.DYING;
 		
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemy_die", loop: false, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_SFX, {key: "enemy_die", loop: false, holdReference: true});
         if(this.parent.attackType === 'projectile') {
             (<ProjectileEnemy>this.parent.container).deactivateProjectiles()
 

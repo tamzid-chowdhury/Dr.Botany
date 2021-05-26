@@ -1,0 +1,15 @@
+{
+	"onEnd": "UIEvents.TRANSITION_LEVEL",
+	"lines": [
+		{
+			"text": " Great Job! ", 
+			"time": 1500
+		},
+		{
+			"text": " Lets keep this little arrangement going ", 
+			"time": 1500
+		}
+	
+
+	]
+}
