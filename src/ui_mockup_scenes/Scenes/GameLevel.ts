@@ -172,7 +172,7 @@ export default class GameLevel extends Scene {
         // TODO: Disable input until after screen wipe finished
         this.initReticle();
         this.materialsManager = new MaterialsManager(this);
-        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), 5);
+        // this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize());
         this.equipmentManager = new EquipmentManager(this);
         this.supportManager = new SupportManager(this);
 
@@ -388,7 +388,7 @@ export default class GameLevel extends Scene {
 
                 this.plant.collisionShape = new AABB(Vec2.ZERO, new Vec2((this.plant.size.x / 2) * 1, (this.plant.size.y / 2) * 1 ))
 
-                // this.completionStatus = true;
+                this.completionStatus = true;
                 this.spawnerTimer.pause();
             }
 

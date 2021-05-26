@@ -10,6 +10,7 @@ import * as Tweens  from "../Utils/Tweens";
 import { Physics } from "../Utils/PhysicsOptions";
 import Level_Fall_One from "./Level_Fall_One";
 import MainMenu from "../MainMenu";
+import EnemyManager from "../GameSystems/EnemyManager";
 
 export default class Level_Spring_One extends GameLevel {
 
@@ -37,6 +38,8 @@ export default class Level_Spring_One extends GameLevel {
 
     startScene(): void {
         super.startScene()
+        // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5, 5, 0, 0 ,0]);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
         let tilemapLayers = this.add.tilemap("level_spring_one");

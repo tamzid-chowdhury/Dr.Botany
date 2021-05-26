@@ -11,13 +11,14 @@ import ScriptedSequence from "../Classes/ScriptedSequence";
 import { Physics } from "../Utils/PhysicsOptions";
 import Level_Spring_One from "./Level_Spring_One";
 import MainMenu from "../MainMenu";
+import EnemyManager from "../GameSystems/EnemyManager";
 
 export default class LevelZero extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
     lookDirection: Vec2;
-    maxEnemyNumber: number = 7;
+    maxEnemyNumber: number = 10;
     levelHasStarted: boolean = false;
     introSequence: ScriptedSequence;
     currentLevel: string = Scenes.LEVEL_ZERO;
@@ -37,7 +38,9 @@ export default class LevelZero extends GameLevel {
     }
 
     startScene(): void {
-        super.startScene()
+        super.startScene();
+        // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [5,5,0,0,0]);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         let tilemapLayers = this.add.tilemap("level_zero");
         for (let layer of tilemapLayers) {

@@ -11,6 +11,7 @@ import { Physics } from "../Utils/PhysicsOptions";
 
 import MainMenu from "../MainMenu";
 import Level_Fall_Two from "./Level_Fall_Two";
+import EnemyManager from "../GameSystems/EnemyManager";
 
 export default class Level_Fall_One extends GameLevel {
 
@@ -37,7 +38,9 @@ export default class Level_Fall_One extends GameLevel {
     }
 
     startScene(): void {
-        super.startScene()
+        super.startScene();
+        // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [0,5,5,0,3]);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
         let tilemapLayers = this.add.tilemap("level_fall_one");  // this change

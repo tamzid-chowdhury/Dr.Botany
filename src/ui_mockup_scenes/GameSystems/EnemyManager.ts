@@ -6,34 +6,47 @@ import Vec2 from '../../Wolfie2D/DataTypes/Vec2';
 import ProjectileEnemy from '../Types/enemies/ProjectileEnemy';
 
 export default class EnemyManager {
-	maxEnemies: number; 
-	inactivePool: Array<Enemy> = []; 
-	activePool: Array<Enemy> = []; 
+    maxEnemies: number = 5;
+    inactivePool: Array<Enemy> = [];
+    activePool: Array<Enemy> = [];
     scene: Scene;
     // choice % number of types of enemies === selection. Round robin picking
     choice: number = 0;
     prototypes: Array<Record<string, any>> = [];
-    startingPosition: Vec2 = new Vec2(300,300)
+    startingPosition: Vec2 = new Vec2(300, 300)
     spawnPositions: Array<Vec2> = [];
-    mapSize : Vec2;
+    mapSize: Vec2;
+    selection: Array<number>;
+    // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
+    constructor(scene: Scene, mapSize: Vec2, selection: Array<number>) {
+        this.scene = scene;
 
-	constructor(scene: Scene, mapSize : Vec2, size: number = 5 ) {
-		this.scene = scene;
-        this.maxEnemies = size;
+        this.selection = selection;
         this.initPrototypes();
-        for(let i = 0; i < this.maxEnemies; i ++) {
-            let enemy = this.createEnemy()
-            this.inactivePool.push(enemy);
-        }
 
+        for (let i = 0; i < this.maxEnemies; i++) {
+            for (let j = 0; j < this.selection[i]; j++) {
+                let enemy = this.createEnemy(i);
+                this.inactivePool.push(enemy);
+            }
+        }
+        // mix
+        for(let i = this.inactivePool.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = this.inactivePool[i];
+            this.inactivePool[i] = this.inactivePool[j];
+            this.inactivePool[j] = temp;
+        }
         this.mapSize = mapSize;
         this.spawnPositions.push(
-            new Vec2(mapSize.x/2, -64),
-            new Vec2(mapSize.x/2, mapSize.y + 64), 
-            new Vec2(-64, mapSize.y/2 ), 
-            new Vec2(mapSize.x + 64, mapSize.y/2 )
+            new Vec2(mapSize.x / 2, -64),
+            new Vec2(mapSize.x / 2, mapSize.y + 64),
+            new Vec2(-64, mapSize.y / 2),
+            new Vec2(mapSize.x + 64, mapSize.y / 2)
         );
-	}
+
+        console.log(this.inactivePool);
+    }
 
     initPrototypes(): void {
         let enemyData = this.scene.load.getObject("enemyData");
@@ -43,14 +56,15 @@ export default class EnemyManager {
         }
     }
 
-    createEnemy(): Enemy {
-        let data = this.prototypes[this.choice % this.prototypes.length];
-        this.choice++;
+    createEnemy(index: number = 0): Enemy {
+        ////////////////////////////////////////////////////////////////////
+        let data = this.prototypes[index];
+        ////////////////////////////////////////////////////////////////////
         let sprite = this.scene.add.animatedSprite(data.spriteKey, "primary");
         let enemy;
-        if(data.attackType === "projectile") {
+        if (data.attackType === "projectile") {
             let clip = [];
-            for(let i = 0; i < data.clipSize; i ++) {
+            for (let i = 0; i < data.clipSize; i++) {
                 let charge = this.scene.add.animatedSprite(data.projectileSpriteKey, "primary");
                 charge.visible = false;
                 charge.active = false;
@@ -59,14 +73,14 @@ export default class EnemyManager {
             enemy = new ProjectileEnemy(sprite, data, clip)
         }
         else {
-            enemy = new Enemy(sprite, data); 
+            enemy = new Enemy(sprite, data);
         }
         return enemy
     }
 
-    spawnEnemy(player: GameNode, plant:GameNode, position: Vec2 = this.startingPosition): void {
+    spawnEnemy(player: GameNode, plant: GameNode, position: Vec2 = this.startingPosition): void { // default value
         let enemy;
-        if(this.inactivePool.length > 0) {
+        if (this.inactivePool.length > 0) {
             enemy = this.inactivePool.pop();
         }
         else {
@@ -89,12 +103,12 @@ export default class EnemyManager {
     }
 
     despawnEnemy(node: GameNode): void {
-        for(let i = 0; i < this.activePool.length; i ++) {
+        for (let i = 0; i < this.activePool.length; i++) {
             let enemy = this.activePool[i];
-            if(enemy.sprite.id === node.id) {
+            if (enemy.sprite.id === node.id) {
                 this.activePool.splice(i, 1)
 
-                enemy.sprite.position.set(-2000,-2000)
+                enemy.sprite.position.set(-2000, -2000)
                 enemy.sprite.active = false;
                 enemy.sprite.visible = false;
                 this.inactivePool.push(enemy);
@@ -104,6 +118,6 @@ export default class EnemyManager {
     }
 
     getNumberOfActiveEnemies(): number {
-        return this.activePool.length; 
+        return this.activePool.length;
     }
 }

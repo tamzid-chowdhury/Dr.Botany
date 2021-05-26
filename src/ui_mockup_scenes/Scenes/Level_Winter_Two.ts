@@ -10,13 +10,14 @@ import * as Tweens  from "../Utils/Tweens";
 import { Physics } from "../Utils/PhysicsOptions";
 
 import MainMenu from "../MainMenu";
+import EnemyManager from "../GameSystems/EnemyManager";
 
 export default class Level_Winter_Two extends GameLevel {
 
     collidables: OrthogonalTilemap;
     tilemapSize: Vec2;
     lookDirection: Vec2;
-    maxEnemyNumber: number = 100;
+    maxEnemyNumber: number = 50;
     moodEffectTimer: Timer = new Timer(10000, null, false);
     moodBarTimer: Timer = new Timer(6000, null, false);
     levelReceiver: Receiver = new Receiver();
@@ -36,7 +37,9 @@ export default class Level_Winter_Two extends GameLevel {
     }
 
     startScene(): void {
-        super.startScene()
+        super.startScene();
+        // [slime, mushroom, carrot, wisp, bomb] , match the total value as the max Enemies to spawn
+        this.enemyManager = new EnemyManager(this, this.viewport.getHalfSize(), [10,10,10,10,10]);
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "background_music", loop: true, holdReference: true });
         
         let tilemapLayers = this.add.tilemap("level_fall_two");  // this change
