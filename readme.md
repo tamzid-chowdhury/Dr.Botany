@@ -1,6 +1,6 @@
 # Dr. Botany
 
-<b> Top Down 2D shooter game made using the Wolfie2D Game Engine written in Typescript. </b>
+<b> Top Down 2D adventure game made using the Wolfie2D Game Engine written in Typescript. </b>
 <p> Dr. Botany was a finalist at Stony Brook University's 17th Annual Game Programming Competition (2021). The game was developed by Charles Monnone, Paul Han, and Tamzid Chowdhury. </p>
   
   
